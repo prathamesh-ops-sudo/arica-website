@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Zap, ShieldCheck, Scale, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LinkPreview } from "@/components/ui/link-preview";
 import fingerprintImage from "@assets/generated_images/digital_fingerprint_scan_visual.png";
 
 const features = [
@@ -67,11 +68,33 @@ export function ForensicsSection() {
               <span className="text-gradient">Threat Tracking</span>
             </h2>
 
+            <p className="text-muted-foreground mb-6 leading-relaxed max-w-lg text-lg">
+              Our forensics laboratory employs{" "}
+              <LinkPreview
+                url="https://www.nist.gov/cybersecurity"
+                className="font-bold bg-clip-text text-transparent bg-gradient-to-br from-primary to-cyan-400"
+              >
+                NIST-compliant methodologies
+              </LinkPreview>{" "}
+              to recover critical data and track sophisticated threat actors across global networks.
+            </p>
+
             <p className="text-muted-foreground mb-10 leading-relaxed max-w-lg">
-              Our forensics laboratory employs military-grade methodologies to
-              recover critical data and track sophisticated threat actors. We
-              ensure evidence remains admissible for legal proceedings through
-              rigorous chain-of-custody protocols.
+              We leverage advanced tools from{" "}
+              <LinkPreview
+                url="https://www.crowdstrike.com"
+                className="font-semibold text-primary hover:text-primary/80 transition-colors"
+              >
+                CrowdStrike
+              </LinkPreview>{" "}
+              and{" "}
+              <LinkPreview
+                url="https://www.paloaltonetworks.com"
+                className="font-semibold text-primary hover:text-primary/80 transition-colors"
+              >
+                Palo Alto Networks
+              </LinkPreview>{" "}
+              to ensure evidence remains admissible for legal proceedings.
             </p>
 
             <div className="space-y-6 mb-10">
