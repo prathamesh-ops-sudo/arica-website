@@ -1,17 +1,21 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { EtherealShadow } from "@/components/ui/ethereal-shadow";
 
 export function CTA() {
   return (
     <section className="py-24 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-primary/10 to-primary/5" />
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.2) 1px, transparent 0)`,
-          backgroundSize: '40px 40px'
-        }} />
+      <div className="absolute inset-0">
+        <EtherealShadow
+          color="rgba(59, 130, 246, 0.6)"
+          animation={{ scale: 80, speed: 60 }}
+          noise={{ opacity: 0.5, scale: 1 }}
+          sizing="fill"
+        />
       </div>
+      
+      <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-transparent to-background/80" />
 
       <div className="max-w-3xl mx-auto px-6 relative z-10 text-center">
         <motion.div
