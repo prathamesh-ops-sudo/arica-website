@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Send, CheckCircle } from "lucide-react";
+import { Send, CheckCircle, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,6 +15,8 @@ import {
 
 export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -23,9 +25,32 @@ export function ContactForm() {
     message: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to submit form");
+      }
+
+      setSubmitted(true);
+    } catch (err: any) {
+      setError(err.message || "Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -65,6 +90,17 @@ export function ContactForm() {
       onSubmit={handleSubmit}
       className="glass rounded-2xl p-8 space-y-6"
     >
+      {error && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-start gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500"
+        >
+          <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
+          <p className="text-sm">{error}</p>
+        </motion.div>
+      )}
+
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <Label htmlFor="name">Full Name</Label>
@@ -75,6 +111,7 @@ export function ContactForm() {
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             required
+            disabled={submitting}
             className="bg-background/50 border-border focus:border-primary"
           />
         </div>
@@ -88,6 +125,7 @@ export function ContactForm() {
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             required
+            disabled={submitting}
             className="bg-background/50 border-border focus:border-primary"
           />
         </div>
@@ -102,6 +140,7 @@ export function ContactForm() {
             placeholder="Your Company"
             value={formData.company}
             onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+            disabled={submitting}
             className="bg-background/50 border-border focus:border-primary"
           />
         </div>
@@ -110,6 +149,7 @@ export function ContactForm() {
           <Select
             value={formData.service}
             onValueChange={(value) => setFormData({ ...formData, service: value })}
+            disabled={submitting}
           >
             <SelectTrigger
               data-testid="select-service"
@@ -137,6 +177,7 @@ export function ContactForm() {
           value={formData.message}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
           required
+          disabled={submitting}
           rows={5}
           className="bg-background/50 border-border focus:border-primary resize-none"
         />
@@ -146,9 +187,10 @@ export function ContactForm() {
         type="submit"
         data-testid="button-submit-contact"
         size="lg"
+        disabled={submitting}
         className="w-full bg-primary text-primary-foreground hover:bg-primary/90 glow-cyan font-semibold"
       >
-        Send Message
+        {submitting ? "Sending..." : "Send Message"}
         <Send className="ml-2 w-5 h-5" />
       </Button>
     </motion.form>
