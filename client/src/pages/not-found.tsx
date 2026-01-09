@@ -1,21 +1,50 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle } from "lucide-react";
+import { motion } from "framer-motion";
+import { Link } from "wouter";
+import { Shield, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Loading } from "@/components/ui/circle-unique-load";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md mx-4">
-        <CardContent className="pt-6">
-          <div className="flex mb-4 gap-2">
-            <AlertCircle className="h-8 w-8 text-red-500" />
-            <h1 className="text-2xl font-bold text-gray-900">404 Page Not Found</h1>
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.1) 1px, transparent 0)`,
+          backgroundSize: '40px 40px'
+        }} />
+      </div>
+
+      <div className="flex-1 flex items-center justify-center px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-md"
+        >
+          <div className="mb-8">
+            <Loading screenHFull={false} />
           </div>
 
-          <p className="mt-4 text-sm text-gray-600">
-            Did you forget to add the page to the router?
+          <div className="flex items-center justify-center gap-2 mb-6">
+            <Shield className="w-8 h-8 text-primary" />
+            <span className="font-display font-bold text-xl">ARICA TECH</span>
+          </div>
+
+          <h1 className="font-display text-6xl font-bold text-primary mb-4">404</h1>
+          <h2 className="font-display text-2xl font-bold mb-4">Access Denied</h2>
+          <p className="text-muted-foreground mb-8">
+            The resource you're looking for has been secured or doesn't exist. 
+            Our security protocols have logged this access attempt.
           </p>
-        </CardContent>
-      </Card>
+
+          <Link href="/">
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 group">
+              <ArrowLeft className="mr-2 w-4 h-4 transition-transform group-hover:-translate-x-1" />
+              Return to Base
+            </Button>
+          </Link>
+        </motion.div>
+      </div>
     </div>
   );
 }
