@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { Users, Activity } from "lucide-react";
 import { AnimatedHero } from "@/components/ui/animated-hero";
-import terrainImage from "@assets/generated_images/3d_wireframe_terrain_visualization.png";
+import { SplineScene } from "@/components/ui/splite";
+import { Spotlight } from "@/components/ui/spotlight";
 
 export function Hero() {
   return (
@@ -55,20 +56,18 @@ export function Hero() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-            className="relative hidden lg:block"
+            className="relative hidden lg:block h-[500px]"
           >
-            <div className="relative">
-              <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-accent/20 rounded-3xl blur-3xl opacity-30" />
-              <div className="relative rounded-2xl overflow-hidden border border-white/10">
-                <img
-                  src={terrainImage}
-                  alt="3D terrain visualization"
-                  className="w-full h-auto"
-                />
-                <div className="absolute bottom-4 right-4 flex items-center gap-2 px-3 py-2 rounded-lg bg-black/60 backdrop-blur-sm border border-white/10">
-                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                  <span className="text-xs font-mono text-green-400">REAL-TIME THREATS</span>
-                </div>
+            <Spotlight size={400} className="from-primary/30 via-primary/20 to-transparent" />
+            <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-accent/20 rounded-3xl blur-3xl opacity-30" />
+            <div className="relative h-full rounded-2xl overflow-hidden border border-white/10 bg-black/50">
+              <SplineScene 
+                scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+                className="w-full h-full"
+              />
+              <div className="absolute bottom-4 right-4 flex items-center gap-2 px-3 py-2 rounded-lg bg-black/60 backdrop-blur-sm border border-white/10">
+                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <span className="text-xs font-mono text-green-400">REAL-TIME THREATS</span>
               </div>
             </div>
           </motion.div>
