@@ -5,10 +5,10 @@ import { Shield, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
-  { href: "/contact", label: "Contact" },
+  { href: "/forensics", label: "Forensics" },
+  { href: "/compliance", label: "Compliance" },
+  { href: "/case-studies", label: "Case Studies" },
 ];
 
 export function Navbar() {
@@ -20,19 +20,23 @@ export function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 glass-strong"
+      className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-white/5"
     >
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <Link href="/" data-testid="link-home-logo">
-            <div className="flex items-center gap-3 cursor-pointer group">
+            <div className="flex items-center gap-2 cursor-pointer group">
               <div className="relative">
-                <Shield className="w-8 h-8 text-primary transition-all duration-300 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Shield className="w-7 h-7 text-primary transition-all duration-300" />
               </div>
-              <span className="font-display font-bold text-xl tracking-tight">
-                Arica<span className="text-primary">Tech</span>
-              </span>
+              <div className="flex flex-col">
+                <span className="font-display font-bold text-lg tracking-tight leading-none">
+                  ARICA TECH
+                </span>
+                <span className="text-[10px] text-muted-foreground tracking-[0.2em] uppercase">
+                  Security Division
+                </span>
+              </div>
             </div>
           </Link>
 
@@ -40,32 +44,31 @@ export function Navbar() {
             {navLinks.map((link) => (
               <Link key={link.href} href={link.href}>
                 <span
-                  data-testid={`link-nav-${link.label.toLowerCase()}`}
-                  className={`relative font-medium text-sm tracking-wide cursor-pointer transition-colors duration-300 ${
+                  data-testid={`link-nav-${link.label.toLowerCase().replace(' ', '-')}`}
+                  className={`relative text-sm tracking-wide cursor-pointer transition-colors duration-300 ${
                     location === link.href
-                      ? "text-primary"
+                      ? "text-foreground"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {link.label}
-                  {location === link.href && (
-                    <motion.div
-                      layoutId="navbar-indicator"
-                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full"
-                    />
-                  )}
                 </span>
               </Link>
             ))}
           </div>
 
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-4">
+            <Link href="/portal">
+              <span className="text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer">
+                Client Portal
+              </span>
+            </Link>
             <Link href="/contact">
               <Button
-                data-testid="button-get-started"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 glow-cyan font-medium"
+                data-testid="button-contact-analyst"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 font-medium text-sm"
               >
-                Get Protected
+                Contact Analyst
               </Button>
             </Link>
           </div>
@@ -90,16 +93,16 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden glass-strong border-t border-border"
+            className="md:hidden bg-background/95 backdrop-blur-xl border-t border-white/5"
           >
             <div className="px-6 py-4 space-y-4">
               {navLinks.map((link) => (
                 <Link key={link.href} href={link.href}>
                   <div
                     onClick={() => setMobileOpen(false)}
-                    className={`block py-2 font-medium cursor-pointer ${
+                    className={`block py-2 text-sm cursor-pointer ${
                       location === link.href
-                        ? "text-primary"
+                        ? "text-foreground"
                         : "text-muted-foreground"
                     }`}
                   >
@@ -112,7 +115,7 @@ export function Navbar() {
                   className="w-full bg-primary text-primary-foreground mt-4"
                   onClick={() => setMobileOpen(false)}
                 >
-                  Get Protected
+                  Contact Analyst
                 </Button>
               </Link>
             </div>

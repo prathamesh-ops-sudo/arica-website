@@ -17,7 +17,7 @@ const services = [
   {
     id: "prevention",
     icon: Shield,
-    title: "Prevention Services",
+    title: "Threat Prevention",
     description:
       "Proactive security measures to stop threats before they impact your business. Our prevention services create multiple layers of defense.",
     features: [
@@ -30,7 +30,6 @@ const services = [
       "Zero Trust Architecture Implementation",
       "Security Policy Development",
     ],
-    color: "primary",
   },
   {
     id: "forensics",
@@ -48,7 +47,6 @@ const services = [
       "Attribution Analysis",
       "Detailed Technical Reporting",
     ],
-    color: "accent",
   },
   {
     id: "legal",
@@ -66,12 +64,11 @@ const services = [
       "Litigation Support & Documentation",
       "Privacy Impact Assessments",
     ],
-    color: "primary",
   },
   {
     id: "recovery",
     icon: RefreshCcw,
-    title: "Post-Attack Recovery",
+    title: "Incident Recovery",
     description:
       "Rapid response and recovery services to minimize damage and restore operations after a security breach. We get you back online safely.",
     features: [
@@ -84,31 +81,6 @@ const services = [
       "Remediation Implementation",
       "Post-Incident Security Hardening",
     ],
-    color: "accent",
-  },
-];
-
-const caseStudies = [
-  {
-    title: "Financial Institution Breach Prevention",
-    industry: "Banking",
-    result: "Prevented $10M+ potential loss",
-    description:
-      "Identified and neutralized an advanced persistent threat targeting customer financial data.",
-  },
-  {
-    title: "Healthcare Ransomware Recovery",
-    industry: "Healthcare",
-    result: "100% data recovery in 48 hours",
-    description:
-      "Rapid response to ransomware attack, achieving full system restoration without paying ransom.",
-  },
-  {
-    title: "Government Compliance Audit",
-    industry: "Government",
-    result: "Full regulatory compliance achieved",
-    description:
-      "Guided agency through complex compliance requirements, passing all security audits.",
   },
 ];
 
@@ -118,8 +90,12 @@ export default function ServicesPage() {
       <Navbar />
 
       <section className="pt-32 pb-20 relative overflow-hidden">
-        <div className="absolute inset-0 cyber-grid opacity-10" />
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.1) 1px, transparent 0)`,
+            backgroundSize: '40px 40px'
+          }} />
+        </div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <motion.div
@@ -128,11 +104,14 @@ export default function ServicesPage() {
             transition={{ duration: 0.6 }}
             className="max-w-3xl"
           >
-            <span className="inline-block text-sm font-semibold text-primary tracking-wider uppercase mb-4">
-              Our Services
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 mb-6">
+              <span className="w-1.5 h-1.5 bg-primary rounded-full" />
+              <span className="text-xs text-primary font-medium tracking-wider uppercase">
+                Our Services
+              </span>
             </span>
             <h1 className="font-display text-5xl md:text-6xl font-bold mb-6">
-              End-to-End Security{" "}
+              Enterprise Security{" "}
               <span className="text-gradient">Solutions</span>
             </h1>
             <p className="text-xl text-muted-foreground leading-relaxed">
@@ -158,14 +137,8 @@ export default function ServicesPage() {
               className="grid lg:grid-cols-2 gap-16 items-start"
             >
               <div className={index % 2 === 1 ? "lg:order-2" : ""}>
-                <div
-                  className={`inline-flex p-4 rounded-xl mb-6 ${
-                    service.color === "primary"
-                      ? "bg-primary/10 text-primary"
-                      : "bg-accent/10 text-accent"
-                  }`}
-                >
-                  <service.icon className="w-10 h-10" />
+                <div className="inline-flex p-3 rounded-xl bg-primary/10 text-primary mb-6">
+                  <service.icon className="w-8 h-8" />
                 </div>
                 <h2 className="font-display text-4xl font-bold mb-6">
                   {service.title}
@@ -176,7 +149,7 @@ export default function ServicesPage() {
                 <Link href="/contact">
                   <Button
                     data-testid={`button-service-${service.id}`}
-                    className="bg-primary text-primary-foreground hover:bg-primary/90 glow-cyan group"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 group"
                   >
                     Get Started
                     <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -185,7 +158,7 @@ export default function ServicesPage() {
               </div>
 
               <div
-                className={`glass rounded-2xl p-8 ${
+                className={`rounded-2xl p-8 border border-white/10 bg-card/50 ${
                   index % 2 === 1 ? "lg:order-1" : ""
                 }`}
               >
@@ -195,13 +168,7 @@ export default function ServicesPage() {
                 <ul className="space-y-4">
                   {service.features.map((feature) => (
                     <li key={feature} className="flex items-start gap-3">
-                      <CheckCircle
-                        className={`w-5 h-5 mt-0.5 flex-shrink-0 ${
-                          service.color === "primary"
-                            ? "text-primary"
-                            : "text-accent"
-                        }`}
-                      />
+                      <CheckCircle className="w-5 h-5 mt-0.5 flex-shrink-0 text-primary" />
                       <span className="text-muted-foreground">{feature}</span>
                     </li>
                   ))}
@@ -211,56 +178,6 @@ export default function ServicesPage() {
           </div>
         </section>
       ))}
-
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <span className="inline-block text-sm font-semibold text-primary tracking-wider uppercase mb-4">
-              Case Studies
-            </span>
-            <h2 className="font-display text-4xl font-bold mb-6">
-              Real-World <span className="text-gradient">Results</span>
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              See how we've helped organizations across industries protect their
-              digital assets.
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {caseStudies.map((study, index) => (
-              <motion.div
-                key={study.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.15 }}
-                data-testid={`card-case-study-${index}`}
-                className="glass rounded-2xl p-8 hover:bg-card/80 transition-all duration-500"
-              >
-                <span className="inline-block text-xs font-semibold text-primary tracking-wider uppercase mb-4 px-3 py-1 rounded-full bg-primary/10">
-                  {study.industry}
-                </span>
-                <h3 className="font-display text-xl font-bold mb-2">
-                  {study.title}
-                </h3>
-                <p className="text-primary font-semibold mb-4">{study.result}</p>
-                <p className="text-muted-foreground text-sm">
-                  {study.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <CTA />
       <Footer />

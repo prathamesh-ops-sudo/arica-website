@@ -8,6 +8,7 @@ import Home from "@/pages/Home";
 import About from "@/pages/About";
 import ServicesPage from "@/pages/ServicesPage";
 import Contact from "@/pages/Contact";
+import CaseStudies from "@/pages/CaseStudies";
 
 function Router() {
   return (
@@ -15,7 +16,11 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/about" component={About} />
       <Route path="/services" component={ServicesPage} />
+      <Route path="/forensics" component={ServicesPage} />
+      <Route path="/compliance" component={ServicesPage} />
       <Route path="/contact" component={Contact} />
+      <Route path="/case-studies" component={CaseStudies} />
+      <Route path="/portal" component={Contact} />
       <Route component={NotFound} />
     </Switch>
   );

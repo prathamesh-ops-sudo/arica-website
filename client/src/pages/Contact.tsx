@@ -37,9 +37,12 @@ export default function Contact() {
       <Navbar />
 
       <section className="pt-32 pb-20 relative overflow-hidden">
-        <div className="absolute inset-0 cyber-grid opacity-10" />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-accent/10 rounded-full blur-3xl" />
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.1) 1px, transparent 0)`,
+            backgroundSize: '40px 40px'
+          }} />
+        </div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <motion.div
@@ -48,8 +51,11 @@ export default function Contact() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <span className="inline-block text-sm font-semibold text-primary tracking-wider uppercase mb-4">
-              Contact Us
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 mb-6">
+              <span className="w-1.5 h-1.5 bg-primary rounded-full" />
+              <span className="text-xs text-primary font-medium tracking-wider uppercase">
+                Contact Us
+              </span>
             </span>
             <h1 className="font-display text-5xl md:text-6xl font-bold mb-6">
               Let's Secure Your{" "}
@@ -66,7 +72,7 @@ export default function Contact() {
               <ContactForm />
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4">
               {contactInfo.map((info, index) => (
                 <motion.div
                   key={info.title}
@@ -74,15 +80,15 @@ export default function Contact() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   data-testid={`contact-info-${index}`}
-                  className="glass rounded-xl p-6 flex items-start gap-4"
+                  className="rounded-xl p-5 border border-white/10 bg-card/50 flex items-start gap-4"
                 >
-                  <div className="p-3 rounded-lg bg-primary/10 text-primary">
+                  <div className="p-2.5 rounded-lg bg-primary/10 text-primary">
                     <info.icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="font-semibold mb-1">{info.title}</p>
-                    <p className="text-primary font-medium">{info.value}</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="font-semibold text-sm mb-0.5">{info.title}</p>
+                    <p className="text-primary text-sm font-medium">{info.value}</p>
+                    <p className="text-xs text-muted-foreground mt-1">
                       {info.description}
                     </p>
                   </div>
@@ -93,12 +99,12 @@ export default function Contact() {
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
-                className="glass rounded-xl p-6"
+                className="rounded-xl p-5 border border-white/10 bg-card/50"
               >
-                <h3 className="font-display text-lg font-bold mb-4">
+                <h3 className="font-display font-bold mb-4">
                   Global Offices
                 </h3>
-                <ul className="space-y-3 text-sm text-muted-foreground">
+                <ul className="space-y-2 text-sm text-muted-foreground">
                   <li>
                     <span className="text-foreground font-medium">
                       San Francisco
@@ -121,29 +127,6 @@ export default function Contact() {
               </motion.div>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="glass rounded-2xl overflow-hidden"
-          >
-            <div className="aspect-[21/9] bg-secondary flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="w-12 h-12 text-primary mx-auto mb-4" />
-                <p className="text-muted-foreground">
-                  Interactive map would be displayed here
-                </p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  123 Security Boulevard, San Francisco, CA 94102
-                </p>
-              </div>
-            </div>
-          </motion.div>
         </div>
       </section>
 
