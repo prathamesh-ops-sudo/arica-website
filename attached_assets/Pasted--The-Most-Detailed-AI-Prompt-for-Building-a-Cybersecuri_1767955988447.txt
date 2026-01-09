@@ -1,0 +1,118 @@
+# The Most Detailed AI Prompt for Building a Cybersecurity Company Website
+
+## 1. Role & Expertise Definition
+
+You are an expert web developer and designer with over 100 years of combined experience in creating high-quality, user-centric websites for cybersecurity firms. Your credentials include proficiency in Next.js, Angular, Node.js, and cloud infrastructure on AWS. You have a deep understanding of user experience (UX) design, animation, and visual branding, ensuring that your creations are not only functional but also visually stunning and highly engaging.
+
+## 2. Context & Background
+
+The website is for **Arica Tech Security**, a cybersecurity company specializing in prevention, forensics, legal, and post-cyberattack solutions. The target audience includes businesses and SaaS companies of all sizes, as well as government-based industries such as the income tax department. The website will serve to attract customers, generate leads, and provide detailed information about the company and its services.
+
+## 3. Primary Objectives
+
+- **Attract Customers**: Design a visually appealing and informative website to attract potential clients.
+- **Generate Leads**: Implement features that facilitate easy contact and inquiry submission.
+- **Provide Information**: Clearly communicate the company's services, expertise, and unique selling points.
+- **Explain Services**: Offer detailed descriptions of the cybersecurity services provided.
+
+## 4. Detailed Requirements
+
+### A. Website Structure
+
+1. **Homepage**
+   - Hero Section: Engaging headline, subheadline, and a call-to-action (CTA) button.
+   - Overview: Brief introduction to Arica Tech Security.
+   - Services: Highlighted sections for each service offered.
+   - Testimonials: Quotes from satisfied clients.
+   - Contact Information: Easy-to-find contact details.
+
+2. **About Us**
+   - Company History: Detailed background of Arica Tech Security.
+   - Team: Profiles of key team members with photos and bios.
+   - Mission & Vision: Statements outlining the company’s goals and philosophy.
+
+3. **Services**
+   - Detailed descriptions of each service.
+   - Benefits and unique aspects of each service.
+   - Case Studies: Real-world examples of successful engagements.
+
+4. **Contact**
+   - Contact Form: For inquiries.
+   - Map: Location of the company.
+   - Social Media Links: Integration with platforms like LinkedIn, Twitter, etc.
+
+### B. Design Elements
+
+- **Color Scheme**: Premium, professional color palette that aligns with the cybersecurity theme.
+- **Animations & Effects**: Smooth transitions and engaging animations using Spline.
+- **Infographics**: Visual representations of data and processes.
+- **UI Design**: Clean, modern, and intuitive user interface.
+
+### C. Technical Requirements
+
+- **Frameworks**: Next.js, Angular
+- **Backend**: Node.js
+- **Hosting**: AWS (EC2, RDS, Bedrock)
+- **Authentication**: AWS Cognito (if needed)
+- **Analytics**: Integration of analytics tools to track page views and user engagement.
+
+## 5. Constraints & Guidelines
+
+- **Timeline**: The website must be completed within two weeks.
+- **Budget**: Not specified, but cost-effective solutions are preferred.
+- **Compliance**: Ensure all content complies with cybersecurity best practices and data protection regulations.
+- **Performance**: Optimize for fast load times and responsiveness.
+
+## 6. Output Format Specifications
+
+- **HTML/CSS**: Clean, semantic, and well-commented code.
+- **JavaScript**: Modular and efficient scripts.
+- **Images**: High-resolution, optimized for web.
+- **Animations**: Integrated using Spline, ensuring smooth performance.
+- **Documentation**: Comprehensive guide on how to maintain and update the website.
+
+## 7. Quality Assurance Criteria
+
+- **Usability Testing**: Conduct thorough testing to ensure ease of use.
+- **Performance Testing**: Ensure the website loads quickly and performs well under various conditions.
+- **Security Testing**: Verify that all security measures are in place and functioning correctly.
+- **Cross-Browser Compatibility**: Ensure the website works seamlessly across all major browsers.
+- **Accessibility**: Adhere to WCAG guidelines to make the website accessible to all users.
+
+## 8. Examples (if applicable)
+
+### Example 1: Homepage Hero Section
+
+```html
+<section class="hero">
+  <div class="container">
+    <h1>Protecting Your Digital Future</h1>
+    <p>Comprehensive cybersecurity solutions for businesses of all sizes.</p>
+    <a href="#contact" class="cta-button">Get Started</a>
+  </div>
+</section>
+```
+
+### Example 2: Service Description
+
+```html
+<section class="service" id="forensics">
+  <h2>Cybersecurity Forensics</h2>
+  <p>Our forensics team specializes in investigating cyber incidents, providing detailed reports, and assisting in legal proceedings.</p>
+</section>
+```
+
+## 9. Edge Cases & Exceptions
+
+- **Downtime**: Implement a robust error-handling mechanism to display a maintenance page during unexpected downtime.
+- **Form Submission Failures**: Provide clear error messages and options to retry submission.
+- **Accessibility Issues**: Ensure alternative text for images and keyboard navigation options are available.
+
+## 10. Success Metrics
+
+- **Page Views**: Track the number of page views to measure initial interest.
+- **User Engagement**: Monitor time spent on the site, bounce rate, and pages per session.
+- **Lead Generation**: Measure the number of inquiries and contact form submissions.
+- **Conversion Rate**: Track the percentage of visitors who take desired actions (e.g., signing up for a newsletter or contacting the company).
+
+By following this ultra-detailed prompt, you will create a premium, high-quality website for Arica Tech Security that meets all specified requirements and exceeds user expectations.
