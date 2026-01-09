@@ -28,16 +28,16 @@ function AnimatedHero({ centered = false }: AnimatedHeroProps) {
 
   return (
     <div className="w-full">
-      <div className={`flex gap-6 items-center flex-col ${centered ? 'text-center' : ''}`}>
+      <div className={`flex gap-6 flex-col ${centered ? 'items-center text-center' : 'items-start text-left'}`}>
         <div>
           <Button variant="secondary" size="sm" className="gap-4 backdrop-blur-sm" data-testid="button-launch-article">
             Enterprise Grade Security <MoveRight className="w-4 h-4" />
           </Button>
         </div>
         <div className="flex gap-4 flex-col">
-          <h1 className="text-5xl md:text-7xl max-w-2xl tracking-tighter text-center font-regular">
+          <h1 className={`text-5xl md:text-7xl max-w-2xl tracking-tighter font-regular ${centered ? 'text-center' : 'text-left'}`}>
             <span className="text-foreground">Your assets are</span>
-            <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1">
+            <span className={`relative flex w-full overflow-hidden md:pb-4 md:pt-1 ${centered ? 'justify-center text-center' : 'justify-start text-left'}`}>
               &nbsp;
               {titles.map((title, index) => (
                 <motion.span
@@ -63,7 +63,7 @@ function AnimatedHero({ centered = false }: AnimatedHeroProps) {
             </span>
           </h1>
 
-          <p className="text-lg md:text-xl leading-relaxed tracking-tight text-muted-foreground max-w-2xl text-center">
+          <p className={`text-lg md:text-xl leading-relaxed tracking-tight text-muted-foreground max-w-2xl ${centered ? 'text-center' : 'text-left'}`}>
             Securing government and enterprise assets with high-trust
             forensics, real-time threat detection, and rigorous legal
             compliance solutions. Your digital future starts here.
