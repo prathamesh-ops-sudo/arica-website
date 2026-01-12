@@ -86,3 +86,25 @@ Preferred communication style: Simple, everyday language.
 - **Vite**: Frontend build tool with React plugin
 - **esbuild**: Server bundling for production
 - **tsx**: TypeScript execution for development
+
+## Core Services Focus
+The website is designed around three core cybersecurity services:
+1. **VAPT** - Vulnerability Assessment & Penetration Testing (network, web app, API, mobile)
+2. **ISO Audit** - ISO 27001 compliance, gap analysis, certification support
+3. **Custom Software Development** - Secure software architecture, DevSecOps, code review
+
+## Special Effects Components
+Strategic animation effects used throughout the site (not overused to avoid "cheap" look):
+- **Typewriter** (`@/components/ui/typewriter.tsx`) - Cycling text effect on Services page header
+- **MorphButton** (`@/components/ui/morph-button.tsx`) - Animated submit button with loading state on Contact form
+- **SplineScene** - 3D robot on homepage hero (requires WebGL)
+- **LinkPreview** - Hover previews for external links in ForensicsSection
+- **EtherealShadow** - Animated background gradients on CTA sections
+- **AnimeNavbar** - Floating pill-style navigation with smooth active state transitions
+
+## Page Structure
+- **Home** (`/`): Hero with 3D robot, Services grid, Forensics section, Compliance section, CTA
+- **Services** (`/services`): Typewriter header, 3 core services with detailed features
+- **Case Studies** (`/case-studies`): Filterable case studies (VAPT, ISO Audit, Software, Enterprise)
+- **About** (`/about`): Company story, stats (200+ assessments, 50+ clients), values, team
+- **Contact** (`/contact`): Contact form with MorphButton, contact info cards
