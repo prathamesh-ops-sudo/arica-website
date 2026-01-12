@@ -5,15 +5,15 @@ import { Button } from "@/components/ui/button";
 import shieldImage from "@assets/generated_images/3d_shield_compliance_icon.png";
 
 const complianceItems = [
-  "Federal Cybersecurity Mandates",
-  "GDPR & International Data Protection",
-  "Risk Management Framework (RMF)",
+  "Risk Assessment & Gap Analysis",
+  "ISMS Implementation & Documentation",
+  "Internal Audit & Management Review",
 ];
 
 const certifications = [
-  { name: "ISO 27001", description: "Information Security" },
-  { name: "SOC 2 Type II", description: "Trust Services" },
-  { name: "NIST 800-53", description: "Security Controls" },
+  { id: "auditor", name: "ISO 27001", description: "Lead Auditor" },
+  { id: "implementer", name: "ISO 27001", description: "Lead Implementer" },
+  { id: "certified", name: "ISO 27001", description: "Certification Ready" },
 ];
 
 export function ComplianceSection() {
@@ -35,31 +35,30 @@ export function ComplianceSection() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-              Regulatory &
+              ISO 27001
               <br />
-              <span className="text-gradient">Legal Compliance</span>
+              <span className="text-gradient">Audit & Certification</span>
             </h2>
 
             <p className="text-muted-foreground mb-8 leading-relaxed max-w-lg">
-              Navigate the complex landscape of GDPR, HIPAA, and federal
-              cybersecurity mandates. We provide automated auditing and risk
-              mitigation strategies to keep your organization aligned with global
-              standards.
+              Achieve ISO 27001 certification with our expert audit services. We guide
+              your organization through the entire certification journey, from initial
+              gap analysis to successful certification and ongoing compliance.
             </p>
 
             <div className="grid grid-cols-2 gap-4 mb-8">
               <div className="p-5 rounded-xl border border-white/10 bg-card/50">
                 <ClipboardCheck className="w-6 h-6 text-primary mb-3" />
-                <h3 className="font-semibold mb-1">Audit Readiness</h3>
+                <h3 className="font-semibold mb-1">ISMS Development</h3>
                 <p className="text-xs text-muted-foreground">
-                  Continuous monitoring ensures you are always ready for unexpected inspections.
+                  Complete Information Security Management System design and implementation.
                 </p>
               </div>
               <div className="p-5 rounded-xl border border-white/10 bg-card/50">
                 <Bot className="w-6 h-6 text-primary mb-3" />
-                <h3 className="font-semibold mb-1">Automated Auditing</h3>
+                <h3 className="font-semibold mb-1">Certification Audit</h3>
                 <p className="text-xs text-muted-foreground">
-                  AI-powered systems provide real-time compliance tracking and reporting.
+                  Expert guidance through Stage 1 and Stage 2 certification audits.
                 </p>
               </div>
             </div>
@@ -78,7 +77,7 @@ export function ComplianceSection() {
                 data-testid="button-get-compliant"
                 className="bg-primary text-primary-foreground hover:bg-primary/90 group"
               >
-                Get Compliant Now
+                Start ISO 27001 Journey
                 <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
@@ -102,7 +101,7 @@ export function ComplianceSection() {
               <div className="flex justify-center gap-4 mt-8">
                 {certifications.map((cert) => (
                   <div
-                    key={cert.name}
+                    key={cert.id}
                     className="px-4 py-3 rounded-lg border border-white/10 bg-card/80 backdrop-blur-sm text-center"
                   >
                     <p className="font-mono text-xs text-primary">{cert.name}</p>

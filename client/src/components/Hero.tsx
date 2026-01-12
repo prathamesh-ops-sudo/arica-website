@@ -48,8 +48,8 @@ export function Hero() {
                   <Users className="w-5 h-5 text-green-500" />
                 </div>
                 <div className="text-left">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider">Protected</p>
-                  <p className="font-display text-2xl font-bold">500+<span className="text-sm text-muted-foreground ml-1">clients</span></p>
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider">Enterprise</p>
+                  <p className="font-display text-2xl font-bold">50+<span className="text-sm text-muted-foreground ml-1">clients</span></p>
                 </div>
               </div>
             </motion.div>

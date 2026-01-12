@@ -8,26 +8,26 @@ import { Footer } from "@/components/Footer";
 const values = [
   {
     icon: Shield,
-    title: "Integrity",
-    description: "We operate with the highest ethical standards, ensuring trust in every interaction.",
+    title: "Security First",
+    description: "We approach every engagement with a defense-in-depth mindset, ensuring comprehensive protection.",
   },
   {
     icon: Target,
-    title: "Excellence",
-    description: "We deliver world-class security solutions that exceed client expectations.",
+    title: "Precision",
+    description: "Our assessments are thorough and methodical, leaving no vulnerability uncovered.",
   },
   {
     icon: Eye,
-    title: "Vigilance",
-    description: "24/7 monitoring and proactive threat detection to stay ahead of adversaries.",
+    title: "Transparency",
+    description: "Clear reporting and honest communication throughout every security assessment and audit.",
   },
 ];
 
 const stats = [
-  { icon: Users, value: "500+", label: "Clients Protected" },
-  { icon: Globe, value: "30+", label: "Countries Served" },
-  { icon: Award, value: "15+", label: "Years Experience" },
-  { icon: Shield, value: "99.9%", label: "Threat Detection" },
+  { icon: Users, value: "200+", label: "Security Assessments" },
+  { icon: Globe, value: "50+", label: "Enterprise Clients" },
+  { icon: Award, value: "10+", label: "Years Experience" },
+  { icon: Shield, value: "100%", label: "Audit Success Rate" },
 ];
 
 export default function About() {
@@ -108,19 +108,19 @@ export default function About() {
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  Arica Tech Security was founded by Dr. Arica Kumar, a former
-                  NSA analyst who saw the growing gap between evolving cyber
-                  threats and the security capabilities of most organizations.
+                  Arica Tech Security was founded by the founding team with deep
+                  backgrounds in offensive security and compliance, who recognized
+                  the critical need for specialized security consulting services.
                 </p>
                 <p>
-                  Starting with just a small team of security experts, we've
-                  grown to serve over 500 clients worldwide, from startups to
-                  Fortune 500 companies and government agencies.
+                  We specialize in Vulnerability Assessment and Penetration Testing
+                  (VAPT), ISO compliance audits, and secure custom software development.
+                  Our expertise helps organizations identify risks before attackers do.
                 </p>
                 <p>
-                  Today, we're at the forefront of cybersecurity innovation,
-                  combining cutting-edge technology with deep expertise to
-                  deliver comprehensive protection for the digital age.
+                  Today, we partner with enterprises across industries to strengthen
+                  their security posture through rigorous testing, comprehensive audits,
+                  and building secure software from the ground up.
                 </p>
               </div>
             </motion.div>
@@ -137,8 +137,8 @@ export default function About() {
                   Our Mission
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  To empower organizations with robust cybersecurity solutions
-                  that protect their assets, reputation, and future.
+                  To deliver expert security assessments, compliance guidance,
+                  and secure software solutions that protect organizations.
                 </p>
               </div>
               <div className="rounded-xl p-5 border border-white/10 bg-card/80">
@@ -151,7 +151,7 @@ export default function About() {
               <div className="rounded-xl p-5 border border-white/10 bg-card/80">
                 <h3 className="font-display font-bold mb-2">Values</h3>
                 <p className="text-xs text-muted-foreground">
-                  Integrity, excellence, and vigilance in everything we do.
+                  Security first, precision, and transparency in every engagement.
                 </p>
               </div>
             </motion.div>

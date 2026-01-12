@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Send, CheckCircle, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MorphButton } from "@/components/ui/morph-button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -183,16 +184,14 @@ export function ContactForm() {
         />
       </div>
 
-      <Button
+      <MorphButton
         type="submit"
         data-testid="button-submit-contact"
-        size="lg"
-        disabled={submitting}
-        className="w-full bg-primary text-primary-foreground hover:bg-primary/90 glow-cyan font-semibold"
-      >
-        {submitting ? "Sending..." : "Send Message"}
-        <Send className="ml-2 w-5 h-5" />
-      </Button>
+        text="Send Message"
+        icon={<Send className="w-5 h-5" />}
+        isLoading={submitting}
+        className="w-full glow-cyan font-semibold"
+      />
     </motion.form>
   );
 }

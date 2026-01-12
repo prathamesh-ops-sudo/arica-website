@@ -8,18 +8,18 @@ import fingerprintImage from "@assets/generated_images/digital_fingerprint_scan_
 const features = [
   {
     icon: Zap,
-    title: "Rapid Response",
-    description: "Immediate containment and investigation to minimize operational downtime.",
+    title: "Black Box Testing",
+    description: "Simulate real-world attacks without prior system knowledge to uncover hidden vulnerabilities.",
   },
   {
     icon: ShieldCheck,
-    title: "Evidence Integrity",
-    description: "Meticulous chain-of-custody protocols for federal compliance.",
+    title: "White Box Testing",
+    description: "Comprehensive code review and security analysis with full system access and documentation.",
   },
   {
     icon: Scale,
-    title: "Expert Testimony",
-    description: "Professional witness services for high-stakes litigation and legal proceedings.",
+    title: "Compliance Reports",
+    description: "Detailed vulnerability reports aligned with industry standards like OWASP and NIST.",
   },
 ];
 
@@ -46,7 +46,7 @@ export function ForensicsSection() {
             <div className="relative">
               <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-md bg-black/60 backdrop-blur-sm border border-white/10 z-10">
                 <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
-                <span className="text-xs font-mono text-primary tracking-wider">SCANNING SECTOR 74</span>
+                <span className="text-xs font-mono text-primary tracking-wider">VAPT IN PROGRESS</span>
               </div>
               <img
                 src={fingerprintImage}
@@ -63,38 +63,38 @@ export function ForensicsSection() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-              Digital Evidence &
+              Vulnerability Assessment &
               <br />
-              <span className="text-gradient">Threat Tracking</span>
+              <span className="text-gradient">Penetration Testing</span>
             </h2>
 
             <p className="text-muted-foreground mb-6 leading-relaxed max-w-lg text-lg">
-              Our forensics laboratory employs{" "}
+              Our security experts follow{" "}
               <LinkPreview
-                url="https://www.nist.gov/cybersecurity"
+                url="https://owasp.org/www-project-web-security-testing-guide/"
                 className="font-bold bg-clip-text text-transparent bg-gradient-to-br from-primary to-cyan-400"
               >
-                NIST-compliant methodologies
+                OWASP Testing Guidelines
               </LinkPreview>{" "}
-              to recover critical data and track sophisticated threat actors across global networks.
+              to identify vulnerabilities across your networks, applications, and infrastructure.
             </p>
 
             <p className="text-muted-foreground mb-10 leading-relaxed max-w-lg">
-              We leverage advanced tools from{" "}
+              We utilize industry-leading tools from{" "}
               <LinkPreview
-                url="https://www.crowdstrike.com"
+                url="https://www.tenable.com/products/nessus"
                 className="font-semibold text-primary hover:text-primary/80 transition-colors"
               >
-                CrowdStrike
+                Tenable Nessus
               </LinkPreview>{" "}
               and{" "}
               <LinkPreview
-                url="https://www.paloaltonetworks.com"
+                url="https://portswigger.net/burp"
                 className="font-semibold text-primary hover:text-primary/80 transition-colors"
               >
-                Palo Alto Networks
+                Burp Suite
               </LinkPreview>{" "}
-              to ensure evidence remains admissible for legal proceedings.
+              to provide comprehensive security assessments with actionable remediation guidance.
             </p>
 
             <div className="space-y-6 mb-10">
@@ -126,7 +126,7 @@ export function ForensicsSection() {
                 variant="outline"
                 className="border-white/20 hover:bg-white/5 group"
               >
-                Request a Case Study
+                Request VAPT Assessment
                 <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>

@@ -7,50 +7,64 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { EtherealShadow } from "@/components/ui/ethereal-shadow";
 
-const categories = ["All sectors", "Finance", "Healthcare", "Energy"];
+const categories = ["All sectors", "VAPT", "ISO Audit", "Software", "Enterprise"];
 
 const caseStudies = [
   {
-    category: "Finance",
-    title: "Swift-Action Banking Forensics",
-    description: "Recovering $45M in compromised assets through advanced cryptographic tracing and rapid incident response.",
-    challenge: "Multi-vector ransomware attack on core transaction ledger.",
-    solution: "Real-time isolation and private key recovery protocols.",
+    category: "VAPT",
+    title: "Banking Infrastructure Penetration Testing",
+    description: "Comprehensive VAPT assessment for a leading financial institution, identifying 47 critical vulnerabilities before exploitation.",
+    challenge: "Legacy banking systems with unknown security gaps across 200+ endpoints.",
+    solution: "Full-scope penetration testing with OWASP methodology and custom exploit development.",
   },
   {
-    category: "Logistics",
-    title: "Supply Chain Integrity Audit",
-    description: "Securing the global distribution network of a Fortune 500 retailer against hardware-level vulnerabilities.",
-    challenge: "Third-party hardware components with embedded backdoors.",
-    solution: "End-to-end hardware validation & firmware hardening.",
+    category: "ISO Audit",
+    title: "ISO 27001 Certification Success",
+    description: "Guided a multinational manufacturing company through complete ISO 27001:2022 certification in just 6 months.",
+    challenge: "No existing ISMS framework, scattered documentation, and 15 global offices.",
+    solution: "Gap analysis, policy development, risk assessment, and certification audit support.",
   },
   {
-    category: "Healthcare",
-    title: "HIPAA Compliance Automation",
-    description: "Transforming patient data security for a regional hospital network using AI-driven compliance tracking.",
-    challenge: "Fragmented EHR systems failing regulatory audits.",
-    solution: "Unified identity management and automated reporting.",
+    category: "Software",
+    title: "Secure E-Commerce Platform Development",
+    description: "Built a PCI-DSS compliant custom e-commerce solution processing $50M+ annual transactions securely.",
+    challenge: "Client needed custom payment integration with end-to-end encryption and fraud prevention.",
+    solution: "Secure SDLC implementation, code review, and continuous security testing pipeline.",
   },
   {
-    category: "Energy",
-    title: "Smart Grid Resilience",
-    description: "Protecting critical power distribution infrastructure from nation-state coordinated DDoS attacks.",
-    challenge: "SCADA systems vulnerable to remote execution.",
-    solution: "Air-gapped monitoring and protocol filtering.",
+    category: "ISO Audit",
+    title: "Healthcare HIPAA + ISO Compliance",
+    description: "Achieved dual HIPAA and ISO 27001 compliance for a regional hospital network protecting 2M patient records.",
+    challenge: "Fragmented EHR systems failing regulatory audits with multiple compliance gaps.",
+    solution: "Unified compliance framework, security controls implementation, and staff training.",
   },
   {
-    category: "Legal",
-    title: "High-Stakes E-Discovery",
-    description: "Preserving digital chain-of-custody for a international litigation case involving proprietary trade secrets.",
-    challenge: "Evidence destruction by internal malicious actors.",
-    solution: "Write-once immutable logging and expert testimony.",
+    category: "VAPT",
+    title: "SCADA System Penetration Testing",
+    description: "Critical infrastructure security assessment for energy sector, preventing potential grid disruption.",
+    challenge: "Industrial control systems with exposed attack vectors and legacy protocols.",
+    solution: "OT-specific penetration testing, network segmentation, and ICS security hardening.",
   },
   {
-    category: "Aerospace",
-    title: "Satellite Link Encryption",
-    description: "Implementing quantum-resistant encryption for secure telemetry between ground control and orbital assets.",
-    challenge: "Emerging risk of legacy unencrypted signals.",
-    solution: "Post-quantum cryptographic wrapper deployment.",
+    category: "Software",
+    title: "Secure Software Development Lifecycle",
+    description: "Implemented DevSecOps pipeline for a fintech startup, reducing vulnerabilities by 94% pre-production.",
+    challenge: "Rapid development cycles introducing security debt and unreviewed code.",
+    solution: "SAST/DAST integration, security gates, and developer security training program.",
+  },
+  {
+    category: "Enterprise",
+    title: "Enterprise Network Security Assessment",
+    description: "360-degree security audit for Fortune 500 company covering 50,000 endpoints across 12 countries.",
+    challenge: "Complex hybrid infrastructure with inconsistent security policies.",
+    solution: "Comprehensive vulnerability assessment, red team exercises, and remediation roadmap.",
+  },
+  {
+    category: "Enterprise",
+    title: "Zero Trust Architecture Implementation",
+    description: "Designed and deployed zero trust security model for government contractor handling classified data.",
+    challenge: "Traditional perimeter security inadequate for remote workforce and cloud migration.",
+    solution: "Identity-centric security, micro-segmentation, and continuous verification protocols.",
   },
 ];
 
@@ -153,22 +167,22 @@ export default function CaseStudies() {
             <div className="rounded-2xl border border-white/10 bg-card/50 p-8">
               <div className="flex items-center gap-2 mb-6">
                 <span className="text-xs font-medium text-primary uppercase tracking-wider px-2 py-1 rounded bg-primary/10">
-                  Featured Case Study
+                  Featured VAPT Success
                 </span>
               </div>
               
               <h2 className="font-display text-2xl font-bold mb-6">
-                Threat Neutralization Impact
+                Vulnerability Reduction Impact
               </h2>
 
               <div className="flex gap-8 mb-6">
                 <div>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Initial Attack Volume</p>
-                  <p className="font-display text-3xl font-bold text-primary">4.2M <span className="text-sm text-muted-foreground">/ day</span></p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Critical Vulnerabilities Found</p>
+                  <p className="font-display text-3xl font-bold text-primary">47 <span className="text-sm text-muted-foreground">identified</span></p>
                 </div>
                 <div>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Post-Deployment</p>
-                  <p className="font-display text-3xl font-bold text-green-500">&lt; 120 <span className="text-sm text-muted-foreground">/ day</span></p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Post-Remediation</p>
+                  <p className="font-display text-3xl font-bold text-green-500">0 <span className="text-sm text-muted-foreground">critical</span></p>
                 </div>
               </div>
 
@@ -177,28 +191,28 @@ export default function CaseStudies() {
 
             <div className="rounded-2xl border border-white/10 bg-card/50 p-8">
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-xs text-muted-foreground uppercase tracking-wider">Government</span>
+                <span className="text-xs text-muted-foreground uppercase tracking-wider">ISO Audit</span>
                 <span className="text-xs text-muted-foreground">•</span>
-                <span className="text-xs text-muted-foreground">Oct 2024</span>
+                <span className="text-xs text-muted-foreground">Nov 2024</span>
               </div>
 
               <h2 className="font-display text-2xl font-bold mb-4">
-                Federal Data Infrastructure Protection
+                ISO 27001:2022 Certification Achievement
               </h2>
 
               <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
-                Successfully neutralized a sustained APT campaign targeting state-level digital infrastructure. 
-                Implemented zero-trust architecture and real-time behavioral analysis.
+                Guided a multinational enterprise through complete ISO 27001:2022 certification, 
+                establishing a robust Information Security Management System across 15 global offices.
               </p>
 
               <div className="grid grid-cols-2 gap-6 mb-8">
                 <div>
                   <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Challenge</p>
-                  <p className="text-sm">Advanced Persistent Threats (APT) infiltrating legacy systems.</p>
+                  <p className="text-sm">No existing ISMS framework with scattered security documentation.</p>
                 </div>
                 <div>
                   <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Solution</p>
-                  <p className="text-sm">Arica Sentience AI & Forensic Protocol 09.</p>
+                  <p className="text-sm">Arica Tech's end-to-end ISO certification support & gap analysis.</p>
                 </div>
               </div>
 
@@ -254,11 +268,10 @@ export default function CaseStudies() {
               >
                 <div className="flex items-center gap-2 mb-4">
                   <span className={`w-1.5 h-1.5 rounded-full ${
-                    study.category === "Finance" ? "bg-blue-500" :
-                    study.category === "Healthcare" ? "bg-green-500" :
-                    study.category === "Energy" ? "bg-yellow-500" :
-                    study.category === "Logistics" ? "bg-orange-500" :
-                    study.category === "Legal" ? "bg-purple-500" :
+                    study.category === "VAPT" ? "bg-red-500" :
+                    study.category === "ISO Audit" ? "bg-green-500" :
+                    study.category === "Software" ? "bg-blue-500" :
+                    study.category === "Enterprise" ? "bg-purple-500" :
                     "bg-cyan-500"
                   }`} />
                   <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">

@@ -1,9 +1,8 @@
 import { motion } from "framer-motion";
 import {
   Shield,
-  Search,
   Scale,
-  RefreshCcw,
+  Code,
   CheckCircle,
   ArrowRight,
 } from "lucide-react";
@@ -12,74 +11,52 @@ import { Navbar } from "@/components/Navbar";
 import { CTA } from "@/components/CTA";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { Typewriter } from "@/components/ui/typewriter";
 
 const services = [
   {
-    id: "prevention",
+    id: "vapt",
     icon: Shield,
-    title: "Threat Prevention",
+    title: "VAPT",
     description:
-      "Proactive security measures to stop threats before they impact your business. Our prevention services create multiple layers of defense.",
+      "Vulnerability Assessment and Penetration Testing to identify and eliminate security weaknesses before attackers exploit them. Our comprehensive testing methodology covers all attack vectors.",
     features: [
-      "Advanced Firewall Management & Configuration",
-      "Intrusion Detection & Prevention Systems (IDS/IPS)",
-      "Vulnerability Assessment & Penetration Testing",
-      "Security Awareness Training for Employees",
-      "Email Security & Phishing Protection",
-      "Endpoint Detection & Response (EDR)",
-      "Zero Trust Architecture Implementation",
-      "Security Policy Development",
+      "Comprehensive Penetration Testing",
+      "Vulnerability Scanning",
+      "Network Security Assessment",
+      "Web Application Security Testing",
+      "API Security Testing",
+      "Social Engineering Assessments",
     ],
   },
   {
-    id: "forensics",
-    icon: Search,
-    title: "Digital Forensics",
-    description:
-      "Expert investigation of security incidents. We trace attacks to their source, identify vulnerabilities, and provide court-admissible evidence.",
-    features: [
-      "Incident Investigation & Analysis",
-      "Digital Evidence Collection & Preservation",
-      "Malware Analysis & Reverse Engineering",
-      "Data Recovery from Compromised Systems",
-      "Chain of Custody Documentation",
-      "Timeline Reconstruction of Attacks",
-      "Attribution Analysis",
-      "Detailed Technical Reporting",
-    ],
-  },
-  {
-    id: "legal",
+    id: "iso-audit",
     icon: Scale,
-    title: "Legal Support",
+    title: "ISO Audit",
     description:
-      "Comprehensive legal assistance for cybersecurity incidents. From expert testimony to compliance guidance, we support you through the legal process.",
+      "Complete ISO 27001 compliance services to help your organization achieve and maintain information security certification. We guide you through every step of the compliance journey.",
     features: [
-      "Expert Witness Testimony",
-      "Regulatory Compliance Guidance (GDPR, HIPAA, SOC2)",
-      "Data Breach Notification Assistance",
-      "Law Enforcement Liaison",
-      "Contract Review for Security Provisions",
-      "Cyber Insurance Claims Support",
-      "Litigation Support & Documentation",
-      "Privacy Impact Assessments",
+      "ISO 27001 Gap Analysis",
+      "Compliance Roadmap",
+      "Policy Development",
+      "Internal Audit Preparation",
+      "Certification Support",
+      "Continuous Compliance Monitoring",
     ],
   },
   {
-    id: "recovery",
-    icon: RefreshCcw,
-    title: "Incident Recovery",
+    id: "custom-software",
+    icon: Code,
+    title: "Custom Software Development",
     description:
-      "Rapid response and recovery services to minimize damage and restore operations after a security breach. We get you back online safely.",
+      "Security-first software development services that integrate security at every stage of the development lifecycle. We build robust, secure enterprise solutions tailored to your needs.",
     features: [
-      "24/7 Incident Response Team",
-      "Business Continuity Planning",
-      "Data Recovery & System Restoration",
-      "Ransomware Negotiation & Recovery",
-      "Infrastructure Rebuilding",
-      "Security Gap Analysis",
-      "Remediation Implementation",
-      "Post-Incident Security Hardening",
+      "Secure Software Architecture",
+      "DevSecOps Integration",
+      "Security-First Development",
+      "Code Review and Analysis",
+      "Secure API Development",
+      "Enterprise Solutions",
     ],
   },
 ];
@@ -111,12 +88,14 @@ export default function ServicesPage() {
               </span>
             </span>
             <h1 className="font-display text-5xl md:text-6xl font-bold mb-6">
-              Enterprise Security{" "}
-              <span className="text-gradient">Solutions</span>
+              <Typewriter 
+                words={["VAPT Services", "ISO 27001 Audit", "Custom Development", "Enterprise Security"]}
+                className="text-gradient"
+              />
             </h1>
             <p className="text-xl text-muted-foreground leading-relaxed">
-              From prevention to recovery, we provide comprehensive cybersecurity
-              services tailored to protect your business at every stage.
+              Comprehensive cybersecurity services including vulnerability assessment,
+              ISO compliance, and secure software development tailored to protect your business.
             </p>
           </motion.div>
         </div>

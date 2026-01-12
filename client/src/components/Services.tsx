@@ -1,40 +1,32 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
-import { Shield, Search, Scale, RefreshCcw, ArrowRight } from "lucide-react";
+import { Shield, Scale, Code, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const services = [
   {
     icon: Shield,
-    title: "Prevention",
+    title: "VAPT Services",
     description:
-      "Proactive security measures to stop threats before they impact your business. Advanced firewalls, intrusion detection, and security training.",
-    features: ["Firewall Management", "Vulnerability Assessment", "Security Training"],
+      "Comprehensive Vulnerability Assessment and Penetration Testing to identify security weaknesses before attackers do. Our certified experts simulate real-world attacks to strengthen your defenses.",
+    features: ["Network Penetration Testing", "Web Application Security", "Mobile App Assessment"],
     color: "primary",
-  },
-  {
-    icon: Search,
-    title: "Forensics",
-    description:
-      "Expert investigation of security incidents. We trace the attack, identify vulnerabilities, and provide detailed reports for legal proceedings.",
-    features: ["Incident Investigation", "Evidence Collection", "Detailed Reporting"],
-    color: "accent",
   },
   {
     icon: Scale,
-    title: "Legal Support",
+    title: "ISO Audit",
     description:
-      "Comprehensive legal assistance for cybersecurity incidents. Expert testimony, compliance guidance, and regulatory support.",
-    features: ["Expert Testimony", "Compliance Guidance", "Regulatory Support"],
-    color: "primary",
+      "Expert ISO 27001 audit and certification services to ensure your organization meets international information security standards and regulatory requirements.",
+    features: ["Gap Analysis", "Documentation Review", "Certification Support"],
+    color: "accent",
   },
   {
-    icon: RefreshCcw,
-    title: "Post-Attack Recovery",
+    icon: Code,
+    title: "Custom Software Development",
     description:
-      "Rapid response and recovery services to minimize damage and restore operations after a security breach.",
-    features: ["Incident Response", "Data Recovery", "System Restoration"],
-    color: "accent",
+      "Secure-by-design software solutions built with security at the core. From web applications to enterprise systems, we develop with best security practices.",
+    features: ["Secure Code Development", "Security Architecture", "DevSecOps Integration"],
+    color: "primary",
   },
 ];
 
@@ -76,8 +68,8 @@ export function Services() {
             <span className="text-gradient">Solutions</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            From prevention to recovery, we provide end-to-end cybersecurity
-            services tailored to your business needs.
+            From security testing to compliance audits, we provide specialized
+            cybersecurity and software development services for your business.
           </p>
         </motion.div>
 
@@ -86,7 +78,7 @@ export function Services() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="grid md:grid-cols-2 gap-8"
+          className="grid md:grid-cols-3 gap-8"
         >
           {services.map((service, index) => (
             <motion.div
