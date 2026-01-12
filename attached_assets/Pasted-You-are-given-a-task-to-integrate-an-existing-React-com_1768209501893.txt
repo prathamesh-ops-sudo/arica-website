@@ -1,0 +1,134 @@
+You are given a task to integrate an existing React component in the codebase
+
+The codebase should support:
+- shadcn project structure  
+- Tailwind CSS
+- Typescript
+
+If it doesn't, provide instructions on how to setup project via shadcn CLI, install Tailwind or Typescript.
+
+Determine the default path for components and styles. 
+If default path for components is not /components/ui, provide instructions on why it's important to create this folder
+Copy-paste this component to /components/ui folder:
+```tsx
+typewriter.tsx
+"use client"
+
+import { useEffect, useState } from "react"
+
+interface TypewriterProps {
+  words: string[]
+  speed?: number
+  delayBetweenWords?: number
+  cursor?: boolean
+  cursorChar?: string
+}
+
+export function Typewriter({
+  words,
+  speed = 100,
+  delayBetweenWords = 2000,
+  cursor = true,
+  cursorChar = "|",
+}: TypewriterProps) {
+  const [displayText, setDisplayText] = useState("")
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [wordIndex, setWordIndex] = useState(0)
+  const [charIndex, setCharIndex] = useState(0)
+  const [showCursor, setShowCursor] = useState(true)
+
+  const currentWord = words[wordIndex]
+
+  useEffect(() => {
+    const timeout = setTimeout(
+      () => {
+        // Typing logic
+        if (!isDeleting) {
+          if (charIndex < currentWord.length) {
+            setDisplayText(currentWord.substring(0, charIndex + 1))
+            setCharIndex(charIndex + 1)
+          } else {
+            // Word is complete, wait before deleting
+            setTimeout(() => {
+              setIsDeleting(true)
+            }, delayBetweenWords)
+          }
+        } else {
+          // Deleting logic
+          if (charIndex > 0) {
+            setDisplayText(currentWord.substring(0, charIndex - 1))
+            setCharIndex(charIndex - 1)
+          } else {
+            // Word is deleted, move to next word
+            setIsDeleting(false)
+            setWordIndex((prev) => (prev + 1) % words.length)
+          }
+        }
+      },
+      isDeleting ? speed / 2 : speed,
+    )
+
+    return () => clearTimeout(timeout)
+  }, [charIndex, currentWord, isDeleting, speed, delayBetweenWords, wordIndex, words])
+
+  // Cursor blinking effect
+  useEffect(() => {
+    if (!cursor) return
+
+    const cursorInterval = setInterval(() => {
+      setShowCursor((prev) => !prev)
+    }, 500)
+
+    return () => clearInterval(cursorInterval)
+  }, [cursor])
+
+  return (
+    <div className="inline-block">
+      <span>
+        {displayText}
+        {cursor && (
+          <span className="ml-1 transition-opacity duration-75" style={{ opacity: showCursor ? 1 : 0 }}>
+            {cursorChar}
+          </span>
+        )}
+      </span>
+    </div>
+  )
+}
+
+
+demo.tsx
+import { Typewriter } from "@/components/ui/typewriter";
+
+export default function DemoOne() {
+  const words = ["Welcome to Typewriter", "Create beautiful effects", "With React & Tailwind", "Type away!"]
+
+  return (
+    <main className="flex items-center justify-center min-h-screen">
+      <div className="text-center">
+        <h1 className="text-5xl font-bold mb-8">
+          <Typewriter words={words} speed={80} delayBetweenWords={2000} cursor={true} cursorChar="|" />
+        </h1> 
+      </div>
+    </main>
+  )
+}
+
+```
+
+Implementation Guidelines
+ 1. Analyze the component structure and identify all required dependencies
+ 2. Review the component's argumens and state
+ 3. Identify any required context providers or hooks and install them
+ 4. Questions to Ask
+ - What data/props will be passed to this component?
+ - Are there any specific state management requirements?
+ - Are there any required assets (images, icons, etc.)?
+ - What is the expected responsive behavior?
+ - What is the best place to use this component in the app?
+
+Steps to integrate
+ 0. Copy paste all the code above in the correct directories
+ 1. Install external dependencies
+ 2. Fill image assets with Unsplash stock images you know exist
+ 3. Use lucide-react icons for svgs or logos if component requires them
