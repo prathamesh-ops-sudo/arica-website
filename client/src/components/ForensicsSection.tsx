@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { Zap, ShieldCheck, Scale, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LinkPreview } from "@/components/ui/link-preview";
-import fingerprintImage from "@assets/generated_images/digital_fingerprint_scan_visual.png";
+import { SecurityScanAnimation } from "@/components/ui/security-scan-animation";
 
 const features = [
   {
@@ -43,17 +43,7 @@ export function ForensicsSection() {
             className="relative"
           >
             <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 to-transparent rounded-3xl blur-2xl" />
-            <div className="relative">
-              <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-md bg-black/60 backdrop-blur-sm border border-white/10 z-10">
-                <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
-                <span className="text-xs font-mono text-primary tracking-wider">VAPT IN PROGRESS</span>
-              </div>
-              <img
-                src={fingerprintImage}
-                alt="Digital fingerprint analysis"
-                className="w-full h-auto rounded-2xl border border-white/10"
-              />
-            </div>
+            <SecurityScanAnimation />
           </motion.div>
 
           <motion.div
