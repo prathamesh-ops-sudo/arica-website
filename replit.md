@@ -93,14 +93,25 @@ The website is designed around three core cybersecurity services:
 2. **ISO Audit** - ISO 27001 compliance, gap analysis, certification support
 3. **Custom Software Development** - Secure software architecture, DevSecOps, code review
 
+## Design System (Arctic Wolf-Inspired)
+Color scheme inspired by Arctic Wolf website with deep navy backgrounds and electric cyan accents:
+- **Background**: Deep navy (hsl 222 47% 5%)
+- **Primary**: Electric cyan (hsl 192 95% 50%) - #00D4FF equivalent
+- **Accent**: Purple (hsl 280 70% 55%)
+- **Aurora Background**: Animated gradient with cyan/purple hints on all pages
+- **Dot Grid Pattern**: Subtle cyan-tinted dots at 40px spacing
+- **Smooth Scrolling**: Native CSS scroll-behavior for refined navigation
+
 ## Special Effects Components
 Strategic animation effects used throughout the site (not overused to avoid "cheap" look):
 - **Typewriter** (`@/components/ui/typewriter.tsx`) - Cycling text effect on Services page header
 - **MorphButton** (`@/components/ui/morph-button.tsx`) - Animated submit button with loading state on Contact form
-- **SplineScene** - 3D robot on homepage hero (requires WebGL)
+- **SecurityScanAnimation** (`@/components/ui/security-scan-animation.tsx`) - Live vulnerability scanning visualization on Forensics section
+- **SplineScene** - 3D robot on homepage hero (requires WebGL, graceful fallback)
 - **LinkPreview** - Hover previews for external links in ForensicsSection
-- **EtherealShadow** - Animated background gradients on CTA sections
+- **EtherealShadow** - Animated background gradients on CTA sections (uses cyan color)
 - **AnimeNavbar** - Floating pill-style navigation with smooth active state transitions
+- **Aurora BG** - Subtle animated gradient background applied to all pages
 
 ## Page Structure
 - **Home** (`/`): Hero with 3D robot, Services grid, Forensics section, Compliance section, CTA

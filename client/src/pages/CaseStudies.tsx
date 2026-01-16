@@ -86,8 +86,8 @@ function ThreatChart() {
       <svg className="w-full h-full" viewBox="0 0 400 150" preserveAspectRatio="none">
         <defs>
           <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="hsl(185, 85%, 50%)" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="hsl(185, 85%, 50%)" stopOpacity="0" />
+            <stop offset="0%" stopColor="hsl(192, 95%, 50%)" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="hsl(192, 95%, 50%)" stopOpacity="0" />
           </linearGradient>
         </defs>
         <path
@@ -97,7 +97,7 @@ function ThreatChart() {
         <path
           d={`M 0 ${150 - (chartData[0].value / maxValue) * 140} ${chartData.map((d, i) => `L ${(i / (chartData.length - 1)) * 400} ${150 - (d.value / maxValue) * 140}`).join(' ')}`}
           fill="none"
-          stroke="hsl(185, 85%, 50%)"
+          stroke="hsl(192, 95%, 50%)"
           strokeWidth="2"
         />
         {chartData.map((d, i) => (
@@ -106,7 +106,7 @@ function ThreatChart() {
             cx={(i / (chartData.length - 1)) * 400}
             cy={150 - (d.value / maxValue) * 140}
             r="4"
-            fill="hsl(185, 85%, 50%)"
+            fill="hsl(192, 95%, 50%)"
           />
         ))}
       </svg>
@@ -131,13 +131,13 @@ export default function CaseStudies() {
     : caseStudies.filter(s => s.category === activeCategory);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background aurora-bg">
       <Navbar />
 
       <section className="pt-32 pb-16 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0 opacity-30">
           <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.1) 1px, transparent 0)`,
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0, 212, 255, 0.12) 1px, transparent 0)`,
             backgroundSize: '40px 40px'
           }} />
         </div>
