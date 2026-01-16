@@ -26,9 +26,9 @@ const features = [
 export function ForensicsSection() {
   return (
     <section className="py-32 relative overflow-hidden bg-card/30">
-      <div className="absolute inset-0 opacity-20">
+      <div className="absolute inset-0 opacity-30">
         <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.1) 1px, transparent 0)`,
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0, 212, 255, 0.15) 1px, transparent 0)`,
           backgroundSize: '40px 40px'
         }} />
       </div>

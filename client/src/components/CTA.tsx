@@ -8,7 +8,7 @@ export function CTA() {
     <section className="py-24 relative overflow-hidden">
       <div className="absolute inset-0">
         <EtherealShadow
-          color="rgba(59, 130, 246, 0.6)"
+          color="rgba(0, 212, 255, 0.5)"
           animation={{ scale: 80, speed: 60 }}
           noise={{ opacity: 0.5, scale: 1 }}
           sizing="fill"
