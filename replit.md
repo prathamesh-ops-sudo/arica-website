@@ -98,6 +98,8 @@ Color scheme inspired by Arctic Wolf website with deep navy backgrounds and elec
 - **Background**: Deep navy (hsl 222 47% 5%)
 - **Primary**: Electric cyan (hsl 192 95% 50%) - #00D4FF equivalent
 - **Accent**: Purple (hsl 280 70% 55%)
+- **Halo White**: Soft off-white (hsl 0 0% 96%) - used for premium text highlights, section headers
+- **Bulgarian Rose**: Deep burgundy (hsl 359 88% 15%) - used for emergency/critical indicators, danger states
 - **Aurora Background**: Animated gradient with cyan/purple hints on all pages
 - **Dot Grid Pattern**: Subtle cyan-tinted dots at 40px spacing
 - **Smooth Scrolling**: Native CSS scroll-behavior for refined navigation

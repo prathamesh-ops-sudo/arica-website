@@ -10,24 +10,28 @@ const contactInfo = [
     title: "Email",
     value: "contact@aricatech.security",
     description: "We respond within 24 hours",
+    isEmergency: false,
   },
   {
     icon: Phone,
     title: "Phone",
     value: "+1 (555) 123-4567",
     description: "Mon-Fri 9AM-6PM PST",
+    isEmergency: false,
   },
   {
     icon: MapPin,
     title: "Location",
     value: "San Francisco, CA",
     description: "Headquarters",
+    isEmergency: false,
   },
   {
     icon: Clock,
     title: "Emergency",
     value: "24/7 Hotline",
     description: "For active incidents",
+    isEmergency: true,
   },
 ];
 
@@ -80,14 +84,22 @@ export default function Contact() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   data-testid={`contact-info-${index}`}
-                  className="rounded-xl p-5 border border-white/10 bg-card/50 flex items-start gap-4"
+                  className={`rounded-xl p-5 border flex items-start gap-4 ${
+                    info.isEmergency 
+                      ? 'border-bulgarian-rose/30 bg-bulgarian-rose/10' 
+                      : 'border-white/10 bg-card/50'
+                  }`}
                 >
-                  <div className="p-2.5 rounded-lg bg-primary/10 text-primary">
+                  <div className={`p-2.5 rounded-lg ${
+                    info.isEmergency 
+                      ? 'bg-bulgarian-rose/20 text-red-400' 
+                      : 'bg-primary/10 text-primary'
+                  }`}>
                     <info.icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="font-semibold text-sm mb-0.5">{info.title}</p>
-                    <p className="text-primary text-sm font-medium">{info.value}</p>
+                    <p className="font-semibold text-sm mb-0.5 text-halo-white">{info.title}</p>
+                    <p className={`text-sm font-medium ${info.isEmergency ? 'text-red-400' : 'text-primary'}`}>{info.value}</p>
                     <p className="text-xs text-muted-foreground mt-1">
                       {info.description}
                     </p>
@@ -106,21 +118,21 @@ export default function Contact() {
                 </h3>
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   <li>
-                    <span className="text-foreground font-medium">
+                    <span className="text-halo-white font-medium">
                       San Francisco
                     </span>{" "}
                     - Headquarters
                   </li>
                   <li>
-                    <span className="text-foreground font-medium">London</span>{" "}
+                    <span className="text-halo-white font-medium">London</span>{" "}
                     - European Operations
                   </li>
                   <li>
-                    <span className="text-foreground font-medium">Singapore</span>{" "}
+                    <span className="text-halo-white font-medium">Singapore</span>{" "}
                     - Asia Pacific
                   </li>
                   <li>
-                    <span className="text-foreground font-medium">Dubai</span>{" "}
+                    <span className="text-halo-white font-medium">Dubai</span>{" "}
                     - Middle East
                   </li>
                 </ul>

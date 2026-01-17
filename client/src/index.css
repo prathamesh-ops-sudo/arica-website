@@ -53,6 +53,8 @@
   --color-cyber-cyan: hsl(var(--cyber-cyan));
   --color-cyber-purple: hsl(var(--cyber-purple));
   --color-cyber-dark: hsl(var(--cyber-dark));
+  --color-halo-white: hsl(var(--halo-white));
+  --color-bulgarian-rose: hsl(var(--bulgarian-rose));
 }
 
 :root {
@@ -100,6 +102,8 @@
   --cyber-cyan: 192 95% 50%;
   --cyber-purple: 280 70% 55%;
   --cyber-dark: 222 47% 5%;
+  --halo-white: 0 0% 96%;
+  --bulgarian-rose: 359 88% 15%;
 
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
@@ -189,6 +193,37 @@
   
   .glow-text {
     text-shadow: 0 0 20px hsl(var(--cyber-cyan) / 0.5), 0 0 40px hsl(var(--cyber-cyan) / 0.3);
+  }
+
+  .text-halo-white {
+    color: hsl(var(--halo-white));
+  }
+
+  .text-bulgarian-rose {
+    color: hsl(var(--bulgarian-rose));
+  }
+
+  .bg-halo-white {
+    background-color: hsl(var(--halo-white));
+  }
+
+  .bg-bulgarian-rose {
+    background-color: hsl(var(--bulgarian-rose));
+  }
+
+  .border-bulgarian-rose {
+    border-color: hsl(var(--bulgarian-rose));
+  }
+
+  .glow-rose {
+    box-shadow: 0 0 20px hsl(var(--bulgarian-rose) / 0.4), 0 0 40px hsl(var(--bulgarian-rose) / 0.2);
+  }
+
+  .text-gradient-rose {
+    background: linear-gradient(135deg, hsl(var(--bulgarian-rose)) 0%, hsl(350 70% 35%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
   
   .glass {

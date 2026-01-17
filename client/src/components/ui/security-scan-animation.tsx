@@ -66,8 +66,8 @@ export function SecurityScanAnimation() {
         className="absolute inset-0 opacity-30"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)
+            linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px)
           `,
           backgroundSize: "20px 20px",
         }}
@@ -76,9 +76,9 @@ export function SecurityScanAnimation() {
       <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
         <defs>
           <linearGradient id="scanGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="rgba(59, 130, 246, 0)" />
-            <stop offset="50%" stopColor="rgba(59, 130, 246, 0.5)" />
-            <stop offset="100%" stopColor="rgba(59, 130, 246, 0)" />
+            <stop offset="0%" stopColor="rgba(0, 212, 255, 0)" />
+            <stop offset="50%" stopColor="rgba(0, 212, 255, 0.5)" />
+            <stop offset="100%" stopColor="rgba(0, 212, 255, 0)" />
           </linearGradient>
           <filter id="glow">
             <feGaussianBlur stdDeviation="1" result="coloredBlur" />
@@ -103,7 +103,7 @@ export function SecurityScanAnimation() {
           y1={scanProgress}
           x2="100"
           y2={scanProgress}
-          stroke="rgba(59, 130, 246, 0.8)"
+          stroke="rgba(0, 212, 255, 0.8)"
           strokeWidth="0.3"
           filter="url(#glow)"
         />
@@ -112,7 +112,7 @@ export function SecurityScanAnimation() {
           const isVisible = point.y <= scanProgress;
           const color =
             point.type === "critical"
-              ? "#ef4444"
+              ? "#7a1214"
               : point.type === "warning"
               ? "#f59e0b"
               : "#22c55e";
@@ -192,7 +192,7 @@ export function SecurityScanAnimation() {
               y1={point.y}
               x2={conn.x}
               y2={conn.y}
-              stroke="rgba(59, 130, 246, 0.2)"
+              stroke="rgba(0, 212, 255, 0.2)"
               strokeWidth="0.2"
             />
           ));
@@ -203,8 +203,8 @@ export function SecurityScanAnimation() {
         <div className="flex items-center justify-between text-xs font-mono">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-red-500" />
-              <span className="text-red-400">{vulnerabilities.critical} Critical</span>
+              <span className="w-2 h-2 rounded-full bg-bulgarian-rose" />
+              <span className="text-bulgarian-rose">{vulnerabilities.critical} Critical</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-yellow-500" />

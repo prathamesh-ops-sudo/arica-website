@@ -133,7 +133,7 @@ export default function About() {
               className="grid grid-cols-2 gap-4"
             >
               <div className="rounded-xl p-6 border border-white/10 bg-card/80 col-span-2">
-                <h3 className="font-display text-lg font-bold mb-2">
+                <h3 className="font-display text-lg font-bold mb-2 text-halo-white">
                   Our Mission
                 </h3>
                 <p className="text-sm text-muted-foreground">
@@ -142,14 +142,14 @@ export default function About() {
                 </p>
               </div>
               <div className="rounded-xl p-5 border border-white/10 bg-card/80">
-                <h3 className="font-display font-bold mb-2">Vision</h3>
+                <h3 className="font-display font-bold mb-2 text-halo-white">Vision</h3>
                 <p className="text-xs text-muted-foreground">
                   A world where every business can operate securely in the
                   digital realm.
                 </p>
               </div>
               <div className="rounded-xl p-5 border border-white/10 bg-card/80">
-                <h3 className="font-display font-bold mb-2">Values</h3>
+                <h3 className="font-display font-bold mb-2 text-halo-white">Values</h3>
                 <p className="text-xs text-muted-foreground">
                   Security first, precision, and transparency in every engagement.
                 </p>

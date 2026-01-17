@@ -9,7 +9,7 @@ export function Footer() {
           <Link href="/">
             <div className="flex items-center gap-2 cursor-pointer">
               <Shield className="w-5 h-5 text-primary" />
-              <span className="font-display font-bold text-sm">ARICA TECH</span>
+              <span className="font-display font-bold text-sm text-halo-white">ARICA TECH</span>
             </div>
           </Link>
 

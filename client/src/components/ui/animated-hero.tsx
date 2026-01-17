@@ -36,7 +36,7 @@ function AnimatedHero({ centered = false }: AnimatedHeroProps) {
         </div>
         <div className="flex gap-4 flex-col">
           <h1 className={`text-5xl md:text-7xl max-w-2xl tracking-tighter font-regular ${centered ? 'text-center' : 'text-left'}`}>
-            <span className="text-foreground">Your assets are</span>
+            <span className="text-halo-white">Your assets are</span>
             <span className={`relative flex w-full overflow-hidden md:pb-4 md:pt-1 ${centered ? 'justify-center text-center' : 'justify-start text-left'}`}>
               &nbsp;
               {titles.map((title, index) => (
