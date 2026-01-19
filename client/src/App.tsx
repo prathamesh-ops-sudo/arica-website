@@ -9,6 +9,7 @@ import About from "@/pages/About";
 import ServicesPage from "@/pages/ServicesPage";
 import Contact from "@/pages/Contact";
 import CaseStudies from "@/pages/CaseStudies";
+import Experience from "@/pages/Experience";
 
 function Router() {
   return (
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/compliance" component={ServicesPage} />
       <Route path="/contact" component={Contact} />
       <Route path="/case-studies" component={CaseStudies} />
+      <Route path="/experience" component={Experience} />
       <Route path="/portal" component={Contact} />
       <Route component={NotFound} />
     </Switch>

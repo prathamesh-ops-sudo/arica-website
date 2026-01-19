@@ -1,0 +1,76 @@
+You are an elite creative developer and technical director.
+Your task is to design and implement a **high-end 3D scroll-based parallax animation** for a company website, inspired by studios like **Lusion, Active Theory, and Igloo Inc**.
+
+### Core Concept
+
+Create an **interactive 3D solar system experience** where scrolling through the page feels like traveling through space. Each celestial body represents a **core feature or pillar of the company**. The experience should feel cinematic, premium, and technically impressive.
+
+### Visual & Experience Goals
+
+* Fullscreen immersive experience (desktop-first, graceful mobile fallback)
+* Dark, deep-space environment with subtle stars, nebula fog, and volumetric lighting
+* Ultra-smooth scroll-driven animation (not timeline-based autoplay)
+* Strong sense of depth, scale, and spatial movement
+* Minimal UI, maximal immersion
+
+### Animation & Interaction
+
+* Use **scroll as the main driver** of the animation (GSAP ScrollTrigger or equivalent)
+* Implement **true 3D parallax**, not fake layer movement
+* Camera moves through the solar system on scroll:
+
+  * Slow orbital camera movement
+  * Subtle rotation and drifting of planets
+  * Objects move at different speeds based on depth (foreground, midground, background)
+* Micro-interactions:
+
+  * Planets slightly react to cursor movement
+  * Hover reveals soft glow or atmospheric pulse
+* Smooth easing, inertia, and interpolation everywhere (no linear motion)
+
+### Solar System Structure
+
+* Central star (Sun): Represents the company’s core mission or vision
+* Each planet represents one key feature or product:
+
+  * Planet textures and scale should visually match the importance of the feature
+  * Optional moons or rings for sub-features
+* As the user scrolls closer to a planet:
+
+  * The planet comes into focus
+  * A minimal text overlay or floating UI appears
+  * Short headline + 1–2 lines of copy (no clutter)
+
+### Technical Expectations
+
+* Use **Three.js / WebGL** for real 3D rendering
+* Physically-inspired lighting (soft shadows, rim light, subtle bloom)
+* Optimized geometry and textures for performance
+* High frame rate (60fps target)
+* Progressive loading and graceful degradation
+* Clean architecture and well-structured code
+
+### Styling & Mood
+
+* Color palette: deep blacks, cosmic blues, subtle gradients, controlled highlights
+* No cartoonish visuals, no gamified UI
+* Elegant typography that blends into the scene
+* Everything should feel intentional, calm, confident, and premium
+
+### Deliverables
+
+* Scroll-based 3D parallax solar system animation
+* Clear mapping of planets to company features
+* Modular, maintainable code
+* Ready to be integrated into a modern web stack (React / Next.js preferred)
+
+### Creative Direction Keywords
+
+“Cinematic”
+“Luxury tech”
+“Spatial storytelling”
+“Calm but powerful”
+“Interactive but not noisy”
+
+Do not build a generic animation.
+Build an **award-worthy, studio-grade experience** that feels like a flagship digital identity piece.
