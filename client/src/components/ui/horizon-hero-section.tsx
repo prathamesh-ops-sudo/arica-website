@@ -38,6 +38,7 @@ export function HorizonHeroSection() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [currentSection, setCurrentSection] = useState(1);
   const [isReady, setIsReady] = useState(false);
+  const [isPastHero, setIsPastHero] = useState(false);
   const totalSections = 2;
   
   const threeRefs = useRef<ThreeRefs>({
@@ -490,10 +491,11 @@ export function HorizonHeroSection() {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const maxScroll = documentHeight - windowHeight;
-      const progress = Math.min(scrollY / maxScroll, 1);
+      const heroHeight = containerRef.current?.offsetHeight || windowHeight * 3;
+      const heroEnd = heroHeight - windowHeight;
+      const progress = Math.min(scrollY / heroEnd, 1);
       
+      setIsPastHero(scrollY > heroEnd);
       setScrollProgress(progress);
       const newSection = Math.floor(progress * totalSections);
       setCurrentSection(newSection);
@@ -565,9 +567,17 @@ export function HorizonHeroSection() {
 
   return (
     <div ref={containerRef} className="horizon-hero-container">
-      <canvas ref={canvasRef} className="horizon-hero-canvas" />
+      <canvas 
+        ref={canvasRef} 
+        className="horizon-hero-canvas" 
+        style={{ opacity: isPastHero ? 0 : 1, transition: 'opacity 0.5s ease' }}
+      />
       
-      <div ref={menuRef} className="horizon-side-menu" style={{ visibility: 'hidden' }}>
+      <div 
+        ref={menuRef} 
+        className="horizon-side-menu" 
+        style={{ visibility: 'hidden', opacity: isPastHero ? 0 : 1, pointerEvents: isPastHero ? 'none' : 'auto', transition: 'opacity 0.5s ease' }}
+      >
         <div className="horizon-menu-icon">
           <span></span>
           <span></span>
@@ -576,7 +586,7 @@ export function HorizonHeroSection() {
         <div className="horizon-vertical-text">SECURITY</div>
       </div>
 
-      <div className="horizon-hero-content">
+      <div className="horizon-hero-content" style={{ opacity: isPastHero ? 0 : 1, transition: 'opacity 0.5s ease' }}>
         <h1 ref={titleRef} className="horizon-hero-title text-halo-white">
           ARICA
         </h1>
@@ -591,7 +601,7 @@ export function HorizonHeroSection() {
         </div>
       </div>
 
-      <div ref={scrollProgressRef} className="horizon-scroll-progress" style={{ visibility: 'hidden' }}>
+      <div ref={scrollProgressRef} className="horizon-scroll-progress" style={{ visibility: 'hidden', opacity: isPastHero ? 0 : 1, pointerEvents: isPastHero ? 'none' : 'auto', transition: 'opacity 0.5s ease' }}>
         <div className="horizon-scroll-text">SCROLL</div>
         <div className="horizon-progress-track">
           <div 
