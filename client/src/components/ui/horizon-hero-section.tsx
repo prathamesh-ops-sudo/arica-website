@@ -34,12 +34,14 @@ export function HorizonHeroSection() {
   const menuRef = useRef<HTMLDivElement>(null);
 
   const smoothCameraPos = useRef({ x: 0, y: 30, z: 100 });
+  const lastProgressRef = useRef(0);
+  const rafIdRef = useRef<number | null>(null);
   
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [currentSection, setCurrentSection] = useState(1);
+  const [currentSection, setCurrentSection] = useState(0);
   const [isReady, setIsReady] = useState(false);
   const [isPastHero, setIsPastHero] = useState(false);
-  const totalSections = 2;
+  const totalSections = 3;
   
   const threeRefs = useRef<ThreeRefs>({
     scene: null,
@@ -76,7 +78,7 @@ export function HorizonHeroSection() {
         alpha: true
       });
       refs.renderer.setSize(window.innerWidth, window.innerHeight);
-      refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
       refs.renderer.toneMapping = THREE.ACESFilmicToneMapping;
       refs.renderer.toneMappingExposure = 0.5;
 
@@ -86,8 +88,8 @@ export function HorizonHeroSection() {
 
       const bloomPass = new UnrealBloomPass(
         new THREE.Vector2(window.innerWidth, window.innerHeight),
-        0.8,
-        0.4,
+        0.45,
+        0.3,
         0.85
       );
       refs.composer.addPass(bloomPass);
@@ -106,7 +108,7 @@ export function HorizonHeroSection() {
       const refs = threeRefs.current;
       if (!refs.scene) return;
       
-      const starCount = 5000;
+      const starCount = 1500;
       
       for (let i = 0; i < 3; i++) {
         const geometry = new THREE.BufferGeometry();
@@ -489,16 +491,26 @@ export function HorizonHeroSection() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const heroHeight = containerRef.current?.offsetHeight || windowHeight * 3;
-      const heroEnd = heroHeight - windowHeight;
-      const progress = Math.min(scrollY / heroEnd, 1);
+      if (rafIdRef.current) return;
       
-      setIsPastHero(scrollY > heroEnd);
-      setScrollProgress(progress);
-      const newSection = Math.floor(progress * totalSections);
-      setCurrentSection(newSection);
+      rafIdRef.current = requestAnimationFrame(() => {
+        rafIdRef.current = null;
+        const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const heroHeight = containerRef.current?.offsetHeight || windowHeight * 3;
+        const heroEnd = heroHeight - windowHeight;
+        const progress = Math.min(scrollY / heroEnd, 1);
+        
+        const pastHero = scrollY > heroEnd;
+        setIsPastHero(pastHero);
+        
+        if (Math.abs(progress - lastProgressRef.current) > 0.01) {
+          lastProgressRef.current = progress;
+          setScrollProgress(progress);
+        }
+        
+        const newSection = Math.min(Math.floor(progress * totalSections), totalSections - 1);
+        setCurrentSection(newSection);
 
       const refs = threeRefs.current;
       
@@ -536,12 +548,16 @@ export function HorizonHeroSection() {
       if (refs.nebula && refs.mountains[3]) {
         refs.nebula.position.z = refs.mountains[3].position.z;
       }
+      });
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+    };
   }, [totalSections]);
 
   const titles: Record<number, string> = {
@@ -586,17 +602,17 @@ export function HorizonHeroSection() {
         <div className="horizon-vertical-text">SECURITY</div>
       </div>
 
-      <div className="horizon-hero-content" style={{ opacity: isPastHero ? 0 : 1, transition: 'opacity 0.5s ease' }}>
+      <div className="horizon-hero-content" style={{ opacity: isPastHero ? 0 : 1, transition: 'opacity 0.3s ease' }}>
         <h1 ref={titleRef} className="horizon-hero-title text-halo-white">
-          ARICA
+          {titles[currentSection] || titles[0]}
         </h1>
         
         <div ref={subtitleRef} className="horizon-hero-subtitle">
           <p className="subtitle-line">
-            Enterprise cybersecurity solutions
+            {(subtitles[currentSection] || subtitles[0]).line1}
           </p>
           <p className="subtitle-line">
-            protecting your digital future
+            {(subtitles[currentSection] || subtitles[0]).line2}
           </p>
         </div>
       </div>
@@ -616,19 +632,7 @@ export function HorizonHeroSection() {
 
       <div className="horizon-scroll-sections">
         {[...Array(2)].map((_, i) => (
-          <section key={i} className="horizon-content-section">
-            <h1 className="horizon-hero-title text-halo-white">
-              {titles[i + 1] || 'DEFAULT'}
-            </h1>
-        
-            <div className="horizon-hero-subtitle">
-              <p className="subtitle-line">
-                {subtitles[i + 1].line1}
-              </p>
-              <p className="subtitle-line">
-                {subtitles[i + 1].line2}
-              </p>
-            </div>
+          <section key={i} className="horizon-content-section" aria-hidden="true">
           </section>
         ))}
       </div>
