@@ -4,9 +4,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,7 +11,6 @@ interface ThreeRefs {
   scene: THREE.Scene | null;
   camera: THREE.PerspectiveCamera | null;
   renderer: THREE.WebGLRenderer | null;
-  composer: EffectComposer | null;
   stars: THREE.Points[];
   nebula: THREE.Mesh | null;
   mountains: THREE.Mesh[];
@@ -47,7 +43,6 @@ export function HorizonHeroSection() {
     scene: null,
     camera: null,
     renderer: null,
-    composer: null,
     stars: [],
     nebula: null,
     mountains: [],
@@ -78,26 +73,12 @@ export function HorizonHeroSection() {
         alpha: true
       });
       refs.renderer.setSize(window.innerWidth, window.innerHeight);
-      refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+      refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
       refs.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      refs.renderer.toneMappingExposure = 0.5;
-
-      refs.composer = new EffectComposer(refs.renderer);
-      const renderPass = new RenderPass(refs.scene, refs.camera);
-      refs.composer.addPass(renderPass);
-
-      const bloomPass = new UnrealBloomPass(
-        new THREE.Vector2(window.innerWidth, window.innerHeight),
-        0.45,
-        0.3,
-        0.85
-      );
-      refs.composer.addPass(bloomPass);
+      refs.renderer.toneMappingExposure = 0.6;
 
       createStarField();
-      createNebula();
       createMountains();
-      createAtmosphere();
       getLocation();
 
       animate();
@@ -108,9 +89,9 @@ export function HorizonHeroSection() {
       const refs = threeRefs.current;
       if (!refs.scene) return;
       
-      const starCount = 1500;
+      const starCount = 800;
       
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 2; i++) {
         const geometry = new THREE.BufferGeometry();
         const positions = new Float32Array(starCount * 3);
         const colors = new Float32Array(starCount * 3);
@@ -258,9 +239,7 @@ export function HorizonHeroSection() {
       
       const layers = [
         { distance: -50, height: 60, color: 0x0a1628, opacity: 1 },
-        { distance: -100, height: 80, color: 0x0d1f35, opacity: 0.8 },
-        { distance: -150, height: 100, color: 0x112940, opacity: 0.6 },
-        { distance: -200, height: 120, color: 0x15334d, opacity: 0.4 }
+        { distance: -150, height: 100, color: 0x112940, opacity: 0.6 }
       ];
 
       layers.forEach((layer, index) => {
@@ -351,10 +330,6 @@ export function HorizonHeroSection() {
         }
       });
 
-      if (refs.nebula && (refs.nebula.material as THREE.ShaderMaterial).uniforms) {
-        (refs.nebula.material as THREE.ShaderMaterial).uniforms.time.value = time * 0.5;
-      }
-
       if (refs.camera && refs.targetCameraX !== undefined) {
         const smoothingFactor = 0.05;
         
@@ -377,8 +352,8 @@ export function HorizonHeroSection() {
         mountain.position.y = 50 + (Math.cos(time * 0.15) * 1 * parallaxFactor);
       });
 
-      if (refs.composer) {
-        refs.composer.render();
+      if (refs.renderer && refs.scene && refs.camera) {
+        refs.renderer.render(refs.scene, refs.camera);
       }
     };
 
@@ -386,11 +361,10 @@ export function HorizonHeroSection() {
 
     const handleResize = () => {
       const refs = threeRefs.current;
-      if (refs.camera && refs.renderer && refs.composer) {
+      if (refs.camera && refs.renderer) {
         refs.camera.aspect = window.innerWidth / window.innerHeight;
         refs.camera.updateProjectionMatrix();
         refs.renderer.setSize(window.innerWidth, window.innerHeight);
-        refs.composer.setSize(window.innerWidth, window.innerHeight);
       }
     };
 
@@ -531,23 +505,12 @@ export function HorizonHeroSection() {
       refs.targetCameraZ = currentPos.z + (nextPos.z - currentPos.z) * sectionProgress;
 
       refs.mountains.forEach((mountain, i) => {
-        const speed = 1 + i * 0.9;
-        const targetZ = mountain.userData.baseZ + scrollY * speed * 0.5;
-        if (refs.nebula) {
-          refs.nebula.position.z = (targetZ + progress * speed * 0.01) - 100;
-        }
-        
-        mountain.userData.targetZ = targetZ;
         if (progress > 0.7) {
           mountain.position.z = 600000;
-        }
-        if (progress < 0.7 && refs.locations) {
+        } else if (refs.locations) {
           mountain.position.z = refs.locations[i];
         }
       });
-      if (refs.nebula && refs.mountains[3]) {
-        refs.nebula.position.z = refs.mountains[3].position.z;
-      }
       });
     };
 
