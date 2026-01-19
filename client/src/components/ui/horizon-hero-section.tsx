@@ -78,7 +78,9 @@ export function HorizonHeroSection() {
       refs.renderer.toneMappingExposure = 0.6;
 
       createStarField();
+      createNebula();
       createMountains();
+      createAtmosphere();
       getLocation();
 
       animate();
@@ -178,7 +180,7 @@ export function HorizonHeroSection() {
       const refs = threeRefs.current;
       if (!refs.scene) return;
       
-      const geometry = new THREE.PlaneGeometry(8000, 4000, 100, 100);
+      const geometry = new THREE.PlaneGeometry(4000, 2000, 20, 20);
       const material = new THREE.ShaderMaterial({
         uniforms: {
           time: { value: 0 },
@@ -279,7 +281,7 @@ export function HorizonHeroSection() {
       const refs = threeRefs.current;
       if (!refs.scene) return;
       
-      const geometry = new THREE.SphereGeometry(600, 32, 32);
+      const geometry = new THREE.SphereGeometry(600, 16, 16);
       const material = new THREE.ShaderMaterial({
         uniforms: {
           time: { value: 0 }
@@ -329,6 +331,10 @@ export function HorizonHeroSection() {
           (starField.material as THREE.ShaderMaterial).uniforms.time.value = time;
         }
       });
+
+      if (refs.nebula && (refs.nebula.material as THREE.ShaderMaterial).uniforms) {
+        (refs.nebula.material as THREE.ShaderMaterial).uniforms.time.value = time * 0.3;
+      }
 
       if (refs.camera && refs.targetCameraX !== undefined) {
         const smoothingFactor = 0.05;
