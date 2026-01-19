@@ -1,6 +1,5 @@
 import { Navbar } from "@/components/Navbar";
-import { Hero } from "@/components/Hero";
-import { HorizonHeroSection } from "@/components/ui/horizon-hero-section";
+import { ScrollExpansionHero } from "@/components/ui/scroll-expansion-hero";
 import { ForensicsSection } from "@/components/ForensicsSection";
 import { AsciiHeroSection } from "@/components/AsciiHeroSection";
 import { ComplianceSection } from "@/components/ComplianceSection";
@@ -9,14 +8,21 @@ import { Footer } from "@/components/Footer";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background aurora-bg">
+    <div className="min-h-screen bg-background">
       <Navbar />
-      <HorizonHeroSection />
-      <ForensicsSection />
-      <AsciiHeroSection />
-      <ComplianceSection />
-      <CTA />
-      <Footer />
+      <ScrollExpansionHero
+        title="ARICA SECURITY"
+        subtitle="Enterprise Cybersecurity Solutions"
+        scrollToExpand="Scroll to explore"
+      >
+        <div className="aurora-bg">
+          <ForensicsSection />
+          <AsciiHeroSection />
+          <ComplianceSection />
+          <CTA />
+          <Footer />
+        </div>
+      </ScrollExpansionHero>
     </div>
   );
 }
