@@ -341,3 +341,168 @@
     pointer-events: none;
   }
 }
+
+/* Horizon Hero Section Styles */
+.horizon-hero-container {
+  position: relative;
+  width: 100%;
+  min-height: 300vh;
+  background: #000;
+  overflow: hidden;
+}
+
+.horizon-hero-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.horizon-side-menu {
+  position: fixed;
+  left: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.horizon-menu-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.horizon-menu-icon span {
+  width: 30px;
+  height: 2px;
+  background: hsl(var(--halo-white));
+  transition: all 0.3s ease;
+}
+
+.horizon-menu-icon:hover span:nth-child(1) {
+  transform: translateX(5px);
+}
+
+.horizon-menu-icon:hover span:nth-child(3) {
+  transform: translateX(-5px);
+}
+
+.horizon-vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: hsl(var(--primary));
+  font-weight: 500;
+}
+
+.horizon-hero-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  text-align: center;
+  pointer-events: none;
+}
+
+.horizon-hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 15vw, 12rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin: 0;
+  line-height: 1;
+  text-shadow: 0 0 60px hsl(var(--primary) / 0.3);
+}
+
+.horizon-hero-title .title-char {
+  display: inline-block;
+}
+
+.horizon-hero-subtitle {
+  margin-top: 2rem;
+  font-size: clamp(0.875rem, 2vw, 1.25rem);
+  color: hsl(var(--muted-foreground));
+  letter-spacing: 0.1em;
+}
+
+.horizon-hero-subtitle .subtitle-line {
+  margin: 0.5rem 0;
+  opacity: 0.8;
+}
+
+.horizon-scroll-progress {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: hsl(var(--muted-foreground));
+}
+
+.horizon-scroll-text {
+  font-weight: 500;
+}
+
+.horizon-progress-track {
+  width: 100px;
+  height: 2px;
+  background: hsl(var(--border));
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.horizon-progress-fill {
+  height: 100%;
+  background: hsl(var(--primary));
+  transition: width 0.1s ease-out;
+}
+
+.horizon-section-counter {
+  font-family: var(--font-mono);
+  color: hsl(var(--primary));
+}
+
+.horizon-scroll-sections {
+  position: relative;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.horizon-content-section {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .horizon-side-menu {
+    left: 1rem;
+  }
+  
+  .horizon-scroll-progress {
+    right: 1rem;
+    bottom: 1rem;
+  }
+  
+  .horizon-progress-track {
+    width: 60px;
+  }
+}
