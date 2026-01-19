@@ -4,6 +4,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Link } from 'wouter';
+import { Rocket } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -584,6 +586,16 @@ export function HorizonHeroSection() {
             {(subtitles[currentSection] || subtitles[0]).line2}
           </p>
         </div>
+        
+        <Link href="/experience">
+          <a 
+            className="mt-8 inline-flex items-center gap-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold px-8 py-4 rounded-full hover:opacity-90 transition-all hover:scale-105 shadow-lg shadow-cyan-500/25"
+            data-testid="button-enter-experience"
+          >
+            <Rocket className="w-5 h-5" />
+            Enter the Experience
+          </a>
+        </Link>
       </div>
 
       <div ref={scrollProgressRef} className="horizon-scroll-progress" style={{ visibility: 'hidden', opacity: isPastHero ? 0 : 1, pointerEvents: isPastHero ? 'none' : 'auto', transition: 'opacity 0.5s ease' }}>
