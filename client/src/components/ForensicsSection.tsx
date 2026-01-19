@@ -4,6 +4,7 @@ import { Zap, ShieldCheck, Scale, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LinkPreview } from "@/components/ui/link-preview";
 import { SecurityScanAnimation } from "@/components/ui/security-scan-animation";
+import { NanobotParticles } from "@/components/ui/nanobot-particles";
 
 const features = [
   {
@@ -43,7 +44,15 @@ export function ForensicsSection() {
             className="relative"
           >
             <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 to-transparent rounded-3xl blur-2xl" />
-            <SecurityScanAnimation />
+            <div className="relative">
+              <NanobotParticles 
+                particleCount={35} 
+                color="0, 212, 255" 
+                maxDistance={100}
+                className="opacity-40"
+              />
+              <SecurityScanAnimation />
+            </div>
           </motion.div>
 
           <motion.div
