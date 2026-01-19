@@ -107,6 +107,8 @@ Color scheme inspired by Arctic Wolf website with deep navy backgrounds and elec
 ## Special Effects Components
 Strategic animation effects used throughout the site (not overused to avoid "cheap" look):
 - **HorizonHeroSection** (`@/components/ui/horizon-hero-section.tsx`) - Three.js 3D space hero with 5000-star field, animated nebula (cyan/purple), parallax mountains, and GSAP scroll-triggered camera movement. Requires WebGL. Full-page (300vh) with scroll-based section transitions.
+- **RealisticSolarSystem** (`@/components/ui/realistic-solar-system.tsx`) - Three.js solar system journey with 8 procedurally-rendered planets (Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn with rings, Neptune). 800vh scroll-driven experience with orbital camera, planet info cards, and mouse parallax.
+- **CyberAttackGlobe** (`@/components/ui/cyber-attack-globe.tsx`) - WebGL globe visualization showing real-time cyber attacks with animated arcs, live statistics, recent attacks feed, and attack type legend. Simulates attacks between 20 global cities.
 - **Typewriter** (`@/components/ui/typewriter.tsx`) - Cycling text effect on Services page header
 - **MorphButton** (`@/components/ui/morph-button.tsx`) - Animated submit button with loading state on Contact form
 - **SecurityScanAnimation** (`@/components/ui/security-scan-animation.tsx`) - Live vulnerability scanning visualization on Forensics section
@@ -122,3 +124,5 @@ Strategic animation effects used throughout the site (not overused to avoid "che
 - **Case Studies** (`/case-studies`): Filterable case studies (VAPT, ISO Audit, Software, Enterprise)
 - **About** (`/about`): Company story, stats (200+ assessments, 50+ clients), values, team
 - **Contact** (`/contact`): Contact form with MorphButton, contact info cards
+- **Experience** (`/experience`): Interactive solar system journey showcasing security services
+- **Attack Globe** (`/attack-globe`): Live cyber attack visualization demonstrating VAPT importance
