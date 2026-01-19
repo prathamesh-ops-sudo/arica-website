@@ -10,6 +10,7 @@ import ServicesPage from "@/pages/ServicesPage";
 import Contact from "@/pages/Contact";
 import CaseStudies from "@/pages/CaseStudies";
 import Experience from "@/pages/Experience";
+import AttackGlobe from "@/pages/AttackGlobe";
 
 function Router() {
   return (
@@ -22,6 +23,7 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/case-studies" component={CaseStudies} />
       <Route path="/experience" component={Experience} />
+      <Route path="/attack-globe" component={AttackGlobe} />
       <Route path="/portal" component={Contact} />
       <Route component={NotFound} />
     </Switch>

@@ -3,6 +3,8 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'wouter';
+import { Globe, ChevronRight } from 'lucide-react';
 
 interface Planet {
   name: string;
@@ -19,6 +21,7 @@ interface Planet {
     atmosphere?: number;
   };
   scrollPosition: number;
+  hasAttackGlobe?: boolean;
 }
 
 const solarSystem: Planet[] = [
@@ -60,8 +63,8 @@ const solarSystem: Planet[] = [
   },
   {
     name: 'earth',
-    title: 'Secure Development',
-    description: 'Custom software development with security built from the ground up - your digital home.',
+    title: 'Global Threat Monitor',
+    description: 'Watch cyber attacks happening in real-time across the globe. Thousands of threats are detected every second - see why VAPT services are essential.',
     size: 1.0,
     distance: 24,
     orbitSpeed: 0.0005,
@@ -69,6 +72,7 @@ const solarSystem: Planet[] = [
     type: 'rocky',
     colors: { primary: 0x1a5fb4, secondary: 0x2e8b57, atmosphere: 0x87ceeb },
     scrollPosition: 0.35,
+    hasAttackGlobe: true,
   },
   {
     name: 'mars',
@@ -949,6 +953,18 @@ export function RealisticSolarSystem() {
                 <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
                   {activePlanet.description}
                 </p>
+                {activePlanet.hasAttackGlobe && (
+                  <Link href="/attack-globe">
+                    <a 
+                      className="mt-5 flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold px-5 py-3 rounded-full hover:opacity-90 transition-all group"
+                      data-testid="link-view-attack-globe"
+                    >
+                      <Globe className="w-4 h-4" />
+                      <span>View Live Attack Globe</span>
+                      <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </a>
+                  </Link>
+                )}
                 <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground/60">
                   <span className="uppercase tracking-wider">{activePlanet.name}</span>
                   <span className="w-1 h-1 rounded-full bg-white/20" />
