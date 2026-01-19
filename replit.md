@@ -106,6 +106,7 @@ Color scheme inspired by Arctic Wolf website with deep navy backgrounds and elec
 
 ## Special Effects Components
 Strategic animation effects used throughout the site (not overused to avoid "cheap" look):
+- **HorizonHeroSection** (`@/components/ui/horizon-hero-section.tsx`) - Three.js 3D space hero with 5000-star field, animated nebula (cyan/purple), parallax mountains, and GSAP scroll-triggered camera movement. Requires WebGL. Full-page (300vh) with scroll-based section transitions.
 - **Typewriter** (`@/components/ui/typewriter.tsx`) - Cycling text effect on Services page header
 - **MorphButton** (`@/components/ui/morph-button.tsx`) - Animated submit button with loading state on Contact form
 - **SecurityScanAnimation** (`@/components/ui/security-scan-animation.tsx`) - Live vulnerability scanning visualization on Forensics section
