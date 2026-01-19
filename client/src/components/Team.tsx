@@ -1,30 +1,30 @@
 import { motion } from "framer-motion";
-import { Linkedin, Twitter } from "lucide-react";
+import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 
-const team = [
+const teamMembers = [
   {
+    quote: "Our mission is to protect businesses from evolving digital threats. Every vulnerability we find is one less attack vector for malicious actors.",
     name: "Dr. Arica Kumar",
-    role: "Founder & CEO",
-    bio: "Former NSA cybersecurity analyst with 20+ years of experience protecting critical infrastructure.",
-    initials: "AK",
+    designation: "Founder & CEO - Former NSA Cybersecurity Analyst",
+    src: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=500&h=500&fit=crop&crop=face",
   },
   {
+    quote: "Security isn't just about technology—it's about building systems that are resilient by design. We bring that mindset to every project.",
     name: "James Wilson",
-    role: "Chief Technology Officer",
-    bio: "Ex-Google security engineer specializing in cloud infrastructure and zero-trust architecture.",
-    initials: "JW",
+    designation: "Chief Technology Officer - Ex-Google Security Engineer",
+    src: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=500&h=500&fit=crop&crop=face",
   },
   {
+    quote: "Digital forensics is like solving a puzzle. Every piece of evidence tells a story, and we're dedicated to uncovering the truth.",
     name: "Elena Rodriguez",
-    role: "Head of Forensics",
-    bio: "FBI-trained digital forensics expert with experience in high-profile cybercrime investigations.",
-    initials: "ER",
+    designation: "Head of Forensics - FBI-trained Expert",
+    src: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=500&h=500&fit=crop&crop=face",
   },
   {
+    quote: "Navigating cyber regulations requires both legal expertise and technical understanding. We bridge that gap for our clients.",
     name: "David Chen",
-    role: "Legal Counsel",
-    bio: "Cyber law specialist helping organizations navigate complex regulatory requirements.",
-    initials: "DC",
+    designation: "Legal Counsel - Cyber Law Specialist",
+    src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=500&fit=crop&crop=face",
   },
 ];
 
@@ -39,7 +39,7 @@ export function Team() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-20"
+          className="text-center mb-10"
         >
           <span className="inline-block text-sm font-semibold text-primary tracking-wider uppercase mb-4">
             Our Team
@@ -53,53 +53,7 @@ export function Team() {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {team.map((member, index) => (
-            <motion.div
-              key={member.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              data-testid={`card-team-${index}`}
-              className="group glass rounded-2xl p-6 text-center hover:bg-card/80 transition-all duration-500"
-            >
-              <div className="relative mb-6 mx-auto w-24 h-24">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent rounded-full opacity-20 group-hover:opacity-40 transition-opacity" />
-                <div className="relative w-full h-full rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border-2 border-primary/30 group-hover:border-primary/50 transition-colors">
-                  <span className="font-display text-2xl font-bold text-primary">
-                    {member.initials}
-                  </span>
-                </div>
-              </div>
-
-              <h3 className="font-display text-xl font-bold mb-1">
-                {member.name}
-              </h3>
-              <p className="text-primary text-sm font-medium mb-4">
-                {member.role}
-              </p>
-              <p className="text-muted-foreground text-sm leading-relaxed mb-6">
-                {member.bio}
-              </p>
-
-              <div className="flex items-center justify-center gap-3">
-                <a
-                  href="#"
-                  className="p-2 rounded-lg bg-secondary hover:bg-primary/20 text-muted-foreground hover:text-primary transition-colors"
-                >
-                  <Linkedin className="w-4 h-4" />
-                </a>
-                <a
-                  href="#"
-                  className="p-2 rounded-lg bg-secondary hover:bg-primary/20 text-muted-foreground hover:text-primary transition-colors"
-                >
-                  <Twitter className="w-4 h-4" />
-                </a>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        <AnimatedTestimonials testimonials={teamMembers} autoplay />
       </div>
     </section>
   );
