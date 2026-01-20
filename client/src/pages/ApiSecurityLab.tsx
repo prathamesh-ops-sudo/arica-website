@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'wouter';
 import { ArrowLeft, Shield, AlertTriangle, CheckCircle, XCircle, Key, Lock, Server, Database, Zap, Eye, Clock, Send, Code, FileJson } from 'lucide-react';
+import { CRTScreen, BlinkingCursor } from '@/components/ui/crt-screen';
 
 interface ApiVulnerability {
   id: string;
@@ -275,22 +276,23 @@ export default function ApiSecurityLab() {
         </div>
 
         <div className="container mx-auto px-6 py-24">
+          <CRTScreen className="rounded-2xl" scanlineIntensity="subtle">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
+            className="text-center mb-12 p-6"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-6" style={{ backgroundColor: 'rgba(0, 212, 255, 0.1)', borderColor: 'rgba(0, 212, 255, 0.3)' }}>
-              <Server className="w-4 h-4" style={{ color: '#00D4FF' }} />
-              <span className="text-sm font-medium" style={{ color: '#00D4FF' }}>API Security Lab</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full crt-panel mb-6">
+              <Server className="w-4 h-4 text-terminal-cyan" />
+              <span className="text-sm font-mono crt-terminal-text text-terminal-cyan">API Security Lab</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              API Security
-              <span className="block text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(to right, #00D4FF, #a855f7)' }}>
+            <h1 className="text-4xl md:text-6xl font-bold mb-4 font-mono crt-terminal-text">
+              <span className="text-terminal-cyan">API Security</span>
+              <span className="block text-terminal-green crt-phosphor-text">
                 Testing Laboratory
               </span>
             </h1>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <p className="text-gray-400 max-w-2xl mx-auto font-mono text-sm">
               Simulate comprehensive API security testing. Analyze authentication flows, rate limiting, data exposure, and common API vulnerabilities.
             </p>
           </motion.div>
@@ -301,28 +303,30 @@ export default function ApiSecurityLab() {
             transition={{ delay: 0.2 }}
             className="max-w-3xl mx-auto mb-12"
           >
-            <div className="flex gap-4 p-2 rounded-2xl bg-black/40 backdrop-blur-xl border border-white/10">
+            <div className="flex gap-4 p-2 rounded-2xl crt-panel backdrop-blur-xl">
               <div className="flex-1 flex items-center gap-3 px-4">
-                <Server className="w-5 h-5" style={{ color: '#00D4FF' }} />
+                <span className="text-terminal-green font-mono">$</span>
+                <Server className="w-5 h-5 text-terminal-cyan" />
                 <input
                   type="text"
                   value={targetUrl}
                   onChange={(e) => setTargetUrl(e.target.value)}
                   placeholder="Enter API endpoint URL..."
-                  className="flex-1 bg-transparent border-none outline-none text-white placeholder:text-white/30"
+                  className="flex-1 bg-transparent border-none outline-none crt-input font-mono text-terminal-cyan placeholder:text-cyan-400/30"
                   disabled={isScanning}
                   data-testid="input-api-endpoint"
                 />
+                {!isScanning && <BlinkingCursor />}
               </div>
               <button
                 onClick={startScan}
                 disabled={isScanning}
-                className="px-8 py-3 rounded-xl font-semibold hover:opacity-90 transition-all disabled:opacity-50 flex items-center gap-2"
+                className="px-8 py-3 rounded-xl font-semibold font-mono hover:opacity-90 transition-all disabled:opacity-50 flex items-center gap-2"
                 style={{ backgroundImage: 'linear-gradient(to right, #00D4FF, #a855f7)' }}
                 data-testid="button-test-endpoint"
               >
                 <Send className="w-4 h-4" />
-                {isScanning ? 'Testing...' : 'Test Endpoint'}
+                {isScanning ? '> Testing...' : '> Test Endpoint'}
               </button>
             </div>
           </motion.div>
@@ -335,10 +339,14 @@ export default function ApiSecurityLab() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="max-w-3xl mx-auto mb-12"
               >
-                <div className="p-8 rounded-3xl bg-black/40 backdrop-blur-xl border" style={{ borderColor: 'rgba(0, 212, 255, 0.3)' }}>
+                <div className="p-8 rounded-3xl crt-panel backdrop-blur-xl">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-sm font-mono" style={{ color: '#00D4FF' }}>{scanPhase}</span>
-                    <span className="text-sm text-white/60">{Math.round(scanProgress)}%</span>
+                    <span className="text-sm font-mono crt-terminal-text flex items-center gap-2 text-terminal-cyan">
+                      <span className="text-terminal-green">$</span>
+                      {scanPhase}
+                      <BlinkingCursor />
+                    </span>
+                    <span className="text-sm text-terminal-green font-mono">{Math.round(scanProgress)}%</span>
                   </div>
                   <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                     <motion.div
@@ -427,35 +435,35 @@ export default function ApiSecurityLab() {
                   })}
                 </div>
 
-                <div className="p-6 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10 mb-8">
+                <div className="p-6 rounded-3xl crt-panel backdrop-blur-xl mb-8">
                   {activeTab === 'request' && requestResponse && (
                     <div>
-                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                        <FileJson className="w-5 h-5" style={{ color: '#00D4FF' }} />
-                        Request/Response Visualization
+                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2 font-mono text-terminal-cyan">
+                        <FileJson className="w-5 h-5 text-terminal-cyan" />
+                        <span className="text-terminal-green">[REQ]</span> Request/Response Visualization
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="p-4 rounded-xl bg-black/60 border border-white/10">
+                        <div className="p-4 rounded-xl bg-black/60 border border-cyan-500/20">
                           <div className="flex items-center gap-2 mb-3">
-                            <span className="px-2 py-1 rounded text-xs font-mono bg-green-500/20 text-green-400">
+                            <span className="px-2 py-1 rounded text-xs font-mono bg-terminal-green/20 text-terminal-green">
                               {requestResponse.method}
                             </span>
-                            <span className="text-sm font-mono text-white/70">{requestResponse.endpoint}</span>
+                            <span className="text-sm font-mono text-terminal-cyan crt-terminal-text">{requestResponse.endpoint}</span>
                           </div>
-                          <div className="text-xs font-mono text-white/50 mb-2">Headers:</div>
-                          <pre className="text-xs font-mono text-white/70 overflow-x-auto" data-testid="request-headers">
+                          <div className="text-xs font-mono text-terminal-green mb-2">// Headers:</div>
+                          <pre className="text-xs font-mono text-terminal-cyan overflow-x-auto crt-terminal-text" data-testid="request-headers">
                             {JSON.stringify(requestResponse.headers, null, 2)}
                           </pre>
                         </div>
-                        <div className="p-4 rounded-xl bg-black/60 border border-white/10">
+                        <div className="p-4 rounded-xl bg-black/60 border border-cyan-500/20">
                           <div className="flex items-center gap-2 mb-3">
-                            <span className={`px-2 py-1 rounded text-xs font-mono ${requestResponse.status === 200 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                            <span className={`px-2 py-1 rounded text-xs font-mono ${requestResponse.status === 200 ? 'bg-terminal-green/20 text-terminal-green' : 'bg-red-500/20 text-red-400'}`}>
                               {requestResponse.status}
                             </span>
-                            <span className="text-sm text-white/50">{requestResponse.responseTime}ms</span>
+                            <span className="text-sm text-terminal-cyan font-mono">{requestResponse.responseTime}ms</span>
                           </div>
-                          <div className="text-xs font-mono text-white/50 mb-2">Response Body:</div>
-                          <pre className="text-xs font-mono text-white/70 overflow-x-auto" data-testid="response-body">
+                          <div className="text-xs font-mono text-terminal-green mb-2">// Response Body:</div>
+                          <pre className="text-xs font-mono text-terminal-cyan overflow-x-auto crt-terminal-text" data-testid="response-body">
                             {JSON.stringify(requestResponse.body, null, 2)}
                           </pre>
                         </div>
@@ -465,9 +473,9 @@ export default function ApiSecurityLab() {
 
                   {activeTab === 'auth' && (
                     <div>
-                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                        <Key className="w-5 h-5" style={{ color: '#00D4FF' }} />
-                        Authentication Testing Results
+                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2 font-mono text-terminal-cyan">
+                        <Key className="w-5 h-5 text-terminal-cyan" />
+                        <span className="text-terminal-green">[AUTH]</span> Authentication Testing Results
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {authTestResults.map((test, index) => {
@@ -501,9 +509,9 @@ export default function ApiSecurityLab() {
 
                   {activeTab === 'rate-limit' && (
                     <div>
-                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                        <Zap className="w-5 h-5" style={{ color: '#00D4FF' }} />
-                        Rate Limiting Analysis Heatmap
+                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2 font-mono text-terminal-cyan">
+                        <Zap className="w-5 h-5 text-terminal-cyan" />
+                        <span className="text-terminal-green">[RATE]</span> Rate Limiting Analysis Heatmap
                       </h3>
                       <div className="p-4 rounded-xl bg-black/60 border border-white/10">
                         <div className="flex items-center justify-between mb-4">
@@ -549,9 +557,9 @@ export default function ApiSecurityLab() {
 
                   {activeTab === 'data' && (
                     <div>
-                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                        <Eye className="w-5 h-5" style={{ color: '#00D4FF' }} />
-                        Data Exposure Testing Results
+                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2 font-mono text-terminal-cyan">
+                        <Eye className="w-5 h-5 text-terminal-cyan" />
+                        <span className="text-terminal-green">[DATA]</span> Data Exposure Testing Results
                       </h3>
                       <div className="space-y-3">
                         {vulnerabilities.filter(v => v.category === 'data-exposure').length > 0 ? (
@@ -587,8 +595,10 @@ export default function ApiSecurityLab() {
                   )}
                 </div>
 
-                <div className="p-6 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10">
-                  <h3 className="text-xl font-bold mb-6">All Vulnerabilities Report</h3>
+                <div className="p-6 rounded-3xl crt-panel backdrop-blur-xl">
+                  <h3 className="text-xl font-bold mb-6 font-mono text-terminal-cyan flex items-center gap-2">
+                    <span className="text-terminal-green">[SYS]</span> All Vulnerabilities Report
+                  </h3>
                   <div className="space-y-3">
                     {vulnerabilities.map((vuln, index) => (
                       <motion.div
@@ -596,19 +606,19 @@ export default function ApiSecurityLab() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all"
+                        className="p-4 rounded-xl bg-black/60 border border-cyan-500/20 hover:border-cyan-500/40 transition-all"
                         data-testid={`vulnerability-${index}`}
                       >
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
-                              <span className={`px-2 py-0.5 rounded text-xs font-medium uppercase border ${getSeverityColor(vuln.severity)}`}>
+                              <span className={`px-2 py-0.5 rounded text-xs font-mono uppercase border ${getSeverityColor(vuln.severity)}`}>
                                 {vuln.severity}
                               </span>
-                              <span className="font-medium">{vuln.type}</span>
+                              <span className="font-mono text-terminal-cyan">{vuln.type}</span>
                             </div>
-                            <p className="text-sm text-gray-400 mb-1">{vuln.description}</p>
-                            <code className="text-xs px-2 py-1 rounded" style={{ color: '#00D4FF', backgroundColor: 'rgba(0, 212, 255, 0.1)' }}>
+                            <p className="text-sm text-gray-400 mb-1 font-mono">{vuln.description}</p>
+                            <code className="text-xs px-2 py-1 rounded font-mono text-terminal-green bg-green-500/10">
                               {vuln.endpoint}
                             </code>
                           </div>
@@ -618,8 +628,8 @@ export default function ApiSecurityLab() {
                     ))}
                     {vulnerabilities.length === 0 && (
                       <div className="text-center py-8">
-                        <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
-                        <p className="text-green-400">No vulnerabilities detected!</p>
+                        <CheckCircle className="w-12 h-12 text-terminal-green mx-auto mb-4" />
+                        <p className="text-terminal-green font-mono">[OK] No vulnerabilities detected!</p>
                       </div>
                     )}
                   </div>
@@ -635,13 +645,14 @@ export default function ApiSecurityLab() {
                     <Shield className="w-5 h-5" />
                     Get Professional API Security Assessment
                   </Link>
-                  <p className="text-sm text-gray-400 mt-4">
+                  <p className="text-sm text-gray-400 mt-4 font-mono">
                     This is a simulation. Real API security assessments are performed by our certified security experts.
                   </p>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
+          </CRTScreen>
         </div>
       </div>
     </div>

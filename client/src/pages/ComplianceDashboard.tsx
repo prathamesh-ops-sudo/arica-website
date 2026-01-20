@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'wouter';
-import { ArrowLeft, Shield, CheckCircle, XCircle, AlertTriangle, FileText, Users, Lock, Server, Database, Eye, Settings, Clock, TrendingUp } from 'lucide-react';
+import { ArrowLeft, Shield, CheckCircle, AlertTriangle, FileText, Users, Lock, Server, Database, Eye, Settings, Clock, TrendingUp } from 'lucide-react';
+import { GlassCard } from '@/components/ui/glass-card';
+import { AnimatedProgress, CircularProgress } from '@/components/ui/animated-progress';
 
 interface ControlCategory {
   id: string;
   name: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   controls: number;
   compliant: number;
   inProgress: number;
@@ -26,39 +28,22 @@ const isoCategories: ControlCategory[] = [
   { id: 'a14', name: 'System Acquisition', icon: Database, controls: 13, compliant: 8, inProgress: 3, description: 'Security requirements and development' },
 ];
 
+const certificationStages = [
+  { name: 'Gap Analysis', progress: 100 },
+  { name: 'Risk Assessment', progress: 100 },
+  { name: 'Implementation', progress: 85 },
+  { name: 'Internal Audit', progress: 60 },
+  { name: 'Stage 1', progress: 30 },
+  { name: 'Stage 2', progress: 0 },
+];
+
 export default function ComplianceDashboard() {
   const [selectedCategory, setSelectedCategory] = useState<ControlCategory | null>(null);
-  const [overallProgress, setOverallProgress] = useState(0);
-  const [animatedStats, setAnimatedStats] = useState({ compliant: 0, inProgress: 0, total: 0 });
 
   const totalControls = isoCategories.reduce((sum, cat) => sum + cat.controls, 0);
   const totalCompliant = isoCategories.reduce((sum, cat) => sum + cat.compliant, 0);
   const totalInProgress = isoCategories.reduce((sum, cat) => sum + cat.inProgress, 0);
   const compliancePercentage = Math.round((totalCompliant / totalControls) * 100);
-
-  useEffect(() => {
-    const duration = 2000;
-    const steps = 60;
-    const interval = duration / steps;
-
-    let step = 0;
-    const timer = setInterval(() => {
-      step++;
-      const progress = step / steps;
-      const eased = 1 - Math.pow(1 - progress, 3);
-
-      setOverallProgress(Math.round(compliancePercentage * eased));
-      setAnimatedStats({
-        compliant: Math.round(totalCompliant * eased),
-        inProgress: Math.round(totalInProgress * eased),
-        total: Math.round(totalControls * eased),
-      });
-
-      if (step >= steps) clearInterval(timer);
-    }, interval);
-
-    return () => clearInterval(timer);
-  }, []);
 
   const getComplianceColor = (percentage: number) => {
     if (percentage >= 80) return 'text-green-400';
@@ -106,98 +91,87 @@ export default function ComplianceDashboard() {
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="lg:col-span-1 p-8 rounded-3xl bg-black/40 backdrop-blur-xl border border-amber-500/30 flex flex-col items-center justify-center"
+            <GlassCard
+              glowColor="amber"
+              className="lg:col-span-1 p-8 flex flex-col items-center justify-center"
+              data-testid="overall-compliance-card"
             >
-              <div className="relative w-48 h-48 mb-6">
-                <svg className="w-full h-full transform -rotate-90">
-                  <circle
-                    cx="96"
-                    cy="96"
-                    r="80"
-                    fill="none"
-                    stroke="rgba(255,255,255,0.1)"
-                    strokeWidth="12"
-                  />
-                  <circle
-                    cx="96"
-                    cy="96"
-                    r="80"
-                    fill="none"
-                    stroke="url(#gradient)"
-                    strokeWidth="12"
-                    strokeLinecap="round"
-                    strokeDasharray={`${overallProgress * 5.02} 502`}
-                    className="transition-all duration-300"
-                  />
-                  <defs>
-                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#f59e0b" />
-                      <stop offset="100%" stopColor="#ef4444" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className={`text-5xl font-bold ${getComplianceColor(overallProgress)}`}>
-                    {overallProgress}%
-                  </span>
-                  <span className="text-sm text-muted-foreground">Compliant</span>
-                </div>
-              </div>
+              <CircularProgress
+                value={compliancePercentage}
+                size={192}
+                strokeWidth={12}
+                color="amber"
+                label="Compliant"
+                className="mb-6"
+                data-testid="compliance-circular-progress"
+              />
               <div className="text-center">
                 <h3 className="text-xl font-bold mb-2">Overall Compliance Score</h3>
                 <p className="text-sm text-muted-foreground">Based on 114 Annex A controls</p>
               </div>
-            </motion.div>
+            </GlassCard>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3 }}
-              className="lg:col-span-2 grid grid-cols-3 gap-4"
-            >
-              <div className="p-6 rounded-2xl bg-green-500/10 backdrop-blur-xl border border-green-500/30">
+            <div className="lg:col-span-2 grid grid-cols-3 gap-4">
+              <GlassCard glowColor="green" className="p-6">
                 <CheckCircle className="w-8 h-8 text-green-400 mb-4" />
-                <div className="text-4xl font-bold text-green-400 mb-1">{animatedStats.compliant}</div>
+                <div className="text-4xl font-bold text-green-400 mb-1">{totalCompliant}</div>
                 <div className="text-sm text-green-400/70">Controls Implemented</div>
-              </div>
-              <div className="p-6 rounded-2xl bg-yellow-500/10 backdrop-blur-xl border border-yellow-500/30">
+                <AnimatedProgress
+                  value={(totalCompliant / totalControls) * 100}
+                  color="green"
+                  showLabel={false}
+                  size="sm"
+                  className="mt-3"
+                />
+              </GlassCard>
+              <GlassCard glowColor="amber" className="p-6">
                 <Clock className="w-8 h-8 text-yellow-400 mb-4" />
-                <div className="text-4xl font-bold text-yellow-400 mb-1">{animatedStats.inProgress}</div>
+                <div className="text-4xl font-bold text-yellow-400 mb-1">{totalInProgress}</div>
                 <div className="text-sm text-yellow-400/70">In Progress</div>
-              </div>
-              <div className="p-6 rounded-2xl bg-red-500/10 backdrop-blur-xl border border-red-500/30">
+                <AnimatedProgress
+                  value={(totalInProgress / totalControls) * 100}
+                  color="amber"
+                  showLabel={false}
+                  size="sm"
+                  className="mt-3"
+                />
+              </GlassCard>
+              <GlassCard glowColor="red" className="p-6">
                 <AlertTriangle className="w-8 h-8 text-red-400 mb-4" />
-                <div className="text-4xl font-bold text-red-400 mb-1">{animatedStats.total - animatedStats.compliant - animatedStats.inProgress}</div>
+                <div className="text-4xl font-bold text-red-400 mb-1">{totalControls - totalCompliant - totalInProgress}</div>
                 <div className="text-sm text-red-400/70">Gaps Identified</div>
-              </div>
+                <AnimatedProgress
+                  value={((totalControls - totalCompliant - totalInProgress) / totalControls) * 100}
+                  color="red"
+                  showLabel={false}
+                  size="sm"
+                  className="mt-3"
+                />
+              </GlassCard>
 
-              <div className="col-span-3 p-6 rounded-2xl bg-black/40 backdrop-blur-xl border border-white/10">
+              <GlassCard glowColor="cyan" className="col-span-3 p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-medium">Certification Timeline</h4>
                   <span className="text-sm text-amber-400">Stage 2 Audit</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  {['Gap Analysis', 'Risk Assessment', 'Implementation', 'Internal Audit', 'Stage 1', 'Stage 2'].map((stage, i) => (
-                    <div key={stage} className="flex-1">
-                      <div className={`h-2 rounded-full ${i < 4 ? 'bg-green-500' : i === 4 ? 'bg-amber-500' : 'bg-white/20'}`} />
-                      <span className="text-xs text-muted-foreground mt-1 block text-center">{stage}</span>
+                <div className="space-y-3">
+                  {certificationStages.map((stage) => (
+                    <div key={stage.name} className="flex items-center gap-4">
+                      <span className="text-xs text-muted-foreground w-28 flex-shrink-0">{stage.name}</span>
+                      <AnimatedProgress
+                        value={stage.progress}
+                        color={stage.progress === 100 ? 'green' : stage.progress > 0 ? 'gradient' : 'cyan'}
+                        size="sm"
+                        className="flex-1"
+                      />
                     </div>
                   ))}
                 </div>
-              </div>
-            </motion.div>
+              </GlassCard>
+            </div>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="p-6 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10"
-          >
+          <GlassCard glowColor="cyan" className="p-6 mb-12">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold">Annex A Control Categories</h3>
               <div className="flex items-center gap-4 text-sm">
@@ -212,14 +186,13 @@ export default function ComplianceDashboard() {
                 const Icon = category.icon;
                 const percentage = getCategoryPercentage(category);
                 const gaps = category.controls - category.compliant - category.inProgress;
+                const glowColor = percentage >= 80 ? 'green' : percentage >= 60 ? 'amber' : 'red';
 
                 return (
-                  <motion.div
+                  <GlassCard
                     key={category.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 * index }}
-                    className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-amber-500/50 transition-all cursor-pointer group"
+                    glowColor={glowColor as 'green' | 'amber' | 'red'}
+                    className="p-4"
                     onClick={() => setSelectedCategory(selectedCategory?.id === category.id ? null : category)}
                     data-testid={`category-${category.id}`}
                   >
@@ -229,15 +202,30 @@ export default function ComplianceDashboard() {
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1">
-                          <h4 className="font-medium group-hover:text-amber-400 transition-colors">{category.name}</h4>
+                          <h4 className="font-medium hover:text-amber-400 transition-colors">{category.name}</h4>
                           <span className={`text-sm font-bold ${getComplianceColor(percentage)}`}>{percentage}%</span>
                         </div>
                         <p className="text-xs text-muted-foreground mb-3">{category.description}</p>
                         <div className="flex items-center gap-1 mb-2">
                           <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden flex">
-                            <div className="h-full bg-green-500" style={{ width: `${(category.compliant / category.controls) * 100}%` }} />
-                            <div className="h-full bg-yellow-500" style={{ width: `${(category.inProgress / category.controls) * 100}%` }} />
-                            <div className="h-full bg-red-500/50" style={{ width: `${(gaps / category.controls) * 100}%` }} />
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${(category.compliant / category.controls) * 100}%` }}
+                              transition={{ duration: 1, delay: 0.1 * index }}
+                              className="h-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]"
+                            />
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${(category.inProgress / category.controls) * 100}%` }}
+                              transition={{ duration: 1, delay: 0.1 * index + 0.1 }}
+                              className="h-full bg-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.5)]"
+                            />
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${(gaps / category.controls) * 100}%` }}
+                              transition={{ duration: 1, delay: 0.1 * index + 0.2 }}
+                              className="h-full bg-red-500/50"
+                            />
                           </div>
                         </div>
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
@@ -247,17 +235,42 @@ export default function ComplianceDashboard() {
                         </div>
                       </div>
                     </div>
-                  </motion.div>
+                    <AnimatePresence>
+                      {selectedCategory?.id === category.id && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="mt-4 pt-4 border-t border-white/10"
+                        >
+                          <div className="grid grid-cols-3 gap-2">
+                            <div className="text-center p-2 rounded-lg bg-green-500/10">
+                              <div className="text-lg font-bold text-green-400">{category.compliant}</div>
+                              <div className="text-xs text-muted-foreground">Compliant</div>
+                            </div>
+                            <div className="text-center p-2 rounded-lg bg-yellow-500/10">
+                              <div className="text-lg font-bold text-yellow-400">{category.inProgress}</div>
+                              <div className="text-xs text-muted-foreground">In Progress</div>
+                            </div>
+                            <div className="text-center p-2 rounded-lg bg-red-500/10">
+                              <div className="text-lg font-bold text-red-400">{gaps}</div>
+                              <div className="text-xs text-muted-foreground">Gaps</div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </GlassCard>
                 );
               })}
             </div>
-          </motion.div>
+          </GlassCard>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="mt-12 text-center"
+            className="text-center"
           >
             <Link
               href="/contact"

@@ -176,6 +176,13 @@
     font-family: var(--font-mono);
   }
 
+  .z-background { z-index: 0; }
+  .z-canvas { z-index: 1; }
+  .z-content { z-index: 10; }
+  .z-overlay { z-index: 20; }
+  .z-navigation { z-index: 50; }
+  .z-modal { z-index: 9999; }
+
   .text-gradient {
     background: linear-gradient(135deg, hsl(var(--cyber-cyan)) 0%, hsl(var(--cyber-purple)) 100%);
     -webkit-background-clip: text;
@@ -519,4 +526,203 @@
   position: relative;
   z-index: 10;
   background: hsl(var(--background));
+}
+
+/* CRT Monitor Effect Styles */
+.crt-screen {
+  position: relative;
+  overflow: hidden;
+}
+
+.crt-curve {
+  border-radius: 8px;
+}
+
+.crt-curve::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 
+    inset 0 0 80px rgba(0, 0, 0, 0.4),
+    inset 0 0 20px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  z-index: 100;
+}
+
+.crt-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 0, 0, 0.03) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 90;
+}
+
+.crt-scanlines-subtle .crt-overlay {
+  opacity: 0.3;
+}
+
+.crt-scanlines-medium .crt-overlay {
+  opacity: 0.5;
+}
+
+.crt-scanlines-strong .crt-overlay {
+  opacity: 0.7;
+}
+
+.crt-noise {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.02;
+  pointer-events: none;
+  z-index: 80;
+  animation: crt-noise 0.2s steps(3) infinite;
+}
+
+.crt-glow {
+  position: absolute;
+  inset: 0;
+  box-shadow: 
+    inset 0 0 60px rgba(0, 212, 255, 0.03),
+    inset 0 0 30px rgba(0, 212, 255, 0.02);
+  pointer-events: none;
+  z-index: 70;
+}
+
+.crt-green-tint .crt-glow {
+  box-shadow: 
+    inset 0 0 60px rgba(0, 255, 0, 0.05),
+    inset 0 0 30px rgba(0, 255, 0, 0.03);
+}
+
+.crt-flicker {
+  animation: crt-flicker 0.15s infinite;
+}
+
+@keyframes crt-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.98; }
+  75% { opacity: 0.995; }
+}
+
+@keyframes crt-noise {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(-1px, 1px); }
+  66% { transform: translate(1px, -1px); }
+}
+
+/* Terminal Text Colors */
+.text-terminal-cyan {
+  color: #00D4FF;
+  text-shadow: 0 0 8px rgba(0, 212, 255, 0.5), 0 0 16px rgba(0, 212, 255, 0.3);
+}
+
+.text-terminal-green {
+  color: #00ff00;
+  text-shadow: 0 0 8px rgba(0, 255, 0, 0.5), 0 0 16px rgba(0, 255, 0, 0.3);
+}
+
+.text-terminal-amber {
+  color: #ffb000;
+  text-shadow: 0 0 8px rgba(255, 176, 0, 0.5), 0 0 16px rgba(255, 176, 0, 0.3);
+}
+
+.bg-terminal-cyan {
+  background-color: #00D4FF;
+  box-shadow: 0 0 8px rgba(0, 212, 255, 0.8);
+}
+
+.bg-terminal-green {
+  background-color: #00ff00;
+  box-shadow: 0 0 8px rgba(0, 255, 0, 0.8);
+}
+
+.bg-terminal-amber {
+  background-color: #ffb000;
+  box-shadow: 0 0 8px rgba(255, 176, 0, 0.8);
+}
+
+/* Blinking Cursor */
+.crt-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1.2em;
+  vertical-align: text-bottom;
+  animation: crt-blink 1s steps(1) infinite;
+}
+
+@keyframes crt-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Terminal Monospace Font */
+.crt-terminal-text {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+  font-feature-settings: 'liga' 1, 'calt' 1;
+}
+
+/* Phosphor Glow Effect for text */
+.crt-phosphor-text {
+  animation: phosphor-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes phosphor-glow {
+  0% { filter: brightness(1); }
+  100% { filter: brightness(1.05); }
+}
+
+/* Screen Glitch Effect */
+.crt-glitch {
+  animation: crt-glitch 5s infinite;
+}
+
+@keyframes crt-glitch {
+  0%, 2%, 4%, 6%, 8%, 10%, 100% { transform: none; }
+  1% { transform: skewX(-2deg); }
+  3% { transform: skewX(1deg); }
+  5% { transform: skewX(-1deg); }
+  7% { transform: skewX(0.5deg); }
+  9% { transform: translateX(-2px); }
+}
+
+/* Terminal Input Box Styles */
+.crt-input {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  color: #00D4FF;
+  text-shadow: 0 0 8px rgba(0, 212, 255, 0.5);
+}
+
+.crt-input:focus {
+  border-color: rgba(0, 212, 255, 0.6);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+  outline: none;
+}
+
+.crt-input::placeholder {
+  color: rgba(0, 212, 255, 0.3);
+}
+
+/* CRT Card/Panel Styles */
+.crt-panel {
+  background: rgba(0, 5, 15, 0.8);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  box-shadow: 
+    inset 0 0 30px rgba(0, 212, 255, 0.03),
+    0 0 20px rgba(0, 212, 255, 0.1);
+}
+
+.crt-panel-green {
+  border-color: rgba(0, 255, 0, 0.2);
+  box-shadow: 
+    inset 0 0 30px rgba(0, 255, 0, 0.03),
+    0 0 20px rgba(0, 255, 0, 0.1);
 }

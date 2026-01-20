@@ -7,6 +7,8 @@ import {
   Lock, Eye, AlertTriangle, CheckCircle, Activity, Zap,
   Layers, Network, Globe2, Key, FileCheck, X
 } from 'lucide-react';
+import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background';
+import { useGsapStagger } from '@/hooks/useGsapStagger';
 
 interface NetworkNode {
   id: string;
@@ -133,7 +135,10 @@ const initialNodes: Omit<NetworkNode, 'mesh'>[] = [
 export default function SecurityArchitecture() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const gsapContainerRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  
+  useGsapStagger(gsapContainerRef);
   const [webglError, setWebglError] = useState(false);
   const [selectedNode, setSelectedNode] = useState<NetworkNode | null>(null);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
@@ -580,9 +585,10 @@ export default function SecurityArchitecture() {
   };
 
   return (
-    <div className="min-h-screen bg-[#000510] text-white relative overflow-hidden">
+    <div className="min-h-screen bg-[#0a0a1e] text-white relative overflow-hidden">
+      <PurpleGalaxyBackground />
       <div
-        className="fixed inset-0 pointer-events-none z-0"
+        className="fixed inset-0 pointer-events-none z-[1]"
         style={{
           background:
             'radial-gradient(ellipse at 50% 0%, rgba(0, 212, 255, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(170, 68, 255, 0.05) 0%, transparent 40%)',
@@ -631,24 +637,24 @@ export default function SecurityArchitecture() {
           </div>
         </header>
 
-        <main className="pt-20 pb-12">
+        <main className="pt-20 pb-12" ref={gsapContainerRef}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center px-6 mb-6"
           >
-            <div className="inline-flex items-center gap-2 bg-[#00D4FF]/10 border border-[#00D4FF]/30 rounded px-4 py-2 mb-4 font-mono text-xs">
+            <div className="inline-flex items-center gap-2 bg-[#00D4FF]/10 border border-[#00D4FF]/30 rounded px-4 py-2 mb-4 font-mono text-xs gsap-fade-in">
               <Network className="w-4 h-4 text-[#00D4FF]" />
               <span className="text-[#00D4FF]">SECURITY ARCHITECTURE VISUALIZATION</span>
             </div>
 
-            <h1 className="font-mono text-3xl md:text-5xl font-bold mb-3">
+            <h1 className="font-mono text-3xl md:text-5xl font-bold mb-3 gsap-fade-in">
               <span className="text-[#00D4FF]">Network </span>
               <span className="text-white">Security</span>
               <span className="text-[#aa44ff]"> Architecture</span>
             </h1>
 
-            <p className="text-[#00D4FF]/60 font-mono text-sm max-w-2xl mx-auto">
+            <p className="text-[#00D4FF]/60 font-mono text-sm max-w-2xl mx-auto gsap-fade-in">
               Interactive 3D visualization of defense-in-depth security layers and network topology
             </p>
           </motion.div>
@@ -661,7 +667,7 @@ export default function SecurityArchitecture() {
                 transition={{ delay: 0.2 }}
                 className="lg:col-span-1 space-y-4"
               >
-                <div className="bg-[#000510]/80 backdrop-blur-sm border border-[#00D4FF]/30 rounded-xl p-4">
+                <div className="bg-[#000510]/80 backdrop-blur-sm border border-[#00D4FF]/30 rounded-xl p-4 gsap-fade-in">
                   <h3 className="font-mono text-sm text-[#00D4FF] mb-4 flex items-center gap-2">
                     <Activity className="w-4 h-4" />
                     Architecture Health
@@ -711,7 +717,7 @@ export default function SecurityArchitecture() {
                   </div>
                 </div>
 
-                <div className="bg-[#000510]/80 backdrop-blur-sm border border-[#00D4FF]/30 rounded-xl p-4">
+                <div className="bg-[#000510]/80 backdrop-blur-sm border border-[#00D4FF]/30 rounded-xl p-4 gsap-fade-in">
                   <h3 className="font-mono text-sm text-[#00D4FF] mb-3 flex items-center gap-2">
                     <Shield className="w-4 h-4" />
                     Defense Simulation
@@ -754,7 +760,7 @@ export default function SecurityArchitecture() {
                   )}
                 </div>
 
-                <div className="bg-[#000510]/80 backdrop-blur-sm border border-[#00D4FF]/30 rounded-xl p-4">
+                <div className="bg-[#000510]/80 backdrop-blur-sm border border-[#00D4FF]/30 rounded-xl p-4 gsap-fade-in">
                   <h3 className="font-mono text-sm text-[#00D4FF] mb-3 flex items-center gap-2">
                     <Eye className="w-4 h-4" />
                     Node Types

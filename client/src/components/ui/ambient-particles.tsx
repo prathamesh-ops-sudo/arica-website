@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 type ParticleVariant = "dots" | "network" | "data";
 
@@ -9,14 +9,27 @@ interface AmbientParticlesProps {
   opacity?: number;
 }
 
+const MOBILE_BREAKPOINT = 768;
+
 export function AmbientParticles({
   variant = "dots",
   count = 20,
   color = "#00D4FF",
   opacity = 0.12,
 }: AmbientParticlesProps) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const effectiveCount = isMobile ? Math.floor(count * 0.4) : count;
+
   const particles = useMemo(() => {
-    return Array.from({ length: count }, (_, i) => ({
+    return Array.from({ length: effectiveCount }, (_, i) => ({
       id: i,
       left: Math.random() * 100,
       top: Math.random() * 100,
@@ -24,11 +37,11 @@ export function AmbientParticles({
       delay: Math.random() * 8,
       duration: 12 + Math.random() * 8,
     }));
-  }, [count, variant]);
+  }, [effectiveCount, variant]);
 
   const networkLines = useMemo(() => {
     if (variant !== "network") return [];
-    return Array.from({ length: Math.floor(count / 2) }, (_, i) => ({
+    return Array.from({ length: Math.floor(effectiveCount / 2) }, (_, i) => ({
       id: i,
       x1: Math.random() * 100,
       y1: Math.random() * 100,
@@ -37,7 +50,7 @@ export function AmbientParticles({
       delay: Math.random() * 6,
       duration: 15 + Math.random() * 10,
     }));
-  }, [count, variant]);
+  }, [effectiveCount, variant]);
 
   return (
     <div

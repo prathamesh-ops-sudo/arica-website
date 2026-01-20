@@ -5,6 +5,8 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, Text, Stars } from '@react-three/drei';
 import * as THREE from 'three';
 import { ArrowLeft, Shield, AlertTriangle, CheckCircle, Bug, Lock, Key, Package, Code, Play, BarChart3, TrendingUp, TrendingDown } from 'lucide-react';
+import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background';
+import { useGsapStagger } from '@/hooks/useGsapStagger';
 
 const CYAN = '#00D4FF';
 const PURPLE = '#9944ff';
@@ -394,6 +396,9 @@ export default function CodeReview() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [results, setResults] = useState<{ type: string; line: number; severity: string; message: string }[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const gsapContainerRef = useRef<HTMLDivElement>(null);
+  
+  useGsapStagger(gsapContainerRef);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -457,8 +462,9 @@ export default function CodeReview() {
   };
 
   return (
-    <div className="min-h-screen text-white relative overflow-hidden" style={{ backgroundColor: NAVY }}>
-      <div className="fixed inset-0 z-0" data-testid="code-review-3d-scene">
+    <div className="min-h-screen text-white relative overflow-hidden" style={{ backgroundColor: '#0a0a1e' }}>
+      <PurpleGalaxyBackground />
+      <div className="fixed inset-0 z-[1]" data-testid="code-review-3d-scene">
         <Canvas camera={{ position: [0, 0, 15], fov: 60 }} gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }} dpr={[1, 2]}>
           <CodeAnalysisScene isScanning={isScanning} />
         </Canvas>
@@ -472,25 +478,25 @@ export default function CodeReview() {
           </Link>
         </div>
 
-        <div className="container mx-auto px-6 py-24">
+        <div className="container mx-auto px-6 py-24" ref={gsapContainerRef}>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-6" style={{ backgroundColor: 'rgba(0, 212, 255, 0.1)', borderColor: 'rgba(0, 212, 255, 0.3)' }}>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-6 gsap-fade-in" style={{ backgroundColor: 'rgba(0, 212, 255, 0.1)', borderColor: 'rgba(0, 212, 255, 0.3)' }}>
               <Code className="w-4 h-4" style={{ color: CYAN }} />
               <span className="text-sm font-medium" style={{ color: CYAN }}>Code Review</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">
+            <h1 className="text-4xl md:text-6xl font-bold mb-4 gsap-fade-in">
               AI-Powered
               <span className="block text-transparent bg-clip-text" style={{ backgroundImage: `linear-gradient(to right, ${CYAN}, ${PURPLE})` }}>
                 Code Analysis
               </span>
             </h1>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <p className="text-gray-400 max-w-2xl mx-auto gsap-fade-in">
               Watch as our scanner beam analyzes code in real-time, detecting vulnerabilities and security issues with particle explosion effects.
             </p>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-16">
-            <h2 className="text-2xl font-bold mb-6 text-center">Vulnerability Categories</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center gsap-fade-in">Vulnerability Categories</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {vulnerabilityCategories.map((cat, i) => {
                 const Icon = cat.icon;
@@ -521,9 +527,9 @@ export default function CodeReview() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mb-16">
-            <h2 className="text-2xl font-bold mb-6 text-center">Code Quality Metrics</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center gsap-fade-in">Code Quality Metrics</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="p-6 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10">
+              <div className="p-6 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10 gsap-fade-in">
                 <div className="flex justify-around">
                   <AnimatedGauge value={78} max={100} label="Coverage" color={CYAN} />
                   <AnimatedGauge value={42} max={100} label="Complexity" color={PURPLE} />
@@ -531,7 +537,7 @@ export default function CodeReview() {
                 </div>
               </div>
               
-              <div className="p-6 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10">
+              <div className="p-6 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10 gsap-fade-in">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                   <BarChart3 className="w-5 h-5" style={{ color: CYAN }} />
                   Issues Trend
@@ -566,7 +572,7 @@ export default function CodeReview() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mb-16">
-            <h2 className="text-2xl font-bold mb-6 text-center">Live Code Scanner</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center gsap-fade-in">Live Code Scanner</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="rounded-3xl bg-black/60 backdrop-blur-xl border border-white/10 overflow-hidden">
                 <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-black/40">

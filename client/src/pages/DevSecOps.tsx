@@ -9,6 +9,8 @@ import {
   Server, Eye, Lock, Zap, Clock, CheckCircle, XCircle, 
   AlertTriangle, Search, FileSearch, Container, Key, ClipboardCheck
 } from 'lucide-react';
+import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background';
+import { useGsapStagger } from '@/hooks/useGsapStagger';
 
 const CYAN = '#00D4FF';
 const PURPLE = '#9944ff';
@@ -417,6 +419,9 @@ export default function DevSecOps() {
   const [passedCount, setPassedCount] = useState(0);
   const [blockedCount, setBlockedCount] = useState(0);
   const canvasRef = useRef<HTMLDivElement>(null);
+  const gsapContainerRef = useRef<HTMLDivElement>(null);
+  
+  useGsapStagger(gsapContainerRef);
 
   const handleMetricsUpdate = useCallback((passed: boolean) => {
     if (passed) {
@@ -448,8 +453,9 @@ export default function DevSecOps() {
   };
 
   return (
-    <div className="min-h-screen text-white relative overflow-hidden" style={{ backgroundColor: NAVY }}>
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-cyan-900/10" />
+    <div className="min-h-screen text-white relative overflow-hidden" style={{ backgroundColor: '#0a0a1e' }}>
+      <PurpleGalaxyBackground />
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-cyan-900/10 z-[1]" />
 
       <div className="fixed top-6 left-6 z-50">
         <Link
@@ -462,23 +468,23 @@ export default function DevSecOps() {
         </Link>
       </div>
 
-      <div className="relative z-10 container mx-auto px-6 py-24">
+      <div className="relative z-10 container mx-auto px-6 py-24" ref={gsapContainerRef}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-6 gsap-fade-in">
             <Shield className="w-4 h-4 text-cyan-400" />
             <span className="text-cyan-400 text-sm font-medium">DevSecOps Pipeline</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 gsap-fade-in">
             Security-Integrated
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
               CI/CD Pipeline
             </span>
           </h1>
-          <p className="text-white/60 max-w-2xl mx-auto">
+          <p className="text-white/60 max-w-2xl mx-auto gsap-fade-in">
             Watch security seamlessly integrate into every stage of your development lifecycle
           </p>
         </motion.div>
@@ -550,7 +556,7 @@ export default function DevSecOps() {
           transition={{ delay: 0.2 }}
           className="mb-12"
         >
-          <h2 className="text-2xl font-bold mb-6 text-center">Security Integration Points</h2>
+          <h2 className="text-2xl font-bold mb-6 text-center gsap-fade-in">Security Integration Points</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {securityIntegrations.map((integration, index) => {
               const Icon = integration.icon;
@@ -605,11 +611,11 @@ export default function DevSecOps() {
           transition={{ delay: 0.4 }}
           className="mb-12"
         >
-          <h2 className="text-2xl font-bold mb-6 text-center">Pipeline Metrics Dashboard</h2>
+          <h2 className="text-2xl font-bold mb-6 text-center gsap-fade-in">Pipeline Metrics Dashboard</h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             <motion.div
               whileHover={{ scale: 1.02 }}
-              className="p-6 rounded-2xl bg-black/40 border border-white/10"
+              className="p-6 rounded-2xl bg-black/40 border border-white/10 gsap-fade-in"
               data-testid="metric-success-rate"
             >
               <div className="flex items-center gap-3 mb-4">
@@ -633,7 +639,7 @@ export default function DevSecOps() {
 
             <motion.div
               whileHover={{ scale: 1.02 }}
-              className="p-6 rounded-2xl bg-black/40 border border-white/10"
+              className="p-6 rounded-2xl bg-black/40 border border-white/10 gsap-fade-in"
               data-testid="metric-issues-blocked"
             >
               <div className="flex items-center gap-3 mb-4">

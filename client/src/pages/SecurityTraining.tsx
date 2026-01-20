@@ -9,6 +9,8 @@ import {
   Eye, Trophy, Award, Flame, CheckCircle, XCircle, Clock, Users,
   TrendingUp, Star, Zap, Target
 } from 'lucide-react';
+import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background';
+import { useGsapStagger } from '@/hooks/useGsapStagger';
 
 const CYAN = '#00D4FF';
 const PURPLE = '#9944ff';
@@ -590,6 +592,9 @@ export default function SecurityTraining() {
   const [shake, setShake] = useState(false);
   const [streak, setStreak] = useState(7);
   const canvasRef = useRef<HTMLDivElement>(null);
+  const gsapContainerRef = useRef<HTMLDivElement>(null);
+  
+  useGsapStagger(gsapContainerRef);
 
   const skills = [
     { name: 'Awareness', value: 85 },
@@ -646,8 +651,9 @@ export default function SecurityTraining() {
   };
 
   return (
-    <div className="min-h-screen text-white relative overflow-hidden" style={{ backgroundColor: NAVY }}>
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-cyan-900/10" />
+    <div className="min-h-screen text-white relative overflow-hidden" style={{ backgroundColor: '#0a0a1e' }}>
+      <PurpleGalaxyBackground />
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-cyan-900/10 z-[1]" />
 
       <div className="fixed top-6 left-6 z-50">
         <Link
@@ -660,23 +666,23 @@ export default function SecurityTraining() {
         </Link>
       </div>
 
-      <div className="relative z-10 container mx-auto px-6 py-24">
+      <div className="relative z-10 container mx-auto px-6 py-24" ref={gsapContainerRef}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-6 gsap-fade-in">
             <BookOpen className="w-4 h-4 text-cyan-400" />
             <span className="text-cyan-400 text-sm font-medium">Security Training Center</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 gsap-fade-in">
             Learn & Master
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
               Cybersecurity Skills
             </span>
           </h1>
-          <p className="text-white/60 max-w-2xl mx-auto">
+          <p className="text-white/60 max-w-2xl mx-auto gsap-fade-in">
             Interactive training modules to enhance your security awareness and protect your organization
           </p>
         </motion.div>
@@ -702,7 +708,7 @@ export default function SecurityTraining() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="lg:col-span-1 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6"
+            className="lg:col-span-1 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 gsap-fade-in"
             data-testid="progress-dashboard"
           >
             <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">

@@ -8,11 +8,13 @@ import {
   Sparkles, Zap
 } from 'lucide-react';
 import { AmbientParticles } from '@/components/ui/ambient-particles';
+import { useScrollProgress } from '@/hooks/useScrollProgress';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface PolicyCategory {
   id: string;
   name: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   description: string;
   compliance: number;
   requirements: string[];
@@ -244,10 +246,12 @@ const particleShader = {
 
 function ThreeJSScene({ 
   selectedPolicy, 
-  onPolicyClick 
+  onPolicyClick,
+  isMobile = false
 }: { 
   selectedPolicy: string | null;
   onPolicyClick: (id: string) => void;
+  isMobile?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<{
@@ -298,7 +302,7 @@ function ThreeJSScene({
       powerPreference: 'high-performance'
     });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
     sceneRef.current.renderer = renderer;
@@ -358,7 +362,7 @@ function ThreeJSScene({
     });
     sceneRef.current.documents = documents;
 
-    const particleCount = 200;
+    const particleCount = isMobile ? 50 : 200;
     const particleGeometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const sizes = new Float32Array(particleCount);
@@ -785,6 +789,8 @@ function PolicyBuilder() {
 export default function SecurityPolicies() {
   const [selectedPolicy, setSelectedPolicy] = useState<string | null>(null);
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const { progress, scrollY } = useScrollProgress();
+  const isMobile = useIsMobile();
   
   const overallCompliance = Math.round(
     policyCategories.reduce((sum, cat) => sum + cat.compliance, 0) / policyCategories.length
@@ -794,11 +800,23 @@ export default function SecurityPolicies() {
     setSelectedPolicy(prev => prev === id ? null : id);
   }, []);
 
+  const parallaxY = isMobile ? 0 : scrollY * 0.15;
+  const parallaxScale = isMobile ? 1 : 1 + progress * 0.05;
+
   return (
     <div className="min-h-screen aurora-bg text-white relative overflow-hidden">
-      <AmbientParticles variant="network" count={30} color="#00D4FF" opacity={0.15} />
+      <div 
+        className="fixed inset-0 z-background pointer-events-none"
+        style={{
+          transform: `translateY(${parallaxY}px) scale(${parallaxScale})`,
+          transition: 'transform 0.1s ease-out',
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-[#00D4FF]/5 via-transparent to-purple-500/5" />
+      </div>
+      <AmbientParticles variant="network" count={isMobile ? 12 : 30} color="#00D4FF" opacity={0.15} />
 
-      <div className="relative z-10">
+      <div className="relative z-content">
         <div className="fixed top-6 left-6 z-50">
           <Link
             href="/experience"
@@ -844,6 +862,7 @@ export default function SecurityPolicies() {
             <ThreeJSScene 
               selectedPolicy={selectedPolicy}
               onPolicyClick={handlePolicyClick}
+              isMobile={isMobile}
             />
           </motion.div>
 

@@ -7,11 +7,13 @@ import {
   Target, Zap, Clock, ArrowRight
 } from 'lucide-react';
 import { AmbientParticles } from '@/components/ui/ambient-particles';
+import { GlassCard } from '@/components/ui/glass-card';
+import { AnimatedProgress, CircularProgress } from '@/components/ui/animated-progress';
 
 interface RiskCategory {
   id: string;
   name: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   score: number;
   findings: string[];
   status: 'critical' | 'high' | 'medium' | 'low';
@@ -140,7 +142,6 @@ const complianceFrameworks: ComplianceFramework[] = [
 const trendData = [68, 65, 62, 64, 58, 55, 52, 48, 45, 42, 38, 35];
 
 export default function RiskAssessment() {
-  const [overallScore, setOverallScore] = useState(0);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [hoveredThreat, setHoveredThreat] = useState<Threat | null>(null);
   const [actionItems, setActionItems] = useState(initialActionItems);
@@ -159,10 +160,6 @@ export default function RiskAssessment() {
 
     const timer = setInterval(() => {
       step++;
-      const progress = step / steps;
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setOverallScore(Math.round(targetScore * eased));
-
       const trendProgress = Math.min(step / 30, 1);
       const pointsToShow = Math.ceil(trendData.length * trendProgress);
       setAnimatedTrend(trendData.slice(0, pointsToShow));
@@ -199,13 +196,13 @@ export default function RiskAssessment() {
     }
   };
 
-  const getCategoryScoreColor = (status: string) => {
+  const getStatusGlowColor = (status: string): 'red' | 'amber' | 'green' | 'cyan' => {
     switch (status) {
-      case 'critical': return 'text-red-400 border-red-500/50 bg-red-500/10';
-      case 'high': return 'text-orange-400 border-orange-500/50 bg-orange-500/10';
-      case 'medium': return 'text-yellow-400 border-yellow-500/50 bg-yellow-500/10';
-      case 'low': return 'text-green-400 border-green-500/50 bg-green-500/10';
-      default: return 'text-gray-400 border-gray-500/50 bg-gray-500/10';
+      case 'critical': return 'red';
+      case 'high': return 'amber';
+      case 'medium': return 'amber';
+      case 'low': return 'green';
+      default: return 'cyan';
     }
   };
 
@@ -217,8 +214,6 @@ export default function RiskAssessment() {
 
   const addressedImpact = actionItems.filter(a => a.addressed).reduce((sum, a) => sum + a.impact, 0);
   const projectedScore = Math.max(0, targetScore - addressedImpact);
-
-  const scoreColors = getScoreColor(overallScore);
 
   return (
     <div className="min-h-screen aurora-bg text-white relative overflow-hidden">
@@ -258,67 +253,25 @@ export default function RiskAssessment() {
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="lg:col-span-1 p-8 rounded-3xl bg-black/40 backdrop-blur-xl border border-[#00D4FF]/30 flex flex-col items-center justify-center"
+            <GlassCard
+              glowColor="cyan"
+              className="lg:col-span-1 p-8 flex flex-col items-center justify-center"
               data-testid="risk-score-dashboard"
             >
-              <div className="relative w-48 h-48 mb-6">
-                <svg className="w-full h-full transform -rotate-90">
-                  <circle
-                    cx="96"
-                    cy="96"
-                    r="80"
-                    fill="none"
-                    stroke="rgba(255,255,255,0.1)"
-                    strokeWidth="12"
-                  />
-                  <circle
-                    cx="96"
-                    cy="96"
-                    r="80"
-                    fill="none"
-                    stroke="url(#riskGradient)"
-                    strokeWidth="12"
-                    strokeLinecap="round"
-                    strokeDasharray={`${overallScore * 5.02} 502`}
-                    className="transition-all duration-300"
-                  />
-                  <defs>
-                    <linearGradient id="riskGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor={overallScore <= 33 ? '#22c55e' : overallScore <= 66 ? '#eab308' : '#ef4444'} />
-                      <stop offset="100%" stopColor={overallScore <= 33 ? '#10b981' : overallScore <= 66 ? '#f59e0b' : '#f43f5e'} />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className={`text-5xl font-bold ${scoreColors.text}`} data-testid="text-overall-score">
-                    {overallScore}
-                  </span>
-                  <span className="text-sm text-muted-foreground">Risk Score</span>
-                </div>
-              </div>
+              <CircularProgress
+                value={targetScore}
+                size={192}
+                strokeWidth={12}
+                color="green"
+                label="Risk Score"
+                className="mb-6"
+                data-testid="risk-circular-progress"
+              />
               <div className="text-center">
                 <h3 className="text-xl font-bold mb-2">Overall Risk Level</h3>
-                <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${scoreColors.text} bg-white/10`}>
-                  {overallScore <= 33 ? (
-                    <>
-                      <CheckCircle className="w-4 h-4" />
-                      <span className="text-sm font-medium">Low Risk</span>
-                    </>
-                  ) : overallScore <= 66 ? (
-                    <>
-                      <AlertTriangle className="w-4 h-4" />
-                      <span className="text-sm font-medium">Medium Risk</span>
-                    </>
-                  ) : (
-                    <>
-                      <AlertCircle className="w-4 h-4" />
-                      <span className="text-sm font-medium">High Risk</span>
-                    </>
-                  )}
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-green-400 bg-white/10">
+                  <CheckCircle className="w-4 h-4" />
+                  <span className="text-sm font-medium">Low Risk</span>
                 </div>
                 <div className="flex items-center justify-center gap-2 mt-4 text-sm">
                   <TrendingDown className="w-4 h-4 text-green-400" />
@@ -326,13 +279,11 @@ export default function RiskAssessment() {
                   <span className="text-muted-foreground">from last month</span>
                 </div>
               </div>
-            </motion.div>
+            </GlassCard>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3 }}
-              className="lg:col-span-2 p-6 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10"
+            <GlassCard
+              glowColor="purple"
+              className="lg:col-span-2 p-6"
               data-testid="risk-trend-chart"
             >
               <div className="flex items-center justify-between mb-6">
@@ -351,29 +302,46 @@ export default function RiskAssessment() {
                       animate={{ height: `${(value / 100) * 100}%` }}
                       transition={{ duration: 0.3, delay: index * 0.05 }}
                       className={`flex-1 rounded-t-lg ${
-                        value <= 33 ? 'bg-green-500/60' : value <= 66 ? 'bg-yellow-500/60' : 'bg-red-500/60'
+                        value <= 33 ? 'bg-green-500/60 shadow-[0_0_10px_rgba(34,197,94,0.3)]' : value <= 66 ? 'bg-yellow-500/60 shadow-[0_0_10px_rgba(234,179,8,0.3)]' : 'bg-red-500/60 shadow-[0_0_10px_rgba(239,68,68,0.3)]'
                       }`}
                     />
                   ))}
                 </div>
                 <svg className="absolute inset-0 w-full h-full overflow-visible" preserveAspectRatio="none">
+                  <defs>
+                    <filter id="glow-line">
+                      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                      <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                  </defs>
                   <polyline
                     fill="none"
-                    stroke="#00D4FF"
+                    stroke="url(#trendGradient)"
                     strokeWidth="3"
                     strokeLinecap="round"
                     strokeLinejoin="round"
+                    filter="url(#glow-line)"
                     points={animatedTrend.map((value, index) => 
                       `${(index / (trendData.length - 1)) * 100}%,${100 - value}%`
                     ).join(' ')}
                   />
+                  <defs>
+                    <linearGradient id="trendGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#00D4FF" />
+                      <stop offset="100%" stopColor="#9944ff" />
+                    </linearGradient>
+                  </defs>
                   {animatedTrend.map((value, index) => (
                     <circle
                       key={index}
                       cx={`${(index / (trendData.length - 1)) * 100}%`}
                       cy={`${100 - value}%`}
-                      r="4"
+                      r="5"
                       fill="#00D4FF"
+                      filter="url(#glow-line)"
                     />
                   ))}
                 </svg>
@@ -382,7 +350,7 @@ export default function RiskAssessment() {
                   <span>Today</span>
                 </div>
               </div>
-            </motion.div>
+            </GlassCard>
           </div>
 
           <motion.div
@@ -398,12 +366,10 @@ export default function RiskAssessment() {
                 const Icon = category.icon;
                 const isExpanded = expandedCategory === category.id;
                 return (
-                  <motion.div
+                  <GlassCard
                     key={category.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 * index }}
-                    className={`p-6 rounded-2xl bg-black/40 backdrop-blur-xl border transition-all cursor-pointer ${getCategoryScoreColor(category.status)}`}
+                    glowColor={getStatusGlowColor(category.status)}
+                    className="p-6"
                     onClick={() => setExpandedCategory(isExpanded ? null : category.id)}
                     data-testid={`card-category-${category.id}`}
                   >
@@ -417,14 +383,13 @@ export default function RiskAssessment() {
                       </div>
                     </div>
                     <h4 className="font-semibold mb-2">{category.name}</h4>
-                    <div className="h-2 bg-white/10 rounded-full overflow-hidden mb-3">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${100 - category.score}%` }}
-                        transition={{ duration: 1, delay: 0.5 + index * 0.1 }}
-                        className={`h-full ${getSeverityColor(category.status)}`}
-                      />
-                    </div>
+                    <AnimatedProgress
+                      value={100 - category.score}
+                      color={category.status === 'low' ? 'green' : category.status === 'critical' ? 'red' : 'amber'}
+                      size="md"
+                      showLabel={false}
+                      className="mb-3"
+                    />
                     <div className="flex items-center justify-between text-sm opacity-70">
                       <span>{category.findings.length} findings</span>
                       {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -448,17 +413,15 @@ export default function RiskAssessment() {
                         </motion.div>
                       )}
                     </AnimatePresence>
-                  </motion.div>
+                  </GlassCard>
                 );
               })}
             </div>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="mb-12 p-6 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10"
+          <GlassCard
+            glowColor="purple"
+            className="mb-12 p-6"
             data-testid="threat-matrix"
           >
             <h3 className="text-2xl font-bold mb-6">Threat Matrix</h3>
@@ -487,7 +450,7 @@ export default function RiskAssessment() {
                           {cellThreats.map((threat, i) => (
                             <div
                               key={threat.id}
-                              className={`w-4 h-4 rounded-full ${getSeverityColor(threat.severity)} cursor-pointer hover:scale-150 transition-transform absolute`}
+                              className={`w-4 h-4 rounded-full ${getSeverityColor(threat.severity)} cursor-pointer hover:scale-150 transition-transform absolute shadow-[0_0_10px_currentColor]`}
                               style={{ 
                                 left: `${20 + (i * 20)}%`,
                                 top: '50%',
@@ -515,7 +478,7 @@ export default function RiskAssessment() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="absolute top-4 right-4 p-4 rounded-xl bg-black/80 backdrop-blur-xl border border-white/20 max-w-xs"
+                    className="absolute top-4 right-4 p-4 rounded-xl bg-[rgba(10,10,30,0.9)] backdrop-blur-xl border border-[#00D4FF]/30 max-w-xs shadow-[0_0_30px_rgba(0,212,255,0.2)]"
                     data-testid="threat-tooltip"
                   >
                     <div className="flex items-center gap-2 mb-2">
@@ -533,30 +496,28 @@ export default function RiskAssessment() {
             </div>
             <div className="flex items-center justify-center gap-6 mt-6 text-sm">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500" />
+                <div className="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
                 <span>Critical</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-orange-500" />
+                <div className="w-3 h-3 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.5)]" />
                 <span>High</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.5)]" />
                 <span>Medium</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-green-500" />
+                <div className="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
                 <span>Low</span>
               </div>
             </div>
-          </motion.div>
+          </GlassCard>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6 }}
-              className="p-6 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10"
+            <GlassCard
+              glowColor="cyan"
+              className="p-6"
               data-testid="action-items-panel"
             >
               <div className="flex items-center justify-between mb-6">
@@ -613,49 +574,37 @@ export default function RiskAssessment() {
                   </motion.div>
                 ))}
               </div>
-            </motion.div>
+            </GlassCard>
 
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.7 }}
-              className="p-6 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10"
+            <GlassCard
+              glowColor="purple"
+              className="p-6"
               data-testid="compliance-scorecard"
             >
               <h3 className="text-xl font-bold mb-6">Compliance Scorecard</h3>
               <div className="space-y-4">
                 {complianceFrameworks.map((framework) => {
                   const isExpanded = expandedFramework === framework.id;
+                  const progressColor = framework.progress >= 80 ? 'green' : framework.progress >= 60 ? 'amber' : 'red';
                   return (
-                    <motion.div
+                    <GlassCard
                       key={framework.id}
-                      className="p-4 rounded-xl bg-white/5 border border-white/10 cursor-pointer hover:border-[#00D4FF]/50 transition-all"
+                      glowColor={progressColor as 'green' | 'amber' | 'red'}
+                      className="p-4"
                       onClick={() => setExpandedFramework(isExpanded ? null : framework.id)}
                       data-testid={`framework-${framework.id}`}
                     >
                       <div className="flex items-center justify-between mb-3">
                         <h4 className="font-semibold">{framework.name}</h4>
                         <div className="flex items-center gap-2">
-                          <span className={`font-bold ${
-                            framework.progress >= 80 ? 'text-green-400' : 
-                            framework.progress >= 60 ? 'text-yellow-400' : 'text-red-400'
-                          }`}>
-                            {framework.progress}%
-                          </span>
                           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                         </div>
                       </div>
-                      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${framework.progress}%` }}
-                          transition={{ duration: 1 }}
-                          className={`h-full ${
-                            framework.progress >= 80 ? 'bg-green-500' : 
-                            framework.progress >= 60 ? 'bg-yellow-500' : 'bg-red-500'
-                          }`}
-                        />
-                      </div>
+                      <AnimatedProgress
+                        value={framework.progress}
+                        color={progressColor as 'green' | 'amber' | 'red'}
+                        size="md"
+                      />
                       <AnimatePresence>
                         {isExpanded && (
                           <motion.div
@@ -670,7 +619,7 @@ export default function RiskAssessment() {
                                 <li key={i} className="flex items-center gap-2 text-sm">
                                   <div className={`w-2 h-2 rounded-full ${
                                     i < Math.ceil(framework.requirements.length * (framework.progress / 100))
-                                      ? 'bg-green-500'
+                                      ? 'bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.5)]'
                                       : 'bg-white/20'
                                   }`} />
                                   <span>{req}</span>
@@ -680,18 +629,16 @@ export default function RiskAssessment() {
                           </motion.div>
                         )}
                       </AnimatePresence>
-                    </motion.div>
+                    </GlassCard>
                   );
                 })}
               </div>
-            </motion.div>
+            </GlassCard>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            className="text-center p-8 rounded-3xl bg-gradient-to-r from-[#00D4FF]/10 to-purple-500/10 border border-[#00D4FF]/30"
+          <GlassCard
+            glowColor="cyan"
+            className="text-center p-8"
           >
             <Zap className="w-12 h-12 text-[#00D4FF] mx-auto mb-4" />
             <h3 className="text-2xl font-bold mb-2">Ready for a Complete Assessment?</h3>
@@ -700,13 +647,13 @@ export default function RiskAssessment() {
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold bg-gradient-to-r from-[#00D4FF] to-purple-500 hover:opacity-90 transition-all"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold bg-gradient-to-r from-[#00D4FF] to-purple-500 hover:opacity-90 transition-all shadow-[0_0_30px_rgba(0,212,255,0.3)]"
               data-testid="link-contact-assessment"
             >
               Request Full Assessment
               <ArrowRight className="w-5 h-5" />
             </Link>
-          </motion.div>
+          </GlassCard>
         </div>
       </div>
     </div>
