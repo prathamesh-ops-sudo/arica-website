@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'wouter';
 import { 
@@ -7,6 +7,7 @@ import {
   Database, Key, FileWarning, Bug, ChevronDown, ChevronRight, Send
 } from 'lucide-react';
 import { AmbientParticles } from '@/components/ui/ambient-particles';
+import { PhoneSecurityVisualization } from '@/components/ui/phone-security-visualization';
 
 interface MobileDevice {
   id: string;
@@ -144,6 +145,11 @@ export default function MobileSecurity() {
   const [permissions, setPermissions] = useState(initialPermissions);
   const [selectedPermission, setSelectedPermission] = useState<Permission | null>(null);
   const [phaseFindings, setPhaseFindings] = useState<string[]>([]);
+  const [threatsBlocked, setThreatsBlocked] = useState(0);
+
+  const handleThreatBlocked = useCallback(() => {
+    setThreatsBlocked(prev => prev + 1);
+  }, []);
 
   const startScan = () => {
     if (!selectedDevice) return;
@@ -155,6 +161,7 @@ export default function MobileSecurity() {
     setVulnerabilities([]);
     setPhaseFindings([]);
     setOwaspItems(initialOWASPItems);
+    setThreatsBlocked(0);
 
     let progress = 0;
     let phase = 0;
@@ -310,6 +317,19 @@ export default function MobileSecurity() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
+            className="mb-12"
+          >
+            <PhoneSecurityVisualization 
+              isScanning={isScanning}
+              threatsBlocked={threatsBlocked}
+              onThreatBlocked={handleThreatBlocked}
+            />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
             className="mb-12"
           >
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">

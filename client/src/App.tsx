@@ -14,10 +14,18 @@ import AttackGlobe from "@/pages/AttackGlobe";
 import VulnerabilityScanner from "@/pages/VulnerabilityScanner";
 import ComplianceDashboard from "@/pages/ComplianceDashboard";
 import DevSecOpsPipeline from "@/pages/DevSecOpsPipeline";
+import DevSecOps from "@/pages/DevSecOps";
 import ApiSecurityLab from "@/pages/ApiSecurityLab";
 import CloudSecurityCenter from "@/pages/CloudSecurityCenter";
 import MobileSecurity from "@/pages/MobileSecurity";
 import RiskAssessment from "@/pages/RiskAssessment";
+import SecurityPolicies from "@/pages/SecurityPolicies";
+import SecurityArchitecture from "@/pages/SecurityArchitecture";
+import CodeReview from "@/pages/CodeReview";
+import Certifications from "@/pages/Certifications";
+import SecurityTraining from "@/pages/SecurityTraining";
+import OngoingSupport from "@/pages/OngoingSupport";
+import SecurityImplementation from "@/pages/SecurityImplementation";
 
 function Router() {
   return (
@@ -34,10 +42,18 @@ function Router() {
       <Route path="/vulnerability-scanner" component={VulnerabilityScanner} />
       <Route path="/compliance-dashboard" component={ComplianceDashboard} />
       <Route path="/devsecops-pipeline" component={DevSecOpsPipeline} />
+      <Route path="/devsecops" component={DevSecOps} />
       <Route path="/api-security-lab" component={ApiSecurityLab} />
       <Route path="/cloud-security-center" component={CloudSecurityCenter} />
       <Route path="/mobile-security" component={MobileSecurity} />
       <Route path="/risk-assessment" component={RiskAssessment} />
+      <Route path="/security-policies" component={SecurityPolicies} />
+      <Route path="/security-architecture" component={SecurityArchitecture} />
+      <Route path="/code-review" component={CodeReview} />
+      <Route path="/certifications" component={Certifications} />
+      <Route path="/security-training" component={SecurityTraining} />
+      <Route path="/ongoing-support" component={OngoingSupport} />
+      <Route path="/security-implementation" component={SecurityImplementation} />
       <Route path="/portal" component={Contact} />
       <Route component={NotFound} />
     </Switch>
