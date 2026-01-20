@@ -697,6 +697,8 @@ export function RealisticSolarSystem() {
   const mouseRef = useRef({ x: 0, y: 0 });
   const prevScrollRef = useRef(0);
   const lastGalaxyRef = useRef<string>(galaxies[0].id);
+  const transitionCooldownRef = useRef(false);
+  const raycasterRef = useRef<THREE.Raycaster | null>(null);
   
   const sceneRef = useRef<{
     scene: THREE.Scene | null;
@@ -778,6 +780,8 @@ export function RealisticSolarSystem() {
     const ambientLight = new THREE.AmbientLight(0x111122, 0.2);
     refs.scene.add(ambientLight);
 
+    raycasterRef.current = new THREE.Raycaster();
+
     createNebula();
     createParallaxStarfield();
     createGalaxies();
@@ -795,12 +799,16 @@ export function RealisticSolarSystem() {
       
       const currentGalaxy = getCurrentGalaxy(progress);
       
-      if (currentGalaxy.id !== lastGalaxyRef.current) {
+      if (currentGalaxy.id !== lastGalaxyRef.current && !transitionCooldownRef.current) {
+        transitionCooldownRef.current = true;
         setWarpEffect(1);
         setTransitionText(`Entering ${currentGalaxy.name}`);
         setTimeout(() => setTransitionText(null), 2000);
         lastGalaxyRef.current = currentGalaxy.id;
-      } else if (scrollDelta > 0.02) {
+        setTimeout(() => {
+          transitionCooldownRef.current = false;
+        }, 500);
+      } else if (scrollDelta > 0.02 && !transitionCooldownRef.current) {
         setWarpEffect(Math.min(0.5, scrollDelta * 5));
       }
       
@@ -820,9 +828,59 @@ export function RealisticSolarSystem() {
       updateCameraForScroll(progress, currentGalaxy);
     };
 
+    const handleClick = (e: MouseEvent) => {
+      if (!refs.camera || !raycasterRef.current) return;
+      
+      const mouse = new THREE.Vector2(
+        (e.clientX / window.innerWidth) * 2 - 1,
+        -(e.clientY / window.innerHeight) * 2 + 1
+      );
+      
+      raycasterRef.current.setFromCamera(mouse, refs.camera);
+      
+      const allVisiblePlanets: THREE.Object3D[] = [];
+      refs.galaxyGroups.forEach((group) => {
+        group.planets.forEach((mesh) => {
+          if (mesh.visible) {
+            allVisiblePlanets.push(mesh);
+          }
+        });
+      });
+      
+      const intersects = raycasterRef.current.intersectObjects(allVisiblePlanets, false);
+      
+      if (intersects.length > 0) {
+        const hitMesh = intersects[0].object as PlanetMesh;
+        if (hitMesh.userData?.planet) {
+          setActivePlanet(hitMesh.userData.planet);
+        }
+      }
+    };
+
     const handleMouseMove = (e: MouseEvent) => {
       mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       mouseRef.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+      
+      if (refs.camera && raycasterRef.current && canvasRef.current) {
+        const mouse = new THREE.Vector2(
+          (e.clientX / window.innerWidth) * 2 - 1,
+          -(e.clientY / window.innerHeight) * 2 + 1
+        );
+        
+        raycasterRef.current.setFromCamera(mouse, refs.camera);
+        
+        const allVisiblePlanets: THREE.Object3D[] = [];
+        refs.galaxyGroups.forEach((group) => {
+          group.planets.forEach((mesh) => {
+            if (mesh.visible) {
+              allVisiblePlanets.push(mesh);
+            }
+          });
+        });
+        
+        const intersects = raycasterRef.current.intersectObjects(allVisiblePlanets, false);
+        canvasRef.current.style.cursor = intersects.length > 0 ? 'pointer' : 'default';
+      }
     };
 
     const handleResize = () => {
@@ -836,12 +894,15 @@ export function RealisticSolarSystem() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('resize', handleResize);
+    canvasRef.current.addEventListener('click', handleClick);
     handleScroll();
 
+    const currentCanvas = canvasRef.current;
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
+      currentCanvas?.removeEventListener('click', handleClick);
       
       if (refs.animationId) cancelAnimationFrame(refs.animationId);
       refs.disposables.forEach(g => g.dispose());
