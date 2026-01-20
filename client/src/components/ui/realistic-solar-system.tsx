@@ -769,7 +769,7 @@ export function RealisticSolarSystem() {
   const targetScrollProgressRef = useRef(0);
   
   const HYSTERESIS_BUFFER = 0.025;
-  const SCROLL_HEIGHT_PER_GALAXY = 250;
+  const SCROLL_HEIGHT_PER_GALAXY = 400;
   
   const sceneRef = useRef<{
     scene: THREE.Scene | null;
