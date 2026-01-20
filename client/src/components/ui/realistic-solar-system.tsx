@@ -892,6 +892,9 @@ export function RealisticSolarSystem() {
       const scrollableDistance = scrollHeight - clientHeight;
       const progress = scrollableDistance > 0 ? Math.max(0, Math.min(1, scrollTop / scrollableDistance)) : 0;
       
+      // Debug logging
+      console.log('Scroll Debug:', { scrollTop, scrollHeight, clientHeight, scrollableDistance, progress });
+      
       targetScrollProgressRef.current = progress;
       
       if (scrollRafRef.current === null) {
