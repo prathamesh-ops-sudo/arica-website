@@ -4,7 +4,12 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'wouter';
-import { ChevronRight, Shield, FileCheck, Code } from 'lucide-react';
+import { ChevronRight, Shield, FileCheck, Code, X } from 'lucide-react';
+
+interface ModalContent {
+  title: string;
+  type: 'scanner' | 'tester' | 'checker' | 'checklist' | 'pipeline';
+}
 
 interface PlanetConfig {
   id: string;
@@ -23,6 +28,8 @@ interface PlanetConfig {
   };
   scrollPosition: number;
   type: 'service' | 'sun';
+  actionType: 'route' | 'attack-globe' | 'modal';
+  modalContent?: ModalContent;
 }
 
 interface GalaxyConfig {
@@ -60,7 +67,7 @@ const galaxies: GalaxyConfig[] = [
           'Wireless Network Security',
           'Network Segmentation Analysis',
         ],
-        link: '/services',
+        link: '/attack-globe',
         size: 1.4,
         distance: 14,
         orbitSpeed: 0.0006,
@@ -68,6 +75,7 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0xff4422, secondary: 0xff6600, atmosphere: 0xff8844 },
         scrollPosition: 0.05,
         type: 'service',
+        actionType: 'attack-globe',
       },
       {
         id: 'web-application',
@@ -87,6 +95,8 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0x00aaff, secondary: 0x0066cc, atmosphere: 0x44ccff },
         scrollPosition: 0.11,
         type: 'service',
+        actionType: 'modal',
+        modalContent: { title: 'Web App Security Scanner', type: 'scanner' },
       },
       {
         id: 'api-security',
@@ -106,6 +116,8 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0x22cc66, secondary: 0x118844, atmosphere: 0x44ff88 },
         scrollPosition: 0.17,
         type: 'service',
+        actionType: 'modal',
+        modalContent: { title: 'API Endpoint Tester', type: 'tester' },
       },
       {
         id: 'mobile-security',
@@ -117,7 +129,7 @@ const galaxies: GalaxyConfig[] = [
           'Secure Storage Testing',
           'Network Traffic Analysis',
         ],
-        link: '/services',
+        link: '/contact',
         size: 1.1,
         distance: 38,
         orbitSpeed: 0.00035,
@@ -125,6 +137,7 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0x9944ff, secondary: 0x6622cc, atmosphere: 0xaa66ff },
         scrollPosition: 0.23,
         type: 'service',
+        actionType: 'route',
       },
       {
         id: 'cloud-security',
@@ -144,6 +157,8 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0xcccccc, secondary: 0x888888, atmosphere: 0xffffff },
         scrollPosition: 0.29,
         type: 'service',
+        actionType: 'modal',
+        modalContent: { title: 'Cloud Config Checker', type: 'checker' },
       },
     ],
   },
@@ -178,6 +193,8 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0xffcc00, secondary: 0xcc9900, atmosphere: 0xffdd44 },
         scrollPosition: 0.38,
         type: 'service',
+        actionType: 'modal',
+        modalContent: { title: 'Compliance Checklist', type: 'checklist' },
       },
       {
         id: 'risk-assessment',
@@ -189,7 +206,7 @@ const galaxies: GalaxyConfig[] = [
           'Risk Quantification',
           'Treatment Planning',
         ],
-        link: '/services',
+        link: '/contact',
         size: 1.3,
         distance: 22,
         orbitSpeed: 0.0005,
@@ -197,6 +214,7 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0x991111, secondary: 0x660000, atmosphere: 0xcc2222 },
         scrollPosition: 0.44,
         type: 'service',
+        actionType: 'route',
       },
       {
         id: 'policy-development',
@@ -208,7 +226,7 @@ const galaxies: GalaxyConfig[] = [
           'Control Implementation Guides',
           'Employee Awareness Materials',
         ],
-        link: '/services',
+        link: '/contact',
         size: 1.1,
         distance: 30,
         orbitSpeed: 0.0004,
@@ -216,6 +234,7 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0x4488ff, secondary: 0x2266cc, atmosphere: 0x88bbff },
         scrollPosition: 0.50,
         type: 'service',
+        actionType: 'route',
       },
       {
         id: 'implementation',
@@ -227,7 +246,7 @@ const galaxies: GalaxyConfig[] = [
           'Staff Training',
           'System Configuration',
         ],
-        link: '/services',
+        link: '/contact',
         size: 1.0,
         distance: 38,
         orbitSpeed: 0.00035,
@@ -235,6 +254,7 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0x22aa88, secondary: 0x117766, atmosphere: 0x44ccaa },
         scrollPosition: 0.56,
         type: 'service',
+        actionType: 'route',
       },
       {
         id: 'certification',
@@ -246,7 +266,7 @@ const galaxies: GalaxyConfig[] = [
           'Non-Conformity Resolution',
           'Certification Maintenance',
         ],
-        link: '/services',
+        link: '/contact',
         size: 1.5,
         distance: 46,
         orbitSpeed: 0.0003,
@@ -254,6 +274,7 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0xffdd00, secondary: 0xddaa00, atmosphere: 0xffee66 },
         scrollPosition: 0.62,
         type: 'service',
+        actionType: 'route',
       },
     ],
   },
@@ -280,7 +301,7 @@ const galaxies: GalaxyConfig[] = [
           'Zero Trust Architecture',
           'Defense in Depth',
         ],
-        link: '/services',
+        link: '/contact',
         size: 1.3,
         distance: 14,
         orbitSpeed: 0.0006,
@@ -288,6 +309,7 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0xaaaaaa, secondary: 0x666666, atmosphere: 0xcccccc },
         scrollPosition: 0.71,
         type: 'service',
+        actionType: 'route',
       },
       {
         id: 'devsecops',
@@ -307,6 +329,8 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0xff6622, secondary: 0xcc4400, atmosphere: 0xff8844 },
         scrollPosition: 0.77,
         type: 'service',
+        actionType: 'modal',
+        modalContent: { title: 'CI/CD Pipeline Security', type: 'pipeline' },
       },
       {
         id: 'code-review',
@@ -318,7 +342,7 @@ const galaxies: GalaxyConfig[] = [
           'Security Bug Detection',
           'Best Practice Enforcement',
         ],
-        link: '/services',
+        link: '/contact',
         size: 1.1,
         distance: 30,
         orbitSpeed: 0.0004,
@@ -326,6 +350,7 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0x00ddff, secondary: 0x00aacc, atmosphere: 0x44eeff },
         scrollPosition: 0.83,
         type: 'service',
+        actionType: 'route',
       },
       {
         id: 'security-training',
@@ -337,7 +362,7 @@ const galaxies: GalaxyConfig[] = [
           'Hands-on Workshops',
           'Security Champion Program',
         ],
-        link: '/services',
+        link: '/contact',
         size: 1.0,
         distance: 38,
         orbitSpeed: 0.00035,
@@ -345,6 +370,7 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0xcc44cc, secondary: 0x992299, atmosphere: 0xee66ee },
         scrollPosition: 0.89,
         type: 'service',
+        actionType: 'route',
       },
       {
         id: 'ongoing-support',
@@ -364,6 +390,7 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0x22ddaa, secondary: 0x11aa77, atmosphere: 0x44ffcc },
         scrollPosition: 0.95,
         type: 'service',
+        actionType: 'route',
       },
     ],
   },
@@ -426,7 +453,7 @@ const servicePlanetShader = {
     float fbm(vec2 p) {
       float v = 0.0;
       float a = 0.5;
-      for(int i = 0; i < 6; i++) {
+      for(int i = 0; i < 3; i++) {
         v += a * noise(p);
         p *= 2.0;
         a *= 0.5;
@@ -437,7 +464,7 @@ const servicePlanetShader = {
     float fbm3D(vec3 p) {
       float v = 0.0;
       float a = 0.5;
-      for(int i = 0; i < 4; i++) {
+      for(int i = 0; i < 2; i++) {
         v += a * noise3D(p);
         p *= 2.0;
         a *= 0.5;
@@ -550,7 +577,7 @@ const sunShader = {
     float fbm(vec2 p) {
       float v = 0.0;
       float a = 0.5;
-      for(int i = 0; i < 6; i++) {
+      for(int i = 0; i < 3; i++) {
         v += a * noise(p);
         p *= 2.0;
         a *= 0.5;
@@ -619,7 +646,7 @@ const sunCoronaShader = {
     float fbm(vec2 p) {
       float v = 0.0;
       float a = 0.5;
-      for(int i = 0; i < 5; i++) {
+      for(int i = 0; i < 3; i++) {
         v += a * noise(p);
         p *= 2.0;
         a *= 0.5;
@@ -677,7 +704,7 @@ const nebulaShader = {
     float fbm(vec2 p) {
       float v = 0.0;
       float a = 0.5;
-      for(int i = 0; i < 5; i++) {
+      for(int i = 0; i < 3; i++) {
         v += a * noise(p);
         p *= 2.0;
         a *= 0.5;
@@ -725,6 +752,7 @@ interface GalaxyGroup {
 
 export function RealisticSolarSystem() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [activePlanet, setActivePlanet] = useState<PlanetConfig | null>(null);
   const [activeGalaxy, setActiveGalaxy] = useState<GalaxyConfig>(galaxies[0]);
@@ -732,6 +760,8 @@ export function RealisticSolarSystem() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [warpEffect, setWarpEffect] = useState(0);
   const [transitionText, setTransitionText] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalPlanet, setModalPlanet] = useState<PlanetConfig | null>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
   const prevScrollRef = useRef(0);
   const lastGalaxyRef = useRef<string>(galaxies[0].id);
@@ -813,51 +843,55 @@ export function RealisticSolarSystem() {
 
     const refs = sceneRef.current;
 
-    refs.scene = new THREE.Scene();
-    refs.scene.background = new THREE.Color(0x000005);
+    try {
+      refs.scene = new THREE.Scene();
+      refs.scene.background = new THREE.Color(0x000005);
 
-    refs.camera = new THREE.PerspectiveCamera(
-      50,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1500
-    );
-    refs.camera.position.set(0, 10, 80);
+      refs.camera = new THREE.PerspectiveCamera(
+        50,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1500
+      );
+      refs.camera.position.set(0, 10, 80);
 
-    refs.renderer = new THREE.WebGLRenderer({
-      canvas: canvasRef.current,
-      antialias: true,
-      alpha: false,
-      powerPreference: 'high-performance',
-    });
-    refs.renderer.setSize(window.innerWidth, window.innerHeight);
-    refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    refs.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    refs.renderer.toneMappingExposure = 1.4;
+      refs.renderer = new THREE.WebGLRenderer({
+        canvas: canvasRef.current,
+        antialias: true,
+        alpha: false,
+        powerPreference: 'high-performance',
+        failIfMajorPerformanceCaveat: false,
+      });
+      refs.renderer.setSize(window.innerWidth, window.innerHeight);
+      refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      refs.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      refs.renderer.toneMappingExposure = 1.4;
 
-    const ambientLight = new THREE.AmbientLight(0x111122, 0.2);
-    refs.scene.add(ambientLight);
+      const ambientLight = new THREE.AmbientLight(0x111122, 0.2);
+      refs.scene.add(ambientLight);
 
-    raycasterRef.current = new THREE.Raycaster();
+      raycasterRef.current = new THREE.Raycaster();
 
-    createNebula();
-    createParallaxStarfield();
-    createGalaxies();
+      createNebula();
+      createParallaxStarfield();
+      createGalaxies();
+
+      animate();
+    } catch (error) {
+      console.warn('WebGL initialization failed, showing fallback UI');
+    }
 
     setIsLoaded(true);
-    animate();
 
     const handleScroll = () => {
-      if (!containerRef.current) return;
+      if (!scrollRef.current) return;
       
-      const containerTop = containerRef.current.offsetTop;
-      const containerHeight = containerRef.current.offsetHeight;
-      const scrollY = window.scrollY || window.pageYOffset;
-      const viewportHeight = window.innerHeight;
+      const scrollTop = scrollRef.current.scrollTop;
+      const scrollHeight = scrollRef.current.scrollHeight;
+      const clientHeight = scrollRef.current.clientHeight;
       
-      const scrollableDistance = containerHeight - viewportHeight;
-      const scrolledIntoContainer = scrollY - containerTop;
-      const progress = Math.max(0, Math.min(1, scrolledIntoContainer / scrollableDistance));
+      const scrollableDistance = scrollHeight - clientHeight;
+      const progress = scrollableDistance > 0 ? Math.max(0, Math.min(1, scrollTop / scrollableDistance)) : 0;
       
       targetScrollProgressRef.current = progress;
       
@@ -933,27 +967,6 @@ export function RealisticSolarSystem() {
     const handleMouseMove = (e: MouseEvent) => {
       mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       mouseRef.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
-      
-      if (refs.camera && raycasterRef.current && canvasRef.current) {
-        const mouse = new THREE.Vector2(
-          (e.clientX / window.innerWidth) * 2 - 1,
-          -(e.clientY / window.innerHeight) * 2 + 1
-        );
-        
-        raycasterRef.current.setFromCamera(mouse, refs.camera);
-        
-        const allVisiblePlanets: THREE.Object3D[] = [];
-        refs.galaxyGroups.forEach((group) => {
-          group.planets.forEach((mesh) => {
-            if (mesh.visible) {
-              allVisiblePlanets.push(mesh);
-            }
-          });
-        });
-        
-        const intersects = raycasterRef.current.intersectObjects(allVisiblePlanets, false);
-        canvasRef.current.style.cursor = intersects.length > 0 ? 'pointer' : 'default';
-      }
     };
 
     const handleResize = () => {
@@ -964,7 +977,10 @@ export function RealisticSolarSystem() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    const scrollElement = scrollRef.current;
+    if (scrollElement) {
+      scrollElement.addEventListener('scroll', handleScroll, { passive: true });
+    }
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('resize', handleResize);
     canvasRef.current.addEventListener('click', handleClick);
@@ -972,7 +988,7 @@ export function RealisticSolarSystem() {
 
     const currentCanvas = canvasRef.current;
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      scrollElement?.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
       currentCanvas?.removeEventListener('click', handleClick);
@@ -1048,9 +1064,9 @@ export function RealisticSolarSystem() {
     if (!refs.scene) return;
 
     const layers = [
-      { count: 4000, size: 0.6, depth: 350, speed: 0.00003 },
-      { count: 3000, size: 0.9, depth: 250, speed: 0.00006 },
-      { count: 2000, size: 1.2, depth: 150, speed: 0.00012 },
+      { count: 1200, size: 0.6, depth: 350, speed: 0.00003 },
+      { count: 1000, size: 0.9, depth: 250, speed: 0.00006 },
+      { count: 800, size: 1.2, depth: 150, speed: 0.00012 },
     ];
 
     layers.forEach((layer) => {
@@ -1465,17 +1481,26 @@ export function RealisticSolarSystem() {
   const totalScrollHeight = `${galaxies.length * SCROLL_HEIGHT_PER_GALAXY}vh`;
   
   return (
-    <div ref={containerRef} className="relative" style={{ height: totalScrollHeight }}>
-      <div className="sticky top-0 h-screen overflow-hidden">
+    <div ref={containerRef} className="relative w-full h-full">
+      <canvas ref={canvasRef} className="fixed inset-0 z-0" />
+      
+      <div 
+        ref={scrollRef} 
+        className="fixed inset-0 z-10 overflow-y-auto overflow-x-hidden"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        <div style={{ height: totalScrollHeight }} />
+      </div>
+      
+      <div className="fixed inset-0 z-20 pointer-events-none">
         {!isLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center bg-background z-50">
+          <div className="absolute inset-0 flex items-center justify-center bg-background z-50 pointer-events-auto">
             <div className="text-center">
               <div className="w-20 h-20 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto mb-4" />
               <p className="text-muted-foreground">Initializing Galaxy Experience...</p>
             </div>
           </div>
         )}
-        <canvas ref={canvasRef} className="absolute inset-0" />
         
         {warpEffect > 0.3 && (
           <div 
@@ -1511,7 +1536,7 @@ export function RealisticSolarSystem() {
           )}
         </AnimatePresence>
         
-        <div className="absolute top-6 left-1/2 -translate-x-1/2 z-20">
+        <div className="absolute top-6 left-1/2 -translate-x-1/2 z-20 pointer-events-auto">
           <div className="flex items-center gap-4 backdrop-blur-xl bg-black/40 rounded-full px-6 py-3 border border-white/10">
             {galaxies.map((galaxy, index) => (
               <div
@@ -1535,7 +1560,7 @@ export function RealisticSolarSystem() {
           </div>
         </div>
         
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-auto">
           <div className="flex items-center gap-2 backdrop-blur-xl bg-black/40 rounded-full px-4 py-2 border border-white/10">
             {activeGalaxy.planets.map((planet) => (
               <div
@@ -1563,7 +1588,7 @@ export function RealisticSolarSystem() {
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: -60, scale: 0.9 }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 max-w-sm md:max-w-md z-20"
+              className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 max-w-sm md:max-w-md z-20 pointer-events-auto"
             >
               <motion.div 
                 className="backdrop-blur-2xl bg-black/60 border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl"
@@ -1617,18 +1642,31 @@ export function RealisticSolarSystem() {
                     </li>
                   ))}
                 </ul>
-                <Link href={activePlanet.link}>
-                  <a 
+                {activePlanet.actionType === 'modal' ? (
+                  <button
+                    onClick={() => { setModalPlanet(activePlanet); setModalOpen(true); }}
+                    className="flex items-center gap-2 font-semibold px-5 py-3 rounded-full hover:opacity-90 transition-all group"
+                    style={{
+                      background: `linear-gradient(135deg, ${activeGalaxy.colorTheme.primary}, ${activeGalaxy.colorTheme.secondary})`,
+                    }}
+                    data-testid={`button-learn-more-${activePlanet.id}`}
+                  >
+                    <span>Learn More</span>
+                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                ) : (
+                  <Link
+                    href={activePlanet.actionType === 'attack-globe' ? '/attack-globe' : activePlanet.link}
                     className="flex items-center gap-2 font-semibold px-5 py-3 rounded-full hover:opacity-90 transition-all group"
                     style={{
                       background: `linear-gradient(135deg, ${activeGalaxy.colorTheme.primary}, ${activeGalaxy.colorTheme.secondary})`,
                     }}
                     data-testid={`link-learn-more-${activePlanet.id}`}
                   >
-                    <span>Learn More</span>
+                    <span>{activePlanet.actionType === 'attack-globe' ? 'View Cyber Attacks' : 'Learn More'}</span>
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </a>
-                </Link>
+                  </Link>
+                )}
               </motion.div>
             </motion.div>
           )}
@@ -1676,6 +1714,123 @@ export function RealisticSolarSystem() {
                   </div>
                 </motion.div>
               </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {modalOpen && modalPlanet && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xl"
+              onClick={() => setModalOpen(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.9, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.9, y: 20 }}
+                className="relative max-w-2xl w-full mx-4 p-8 rounded-3xl border border-white/10"
+                style={{
+                  background: `linear-gradient(135deg, ${activeGalaxy.colorTheme.primary}20, ${activeGalaxy.colorTheme.secondary}10)`,
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  onClick={() => setModalOpen(false)}
+                  className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                  data-testid="button-modal-close"
+                >
+                  <X className="w-5 h-5 text-white" />
+                </button>
+
+                <h2
+                  className="text-3xl font-bold mb-4"
+                  style={{ color: getColorHex(modalPlanet) }}
+                >
+                  {modalPlanet.modalContent?.title || modalPlanet.name}
+                </h2>
+
+                <div className="mb-6 p-4 rounded-2xl bg-black/40 border border-white/5 font-mono text-sm overflow-hidden">
+                  {modalPlanet.modalContent?.type === 'scanner' && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-green-400">
+                        <span className="animate-pulse">●</span> Scanning target...
+                      </div>
+                      {['SQL Injection', 'XSS Vulnerabilities', 'CSRF Tokens', 'Auth Bypass'].map((item, i) => (
+                        <motion.div
+                          key={item}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.2 }}
+                          className="flex justify-between text-white/70"
+                        >
+                          <span>Checking {item}...</span>
+                          <span className="text-yellow-400">⬤</span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                  {modalPlanet.modalContent?.type === 'tester' && (
+                    <div className="space-y-2">
+                      <div className="text-cyan-400">GET /api/v1/users</div>
+                      <div className="text-green-400">→ 200 OK (42ms)</div>
+                      <div className="text-cyan-400 mt-2">POST /api/v1/auth</div>
+                      <div className="text-green-400">→ 200 OK (128ms)</div>
+                      <div className="text-cyan-400 mt-2">GET /api/v1/admin</div>
+                      <div className="text-red-400">→ 401 Unauthorized (15ms)</div>
+                    </div>
+                  )}
+                  {modalPlanet.modalContent?.type === 'checker' && (
+                    <div className="space-y-2">
+                      <div className="flex justify-between"><span>S3 Bucket Encryption</span><span className="text-green-400">✓</span></div>
+                      <div className="flex justify-between"><span>IAM MFA Enabled</span><span className="text-green-400">✓</span></div>
+                      <div className="flex justify-between"><span>Public Access Blocked</span><span className="text-red-400">✗</span></div>
+                      <div className="flex justify-between"><span>CloudTrail Logging</span><span className="text-yellow-400">⚠</span></div>
+                    </div>
+                  )}
+                  {modalPlanet.modalContent?.type === 'checklist' && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2"><span className="text-green-400">☑</span> Information Security Policy</div>
+                      <div className="flex items-center gap-2"><span className="text-green-400">☑</span> Risk Assessment Framework</div>
+                      <div className="flex items-center gap-2"><span className="text-yellow-400">☐</span> Access Control Policy</div>
+                      <div className="flex items-center gap-2"><span className="text-yellow-400">☐</span> Incident Response Plan</div>
+                    </div>
+                  )}
+                  {modalPlanet.modalContent?.type === 'pipeline' && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2"><span className="text-green-400">✓</span> Build → <span className="text-white/50">2.3s</span></div>
+                      <div className="flex items-center gap-2"><span className="text-green-400">✓</span> SAST Scan → <span className="text-white/50">12.1s</span></div>
+                      <div className="flex items-center gap-2"><span className="text-cyan-400 animate-pulse">●</span> Container Scan → <span className="text-white/50">running...</span></div>
+                      <div className="flex items-center gap-2 text-white/30">○ Deploy to Staging</div>
+                    </div>
+                  )}
+                </div>
+
+                <p className="text-muted-foreground mb-6">{modalPlanet.description}</p>
+
+                <div className="flex gap-3">
+                  <Link
+                    href="/contact"
+                    className="flex-1 text-center py-3 rounded-full font-semibold transition-all hover:opacity-90"
+                    style={{
+                      background: `linear-gradient(135deg, ${activeGalaxy.colorTheme.primary}, ${activeGalaxy.colorTheme.secondary})`,
+                    }}
+                    onClick={() => setModalOpen(false)}
+                    data-testid="link-modal-contact"
+                  >
+                    Get Started
+                  </Link>
+                  <button
+                    onClick={() => setModalOpen(false)}
+                    className="px-6 py-3 rounded-full font-semibold bg-white/10 hover:bg-white/20 transition-colors"
+                    data-testid="button-modal-close-secondary"
+                  >
+                    Close
+                  </button>
+                </div>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
