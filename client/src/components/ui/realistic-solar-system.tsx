@@ -813,19 +813,9 @@ export function RealisticSolarSystem() {
     const currentIndex = lockedGalaxyIndexRef.current;
     const currentGalaxy = galaxies[currentIndex];
     
-    console.log('Galaxy Debug:', { 
-      currentIndex, 
-      currentGalaxyName: currentGalaxy.name,
-      progress, 
-      scrollEnd: currentGalaxy.scrollEnd,
-      threshold: currentGalaxy.scrollEnd + HYSTERESIS_BUFFER,
-      shouldTransition: progress > currentGalaxy.scrollEnd + HYSTERESIS_BUFFER
-    });
-    
     if (currentIndex < galaxies.length - 1) {
       const nextBoundary = currentGalaxy.scrollEnd;
       if (progress > nextBoundary + HYSTERESIS_BUFFER) {
-        console.log('TRANSITIONING to galaxy:', currentIndex + 1, galaxies[currentIndex + 1].name);
         lockedGalaxyIndexRef.current = currentIndex + 1;
         return galaxies[currentIndex + 1];
       }
@@ -840,7 +830,7 @@ export function RealisticSolarSystem() {
     }
     
     return currentGalaxy;
-  }, [HYSTERESIS_BUFFER]);
+  }, []);
 
   const getGalaxyLocalProgress = useCallback((progress: number, galaxy: GalaxyConfig): number => {
     const range = galaxy.scrollEnd - galaxy.scrollStart;
@@ -901,9 +891,6 @@ export function RealisticSolarSystem() {
       
       const scrollableDistance = scrollHeight - clientHeight;
       const progress = scrollableDistance > 0 ? Math.max(0, Math.min(1, scrollTop / scrollableDistance)) : 0;
-      
-      // Debug logging
-      console.log('Scroll Debug:', { scrollTop, scrollHeight, clientHeight, scrollableDistance, progress });
       
       targetScrollProgressRef.current = progress;
       
@@ -1013,7 +1000,8 @@ export function RealisticSolarSystem() {
       refs.materials.forEach(m => m.dispose());
       refs.renderer?.dispose();
     };
-  }, [getGalaxyWithHysteresis]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (warpEffect > 0) {
@@ -1540,7 +1528,8 @@ export function RealisticSolarSystem() {
     waitForLayoutAndRestore();
     
     return () => window.removeEventListener('resize', updateSpacerHeight);
-  }, [updateSpacerHeight, getGalaxyWithHysteresis]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   
   return (
     <div ref={containerRef} className="relative w-full h-full">
