@@ -813,9 +813,19 @@ export function RealisticSolarSystem() {
     const currentIndex = lockedGalaxyIndexRef.current;
     const currentGalaxy = galaxies[currentIndex];
     
+    console.log('Galaxy Debug:', { 
+      currentIndex, 
+      currentGalaxyName: currentGalaxy.name,
+      progress, 
+      scrollEnd: currentGalaxy.scrollEnd,
+      threshold: currentGalaxy.scrollEnd + HYSTERESIS_BUFFER,
+      shouldTransition: progress > currentGalaxy.scrollEnd + HYSTERESIS_BUFFER
+    });
+    
     if (currentIndex < galaxies.length - 1) {
       const nextBoundary = currentGalaxy.scrollEnd;
       if (progress > nextBoundary + HYSTERESIS_BUFFER) {
+        console.log('TRANSITIONING to galaxy:', currentIndex + 1, galaxies[currentIndex + 1].name);
         lockedGalaxyIndexRef.current = currentIndex + 1;
         return galaxies[currentIndex + 1];
       }
