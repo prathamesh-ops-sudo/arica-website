@@ -16,6 +16,8 @@ import ComplianceDashboard from "@/pages/ComplianceDashboard";
 import DevSecOpsPipeline from "@/pages/DevSecOpsPipeline";
 import ApiSecurityLab from "@/pages/ApiSecurityLab";
 import CloudSecurityCenter from "@/pages/CloudSecurityCenter";
+import MobileSecurity from "@/pages/MobileSecurity";
+import RiskAssessment from "@/pages/RiskAssessment";
 
 function Router() {
   return (
@@ -34,6 +36,8 @@ function Router() {
       <Route path="/devsecops-pipeline" component={DevSecOpsPipeline} />
       <Route path="/api-security-lab" component={ApiSecurityLab} />
       <Route path="/cloud-security-center" component={CloudSecurityCenter} />
+      <Route path="/mobile-security" component={MobileSecurity} />
+      <Route path="/risk-assessment" component={RiskAssessment} />
       <Route path="/portal" component={Contact} />
       <Route component={NotFound} />
     </Switch>
