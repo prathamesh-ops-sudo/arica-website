@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { EtherealShadow } from "@/components/ui/ethereal-shadow";
+import { AmbientParticles } from "@/components/ui/ambient-particles";
 
 const categories = ["All sectors", "VAPT", "ISO Audit", "Software", "Enterprise"];
 
@@ -132,6 +133,7 @@ export default function CaseStudies() {
 
   return (
     <div className="min-h-screen bg-background aurora-bg">
+      <AmbientParticles variant="data" count={15} opacity={0.1} />
       <Navbar />
 
       <section className="pt-32 pb-16 relative overflow-hidden">

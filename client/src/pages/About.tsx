@@ -4,6 +4,7 @@ import { Navbar } from "@/components/Navbar";
 import { Team } from "@/components/Team";
 import { CTA } from "@/components/CTA";
 import { Footer } from "@/components/Footer";
+import { AmbientParticles } from "@/components/ui/ambient-particles";
 
 const values = [
   {
@@ -33,6 +34,7 @@ const stats = [
 export default function About() {
   return (
     <div className="min-h-screen bg-background aurora-bg">
+      <AmbientParticles variant="network" count={18} opacity={0.1} />
       <Navbar />
 
       <section className="pt-32 pb-20 relative overflow-hidden">

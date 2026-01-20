@@ -12,6 +12,7 @@ import { CTA } from "@/components/CTA";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Typewriter } from "@/components/ui/typewriter";
+import { AmbientParticles } from "@/components/ui/ambient-particles";
 
 const services = [
   {
@@ -64,6 +65,7 @@ const services = [
 export default function ServicesPage() {
   return (
     <div className="min-h-screen bg-background aurora-bg">
+      <AmbientParticles variant="dots" count={25} opacity={0.12} />
       <Navbar />
 
       <section className="pt-32 pb-20 relative overflow-hidden">
