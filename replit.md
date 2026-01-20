@@ -129,3 +129,7 @@ Strategic animation effects used throughout the site (not overused to avoid "che
 - **Contact** (`/contact`): Contact form with MorphButton, contact info cards
 - **Experience** (`/experience`): Interactive solar system journey showcasing security services
 - **Attack Globe** (`/attack-globe`): Dramatic "Every 39 Seconds" messaging, fluid simulation background, live attack/loss counters, key cybersecurity statistics, and strong VAPT call-to-action with compelling breach prevention data
+- **Mobile Security** (`/mobile-security`): Interactive mobile security testing simulation with device selection panel (iOS/Android), animated security scan phases, vulnerability cards with severity levels, OWASP Mobile Top 10 checklist, and app permissions analyzer
+- **Risk Assessment** (`/risk-assessment`): Interactive risk assessment dashboard with circular risk score indicator, 6 risk category cards with expandable details, threat matrix visualization, risk trend chart, action items panel with checkboxes, and compliance scorecard for ISO 27001/NIST/SOC 2
+- **API Security Lab** (`/api-security-lab`): Interactive API security testing with endpoint testing simulation, authentication panel, rate limiting heatmap, and data exposure testing
+- **Cloud Security Center** (`/cloud-security-center`): Cloud infrastructure visualization, IAM policy assessment, container security cards, and real-time security events
