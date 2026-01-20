@@ -809,27 +809,14 @@ export function RealisticSolarSystem() {
     lookAtZ: 0,
   });
 
-  const getGalaxyWithHysteresis = useCallback((progress: number): GalaxyConfig => {
-    const currentIndex = lockedGalaxyIndexRef.current;
-    const currentGalaxy = galaxies[currentIndex];
-    
-    if (currentIndex < galaxies.length - 1) {
-      const nextBoundary = currentGalaxy.scrollEnd;
-      if (progress > nextBoundary + HYSTERESIS_BUFFER) {
-        lockedGalaxyIndexRef.current = currentIndex + 1;
-        return galaxies[currentIndex + 1];
-      }
+  const getGalaxyForProgress = useCallback((progress: number): GalaxyConfig => {
+    // Simple direct mapping: 0-0.33 = VAPT, 0.33-0.66 = ISO, 0.66-1.0 = Secure Software
+    if (progress >= 0.66) {
+      return galaxies[2]; // Secure Software
+    } else if (progress >= 0.33) {
+      return galaxies[1]; // ISO 27001
     }
-    
-    if (currentIndex > 0) {
-      const prevBoundary = currentGalaxy.scrollStart;
-      if (progress < prevBoundary - HYSTERESIS_BUFFER) {
-        lockedGalaxyIndexRef.current = currentIndex - 1;
-        return galaxies[currentIndex - 1];
-      }
-    }
-    
-    return currentGalaxy;
+    return galaxies[0]; // VAPT Services
   }, []);
 
   const getGalaxyLocalProgress = useCallback((progress: number, galaxy: GalaxyConfig): number => {
@@ -901,7 +888,7 @@ export function RealisticSolarSystem() {
           const currentProgress = targetScrollProgressRef.current;
           const scrollDelta = Math.abs(currentProgress - prevScrollRef.current);
           
-          const currentGalaxy = getGalaxyWithHysteresis(currentProgress);
+          const currentGalaxy = getGalaxyForProgress(currentProgress);
           
           if (currentGalaxy.id !== lastGalaxyRef.current && !transitionCooldownRef.current) {
             transitionCooldownRef.current = true;
@@ -1383,7 +1370,7 @@ export function RealisticSolarSystem() {
       nebulaMat.uniforms.time.value = time;
       nebulaMat.uniforms.parallax.value = mouseRef.current.x * 2;
       
-      const currentGalaxy = getGalaxyWithHysteresis(scrollProgress);
+      const currentGalaxy = getGalaxyForProgress(scrollProgress);
       nebulaMat.uniforms.nebulaColor1.value.set(
         currentGalaxy.nebulaColors.color1[0],
         currentGalaxy.nebulaColors.color1[1],
@@ -1401,7 +1388,7 @@ export function RealisticSolarSystem() {
       );
     }
 
-    const currentGalaxy = getGalaxyWithHysteresis(scrollProgress);
+    const currentGalaxy = getGalaxyForProgress(scrollProgress);
     
     refs.galaxyGroups.forEach((group) => {
       const isCurrentGalaxy = group.id === currentGalaxy.id;
@@ -1468,7 +1455,7 @@ export function RealisticSolarSystem() {
     if (refs.renderer && refs.scene && refs.camera) {
       refs.renderer.render(refs.scene, refs.camera);
     }
-  }, [scrollProgress, warpEffect, getGalaxyWithHysteresis]);
+  }, [scrollProgress, warpEffect, getGalaxyForProgress]);
 
   const getColorHex = (planet: PlanetConfig) => `#${planet.color.primary.toString(16).padStart(6, '0')}`;
   const getGalaxyIcon = (galaxyId: string) => {
@@ -1515,7 +1502,7 @@ export function RealisticSolarSystem() {
           scrollRef.current.scrollTop = progress * scrollableDistance;
           setScrollProgress(progress);
           
-          const galaxy = getGalaxyWithHysteresis(progress);
+          const galaxy = getGalaxyForProgress(progress);
           setActiveGalaxy(galaxy);
           lastGalaxyRef.current = galaxy.id;
           initialScrollRestoredRef.current = true;
