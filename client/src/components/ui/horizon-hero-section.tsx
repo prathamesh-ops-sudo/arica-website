@@ -587,14 +587,13 @@ export function HorizonHeroSection() {
           </p>
         </div>
         
-        <Link href="/experience">
-          <a 
-            className="mt-8 inline-flex items-center gap-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold px-8 py-4 rounded-full hover:opacity-90 transition-all hover:scale-105 shadow-lg shadow-cyan-500/25"
-            data-testid="button-enter-experience"
-          >
-            <Rocket className="w-5 h-5" />
-            Enter the Experience
-          </a>
+        <Link 
+          href="/experience"
+          className="mt-8 inline-flex items-center gap-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold px-8 py-4 rounded-full hover:opacity-90 transition-all hover:scale-105 shadow-lg shadow-cyan-500/25"
+          data-testid="button-enter-experience"
+        >
+          <Rocket className="w-5 h-5" />
+          Enter the Experience
         </Link>
       </div>
 
