@@ -725,6 +725,91 @@ const nebulaShader = {
   `,
 };
 
+const shockwaveShader = {
+  vertexShader: `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform float progress;
+    uniform vec3 shockwaveColor;
+    uniform float ringWidth;
+    varying vec2 vUv;
+    
+    void main() {
+      vec2 center = vec2(0.5, 0.5);
+      float dist = distance(vUv, center) * 2.0;
+      float ring = smoothstep(progress - ringWidth, progress, dist) * 
+                   smoothstep(progress + ringWidth, progress, dist);
+      float fade = 1.0 - progress;
+      float alpha = ring * fade * 2.0;
+      gl_FragColor = vec4(shockwaveColor * 1.5, alpha);
+    }
+  `,
+};
+
+const particleBurstShader = {
+  vertexShader: `
+    attribute float size;
+    attribute float life;
+    attribute vec3 velocity;
+    uniform float time;
+    varying float vLife;
+    varying vec3 vColor;
+    
+    void main() {
+      vLife = life;
+      vec3 pos = position + velocity * time * 2.0;
+      pos += velocity * sin(time * 3.0) * 0.2;
+      vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+      gl_PointSize = size * (1.0 - time * 0.5) * (300.0 / -mvPosition.z);
+      gl_Position = projectionMatrix * mvPosition;
+      vColor = vec3(1.0, 0.8, 0.4);
+    }
+  `,
+  fragmentShader: `
+    varying float vLife;
+    varying vec3 vColor;
+    uniform float time;
+    
+    void main() {
+      float dist = length(gl_PointCoord - vec2(0.5));
+      if (dist > 0.5) discard;
+      float alpha = (1.0 - dist * 2.0) * (1.0 - time);
+      gl_FragColor = vec4(vColor, alpha * vLife);
+    }
+  `,
+};
+
+const trailParticleShader = {
+  vertexShader: `
+    attribute float size;
+    attribute float alpha;
+    varying float vAlpha;
+    
+    void main() {
+      vAlpha = alpha;
+      vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+      gl_PointSize = size * (200.0 / -mvPosition.z);
+      gl_Position = projectionMatrix * mvPosition;
+    }
+  `,
+  fragmentShader: `
+    uniform vec3 trailColor;
+    varying float vAlpha;
+    
+    void main() {
+      float dist = length(gl_PointCoord - vec2(0.5));
+      if (dist > 0.5) discard;
+      float intensity = 1.0 - dist * 2.0;
+      gl_FragColor = vec4(trailColor * intensity, vAlpha * intensity);
+    }
+  `,
+};
+
 interface PlanetMesh extends THREE.Mesh {
   userData: {
     planet: PlanetConfig;
@@ -733,7 +818,21 @@ interface PlanetMesh extends THREE.Mesh {
     bobOffset: number;
     atmosphere?: THREE.Mesh;
     outerGlow?: THREE.Mesh;
+    hoverIntensity?: number;
+    wobblePhase?: number;
+    scatterOffset?: THREE.Vector3;
+    particleBurst?: THREE.Points;
   };
+}
+
+interface PhysicsState {
+  scrollVelocity: number;
+  scrollMomentum: number;
+  cameraShake: { x: number; y: number; z: number; intensity: number };
+  hoveredPlanetId: string | null;
+  transitionShockwave: { active: boolean; progress: number; center: THREE.Vector3 };
+  planetScatter: { active: boolean; progress: number };
+  warpTrails: THREE.Points[];
 }
 
 interface GalaxyGroup {
@@ -767,6 +866,21 @@ export function RealisticSolarSystem() {
   const targetScrollProgressRef = useRef(0);
   const spacerRef = useRef<HTMLDivElement>(null);
   const initialScrollRestoredRef = useRef(false);
+  const lastScrollTimeRef = useRef(0);
+  const scrollVelocityRef = useRef(0);
+  
+  const physicsStateRef = useRef<PhysicsState>({
+    scrollVelocity: 0,
+    scrollMomentum: 0,
+    cameraShake: { x: 0, y: 0, z: 0, intensity: 0 },
+    hoveredPlanetId: null,
+    transitionShockwave: { active: false, progress: 0, center: new THREE.Vector3() },
+    planetScatter: { active: false, progress: 0 },
+    warpTrails: [],
+  });
+  
+  const shockwaveRef = useRef<THREE.Mesh | null>(null);
+  const trailParticlesRef = useRef<THREE.Points | null>(null);
   
   const HYSTERESIS_BUFFER = 0.025;
   const SCROLL_MULTIPLIER = 5;
@@ -877,13 +991,96 @@ export function RealisticSolarSystem() {
       const scrollableDistance = scrollHeight - clientHeight;
       let progress = scrollableDistance > 0 ? scrollTop / scrollableDistance : 0;
       
-      // Looping mechanism: when reaching end, smoothly animate back to start
       if (progress >= 0.98 && scrollRef.current && !transitionCooldownRef.current) {
         transitionCooldownRef.current = true;
         setWarpEffect(1);
         setTransitionText('Warping to VAPT Services...');
         
-        // Animate scroll back to start
+        physicsStateRef.current.cameraShake.intensity = 1.2;
+        physicsStateRef.current.planetScatter = { active: true, progress: 0 };
+        
+        if (sceneRef.current.scene) {
+          if (shockwaveRef.current) {
+            sceneRef.current.scene.remove(shockwaveRef.current);
+            shockwaveRef.current.geometry.dispose();
+            (shockwaveRef.current.material as THREE.Material).dispose();
+          }
+          
+          const warpColor = new THREE.Color('#00ffff');
+          const ringGeom = new THREE.RingGeometry(0.1, 100, 64);
+          const ringMat = new THREE.ShaderMaterial({
+            uniforms: {
+              progress: { value: 0 },
+              shockwaveColor: { value: new THREE.Vector3(warpColor.r, warpColor.g, warpColor.b) },
+              ringWidth: { value: 0.2 },
+            },
+            vertexShader: shockwaveShader.vertexShader,
+            fragmentShader: shockwaveShader.fragmentShader,
+            transparent: true,
+            side: THREE.DoubleSide,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+          });
+          
+          const ringMesh = new THREE.Mesh(ringGeom, ringMat);
+          ringMesh.rotation.x = -Math.PI / 2;
+          ringMesh.position.y = 0;
+          sceneRef.current.scene.add(ringMesh);
+          shockwaveRef.current = ringMesh;
+          
+          physicsStateRef.current.transitionShockwave = {
+            active: true,
+            progress: 0,
+            center: new THREE.Vector3(0, 0, 0),
+          };
+          
+          if (!trailParticlesRef.current) {
+            const particleCount = 100;
+            const positions = new Float32Array(particleCount * 3);
+            const sizes = new Float32Array(particleCount);
+            const alphas = new Float32Array(particleCount);
+            
+            for (let i = 0; i < particleCount; i++) {
+              positions[i * 3] = (Math.random() - 0.5) * 20;
+              positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+              positions[i * 3 + 2] = -10 - Math.random() * 80;
+              sizes[i] = 1 + Math.random() * 2;
+              alphas[i] = 0;
+            }
+            
+            const trailGeom = new THREE.BufferGeometry();
+            trailGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            trailGeom.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+            trailGeom.setAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
+            
+            const trailMat = new THREE.ShaderMaterial({
+              uniforms: {
+                trailColor: { value: new THREE.Vector3(warpColor.r, warpColor.g, warpColor.b) },
+              },
+              vertexShader: trailParticleShader.vertexShader,
+              fragmentShader: trailParticleShader.fragmentShader,
+              transparent: true,
+              depthWrite: false,
+              blending: THREE.AdditiveBlending,
+            });
+            
+            const trailParticles = new THREE.Points(trailGeom, trailMat);
+            sceneRef.current.scene.add(trailParticles);
+            trailParticlesRef.current = trailParticles;
+          }
+        }
+        
+        sceneRef.current.galaxyGroups.forEach((group) => {
+          group.planets.forEach((mesh) => {
+            const randomDir = new THREE.Vector3(
+              (Math.random() - 0.5) * 2,
+              (Math.random() - 0.5) * 0.5,
+              (Math.random() - 0.5) * 2
+            ).normalize();
+            mesh.userData.scatterOffset = randomDir.multiplyScalar(5 + Math.random() * 8);
+          });
+        });
+        
         const animateToStart = () => {
           if (!scrollRef.current) return;
           const currentScroll = scrollRef.current.scrollTop;
@@ -919,12 +1116,72 @@ export function RealisticSolarSystem() {
           const currentProgress = targetScrollProgressRef.current;
           const scrollDelta = Math.abs(currentProgress - prevScrollRef.current);
           
+          const now = performance.now();
+          const timeDelta = now - lastScrollTimeRef.current;
+          lastScrollTimeRef.current = now;
+          
+          if (timeDelta > 0 && timeDelta < 100) {
+            scrollVelocityRef.current = scrollDelta / timeDelta * 1000;
+            physicsStateRef.current.scrollMomentum = Math.min(scrollVelocityRef.current * 2, 3);
+          }
+          
           const currentGalaxy = getGalaxyForProgress(currentProgress);
           
           if (currentGalaxy.id !== lastGalaxyRef.current && !transitionCooldownRef.current) {
             transitionCooldownRef.current = true;
             setWarpEffect(1);
             setTransitionText(`Entering ${currentGalaxy.name}`);
+            
+            physicsStateRef.current.cameraShake.intensity = 0.8;
+            physicsStateRef.current.planetScatter = { active: true, progress: 0 };
+            
+            if (sceneRef.current.scene) {
+              if (shockwaveRef.current) {
+                sceneRef.current.scene.remove(shockwaveRef.current);
+                shockwaveRef.current.geometry.dispose();
+                (shockwaveRef.current.material as THREE.Material).dispose();
+              }
+              
+              const shockColor = new THREE.Color(currentGalaxy.colorTheme.accent);
+              const ringGeom = new THREE.RingGeometry(0.1, 80, 64);
+              const ringMat = new THREE.ShaderMaterial({
+                uniforms: {
+                  progress: { value: 0 },
+                  shockwaveColor: { value: new THREE.Vector3(shockColor.r, shockColor.g, shockColor.b) },
+                  ringWidth: { value: 0.15 },
+                },
+                vertexShader: shockwaveShader.vertexShader,
+                fragmentShader: shockwaveShader.fragmentShader,
+                transparent: true,
+                side: THREE.DoubleSide,
+                depthWrite: false,
+                blending: THREE.AdditiveBlending,
+              });
+              
+              const ringMesh = new THREE.Mesh(ringGeom, ringMat);
+              ringMesh.rotation.x = -Math.PI / 2;
+              ringMesh.position.y = 0;
+              sceneRef.current.scene.add(ringMesh);
+              shockwaveRef.current = ringMesh;
+              
+              physicsStateRef.current.transitionShockwave = {
+                active: true,
+                progress: 0,
+                center: new THREE.Vector3(0, 0, 0),
+              };
+            }
+            
+            sceneRef.current.galaxyGroups.forEach((group) => {
+              group.planets.forEach((mesh) => {
+                const randomDir = new THREE.Vector3(
+                  (Math.random() - 0.5) * 2,
+                  (Math.random() - 0.5) * 0.5,
+                  (Math.random() - 0.5) * 2
+                ).normalize();
+                mesh.userData.scatterOffset = randomDir.multiplyScalar(3 + Math.random() * 5);
+              });
+            });
+            
             setTimeout(() => setTransitionText(null), 2000);
             lastGalaxyRef.current = currentGalaxy.id;
             setTimeout(() => {
@@ -1368,12 +1625,217 @@ export function RealisticSolarSystem() {
     });
   };
 
+  const createShockwave = useCallback(() => {
+    const refs = sceneRef.current;
+    if (!refs.scene) return;
+    
+    if (shockwaveRef.current) {
+      refs.scene.remove(shockwaveRef.current);
+      shockwaveRef.current.geometry.dispose();
+      (shockwaveRef.current.material as THREE.Material).dispose();
+    }
+    
+    const currentGalaxy = getGalaxyForProgress(scrollProgress);
+    const shockwaveColor = new THREE.Color(currentGalaxy.colorTheme.accent);
+    
+    const geometry = new THREE.RingGeometry(0.1, 80, 64);
+    const material = new THREE.ShaderMaterial({
+      uniforms: {
+        progress: { value: 0 },
+        shockwaveColor: { value: new THREE.Vector3(shockwaveColor.r, shockwaveColor.g, shockwaveColor.b) },
+        ringWidth: { value: 0.15 },
+      },
+      vertexShader: shockwaveShader.vertexShader,
+      fragmentShader: shockwaveShader.fragmentShader,
+      transparent: true,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.rotation.x = -Math.PI / 2;
+    mesh.position.y = 0;
+    refs.scene.add(mesh);
+    shockwaveRef.current = mesh;
+    
+    physicsStateRef.current.transitionShockwave = {
+      active: true,
+      progress: 0,
+      center: new THREE.Vector3(0, 0, 0),
+    };
+  }, [scrollProgress, getGalaxyForProgress]);
+
+  const createParticleBurst = useCallback((position: THREE.Vector3, color: THREE.Color) => {
+    const refs = sceneRef.current;
+    if (!refs.scene) return null;
+    
+    const particleCount = 30;
+    const positions = new Float32Array(particleCount * 3);
+    const velocities = new Float32Array(particleCount * 3);
+    const sizes = new Float32Array(particleCount);
+    const lifes = new Float32Array(particleCount);
+    
+    for (let i = 0; i < particleCount; i++) {
+      positions[i * 3] = position.x;
+      positions[i * 3 + 1] = position.y;
+      positions[i * 3 + 2] = position.z;
+      
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(Math.random() * 2 - 1);
+      const speed = 0.5 + Math.random() * 1.5;
+      velocities[i * 3] = Math.sin(phi) * Math.cos(theta) * speed;
+      velocities[i * 3 + 1] = Math.sin(phi) * Math.sin(theta) * speed;
+      velocities[i * 3 + 2] = Math.cos(phi) * speed;
+      
+      sizes[i] = 2 + Math.random() * 4;
+      lifes[i] = 0.5 + Math.random() * 0.5;
+    }
+    
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+    geometry.setAttribute('life', new THREE.BufferAttribute(lifes, 1));
+    
+    const material = new THREE.ShaderMaterial({
+      uniforms: {
+        time: { value: 0 },
+        burstColor: { value: new THREE.Vector3(color.r, color.g, color.b) },
+      },
+      vertexShader: particleBurstShader.vertexShader,
+      fragmentShader: particleBurstShader.fragmentShader,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    
+    const particles = new THREE.Points(geometry, material);
+    (particles as any).userData = { startTime: sceneRef.current.clock.getElapsedTime(), duration: 1.5 };
+    refs.scene.add(particles);
+    refs.disposables.push(geometry);
+    refs.materials.push(material);
+    
+    return particles;
+  }, []);
+
+  const createTrailParticles = useCallback(() => {
+    const refs = sceneRef.current;
+    if (!refs.scene) return;
+    
+    if (trailParticlesRef.current) {
+      refs.scene.remove(trailParticlesRef.current);
+    }
+    
+    const particleCount = 100;
+    const positions = new Float32Array(particleCount * 3);
+    const sizes = new Float32Array(particleCount);
+    const alphas = new Float32Array(particleCount);
+    
+    for (let i = 0; i < particleCount; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 20;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+      positions[i * 3 + 2] = -10 - Math.random() * 80;
+      sizes[i] = 1 + Math.random() * 2;
+      alphas[i] = 0;
+    }
+    
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+    geometry.setAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
+    
+    const currentGalaxy = getGalaxyForProgress(scrollProgress);
+    const trailColor = new THREE.Color(currentGalaxy.colorTheme.accent);
+    
+    const material = new THREE.ShaderMaterial({
+      uniforms: {
+        trailColor: { value: new THREE.Vector3(trailColor.r, trailColor.g, trailColor.b) },
+      },
+      vertexShader: trailParticleShader.vertexShader,
+      fragmentShader: trailParticleShader.fragmentShader,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    
+    const particles = new THREE.Points(geometry, material);
+    refs.scene.add(particles);
+    trailParticlesRef.current = particles;
+    refs.disposables.push(geometry);
+    refs.materials.push(material);
+  }, [scrollProgress, getGalaxyForProgress]);
+
+  const triggerGalaxyTransition = useCallback(() => {
+    const physics = physicsStateRef.current;
+    
+    physics.cameraShake.intensity = 0.8;
+    physics.planetScatter = { active: true, progress: 0 };
+    
+    createShockwave();
+    createTrailParticles();
+    
+    sceneRef.current.galaxyGroups.forEach((group) => {
+      group.planets.forEach((mesh) => {
+        const randomDir = new THREE.Vector3(
+          (Math.random() - 0.5) * 2,
+          (Math.random() - 0.5) * 0.5,
+          (Math.random() - 0.5) * 2
+        ).normalize();
+        mesh.userData.scatterOffset = randomDir.multiplyScalar(3 + Math.random() * 5);
+      });
+    });
+  }, [createShockwave, createTrailParticles]);
+
+  const checkPlanetHover = useCallback(() => {
+    const refs = sceneRef.current;
+    if (!refs.camera || !raycasterRef.current) return;
+    
+    const mouse = new THREE.Vector2(mouseRef.current.x, mouseRef.current.y);
+    raycasterRef.current.setFromCamera(mouse, refs.camera);
+    
+    const allVisiblePlanets: THREE.Object3D[] = [];
+    refs.galaxyGroups.forEach((group) => {
+      group.planets.forEach((mesh) => {
+        if (mesh.visible) {
+          allVisiblePlanets.push(mesh);
+        }
+      });
+    });
+    
+    const intersects = raycasterRef.current.intersectObjects(allVisiblePlanets, false);
+    
+    let hoveredId: string | null = null;
+    if (intersects.length > 0) {
+      const hitMesh = intersects[0].object as PlanetMesh;
+      if (hitMesh.userData?.planet) {
+        hoveredId = hitMesh.userData.planet.id;
+        
+        if (physicsStateRef.current.hoveredPlanetId !== hoveredId) {
+          const burstColor = new THREE.Color(hitMesh.userData.planet.color.primary);
+          const burst = createParticleBurst(hitMesh.position.clone(), burstColor);
+          if (burst) {
+            hitMesh.userData.particleBurst = burst;
+          }
+        }
+      }
+    }
+    
+    physicsStateRef.current.hoveredPlanetId = hoveredId;
+  }, [createParticleBurst]);
+
   const animate = useCallback(() => {
     const refs = sceneRef.current;
     refs.animationId = requestAnimationFrame(animate);
 
     const time = refs.clock.getElapsedTime();
     const cam = cameraState.current;
+    const physics = physicsStateRef.current;
+    
+    checkPlanetHover();
+    
+    physics.scrollMomentum *= 0.95;
+    const momentumBoost = physics.scrollMomentum * 0.5;
     
     const smoothing = 0.025;
     cam.x += (cam.targetX - cam.x) * smoothing;
@@ -1382,17 +1844,65 @@ export function RealisticSolarSystem() {
 
     const mouseX = mouseRef.current.x * 4;
     const mouseY = mouseRef.current.y * 2.5;
+    
+    if (physics.cameraShake.intensity > 0) {
+      physics.cameraShake.x = (Math.random() - 0.5) * physics.cameraShake.intensity * 2;
+      physics.cameraShake.y = (Math.random() - 0.5) * physics.cameraShake.intensity * 1.5;
+      physics.cameraShake.z = (Math.random() - 0.5) * physics.cameraShake.intensity * 0.5;
+      physics.cameraShake.intensity *= 0.92;
+      if (physics.cameraShake.intensity < 0.01) physics.cameraShake.intensity = 0;
+    }
 
     if (refs.camera) {
-      refs.camera.position.x = cam.x + mouseX;
-      refs.camera.position.y = cam.y + mouseY;
-      refs.camera.position.z = cam.z;
+      refs.camera.position.x = cam.x + mouseX + physics.cameraShake.x;
+      refs.camera.position.y = cam.y + mouseY + physics.cameraShake.y;
+      refs.camera.position.z = cam.z + physics.cameraShake.z;
       refs.camera.lookAt(cam.lookAtX, cam.lookAtY, cam.lookAtZ);
+    }
+    
+    if (physics.transitionShockwave.active && shockwaveRef.current) {
+      physics.transitionShockwave.progress += 0.015;
+      const mat = shockwaveRef.current.material as THREE.ShaderMaterial;
+      mat.uniforms.progress.value = physics.transitionShockwave.progress;
+      
+      if (physics.transitionShockwave.progress >= 1) {
+        physics.transitionShockwave.active = false;
+        refs.scene?.remove(shockwaveRef.current);
+        shockwaveRef.current.geometry.dispose();
+        (shockwaveRef.current.material as THREE.Material).dispose();
+        shockwaveRef.current = null;
+      }
+    }
+    
+    if (physics.planetScatter.active) {
+      physics.planetScatter.progress += 0.02;
+      if (physics.planetScatter.progress >= 1) {
+        physics.planetScatter.active = false;
+        physics.planetScatter.progress = 0;
+      }
+    }
+    
+    if (trailParticlesRef.current && warpEffect > 0.3) {
+      const positions = trailParticlesRef.current.geometry.attributes.position.array as Float32Array;
+      const alphas = trailParticlesRef.current.geometry.attributes.alpha.array as Float32Array;
+      
+      for (let i = 0; i < alphas.length; i++) {
+        positions[i * 3 + 2] += 2 * warpEffect;
+        if (positions[i * 3 + 2] > 50) {
+          positions[i * 3 + 2] = -80;
+          positions[i * 3] = (Math.random() - 0.5) * 20;
+          positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+        }
+        alphas[i] = warpEffect * 0.8;
+      }
+      
+      trailParticlesRef.current.geometry.attributes.position.needsUpdate = true;
+      trailParticlesRef.current.geometry.attributes.alpha.needsUpdate = true;
     }
 
     refs.starLayers.forEach((layer) => {
       const speed = (layer as any).userData.speed;
-      layer.rotation.y += speed * (1 + warpEffect * 5);
+      layer.rotation.y += speed * (1 + warpEffect * 5) + momentumBoost * 0.001;
       layer.rotation.x += speed * 0.3;
     });
 
@@ -1456,13 +1966,45 @@ export function RealisticSolarSystem() {
         if (mesh.visible) {
           const planet = mesh.userData.planet;
           const bobOffset = mesh.userData.bobOffset;
+          const isHovered = physics.hoveredPlanetId === planet.id;
           
-          mesh.userData.angle += planet.orbitSpeed;
-          mesh.position.x = Math.cos(mesh.userData.angle) * planet.distance;
-          mesh.position.z = Math.sin(mesh.userData.angle) * planet.distance;
-          mesh.position.y = Math.sin(time * 0.5 + bobOffset) * 0.15;
+          if (mesh.userData.hoverIntensity === undefined) mesh.userData.hoverIntensity = 0;
+          if (mesh.userData.wobblePhase === undefined) mesh.userData.wobblePhase = Math.random() * Math.PI * 2;
           
-          mesh.rotation.y += planet.rotationSpeed;
+          const targetHover = isHovered ? 1 : 0;
+          mesh.userData.hoverIntensity += (targetHover - mesh.userData.hoverIntensity) * 0.1;
+          const hoverIntensity = mesh.userData.hoverIntensity;
+          
+          const orbitSpeedWithMomentum = planet.orbitSpeed * (1 + momentumBoost * 0.5);
+          mesh.userData.angle += orbitSpeedWithMomentum;
+          
+          let baseX = Math.cos(mesh.userData.angle) * planet.distance;
+          let baseZ = Math.sin(mesh.userData.angle) * planet.distance;
+          let baseY = Math.sin(time * 0.5 + bobOffset) * 0.15;
+          
+          if (physics.planetScatter.active && mesh.userData.scatterOffset) {
+            const scatterProgress = physics.planetScatter.progress;
+            const scatterCurve = Math.sin(scatterProgress * Math.PI);
+            baseX += mesh.userData.scatterOffset.x * scatterCurve;
+            baseY += mesh.userData.scatterOffset.y * scatterCurve;
+            baseZ += mesh.userData.scatterOffset.z * scatterCurve;
+          }
+          
+          if (hoverIntensity > 0.01) {
+            const wobbleSpeed = 8;
+            const wobbleAmount = 0.3 * hoverIntensity;
+            mesh.userData.wobblePhase += 0.1;
+            baseX += Math.sin(time * wobbleSpeed + mesh.userData.wobblePhase) * wobbleAmount;
+            baseY += Math.cos(time * wobbleSpeed * 1.3) * wobbleAmount * 0.5;
+            baseZ += Math.sin(time * wobbleSpeed * 0.8) * wobbleAmount;
+          }
+          
+          mesh.position.set(baseX, baseY, baseZ);
+          
+          const baseScale = 1 + hoverIntensity * 0.15 * (1 + Math.sin(time * 4) * 0.3);
+          mesh.scale.setScalar(baseScale);
+          
+          mesh.rotation.y += planet.rotationSpeed * (1 + hoverIntensity * 0.5);
 
           const mat = mesh.material as THREE.ShaderMaterial;
           if (mat.uniforms?.time) mat.uniforms.time.value = time;
@@ -1470,6 +2012,7 @@ export function RealisticSolarSystem() {
 
           if (mesh.userData.atmosphere) {
             mesh.userData.atmosphere.position.copy(mesh.position);
+            mesh.userData.atmosphere.scale.setScalar(baseScale * (1 + hoverIntensity * 0.1));
             const atmosMat = mesh.userData.atmosphere.material as THREE.ShaderMaterial;
             if (atmosMat.uniforms?.lightPosition) atmosMat.uniforms.lightPosition.value.set(0, 0, 0);
             if (atmosMat.uniforms?.time) atmosMat.uniforms.time.value = time;
@@ -1477,7 +2020,34 @@ export function RealisticSolarSystem() {
           
           if (mesh.userData.outerGlow) {
             mesh.userData.outerGlow.position.copy(mesh.position);
+            const glowScale = baseScale * (1 + hoverIntensity * 0.3);
+            mesh.userData.outerGlow.scale.setScalar(glowScale);
             mesh.userData.outerGlow.visible = mesh.visible;
+            
+            const glowMat = mesh.userData.outerGlow.material as THREE.ShaderMaterial;
+            if (glowMat.uniforms?.glowColor && hoverIntensity > 0.01) {
+              const intensityBoost = 1 + hoverIntensity * 0.5;
+              const baseColor = glowMat.uniforms.glowColor.value;
+              glowMat.uniforms.glowColor.value.set(
+                Math.min(baseColor.x * intensityBoost, 1),
+                Math.min(baseColor.y * intensityBoost, 1),
+                Math.min(baseColor.z * intensityBoost, 1)
+              );
+            }
+          }
+          
+          if (mesh.userData.particleBurst) {
+            const burst = mesh.userData.particleBurst as THREE.Points;
+            const burstData = (burst as any).userData;
+            const elapsed = time - burstData.startTime;
+            
+            if (elapsed < burstData.duration) {
+              const burstMat = burst.material as THREE.ShaderMaterial;
+              if (burstMat.uniforms?.time) burstMat.uniforms.time.value = elapsed / burstData.duration;
+            } else {
+              refs.scene?.remove(burst);
+              mesh.userData.particleBurst = undefined;
+            }
           }
         }
       });
@@ -1486,7 +2056,7 @@ export function RealisticSolarSystem() {
     if (refs.renderer && refs.scene && refs.camera) {
       refs.renderer.render(refs.scene, refs.camera);
     }
-  }, [scrollProgress, warpEffect, getGalaxyForProgress]);
+  }, [scrollProgress, warpEffect, getGalaxyForProgress, checkPlanetHover]);
 
   const getColorHex = (planet: PlanetConfig) => `#${planet.color.primary.toString(16).padStart(6, '0')}`;
   const getGalaxyIcon = (galaxyId: string) => {
