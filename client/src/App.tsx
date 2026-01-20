@@ -11,6 +11,9 @@ import Contact from "@/pages/Contact";
 import CaseStudies from "@/pages/CaseStudies";
 import Experience from "@/pages/Experience";
 import AttackGlobe from "@/pages/AttackGlobe";
+import VulnerabilityScanner from "@/pages/VulnerabilityScanner";
+import ComplianceDashboard from "@/pages/ComplianceDashboard";
+import DevSecOpsPipeline from "@/pages/DevSecOpsPipeline";
 
 function Router() {
   return (
@@ -24,6 +27,9 @@ function Router() {
       <Route path="/case-studies" component={CaseStudies} />
       <Route path="/experience" component={Experience} />
       <Route path="/attack-globe" component={AttackGlobe} />
+      <Route path="/vulnerability-scanner" component={VulnerabilityScanner} />
+      <Route path="/compliance-dashboard" component={ComplianceDashboard} />
+      <Route path="/devsecops-pipeline" component={DevSecOpsPipeline} />
       <Route path="/portal" component={Contact} />
       <Route component={NotFound} />
     </Switch>

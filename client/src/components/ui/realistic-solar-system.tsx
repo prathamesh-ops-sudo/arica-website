@@ -87,7 +87,7 @@ const galaxies: GalaxyConfig[] = [
           'Authentication Bypass Testing',
           'Session Management Analysis',
         ],
-        link: '/services',
+        link: '/vulnerability-scanner',
         size: 1.2,
         distance: 22,
         orbitSpeed: 0.0005,
@@ -95,8 +95,7 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0x00aaff, secondary: 0x0066cc, atmosphere: 0x44ccff },
         scrollPosition: 0.11,
         type: 'service',
-        actionType: 'modal',
-        modalContent: { title: 'Web App Security Scanner', type: 'scanner' },
+        actionType: 'route',
       },
       {
         id: 'api-security',
@@ -185,7 +184,7 @@ const galaxies: GalaxyConfig[] = [
           'Remediation Roadmap',
           'Priority Action Items',
         ],
-        link: '/services',
+        link: '/compliance-dashboard',
         size: 1.2,
         distance: 14,
         orbitSpeed: 0.0006,
@@ -193,8 +192,7 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0xffcc00, secondary: 0xcc9900, atmosphere: 0xffdd44 },
         scrollPosition: 0.38,
         type: 'service',
-        actionType: 'modal',
-        modalContent: { title: 'Compliance Checklist', type: 'checklist' },
+        actionType: 'route',
       },
       {
         id: 'risk-assessment',
@@ -321,7 +319,7 @@ const galaxies: GalaxyConfig[] = [
           'Container Security',
           'Infrastructure as Code Security',
         ],
-        link: '/services',
+        link: '/devsecops-pipeline',
         size: 1.2,
         distance: 22,
         orbitSpeed: 0.0005,
@@ -329,8 +327,7 @@ const galaxies: GalaxyConfig[] = [
         color: { primary: 0xff6622, secondary: 0xcc4400, atmosphere: 0xff8844 },
         scrollPosition: 0.77,
         type: 'service',
-        actionType: 'modal',
-        modalContent: { title: 'CI/CD Pipeline Security', type: 'pipeline' },
+        actionType: 'route',
       },
       {
         id: 'code-review',
@@ -1717,124 +1714,124 @@ export function RealisticSolarSystem() {
             </motion.div>
           )}
         </AnimatePresence>
+      </div>
 
-        <AnimatePresence>
-          {modalOpen && modalPlanet && (
+      <AnimatePresence>
+        {modalOpen && modalPlanet && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xl"
+            onClick={() => setModalOpen(false)}
+          >
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xl"
-              onClick={() => setModalOpen(false)}
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="relative max-w-2xl w-full mx-4 p-8 rounded-3xl border border-white/10"
+              style={{
+                background: `linear-gradient(135deg, ${activeGalaxy.colorTheme.primary}20, ${activeGalaxy.colorTheme.secondary}10)`,
+              }}
+              onClick={(e) => e.stopPropagation()}
             >
-              <motion.div
-                initial={{ scale: 0.9, y: 20 }}
-                animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.9, y: 20 }}
-                className="relative max-w-2xl w-full mx-4 p-8 rounded-3xl border border-white/10"
-                style={{
-                  background: `linear-gradient(135deg, ${activeGalaxy.colorTheme.primary}20, ${activeGalaxy.colorTheme.secondary}10)`,
-                }}
-                onClick={(e) => e.stopPropagation()}
+              <button
+                onClick={() => setModalOpen(false)}
+                className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                data-testid="button-modal-close"
               >
+                <X className="w-5 h-5 text-white" />
+              </button>
+
+              <h2
+                className="text-3xl font-bold mb-4"
+                style={{ color: getColorHex(modalPlanet) }}
+              >
+                {modalPlanet.modalContent?.title || modalPlanet.name}
+              </h2>
+
+              <div className="mb-6 p-4 rounded-2xl bg-black/40 border border-white/5 font-mono text-sm overflow-hidden">
+                {modalPlanet.modalContent?.type === 'scanner' && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-green-400">
+                      <span className="animate-pulse">●</span> Scanning target...
+                    </div>
+                    {['SQL Injection', 'XSS Vulnerabilities', 'CSRF Tokens', 'Auth Bypass'].map((item, i) => (
+                      <motion.div
+                        key={item}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.2 }}
+                        className="flex justify-between text-white/70"
+                      >
+                        <span>Checking {item}...</span>
+                        <span className="text-yellow-400">⬤</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+                {modalPlanet.modalContent?.type === 'tester' && (
+                  <div className="space-y-2">
+                    <div className="text-cyan-400">GET /api/v1/users</div>
+                    <div className="text-green-400">→ 200 OK (42ms)</div>
+                    <div className="text-cyan-400 mt-2">POST /api/v1/auth</div>
+                    <div className="text-green-400">→ 200 OK (128ms)</div>
+                    <div className="text-cyan-400 mt-2">GET /api/v1/admin</div>
+                    <div className="text-red-400">→ 401 Unauthorized (15ms)</div>
+                  </div>
+                )}
+                {modalPlanet.modalContent?.type === 'checker' && (
+                  <div className="space-y-2">
+                    <div className="flex justify-between"><span>S3 Bucket Encryption</span><span className="text-green-400">✓</span></div>
+                    <div className="flex justify-between"><span>IAM MFA Enabled</span><span className="text-green-400">✓</span></div>
+                    <div className="flex justify-between"><span>Public Access Blocked</span><span className="text-red-400">✗</span></div>
+                    <div className="flex justify-between"><span>CloudTrail Logging</span><span className="text-yellow-400">⚠</span></div>
+                  </div>
+                )}
+                {modalPlanet.modalContent?.type === 'checklist' && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2"><span className="text-green-400">☑</span> Information Security Policy</div>
+                    <div className="flex items-center gap-2"><span className="text-green-400">☑</span> Risk Assessment Framework</div>
+                    <div className="flex items-center gap-2"><span className="text-yellow-400">☐</span> Access Control Policy</div>
+                    <div className="flex items-center gap-2"><span className="text-yellow-400">☐</span> Incident Response Plan</div>
+                  </div>
+                )}
+                {modalPlanet.modalContent?.type === 'pipeline' && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2"><span className="text-green-400">✓</span> Build → <span className="text-white/50">2.3s</span></div>
+                    <div className="flex items-center gap-2"><span className="text-green-400">✓</span> SAST Scan → <span className="text-white/50">12.1s</span></div>
+                    <div className="flex items-center gap-2"><span className="text-cyan-400 animate-pulse">●</span> Container Scan → <span className="text-white/50">running...</span></div>
+                    <div className="flex items-center gap-2 text-white/30">○ Deploy to Staging</div>
+                  </div>
+                )}
+              </div>
+
+              <p className="text-muted-foreground mb-6">{modalPlanet.description}</p>
+
+              <div className="flex gap-3">
+                <Link
+                  href="/contact"
+                  className="flex-1 text-center py-3 rounded-full font-semibold transition-all hover:opacity-90"
+                  style={{
+                    background: `linear-gradient(135deg, ${activeGalaxy.colorTheme.primary}, ${activeGalaxy.colorTheme.secondary})`,
+                  }}
+                  onClick={() => setModalOpen(false)}
+                  data-testid="link-modal-contact"
+                >
+                  Get Started
+                </Link>
                 <button
                   onClick={() => setModalOpen(false)}
-                  className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-                  data-testid="button-modal-close"
+                  className="px-6 py-3 rounded-full font-semibold bg-white/10 hover:bg-white/20 transition-colors"
+                  data-testid="button-modal-close-secondary"
                 >
-                  <X className="w-5 h-5 text-white" />
+                  Close
                 </button>
-
-                <h2
-                  className="text-3xl font-bold mb-4"
-                  style={{ color: getColorHex(modalPlanet) }}
-                >
-                  {modalPlanet.modalContent?.title || modalPlanet.name}
-                </h2>
-
-                <div className="mb-6 p-4 rounded-2xl bg-black/40 border border-white/5 font-mono text-sm overflow-hidden">
-                  {modalPlanet.modalContent?.type === 'scanner' && (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-green-400">
-                        <span className="animate-pulse">●</span> Scanning target...
-                      </div>
-                      {['SQL Injection', 'XSS Vulnerabilities', 'CSRF Tokens', 'Auth Bypass'].map((item, i) => (
-                        <motion.div
-                          key={item}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: i * 0.2 }}
-                          className="flex justify-between text-white/70"
-                        >
-                          <span>Checking {item}...</span>
-                          <span className="text-yellow-400">⬤</span>
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
-                  {modalPlanet.modalContent?.type === 'tester' && (
-                    <div className="space-y-2">
-                      <div className="text-cyan-400">GET /api/v1/users</div>
-                      <div className="text-green-400">→ 200 OK (42ms)</div>
-                      <div className="text-cyan-400 mt-2">POST /api/v1/auth</div>
-                      <div className="text-green-400">→ 200 OK (128ms)</div>
-                      <div className="text-cyan-400 mt-2">GET /api/v1/admin</div>
-                      <div className="text-red-400">→ 401 Unauthorized (15ms)</div>
-                    </div>
-                  )}
-                  {modalPlanet.modalContent?.type === 'checker' && (
-                    <div className="space-y-2">
-                      <div className="flex justify-between"><span>S3 Bucket Encryption</span><span className="text-green-400">✓</span></div>
-                      <div className="flex justify-between"><span>IAM MFA Enabled</span><span className="text-green-400">✓</span></div>
-                      <div className="flex justify-between"><span>Public Access Blocked</span><span className="text-red-400">✗</span></div>
-                      <div className="flex justify-between"><span>CloudTrail Logging</span><span className="text-yellow-400">⚠</span></div>
-                    </div>
-                  )}
-                  {modalPlanet.modalContent?.type === 'checklist' && (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2"><span className="text-green-400">☑</span> Information Security Policy</div>
-                      <div className="flex items-center gap-2"><span className="text-green-400">☑</span> Risk Assessment Framework</div>
-                      <div className="flex items-center gap-2"><span className="text-yellow-400">☐</span> Access Control Policy</div>
-                      <div className="flex items-center gap-2"><span className="text-yellow-400">☐</span> Incident Response Plan</div>
-                    </div>
-                  )}
-                  {modalPlanet.modalContent?.type === 'pipeline' && (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2"><span className="text-green-400">✓</span> Build → <span className="text-white/50">2.3s</span></div>
-                      <div className="flex items-center gap-2"><span className="text-green-400">✓</span> SAST Scan → <span className="text-white/50">12.1s</span></div>
-                      <div className="flex items-center gap-2"><span className="text-cyan-400 animate-pulse">●</span> Container Scan → <span className="text-white/50">running...</span></div>
-                      <div className="flex items-center gap-2 text-white/30">○ Deploy to Staging</div>
-                    </div>
-                  )}
-                </div>
-
-                <p className="text-muted-foreground mb-6">{modalPlanet.description}</p>
-
-                <div className="flex gap-3">
-                  <Link
-                    href="/contact"
-                    className="flex-1 text-center py-3 rounded-full font-semibold transition-all hover:opacity-90"
-                    style={{
-                      background: `linear-gradient(135deg, ${activeGalaxy.colorTheme.primary}, ${activeGalaxy.colorTheme.secondary})`,
-                    }}
-                    onClick={() => setModalOpen(false)}
-                    data-testid="link-modal-contact"
-                  >
-                    Get Started
-                  </Link>
-                  <button
-                    onClick={() => setModalOpen(false)}
-                    className="px-6 py-3 rounded-full font-semibold bg-white/10 hover:bg-white/20 transition-colors"
-                    data-testid="button-modal-close-secondary"
-                  >
-                    Close
-                  </button>
-                </div>
-              </motion.div>
+              </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
