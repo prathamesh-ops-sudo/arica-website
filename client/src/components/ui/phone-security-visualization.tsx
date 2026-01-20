@@ -2,22 +2,40 @@
 
 import React, { useRef, useMemo, useEffect, useState, useCallback } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Float } from '@react-three/drei';
+import { Float, RoundedBox, Environment, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
 
 const CYAN = '#00D4FF';
 const PURPLE = '#9944ff';
 const THREAT_RED = '#ff3344';
 
+interface DeviceType {
+  id: string;
+  name: string;
+  color: string;
+  screenRatio: number;
+}
+
+const devices: DeviceType[] = [
+  { id: 'iphone', name: 'iPhone 15 Pro', color: '#1a1a2e', screenRatio: 0.92 },
+  { id: 'pixel', name: 'Pixel 8 Pro', color: '#2d2d3a', screenRatio: 0.90 },
+  { id: 'samsung', name: 'Galaxy S24', color: '#1e1e2a', screenRatio: 0.91 },
+];
+
 interface PhoneProps {
   isScanning: boolean;
   mousePosition: { x: number; y: number };
+  selectedDevice: DeviceType;
+  onHotspotClick: (zone: string) => void;
+  isDragging: boolean;
+  dragRotation: { x: number; y: number };
 }
 
-function PhoneModel({ isScanning, mousePosition }: PhoneProps) {
+function RealisticPhone({ isScanning, mousePosition, selectedDevice, onHotspotClick, isDragging, dragRotation }: PhoneProps) {
   const phoneRef = useRef<THREE.Group>(null);
   const screenRef = useRef<THREE.Mesh>(null);
   const screenMaterialRef = useRef<THREE.ShaderMaterial>(null);
+  const [hoveredZone, setHoveredZone] = useState<string | null>(null);
   
   const screenShader = useMemo(() => ({
     uniforms: {
@@ -25,6 +43,7 @@ function PhoneModel({ isScanning, mousePosition }: PhoneProps) {
       isScanning: { value: isScanning ? 1.0 : 0.0 },
       color1: { value: new THREE.Color(CYAN) },
       color2: { value: new THREE.Color(PURPLE) },
+      hoveredZone: { value: 0 },
     },
     vertexShader: `
       varying vec2 vUv;
@@ -38,40 +57,85 @@ function PhoneModel({ isScanning, mousePosition }: PhoneProps) {
       uniform float isScanning;
       uniform vec3 color1;
       uniform vec3 color2;
+      uniform float hoveredZone;
       varying vec2 vUv;
       
       float random(vec2 st) {
         return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
       }
       
+      float sdRoundedBox(vec2 p, vec2 b, float r) {
+        vec2 q = abs(p) - b + r;
+        return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
+      }
+      
       void main() {
         vec2 uv = vUv;
+        vec2 centered = uv - 0.5;
         
+        // App icons grid
+        float iconSize = 0.08;
+        float iconSpacing = 0.18;
+        vec2 iconGrid = mod(uv * 5.0, 1.0);
+        float icon = step(0.3, iconGrid.x) * step(iconGrid.x, 0.7) * 
+                     step(0.3, iconGrid.y) * step(iconGrid.y, 0.7);
+        
+        // Scan effects
         float scanLine = step(0.98, sin(uv.y * 100.0 - time * 10.0));
         float scanWave = sin(uv.y * 20.0 - time * 5.0) * 0.5 + 0.5;
         
-        float grid = step(0.95, sin(uv.x * 30.0)) + step(0.95, sin(uv.y * 50.0));
-        grid *= 0.3;
+        // Hexagonal grid pattern
+        float hexScale = 15.0;
+        vec2 hexUv = uv * hexScale;
+        float hex = sin(hexUv.x + sin(hexUv.y * 1.73205)) * 
+                    sin(hexUv.y * 1.73205 + sin(hexUv.x));
+        hex = smoothstep(0.8, 1.0, hex) * 0.3;
         
-        float noise = random(uv + time * 0.1) * 0.1;
+        // Data flow lines
+        float dataLines = 0.0;
+        for (int i = 0; i < 5; i++) {
+          float fi = float(i);
+          float lineY = fract(time * 0.3 + fi * 0.2);
+          dataLines += smoothstep(0.02, 0.0, abs(uv.y - lineY)) * 0.3;
+        }
         
+        // Vulnerability hotspot zones
+        float zone1 = 1.0 - smoothstep(0.15, 0.2, length(uv - vec2(0.2, 0.8)));
+        float zone2 = 1.0 - smoothstep(0.15, 0.2, length(uv - vec2(0.8, 0.8)));
+        float zone3 = 1.0 - smoothstep(0.15, 0.2, length(uv - vec2(0.5, 0.5)));
+        float zone4 = 1.0 - smoothstep(0.15, 0.2, length(uv - vec2(0.2, 0.2)));
+        float zone5 = 1.0 - smoothstep(0.15, 0.2, length(uv - vec2(0.8, 0.2)));
+        
+        float zoneHighlight = (zone1 + zone2 + zone3 + zone4 + zone5) * isScanning * 0.5;
+        
+        // Pulse and noise
         float pulse = sin(time * 3.0) * 0.3 + 0.7;
+        float noise = random(uv + time * 0.1) * 0.05;
         
-        vec3 baseColor = mix(color1, color2, uv.y);
-        
-        float scanProgress = fract(time * 0.5);
-        float scanBar = smoothstep(scanProgress - 0.1, scanProgress, uv.y) - 
-                        smoothstep(scanProgress, scanProgress + 0.02, uv.y);
+        // Scan bar
+        float scanProgress = fract(time * 0.4);
+        float scanBar = smoothstep(scanProgress - 0.15, scanProgress, uv.y) - 
+                        smoothstep(scanProgress, scanProgress + 0.03, uv.y);
         scanBar *= isScanning;
         
-        vec3 finalColor = baseColor * 0.3;
-        finalColor += baseColor * grid;
-        finalColor += baseColor * scanLine * 0.5 * isScanning;
-        finalColor += vec3(1.0) * scanBar * 0.8;
-        finalColor += baseColor * noise;
-        finalColor *= pulse * isScanning + (1.0 - isScanning) * 0.5;
+        // Base gradient
+        vec3 baseColor = mix(color1 * 0.6, color2 * 0.6, uv.y);
         
-        float alpha = 0.9;
+        // Compose final color
+        vec3 finalColor = baseColor * 0.2;
+        finalColor += baseColor * hex;
+        finalColor += baseColor * dataLines * isScanning;
+        finalColor += baseColor * scanLine * 0.4 * isScanning;
+        finalColor += vec3(1.0, 1.0, 1.0) * scanBar * 0.9;
+        finalColor += vec3(1.0, 0.3, 0.1) * zoneHighlight * sin(time * 5.0) * 0.5;
+        finalColor += baseColor * noise;
+        finalColor *= pulse * isScanning + (1.0 - isScanning) * 0.4;
+        
+        // Glass reflection
+        float reflection = pow(1.0 - abs(centered.x * 2.0), 8.0) * 0.15;
+        finalColor += vec3(1.0) * reflection;
+        
+        float alpha = 0.95;
         gl_FragColor = vec4(finalColor, alpha);
       }
     `,
@@ -79,12 +143,15 @@ function PhoneModel({ isScanning, mousePosition }: PhoneProps) {
 
   useFrame((state) => {
     if (phoneRef.current) {
-      const targetRotY = mousePosition.x * 0.3;
-      const targetRotX = -mousePosition.y * 0.2;
-      
-      phoneRef.current.rotation.y += (targetRotY - phoneRef.current.rotation.y) * 0.05;
-      phoneRef.current.rotation.x += (targetRotX - phoneRef.current.rotation.x) * 0.05;
-      phoneRef.current.rotation.y += 0.003;
+      if (isDragging) {
+        phoneRef.current.rotation.y = dragRotation.y;
+        phoneRef.current.rotation.x = dragRotation.x;
+      } else {
+        const targetRotY = mousePosition.x * 0.15 + state.clock.elapsedTime * 0.1;
+        const targetRotX = -mousePosition.y * 0.1;
+        phoneRef.current.rotation.y += (targetRotY - phoneRef.current.rotation.y) * 0.02;
+        phoneRef.current.rotation.x += (targetRotX - phoneRef.current.rotation.x) * 0.02;
+      }
     }
     
     if (screenMaterialRef.current) {
@@ -93,20 +160,33 @@ function PhoneModel({ isScanning, mousePosition }: PhoneProps) {
     }
   });
 
+  const handleZoneClick = (zone: string) => {
+    onHotspotClick(zone);
+  };
+
   return (
-    <Float speed={2} rotationIntensity={0.1} floatIntensity={0.5}>
+    <Float speed={1.5} rotationIntensity={0.05} floatIntensity={0.3} enabled={!isDragging}>
       <group ref={phoneRef} position={[0, 0, 0]}>
-        <mesh castShadow>
-          <boxGeometry args={[1.2, 2.4, 0.1]} />
-          <meshStandardMaterial 
-            color="#1a1a2e"
-            metalness={0.8}
-            roughness={0.2}
+        {/* Main phone body with rounded edges */}
+        <RoundedBox args={[1.4, 2.8, 0.12]} radius={0.08} smoothness={4} castShadow>
+          <meshPhysicalMaterial 
+            color={selectedDevice.color}
+            metalness={0.9}
+            roughness={0.15}
+            clearcoat={0.8}
+            clearcoatRoughness={0.1}
+            envMapIntensity={1.5}
           />
-        </mesh>
+        </RoundedBox>
         
-        <mesh position={[0, 0.1, 0.051]} ref={screenRef}>
-          <planeGeometry args={[1.05, 2.0]} />
+        {/* Screen bezel */}
+        <RoundedBox args={[1.25, 2.55, 0.01]} radius={0.06} smoothness={4} position={[0, 0, 0.06]}>
+          <meshBasicMaterial color="#000000" />
+        </RoundedBox>
+        
+        {/* Animated screen */}
+        <mesh position={[0, 0.05, 0.065]} ref={screenRef}>
+          <planeGeometry args={[1.15, 2.35]} />
           <shaderMaterial
             ref={screenMaterialRef}
             {...screenShader}
@@ -114,24 +194,110 @@ function PhoneModel({ isScanning, mousePosition }: PhoneProps) {
           />
         </mesh>
         
-        <mesh position={[0, 1.05, 0.051]}>
-          <circleGeometry args={[0.05, 32]} />
-          <meshBasicMaterial color="#333" />
+        {/* Dynamic Island / Notch */}
+        <RoundedBox args={[0.35, 0.1, 0.01]} radius={0.04} smoothness={4} position={[0, 1.15, 0.07]}>
+          <meshBasicMaterial color="#000000" />
+        </RoundedBox>
+        
+        {/* Front camera lens */}
+        <mesh position={[-0.08, 1.15, 0.075]}>
+          <circleGeometry args={[0.025, 32]} />
+          <meshPhysicalMaterial color="#1a1a2e" metalness={0.5} roughness={0.2} />
         </mesh>
         
-        <mesh position={[0, -1.0, 0.051]}>
-          <ringGeometry args={[0.08, 0.12, 32]} />
-          <meshBasicMaterial color={CYAN} transparent opacity={0.5} />
+        {/* Camera bump on back */}
+        <group position={[-0.35, 0.9, -0.07]}>
+          <RoundedBox args={[0.45, 0.5, 0.08]} radius={0.05} smoothness={4}>
+            <meshPhysicalMaterial 
+              color={selectedDevice.color}
+              metalness={0.85}
+              roughness={0.2}
+              clearcoat={0.5}
+            />
+          </RoundedBox>
+          
+          {/* Camera lenses */}
+          <mesh position={[-0.1, 0.1, 0.045]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.08, 0.08, 0.02, 32]} />
+            <meshPhysicalMaterial color="#111" metalness={0.9} roughness={0.1} />
+          </mesh>
+          <mesh position={[0.1, 0.1, 0.045]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.08, 0.08, 0.02, 32]} />
+            <meshPhysicalMaterial color="#111" metalness={0.9} roughness={0.1} />
+          </mesh>
+          <mesh position={[-0.1, -0.12, 0.045]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.06, 0.06, 0.02, 32]} />
+            <meshPhysicalMaterial color="#111" metalness={0.9} roughness={0.1} />
+          </mesh>
+          
+          {/* Camera lens rings (glowing when scanning) */}
+          {isScanning && (
+            <>
+              <mesh position={[-0.1, 0.1, 0.055]}>
+                <ringGeometry args={[0.075, 0.085, 32]} />
+                <meshBasicMaterial color={CYAN} transparent opacity={0.8} />
+              </mesh>
+              <mesh position={[0.1, 0.1, 0.055]}>
+                <ringGeometry args={[0.075, 0.085, 32]} />
+                <meshBasicMaterial color={CYAN} transparent opacity={0.8} />
+              </mesh>
+            </>
+          )}
+          
+          {/* Flash */}
+          <mesh position={[0.1, -0.12, 0.045]}>
+            <circleGeometry args={[0.03, 32]} />
+            <meshBasicMaterial color={isScanning ? "#ffff00" : "#888"} />
+          </mesh>
+        </group>
+        
+        {/* Side buttons */}
+        <RoundedBox args={[0.03, 0.2, 0.04]} radius={0.01} smoothness={2} position={[0.72, 0.3, 0]}>
+          <meshPhysicalMaterial color="#333" metalness={0.8} roughness={0.3} />
+        </RoundedBox>
+        <RoundedBox args={[0.03, 0.12, 0.04]} radius={0.01} smoothness={2} position={[0.72, 0.55, 0]}>
+          <meshPhysicalMaterial color="#333" metalness={0.8} roughness={0.3} />
+        </RoundedBox>
+        <RoundedBox args={[0.03, 0.08, 0.04]} radius={0.01} smoothness={2} position={[-0.72, 0.4, 0]}>
+          <meshPhysicalMaterial color="#333" metalness={0.8} roughness={0.3} />
+        </RoundedBox>
+        <RoundedBox args={[0.03, 0.15, 0.04]} radius={0.01} smoothness={2} position={[-0.72, 0.15, 0]}>
+          <meshPhysicalMaterial color="#333" metalness={0.8} roughness={0.3} />
+        </RoundedBox>
+        
+        {/* Charging port */}
+        <mesh position={[0, -1.4, 0.02]}>
+          <boxGeometry args={[0.15, 0.03, 0.02]} />
+          <meshBasicMaterial color="#222" />
         </mesh>
         
-        <mesh position={[0.45, 0, 0.051]}>
-          <boxGeometry args={[0.02, 0.15, 0.01]} />
-          <meshBasicMaterial color="#333" />
+        {/* Speaker grilles */}
+        {[-0.25, -0.15, -0.05, 0.05, 0.15, 0.25].map((x, i) => (
+          <mesh key={i} position={[x, -1.38, 0.06]}>
+            <circleGeometry args={[0.015, 8]} />
+            <meshBasicMaterial color="#333" />
+          </mesh>
+        ))}
+        
+        {/* Interactive hotspot zones (invisible, for clicking) */}
+        <mesh 
+          position={[0, 0, 0.08]} 
+          visible={false}
+          onClick={() => handleZoneClick('screen')}
+          onPointerEnter={() => setHoveredZone('screen')}
+          onPointerLeave={() => setHoveredZone(null)}
+        >
+          <planeGeometry args={[1.2, 2.4]} />
+          <meshBasicMaterial transparent opacity={0} />
         </mesh>
-        <mesh position={[0.45, 0.25, 0.051]}>
-          <boxGeometry args={[0.02, 0.08, 0.01]} />
-          <meshBasicMaterial color="#333" />
-        </mesh>
+        
+        {/* Notification LED */}
+        {isScanning && (
+          <mesh position={[0.5, 1.3, 0.065]}>
+            <circleGeometry args={[0.02, 16]} />
+            <meshBasicMaterial color={CYAN} />
+          </mesh>
+        )}
       </group>
     </Float>
   );
@@ -140,9 +306,10 @@ function PhoneModel({ isScanning, mousePosition }: PhoneProps) {
 interface ShieldEffectProps {
   active: boolean;
   flash: boolean;
+  intensity?: number;
 }
 
-function ShieldEffect({ active, flash }: ShieldEffectProps) {
+function ShieldEffect({ active, flash, intensity = 1 }: ShieldEffectProps) {
   const shieldRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   
@@ -152,13 +319,16 @@ function ShieldEffect({ active, flash }: ShieldEffectProps) {
       active: { value: 0 },
       flash: { value: 0 },
       color: { value: new THREE.Color(CYAN) },
+      intensity: { value: intensity },
     },
     vertexShader: `
       varying vec3 vNormal;
       varying vec3 vPosition;
+      varying vec2 vUv;
       void main() {
         vNormal = normalize(normalMatrix * normal);
         vPosition = position;
+        vUv = uv;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
       }
     `,
@@ -167,401 +337,414 @@ function ShieldEffect({ active, flash }: ShieldEffectProps) {
       uniform float active;
       uniform float flash;
       uniform vec3 color;
+      uniform float intensity;
       varying vec3 vNormal;
       varying vec3 vPosition;
+      varying vec2 vUv;
       
       void main() {
-        float fresnel = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 3.0);
+        float fresnel = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 2.5);
         
-        float hex = sin(vPosition.x * 10.0 + vPosition.y * 10.0 + time * 2.0) * 0.5 + 0.5;
+        // Hexagonal shield pattern
+        vec2 hexUv = vPosition.xy * 8.0;
+        float hex = sin(hexUv.x * 1.73205 + hexUv.y) * sin(hexUv.y * 2.0 - hexUv.x * 0.5);
+        hex = smoothstep(0.3, 0.5, hex) * 0.4;
         
-        float pulse = sin(time * 4.0) * 0.2 + 0.8;
+        // Energy flow
+        float flow = sin(vPosition.y * 10.0 + time * 3.0) * 0.5 + 0.5;
+        flow *= sin(vPosition.x * 8.0 - time * 2.0) * 0.5 + 0.5;
         
-        vec3 finalColor = color * (fresnel * 0.8 + hex * 0.2);
-        finalColor += vec3(1.0) * flash * 2.0;
+        float pulse = sin(time * 4.0) * 0.15 + 0.85;
         
-        float alpha = (fresnel * 0.6 + 0.1) * active * pulse;
-        alpha = max(alpha, flash * 0.8);
+        vec3 finalColor = color * (fresnel * 0.9 + hex * 0.3 + flow * 0.2);
+        finalColor += vec3(1.0, 1.0, 1.0) * flash * 3.0;
+        finalColor *= intensity;
+        
+        float alpha = (fresnel * 0.7 + hex * 0.2 + 0.05) * active * pulse;
+        alpha = max(alpha, flash * 0.9);
+        alpha *= intensity;
         
         gl_FragColor = vec4(finalColor, alpha);
       }
     `,
-  }), []);
+  }), [intensity]);
 
   useFrame((state) => {
     if (shieldRef.current) {
-      shieldRef.current.rotation.y += 0.01;
-      shieldRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
+      shieldRef.current.rotation.y += 0.008;
+      shieldRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.5) * 0.08;
     }
     
     if (materialRef.current) {
       materialRef.current.uniforms.time.value = state.clock.elapsedTime;
-      materialRef.current.uniforms.active.value += (active ? 1 : 0 - materialRef.current.uniforms.active.value) * 0.1;
-      materialRef.current.uniforms.flash.value += (flash ? 1 : 0 - materialRef.current.uniforms.flash.value) * 0.2;
+      materialRef.current.uniforms.active.value += (active ? 1 : 0 - materialRef.current.uniforms.active.value) * 0.08;
+      materialRef.current.uniforms.flash.value += (flash ? 1 : 0 - materialRef.current.uniforms.flash.value) * 0.15;
     }
   });
 
   return (
-    <mesh ref={shieldRef}>
-      <sphereGeometry args={[2, 32, 32]} />
+    <mesh ref={shieldRef} scale={[2.2, 2.8, 2.2]}>
+      <icosahedronGeometry args={[1, 2]} />
       <shaderMaterial
         ref={materialRef}
         {...shieldShader}
         transparent
         side={THREE.DoubleSide}
         depthWrite={false}
-        blending={THREE.AdditiveBlending}
       />
     </mesh>
   );
 }
 
-interface OrbitingParticlesProps {
-  count?: number;
-}
-
-function OrbitingParticles({ count = 100 }: OrbitingParticlesProps) {
-  const pointsRef = useRef<THREE.Points>(null);
-  
-  const [positions, angles, radii, speeds] = useMemo(() => {
-    const pos = new Float32Array(count * 3);
-    const ang = new Float32Array(count);
-    const rad = new Float32Array(count);
-    const spd = new Float32Array(count);
-    
-    for (let i = 0; i < count; i++) {
-      ang[i] = Math.random() * Math.PI * 2;
-      rad[i] = 2.5 + Math.random() * 2;
-      spd[i] = (0.5 + Math.random()) * (Math.random() > 0.5 ? 1 : -1);
-      
-      const height = (Math.random() - 0.5) * 3;
-      pos[i * 3] = Math.cos(ang[i]) * rad[i];
-      pos[i * 3 + 1] = height;
-      pos[i * 3 + 2] = Math.sin(ang[i]) * rad[i];
-    }
-    
-    return [pos, ang, rad, spd];
-  }, [count]);
-
-  const colors = useMemo(() => {
-    const cols = new Float32Array(count * 3);
-    const cyan = new THREE.Color(CYAN);
-    const purple = new THREE.Color(PURPLE);
-    
-    for (let i = 0; i < count; i++) {
-      const mix = Math.random();
-      const color = cyan.clone().lerp(purple, mix);
-      cols[i * 3] = color.r;
-      cols[i * 3 + 1] = color.g;
-      cols[i * 3 + 2] = color.b;
-    }
-    return cols;
-  }, [count]);
-
-  useFrame((state) => {
-    if (pointsRef.current) {
-      const pos = pointsRef.current.geometry.attributes.position.array as Float32Array;
-      const time = state.clock.elapsedTime;
-      
-      for (let i = 0; i < count; i++) {
-        const currentAngle = angles[i] + time * speeds[i] * 0.3;
-        const wobble = Math.sin(time * 2 + i) * 0.2;
-        
-        pos[i * 3] = Math.cos(currentAngle) * (radii[i] + wobble);
-        pos[i * 3 + 2] = Math.sin(currentAngle) * (radii[i] + wobble);
-      }
-      
-      pointsRef.current.geometry.attributes.position.needsUpdate = true;
-    }
-  });
-
-  const geometry = useMemo(() => {
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    return geo;
-  }, [positions, colors]);
-
-  useEffect(() => {
-    return () => {
-      geometry.dispose();
-    };
-  }, [geometry]);
-
-  return (
-    <points ref={pointsRef} geometry={geometry}>
-      <pointsMaterial
-        size={0.08}
-        vertexColors
-        transparent
-        opacity={0.9}
-        sizeAttenuation
-        blending={THREE.AdditiveBlending}
-        depthWrite={false}
-      />
-    </points>
-  );
-}
-
-interface ThreatParticle {
-  id: number;
-  position: THREE.Vector3;
-  velocity: THREE.Vector3;
-  active: boolean;
-}
-
 interface ThreatParticlesProps {
+  active: boolean;
   onThreatBlocked: () => void;
-  shieldActive: boolean;
+  userTriggered?: boolean;
 }
 
-function ThreatParticles({ onThreatBlocked, shieldActive }: ThreatParticlesProps) {
-  const [threats, setThreats] = useState<ThreatParticle[]>([]);
-  const threatIdRef = useRef(0);
+function ThreatParticles({ active, onThreatBlocked, userTriggered = false }: ThreatParticlesProps) {
+  const particlesRef = useRef<THREE.Points>(null);
+  const [threats, setThreats] = useState<Array<{ position: THREE.Vector3; velocity: THREE.Vector3; life: number }>>([]);
   
-  useEffect(() => {
-    if (!shieldActive) return;
+  useFrame((state, delta) => {
+    if (!active && !userTriggered) return;
     
-    const spawnThreat = () => {
+    // Spawn threats more frequently when user triggered
+    const spawnRate = userTriggered ? 0.15 : 0.03;
+    if (Math.random() < spawnRate) {
       const angle = Math.random() * Math.PI * 2;
-      const distance = 8;
-      const startPos = new THREE.Vector3(
+      const distance = 5 + Math.random() * 2;
+      const position = new THREE.Vector3(
         Math.cos(angle) * distance,
         (Math.random() - 0.5) * 4,
         Math.sin(angle) * distance
       );
       
-      const direction = startPos.clone().negate().normalize();
-      const speed = 0.08 + Math.random() * 0.04;
+      const targetOffset = new THREE.Vector3(
+        (Math.random() - 0.5) * 0.5,
+        (Math.random() - 0.5) * 0.5,
+        0
+      );
+      const velocity = targetOffset.sub(position).normalize().multiplyScalar(0.08 + Math.random() * 0.04);
       
-      const newThreat: ThreatParticle = {
-        id: threatIdRef.current++,
-        position: startPos,
-        velocity: direction.multiplyScalar(speed),
-        active: true,
-      };
-      
-      setThreats(prev => [...prev, newThreat]);
-    };
+      setThreats(prev => [...prev.slice(-30), { position, velocity, life: 1 }]);
+    }
     
-    const interval = setInterval(spawnThreat, 800 + Math.random() * 1200);
-    return () => clearInterval(interval);
-  }, [shieldActive]);
-
-  useFrame(() => {
-    setThreats(prev => {
-      const updated = prev.map(threat => {
-        if (!threat.active) return threat;
-        
-        const newPos = threat.position.clone().add(threat.velocity);
-        
-        if (newPos.length() < 2.2 && shieldActive) {
-          onThreatBlocked();
-          return { ...threat, active: false };
+    // Update threats
+    setThreats(prev => prev.map(threat => {
+      threat.position.add(threat.velocity);
+      
+      // Check collision with shield
+      if (threat.position.length() < 2.2) {
+        onThreatBlocked();
+        return { ...threat, life: 0 };
+      }
+      
+      return { ...threat, life: threat.life - delta * 0.3 };
+    }).filter(t => t.life > 0));
+  });
+  
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array(100 * 3);
+    const colors = new Float32Array(100 * 3);
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    return geo;
+  }, []);
+  
+  useEffect(() => {
+    if (particlesRef.current) {
+      const positions = particlesRef.current.geometry.attributes.position.array as Float32Array;
+      const colors = particlesRef.current.geometry.attributes.color.array as Float32Array;
+      
+      threats.forEach((threat, i) => {
+        if (i < 100) {
+          positions[i * 3] = threat.position.x;
+          positions[i * 3 + 1] = threat.position.y;
+          positions[i * 3 + 2] = threat.position.z;
+          
+          colors[i * 3] = 1;
+          colors[i * 3 + 1] = 0.2;
+          colors[i * 3 + 2] = 0.1;
         }
-        
-        if (newPos.length() > 10 || newPos.length() < 0.5) {
-          return { ...threat, active: false };
-        }
-        
-        return { ...threat, position: newPos };
       });
       
-      return updated.filter(t => t.active || Date.now() % 1000 < 500);
-    });
-  });
-
+      particlesRef.current.geometry.attributes.position.needsUpdate = true;
+      particlesRef.current.geometry.attributes.color.needsUpdate = true;
+    }
+  }, [threats]);
+  
   return (
-    <>
-      {threats.filter(t => t.active).map(threat => (
-        <mesh key={threat.id} position={threat.position}>
-          <sphereGeometry args={[0.1, 8, 8]} />
-          <meshBasicMaterial 
-            color={THREAT_RED}
-            transparent
-            opacity={0.9}
-          />
-          <pointLight color={THREAT_RED} intensity={0.5} distance={2} />
-        </mesh>
-      ))}
-    </>
+    <points ref={particlesRef} geometry={geometry}>
+      <pointsMaterial
+        size={0.15}
+        vertexColors
+        transparent
+        opacity={0.9}
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
+  );
+}
+
+function OrbitingParticles() {
+  const particlesRef = useRef<THREE.Points>(null);
+  const count = 100;
+  
+  const [positions, sizes] = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    const size = new Float32Array(count);
+    
+    for (let i = 0; i < count; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(Math.random() * 2 - 1);
+      const r = 2.5 + Math.random() * 1.5;
+      
+      pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      pos[i * 3 + 2] = r * Math.cos(phi);
+      
+      size[i] = 0.02 + Math.random() * 0.04;
+    }
+    
+    return [pos, size];
+  }, []);
+  
+  useFrame((state) => {
+    if (particlesRef.current) {
+      particlesRef.current.rotation.y = state.clock.elapsedTime * 0.1;
+      particlesRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.2) * 0.1;
+    }
+  });
+  
+  return (
+    <points ref={particlesRef}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+        <bufferAttribute attach="attributes-size" args={[sizes, 1]} />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.04}
+        color={CYAN}
+        transparent
+        opacity={0.6}
+        blending={THREE.AdditiveBlending}
+        sizeAttenuation
+      />
+    </points>
   );
 }
 
 interface SceneProps {
   isScanning: boolean;
-  mousePosition: { x: number; y: number };
   onThreatBlocked: () => void;
-  shieldFlash: boolean;
+  selectedDevice: DeviceType;
+  onHotspotClick: (zone: string) => void;
+  attackMode: boolean;
 }
 
-function Scene({ isScanning, mousePosition, onThreatBlocked, shieldFlash }: SceneProps) {
+function Scene({ isScanning, onThreatBlocked, selectedDevice, onHotspotClick, attackMode }: SceneProps) {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [dragRotation, setDragRotation] = useState({ x: 0, y: 0 });
+  const [shieldFlash, setShieldFlash] = useState(false);
+  const { gl } = useThree();
+  
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = gl.domElement.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      setMousePos({ x, y });
+      
+      if (isDragging) {
+        const deltaX = (e.clientX - dragStart.x) * 0.01;
+        const deltaY = (e.clientY - dragStart.y) * 0.01;
+        setDragRotation({ x: deltaY, y: deltaX });
+      }
+    };
+    
+    const handleMouseDown = (e: MouseEvent) => {
+      setIsDragging(true);
+      setDragStart({ x: e.clientX, y: e.clientY });
+    };
+    
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+    
+    gl.domElement.addEventListener('mousemove', handleMouseMove);
+    gl.domElement.addEventListener('mousedown', handleMouseDown);
+    gl.domElement.addEventListener('mouseup', handleMouseUp);
+    gl.domElement.addEventListener('mouseleave', handleMouseUp);
+    
+    return () => {
+      gl.domElement.removeEventListener('mousemove', handleMouseMove);
+      gl.domElement.removeEventListener('mousedown', handleMouseDown);
+      gl.domElement.removeEventListener('mouseup', handleMouseUp);
+      gl.domElement.removeEventListener('mouseleave', handleMouseUp);
+    };
+  }, [gl, isDragging, dragStart]);
+  
+  const handleThreatBlocked = () => {
+    setShieldFlash(true);
+    setTimeout(() => setShieldFlash(false), 150);
+    onThreatBlocked();
+  };
+  
   return (
     <>
-      <ambientLight intensity={0.3} />
-      <pointLight position={[5, 5, 5]} intensity={0.6} color={CYAN} />
-      <pointLight position={[-5, -5, 5]} intensity={0.4} color={PURPLE} />
-      <spotLight
-        position={[0, 5, 5]}
-        angle={0.5}
-        penumbra={1}
-        intensity={0.5}
-        color={CYAN}
+      <ambientLight intensity={0.4} />
+      <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
+      <pointLight position={[-5, 5, 5]} intensity={0.5} color={CYAN} />
+      <pointLight position={[5, -5, 5]} intensity={0.3} color={PURPLE} />
+      
+      <RealisticPhone 
+        isScanning={isScanning} 
+        mousePosition={mousePos}
+        selectedDevice={selectedDevice}
+        onHotspotClick={onHotspotClick}
+        isDragging={isDragging}
+        dragRotation={dragRotation}
+      />
+      <ShieldEffect active={isScanning || attackMode} flash={shieldFlash} intensity={attackMode ? 1.3 : 1} />
+      <ThreatParticles active={isScanning} onThreatBlocked={handleThreatBlocked} userTriggered={attackMode} />
+      <OrbitingParticles />
+      
+      <ContactShadows 
+        position={[0, -2, 0]} 
+        opacity={0.4} 
+        scale={8} 
+        blur={2} 
+        far={4}
+        color="#000022"
       />
       
-      <PhoneModel isScanning={isScanning} mousePosition={mousePosition} />
-      <ShieldEffect active={isScanning} flash={shieldFlash} />
-      <OrbitingParticles count={80} />
-      
-      {isScanning && (
-        <ThreatParticles 
-          onThreatBlocked={onThreatBlocked} 
-          shieldActive={isScanning}
-        />
-      )}
+      <Environment preset="night" />
     </>
   );
 }
 
 interface PhoneSecurityVisualizationProps {
   isScanning: boolean;
-  threatsBlocked: number;
   onThreatBlocked: () => void;
 }
 
-export function PhoneSecurityVisualization({ 
-  isScanning, 
-  threatsBlocked,
-  onThreatBlocked 
-}: PhoneSecurityVisualizationProps) {
-  const [mounted, setMounted] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [shieldFlash, setShieldFlash] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+export function PhoneSecurityVisualization({ isScanning, onThreatBlocked }: PhoneSecurityVisualizationProps) {
+  const [selectedDeviceIndex, setSelectedDeviceIndex] = useState(0);
+  const [hotspotInfo, setHotspotInfo] = useState<string | null>(null);
+  const [attackMode, setAttackMode] = useState(false);
+  const [localThreatsBlocked, setLocalThreatsBlocked] = useState(0);
   
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      const y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-      setMousePosition({ x, y });
-    }
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [handleMouseMove]);
-
-  const handleThreatBlocked = useCallback(() => {
-    setShieldFlash(true);
+  const selectedDevice = devices[selectedDeviceIndex];
+  
+  const handleHotspotClick = (zone: string) => {
+    setHotspotInfo(zone === 'screen' ? 'Tap detected on screen - Analyzing touch patterns...' : null);
+    setTimeout(() => setHotspotInfo(null), 2000);
+  };
+  
+  const handleThreatBlocked = () => {
+    setLocalThreatsBlocked(prev => prev + 1);
     onThreatBlocked();
-    setTimeout(() => setShieldFlash(false), 150);
-  }, [onThreatBlocked]);
-
-  if (!mounted) {
-    return (
-      <div 
-        className="relative w-full h-[400px] rounded-2xl overflow-hidden"
-        style={{ backgroundColor: 'rgba(0, 5, 16, 0.8)' }}
-      >
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-12 h-12 border-2 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin" />
-        </div>
-      </div>
-    );
-  }
-
+  };
+  
+  const cycleDevice = (direction: number) => {
+    setSelectedDeviceIndex(prev => (prev + direction + devices.length) % devices.length);
+  };
+  
   return (
-    <div 
-      ref={containerRef}
-      className="relative w-full h-[400px] rounded-2xl overflow-hidden border"
-      style={{ 
-        backgroundColor: 'rgba(0, 5, 16, 0.9)',
-        borderColor: 'rgba(0, 212, 255, 0.2)'
-      }}
-      data-testid="phone-security-visualization"
-    >
+    <div className="relative w-full h-[500px] rounded-2xl overflow-hidden bg-gradient-to-b from-slate-900/80 to-slate-950/80 border border-cyan-500/20">
       <Canvas
-        camera={{ position: [0, 0, 6], fov: 50 }}
-        gl={{ 
-          alpha: true, 
-          antialias: true,
-          powerPreference: 'high-performance',
-        }}
+        camera={{ position: [0, 0, 6], fov: 45 }}
         dpr={[1, 2]}
+        gl={{ 
+          antialias: true, 
+          alpha: true,
+          powerPreference: 'high-performance'
+        }}
+        style={{ cursor: 'grab' }}
       >
         <Scene 
           isScanning={isScanning} 
-          mousePosition={mousePosition}
           onThreatBlocked={handleThreatBlocked}
-          shieldFlash={shieldFlash}
+          selectedDevice={selectedDevice}
+          onHotspotClick={handleHotspotClick}
+          attackMode={attackMode}
         />
       </Canvas>
       
-      <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-        <div 
-          className="px-4 py-2 rounded-lg backdrop-blur-xl border"
-          style={{ 
-            backgroundColor: 'rgba(0, 0, 0, 0.6)',
-            borderColor: 'rgba(0, 212, 255, 0.3)'
-          }}
+      {/* Device selector carousel */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-black/60 backdrop-blur-xl rounded-full px-4 py-2 border border-cyan-500/30">
+        <button 
+          onClick={() => cycleDevice(-1)}
+          className="p-2 hover:bg-cyan-500/20 rounded-full transition-colors"
+          data-testid="btn-prev-device"
         >
-          <div className="flex items-center gap-2">
-            <div 
-              className={`w-2 h-2 rounded-full ${isScanning ? 'animate-pulse' : ''}`}
-              style={{ backgroundColor: isScanning ? CYAN : '#666' }}
-            />
-            <span className="text-sm text-white/80">
-              {isScanning ? 'Shield Active' : 'Shield Standby'}
-            </span>
-          </div>
+          <svg className="w-5 h-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        
+        <div className="text-center min-w-[140px]">
+          <div className="text-cyan-400 font-medium text-sm">{selectedDevice.name}</div>
+          <div className="text-gray-500 text-xs">Drag to rotate</div>
         </div>
         
-        <div 
-          className="px-4 py-2 rounded-lg backdrop-blur-xl border"
-          style={{ 
-            backgroundColor: shieldFlash ? 'rgba(0, 212, 255, 0.2)' : 'rgba(0, 0, 0, 0.6)',
-            borderColor: threatsBlocked > 0 ? 'rgba(255, 51, 68, 0.5)' : 'rgba(0, 212, 255, 0.3)',
-            transition: 'all 0.15s ease'
-          }}
+        <button 
+          onClick={() => cycleDevice(1)}
+          className="p-2 hover:bg-cyan-500/20 rounded-full transition-colors"
+          data-testid="btn-next-device"
         >
-          <div className="flex items-center gap-2">
-            <svg 
-              className="w-4 h-4" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke={THREAT_RED}
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" 
-              />
-            </svg>
-            <span className="text-sm font-medium" style={{ color: THREAT_RED }}>
-              {threatsBlocked} Threats Blocked
-            </span>
-          </div>
-        </div>
+          <svg className="w-5 h-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
       
-      <div 
-        className="absolute top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full backdrop-blur-xl border"
-        style={{ 
-          backgroundColor: 'rgba(0, 0, 0, 0.6)',
-          borderColor: 'rgba(0, 212, 255, 0.3)'
-        }}
-      >
-        <span className="text-sm font-medium" style={{ color: CYAN }}>
-          3D Security Visualization
-        </span>
+      {/* Status overlay */}
+      <div className="absolute top-4 left-4 flex flex-col gap-2">
+        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+          isScanning ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/50' : 
+          attackMode ? 'bg-red-500/20 text-red-400 border border-red-500/50' :
+          'bg-gray-800/60 text-gray-400 border border-gray-600/30'
+        }`}>
+          <span className={`w-2 h-2 rounded-full ${isScanning ? 'bg-cyan-400 animate-pulse' : attackMode ? 'bg-red-400 animate-pulse' : 'bg-gray-500'}`} />
+          {isScanning ? 'Scanning Active' : attackMode ? 'Attack Simulation' : 'Shield Standby'}
+        </div>
+        
+        {localThreatsBlocked > 0 && (
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/50">
+            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            {localThreatsBlocked} Threats Blocked
+          </div>
+        )}
       </div>
+      
+      {/* Attack mode toggle */}
+      <div className="absolute top-4 right-4">
+        <button
+          onClick={() => setAttackMode(!attackMode)}
+          className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
+            attackMode 
+              ? 'bg-red-500/30 text-red-400 border border-red-500/50 hover:bg-red-500/40' 
+              : 'bg-gray-800/60 text-gray-300 border border-gray-600/30 hover:bg-gray-700/60'
+          }`}
+          data-testid="btn-attack-mode"
+        >
+          {attackMode ? '🛑 Stop Attack' : '⚔️ Simulate Attack'}
+        </button>
+      </div>
+      
+      {/* Hotspot info toast */}
+      {hotspotInfo && (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/80 backdrop-blur-xl px-4 py-2 rounded-lg border border-cyan-500/50 text-cyan-400 text-sm">
+          {hotspotInfo}
+        </div>
+      )}
     </div>
   );
 }
