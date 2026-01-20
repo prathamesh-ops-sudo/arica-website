@@ -210,6 +210,12 @@ function DataParticles({ count = 500 }: { count?: number }) {
     return geo;
   }, [positions, colors, sizes]);
 
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+    };
+  }, [geometry]);
+
   return (
     <points ref={pointsRef} geometry={geometry}>
       <pointsMaterial
@@ -332,11 +338,11 @@ function ScrollCamera() {
       mouseRef.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
     };
     
-    document.addEventListener('scroll', handleScroll);
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     
     return () => {
-      document.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);

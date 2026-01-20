@@ -1269,13 +1269,77 @@ export function CyberAttackGlobe({
     }, attackFrequency);
 
     return () => {
+      if (refs.animationId) cancelAnimationFrame(refs.animationId);
+      
+      clearInterval(attackInterval);
+      
       window.removeEventListener('resize', updateSize);
       window.removeEventListener('mouseup', handleMouseUp);
       containerRef.current?.removeEventListener('mousedown', handleMouseDown);
       containerRef.current?.removeEventListener('mousemove', handleMouseMove);
-      clearInterval(attackInterval);
-      if (refs.animationId) cancelAnimationFrame(refs.animationId);
+      
+      refs.arcs.forEach(arc => {
+        arc.mesh.geometry.dispose();
+        (arc.mesh.material as THREE.Material).dispose();
+        arc.marker.geometry.dispose();
+        (arc.marker.material as THREE.Material).dispose();
+        arc.trailParticles.geometry.dispose();
+        (arc.trailParticles.material as THREE.Material).dispose();
+      });
+      refs.arcs = [];
+      
+      refs.markers.forEach(marker => {
+        marker.geometry.dispose();
+        (marker.material as THREE.Material).dispose();
+      });
+      refs.markers = [];
+      
+      refs.impactEffects.forEach(effect => {
+        effect.explosion.geometry.dispose();
+        (effect.explosion.material as THREE.Material).dispose();
+        effect.shockwave.geometry.dispose();
+        (effect.shockwave.material as THREE.Material).dispose();
+        effect.flash.geometry.dispose();
+        (effect.flash.material as THREE.Material).dispose();
+        effect.particles.geometry.dispose();
+        (effect.particles.material as THREE.Material).dispose();
+      });
+      refs.impactEffects = [];
+      
+      if (refs.ambientParticles) {
+        refs.ambientParticles.geometry.dispose();
+        (refs.ambientParticles.material as THREE.Material).dispose();
+      }
+      
+      if (refs.dataStreamParticles) {
+        refs.dataStreamParticles.geometry.dispose();
+        (refs.dataStreamParticles.material as THREE.Material).dispose();
+      }
+      
+      if (refs.atmosphereGlow) {
+        refs.atmosphereGlow.geometry.dispose();
+        (refs.atmosphereGlow.material as THREE.Material).dispose();
+      }
+      
+      if (refs.scene) {
+        refs.scene.traverse((object) => {
+          const mesh = object as THREE.Mesh;
+          if (mesh.geometry) {
+            mesh.geometry.dispose();
+          }
+          if (mesh.material) {
+            if (Array.isArray(mesh.material)) {
+              mesh.material.forEach(m => m.dispose());
+            } else {
+              (mesh.material as THREE.Material).dispose();
+            }
+          }
+        });
+      }
+      
       refs.renderer?.dispose();
+      
+      refs.rippleEffects = [];
     };
   }, [addAttack, autoRotate, attackFrequency, createAmbientParticles, createDataStreamParticles, createExplosion]);
 

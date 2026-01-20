@@ -1264,16 +1264,95 @@ export function RealisticSolarSystem() {
 
     const currentCanvas = canvasRef.current;
     return () => {
+      // Remove all event listeners
       scrollElement?.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
       currentCanvas?.removeEventListener('click', handleClick);
       
+      // Cancel all animation frames
       if (scrollRafRef.current) cancelAnimationFrame(scrollRafRef.current);
       if (refs.animationId) cancelAnimationFrame(refs.animationId);
+      
+      // Dispose shockwave mesh if exists
+      if (shockwaveRef.current) {
+        shockwaveRef.current.geometry?.dispose();
+        if (shockwaveRef.current.material) {
+          if (Array.isArray(shockwaveRef.current.material)) {
+            shockwaveRef.current.material.forEach(m => m.dispose());
+          } else {
+            (shockwaveRef.current.material as THREE.Material).dispose();
+          }
+        }
+        shockwaveRef.current = null;
+      }
+      
+      // Dispose trail particles if exists
+      if (trailParticlesRef.current) {
+        trailParticlesRef.current.geometry?.dispose();
+        if (trailParticlesRef.current.material) {
+          if (Array.isArray(trailParticlesRef.current.material)) {
+            trailParticlesRef.current.material.forEach(m => m.dispose());
+          } else {
+            (trailParticlesRef.current.material as THREE.Material).dispose();
+          }
+        }
+        trailParticlesRef.current = null;
+      }
+      
+      // Comprehensively dispose all scene objects by traversing the scene
+      if (refs.scene) {
+        refs.scene.traverse((object) => {
+          if ((object as THREE.Mesh).geometry) {
+            (object as THREE.Mesh).geometry.dispose();
+          }
+          if ((object as THREE.Mesh).material) {
+            const material = (object as THREE.Mesh).material;
+            if (Array.isArray(material)) {
+              material.forEach(m => {
+                if (m.map) m.map.dispose();
+                if (m.lightMap) m.lightMap.dispose();
+                if (m.bumpMap) m.bumpMap.dispose();
+                if (m.normalMap) m.normalMap.dispose();
+                if (m.specularMap) m.specularMap.dispose();
+                if (m.envMap) m.envMap.dispose();
+                m.dispose();
+              });
+            } else if (material) {
+              const mat = material as THREE.MeshStandardMaterial;
+              if (mat.map) mat.map.dispose();
+              if (mat.lightMap) mat.lightMap.dispose();
+              if (mat.bumpMap) mat.bumpMap.dispose();
+              if (mat.normalMap) mat.normalMap.dispose();
+              if (mat.specularMap) mat.specularMap.dispose();
+              if (mat.envMap) mat.envMap.dispose();
+              material.dispose();
+            }
+          }
+        });
+        
+        // Clear all children from the scene
+        while (refs.scene.children.length > 0) {
+          refs.scene.remove(refs.scene.children[0]);
+        }
+      }
+      
+      // Also dispose tracked items in arrays (fallback for any missed items)
       refs.disposables.forEach(g => g.dispose());
       refs.materials.forEach(m => m.dispose());
+      refs.disposables.length = 0;
+      refs.materials.length = 0;
+      
+      // Clear galaxy groups references
+      refs.galaxyGroups.length = 0;
+      refs.starLayers.length = 0;
+      refs.nebula = null;
+      
+      // Dispose renderer
       refs.renderer?.dispose();
+      refs.renderer = null;
+      refs.scene = null;
+      refs.camera = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
