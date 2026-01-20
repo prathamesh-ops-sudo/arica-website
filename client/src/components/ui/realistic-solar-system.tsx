@@ -767,9 +767,11 @@ export function RealisticSolarSystem() {
   const lockedGalaxyIndexRef = useRef(0);
   const scrollRafRef = useRef<number | null>(null);
   const targetScrollProgressRef = useRef(0);
+  const spacerRef = useRef<HTMLDivElement>(null);
+  const initialScrollRestoredRef = useRef(false);
   
   const HYSTERESIS_BUFFER = 0.025;
-  const SCROLL_HEIGHT_PER_GALAXY = 400;
+  const SCROLL_MULTIPLIER = 5;
   
   const sceneRef = useRef<{
     scene: THREE.Scene | null;
@@ -917,6 +919,8 @@ export function RealisticSolarSystem() {
           prevScrollRef.current = currentProgress;
           setScrollProgress(currentProgress);
           setActiveGalaxy(currentGalaxy);
+          
+          sessionStorage.setItem('galaxyScrollProgress', currentProgress.toString());
 
           let newActive: PlanetConfig | null = null;
           currentGalaxy.planets.forEach((planet) => {
@@ -1475,7 +1479,55 @@ export function RealisticSolarSystem() {
     }
   };
 
-  const totalScrollHeight = `${galaxies.length * SCROLL_HEIGHT_PER_GALAXY}vh`;
+  const updateSpacerHeight = useCallback(() => {
+    if (spacerRef.current) {
+      const height = window.innerHeight * galaxies.length * SCROLL_MULTIPLIER;
+      spacerRef.current.style.height = `${height}px`;
+    }
+  }, []);
+
+  useEffect(() => {
+    updateSpacerHeight();
+    window.addEventListener('resize', updateSpacerHeight);
+    
+    const waitForLayoutAndRestore = () => {
+      if (initialScrollRestoredRef.current) return;
+      
+      const checkAndRestore = () => {
+        if (!scrollRef.current || !spacerRef.current) {
+          requestAnimationFrame(checkAndRestore);
+          return;
+        }
+        
+        const scrollHeight = scrollRef.current.scrollHeight;
+        const clientHeight = scrollRef.current.clientHeight;
+        const scrollableDistance = scrollHeight - clientHeight;
+        
+        if (scrollableDistance < 100) {
+          requestAnimationFrame(checkAndRestore);
+          return;
+        }
+        
+        const savedProgress = sessionStorage.getItem('galaxyScrollProgress');
+        if (savedProgress && !initialScrollRestoredRef.current) {
+          const progress = parseFloat(savedProgress);
+          scrollRef.current.scrollTop = progress * scrollableDistance;
+          setScrollProgress(progress);
+          
+          const galaxy = getGalaxyWithHysteresis(progress);
+          setActiveGalaxy(galaxy);
+          lastGalaxyRef.current = galaxy.id;
+          initialScrollRestoredRef.current = true;
+        }
+      };
+      
+      requestAnimationFrame(checkAndRestore);
+    };
+    
+    waitForLayoutAndRestore();
+    
+    return () => window.removeEventListener('resize', updateSpacerHeight);
+  }, [updateSpacerHeight, getGalaxyWithHysteresis]);
   
   return (
     <div ref={containerRef} className="relative w-full h-full">
@@ -1486,7 +1538,7 @@ export function RealisticSolarSystem() {
         className="fixed inset-0 z-10 overflow-y-auto overflow-x-hidden"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        <div style={{ height: totalScrollHeight }} />
+        <div ref={spacerRef} />
       </div>
       
       <div className="fixed inset-0 z-20 pointer-events-none">
