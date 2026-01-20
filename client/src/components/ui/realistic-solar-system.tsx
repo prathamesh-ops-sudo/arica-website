@@ -1538,7 +1538,10 @@ export function RealisticSolarSystem() {
         className="fixed inset-0 z-10 overflow-y-auto overflow-x-hidden"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        <div ref={spacerRef} />
+        <div 
+          ref={spacerRef} 
+          style={{ minHeight: '1500vh', height: `${typeof window !== 'undefined' ? window.innerHeight * 3 * 5 : 10800}px` }}
+        />
       </div>
       
       <div className="fixed inset-0 z-20 pointer-events-none">
