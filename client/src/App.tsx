@@ -14,6 +14,8 @@ import AttackGlobe from "@/pages/AttackGlobe";
 import VulnerabilityScanner from "@/pages/VulnerabilityScanner";
 import ComplianceDashboard from "@/pages/ComplianceDashboard";
 import DevSecOpsPipeline from "@/pages/DevSecOpsPipeline";
+import ApiSecurityLab from "@/pages/ApiSecurityLab";
+import CloudSecurityCenter from "@/pages/CloudSecurityCenter";
 
 function Router() {
   return (
@@ -30,6 +32,8 @@ function Router() {
       <Route path="/vulnerability-scanner" component={VulnerabilityScanner} />
       <Route path="/compliance-dashboard" component={ComplianceDashboard} />
       <Route path="/devsecops-pipeline" component={DevSecOpsPipeline} />
+      <Route path="/api-security-lab" component={ApiSecurityLab} />
+      <Route path="/cloud-security-center" component={CloudSecurityCenter} />
       <Route path="/portal" component={Contact} />
       <Route component={NotFound} />
     </Switch>

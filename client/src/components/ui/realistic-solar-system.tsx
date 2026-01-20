@@ -877,8 +877,41 @@ export function RealisticSolarSystem() {
       const clientHeight = scrollRef.current.clientHeight;
       
       const scrollableDistance = scrollHeight - clientHeight;
-      const progress = scrollableDistance > 0 ? Math.max(0, Math.min(1, scrollTop / scrollableDistance)) : 0;
+      let progress = scrollableDistance > 0 ? scrollTop / scrollableDistance : 0;
       
+      // Looping mechanism: when reaching end, smoothly animate back to start
+      if (progress >= 0.98 && scrollRef.current && !transitionCooldownRef.current) {
+        transitionCooldownRef.current = true;
+        setWarpEffect(1);
+        setTransitionText('Warping to VAPT Services...');
+        
+        // Animate scroll back to start
+        const animateToStart = () => {
+          if (!scrollRef.current) return;
+          const currentScroll = scrollRef.current.scrollTop;
+          const targetScroll = 0;
+          const diff = currentScroll - targetScroll;
+          
+          if (diff > 10) {
+            scrollRef.current.scrollTop = currentScroll - diff * 0.15;
+            requestAnimationFrame(animateToStart);
+          } else {
+            scrollRef.current.scrollTop = 0;
+            progress = 0;
+            lastGalaxyRef.current = 'vapt';
+            sessionStorage.setItem('galaxyScrollProgress', '0');
+            setTimeout(() => {
+              transitionCooldownRef.current = false;
+              setTransitionText(null);
+            }, 1500);
+          }
+        };
+        
+        requestAnimationFrame(animateToStart);
+        return;
+      }
+      
+      progress = Math.max(0, Math.min(1, progress));
       targetScrollProgressRef.current = progress;
       
       if (scrollRafRef.current === null) {
