@@ -400,6 +400,10 @@ const servicePlanetShader = {
       return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
     }
     
+    float hash3(vec3 p) {
+      return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);
+    }
+    
     float noise(vec2 p) {
       vec2 i = floor(p);
       vec2 f = fract(p);
@@ -408,11 +412,33 @@ const servicePlanetShader = {
                  mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
     }
     
+    float noise3D(vec3 p) {
+      vec3 i = floor(p);
+      vec3 f = fract(p);
+      f = f * f * (3.0 - 2.0 * f);
+      return mix(
+        mix(mix(hash3(i), hash3(i + vec3(1,0,0)), f.x),
+            mix(hash3(i + vec3(0,1,0)), hash3(i + vec3(1,1,0)), f.x), f.y),
+        mix(mix(hash3(i + vec3(0,0,1)), hash3(i + vec3(1,0,1)), f.x),
+            mix(hash3(i + vec3(0,1,1)), hash3(i + vec3(1,1,1)), f.x), f.y), f.z);
+    }
+    
     float fbm(vec2 p) {
       float v = 0.0;
       float a = 0.5;
-      for(int i = 0; i < 5; i++) {
+      for(int i = 0; i < 6; i++) {
         v += a * noise(p);
+        p *= 2.0;
+        a *= 0.5;
+      }
+      return v;
+    }
+    
+    float fbm3D(vec3 p) {
+      float v = 0.0;
+      float a = 0.5;
+      for(int i = 0; i < 4; i++) {
+        v += a * noise3D(p);
         p *= 2.0;
         a *= 0.5;
       }
@@ -427,28 +453,39 @@ const servicePlanetShader = {
       
       vec2 uv = vec2(atan(vPosition.x, vPosition.z) / 6.28318 + 0.5, asin(vPosition.y / length(vPosition)) / 3.14159 + 0.5);
       
-      float pattern1 = fbm(uv * 8.0 + time * 0.02);
-      float pattern2 = fbm(uv * 4.0 - time * 0.015);
-      float bands = sin(uv.y * 12.0 + pattern1 * 2.0) * 0.5 + 0.5;
+      float pattern1 = fbm(uv * 10.0 + time * 0.015);
+      float pattern2 = fbm(uv * 6.0 - time * 0.01);
+      float pattern3 = fbm3D(vPosition * 2.0 + time * 0.02);
+      float bands = sin(uv.y * 16.0 + pattern1 * 3.0) * 0.5 + 0.5;
+      float craters = smoothstep(0.6, 0.7, fbm(uv * 30.0)) * 0.3;
       
-      vec3 baseColor = mix(primaryColor, secondaryColor, pattern1 * 0.6 + bands * 0.4);
-      baseColor = mix(baseColor, primaryColor * 1.2, pattern2 * 0.3);
+      vec3 baseColor = mix(primaryColor, secondaryColor, pattern1 * 0.5 + bands * 0.3);
+      baseColor = mix(baseColor, primaryColor * 1.3, pattern2 * 0.25);
+      baseColor = mix(baseColor, secondaryColor * 0.7, pattern3 * 0.2);
+      baseColor -= vec3(craters) * secondaryColor;
       
-      float fresnel = pow(1.0 - max(dot(viewDir, vNormal), 0.0), 2.5);
-      vec3 rimColor = mix(primaryColor, vec3(1.0), 0.5);
-      baseColor = mix(baseColor, rimColor, fresnel * 0.4);
+      float fresnel = pow(1.0 - max(dot(viewDir, vNormal), 0.0), 3.0);
+      vec3 rimColor = mix(primaryColor, vec3(1.0), 0.6);
       
       vec3 halfDir = normalize(lightDir + viewDir);
-      float spec = pow(max(dot(vNormal, halfDir), 0.0), 40.0) * 0.4;
+      float spec = pow(max(dot(vNormal, halfDir), 0.0), 60.0) * 0.5;
+      float specWide = pow(max(dot(vNormal, halfDir), 0.0), 20.0) * 0.2;
       
-      float terminator = smoothstep(-0.15, 0.3, diffuse);
-      vec3 nightSide = baseColor * 0.05;
-      vec3 daySide = baseColor * (diffuse * 0.7 + 0.3) + vec3(spec) * primaryColor;
+      float terminator = smoothstep(-0.2, 0.4, diffuse);
+      vec3 ambient = baseColor * 0.08 + primaryColor * 0.02;
+      vec3 nightGlow = primaryColor * 0.03 * (1.0 - terminator);
+      vec3 nightSide = ambient + nightGlow;
+      vec3 daySide = baseColor * (diffuse * 0.8 + 0.2) + vec3(spec + specWide) * mix(primaryColor, vec3(1.0), 0.5);
       
-      float rimLight = pow(1.0 - max(dot(viewDir, vNormal), 0.0), 4.0) * 0.3;
+      float rimLight = pow(1.0 - max(dot(viewDir, vNormal), 0.0), 5.0) * 0.4;
+      float backLight = pow(max(-NdotL, 0.0), 2.0) * 0.15;
       
       vec3 finalColor = mix(nightSide, daySide, terminator);
-      finalColor += rimLight * rimColor;
+      finalColor += rimLight * rimColor * terminator;
+      finalColor += backLight * primaryColor;
+      finalColor = mix(finalColor, rimColor * 1.2, fresnel * 0.3);
+      
+      finalColor = pow(finalColor, vec3(0.95));
       
       gl_FragColor = vec4(finalColor, 1.0);
     }
@@ -673,6 +710,7 @@ interface PlanetMesh extends THREE.Mesh {
     angle: number;
     bobOffset: number;
     atmosphere?: THREE.Mesh;
+    outerGlow?: THREE.Mesh;
   };
 }
 
@@ -700,8 +738,11 @@ export function RealisticSolarSystem() {
   const transitionCooldownRef = useRef(false);
   const raycasterRef = useRef<THREE.Raycaster | null>(null);
   const lockedGalaxyIndexRef = useRef(0);
+  const scrollRafRef = useRef<number | null>(null);
+  const targetScrollProgressRef = useRef(0);
   
   const HYSTERESIS_BUFFER = 0.025;
+  const SCROLL_HEIGHT_PER_GALAXY = 250;
   
   const sceneRef = useRef<{
     scene: THREE.Scene | null;
@@ -808,41 +849,56 @@ export function RealisticSolarSystem() {
 
     const handleScroll = () => {
       if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const scrollHeight = containerRef.current.scrollHeight - window.innerHeight;
-      const progress = Math.max(0, Math.min(1, -rect.top / scrollHeight));
       
-      const scrollDelta = Math.abs(progress - prevScrollRef.current);
+      const containerTop = containerRef.current.offsetTop;
+      const containerHeight = containerRef.current.offsetHeight;
+      const scrollY = window.scrollY || window.pageYOffset;
+      const viewportHeight = window.innerHeight;
       
-      const currentGalaxy = getGalaxyWithHysteresis(progress);
+      const scrollableDistance = containerHeight - viewportHeight;
+      const scrolledIntoContainer = scrollY - containerTop;
+      const progress = Math.max(0, Math.min(1, scrolledIntoContainer / scrollableDistance));
       
-      if (currentGalaxy.id !== lastGalaxyRef.current && !transitionCooldownRef.current) {
-        transitionCooldownRef.current = true;
-        setWarpEffect(1);
-        setTransitionText(`Entering ${currentGalaxy.name}`);
-        setTimeout(() => setTransitionText(null), 2000);
-        lastGalaxyRef.current = currentGalaxy.id;
-        setTimeout(() => {
-          transitionCooldownRef.current = false;
-        }, 500);
-      } else if (scrollDelta > 0.02 && !transitionCooldownRef.current) {
-        setWarpEffect(Math.min(0.5, scrollDelta * 5));
+      targetScrollProgressRef.current = progress;
+      
+      if (scrollRafRef.current === null) {
+        scrollRafRef.current = requestAnimationFrame(() => {
+          scrollRafRef.current = null;
+          
+          const currentProgress = targetScrollProgressRef.current;
+          const scrollDelta = Math.abs(currentProgress - prevScrollRef.current);
+          
+          const currentGalaxy = getGalaxyWithHysteresis(currentProgress);
+          
+          if (currentGalaxy.id !== lastGalaxyRef.current && !transitionCooldownRef.current) {
+            transitionCooldownRef.current = true;
+            setWarpEffect(1);
+            setTransitionText(`Entering ${currentGalaxy.name}`);
+            setTimeout(() => setTransitionText(null), 2000);
+            lastGalaxyRef.current = currentGalaxy.id;
+            setTimeout(() => {
+              transitionCooldownRef.current = false;
+            }, 500);
+          } else if (scrollDelta > 0.02 && !transitionCooldownRef.current) {
+            setWarpEffect(Math.min(0.5, scrollDelta * 5));
+          }
+          
+          prevScrollRef.current = currentProgress;
+          setScrollProgress(currentProgress);
+          setActiveGalaxy(currentGalaxy);
+
+          let newActive: PlanetConfig | null = null;
+          currentGalaxy.planets.forEach((planet) => {
+            const dist = Math.abs(currentProgress - planet.scrollPosition);
+            if (dist < 0.04) {
+              newActive = planet;
+            }
+          });
+          setActivePlanet(newActive);
+
+          updateCameraForScroll(currentProgress, currentGalaxy);
+        });
       }
-      
-      prevScrollRef.current = progress;
-      setScrollProgress(progress);
-      setActiveGalaxy(currentGalaxy);
-
-      let newActive: PlanetConfig | null = null;
-      currentGalaxy.planets.forEach((planet) => {
-        const dist = Math.abs(progress - planet.scrollPosition);
-        if (dist < 0.04) {
-          newActive = planet;
-        }
-      });
-      setActivePlanet(newActive);
-
-      updateCameraForScroll(progress, currentGalaxy);
     };
 
     const handleClick = (e: MouseEvent) => {
@@ -921,6 +977,7 @@ export function RealisticSolarSystem() {
       window.removeEventListener('resize', handleResize);
       currentCanvas?.removeEventListener('click', handleClick);
       
+      if (scrollRafRef.current) cancelAnimationFrame(scrollRafRef.current);
       if (refs.animationId) cancelAnimationFrame(refs.animationId);
       refs.disposables.forEach(g => g.dispose());
       refs.materials.forEach(m => m.dispose());
@@ -1085,9 +1142,10 @@ export function RealisticSolarSystem() {
 
       galaxyGroup.sunLight = new THREE.PointLight(
         new THREE.Color(galaxy.colorTheme.primary).getHex(),
-        3,
-        200
+        4,
+        300
       );
+      galaxyGroup.sunLight.position.set(0, 0, 0);
       refs.scene!.add(galaxyGroup.sunLight);
 
       const coronaLayers = [
@@ -1153,34 +1211,75 @@ export function RealisticSolarSystem() {
         refs.materials.push(material);
 
         if (planet.color.atmosphere) {
-          const atmosGeom = new THREE.SphereGeometry(planet.size * 1.12, 32, 32);
+          const atmosGeom = new THREE.SphereGeometry(planet.size * 1.15, 48, 48);
           const atmosColor = new THREE.Color(planet.color.atmosphere);
           const atmosMat = new THREE.ShaderMaterial({
             uniforms: {
               atmosphereColor: { value: new THREE.Vector3(atmosColor.r, atmosColor.g, atmosColor.b) },
               lightPosition: { value: new THREE.Vector3(0, 0, 0) },
+              time: { value: 0 },
             },
             vertexShader: `
               varying vec3 vNormal;
               varying vec3 vWorldPosition;
+              varying vec3 vViewPosition;
               void main() {
                 vNormal = normalize(normalMatrix * normal);
                 vWorldPosition = (modelMatrix * vec4(position, 1.0)).xyz;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                vViewPosition = -mvPosition.xyz;
+                gl_Position = projectionMatrix * mvPosition;
               }
             `,
             fragmentShader: `
               uniform vec3 atmosphereColor;
               uniform vec3 lightPosition;
+              uniform float time;
               varying vec3 vNormal;
               varying vec3 vWorldPosition;
+              varying vec3 vViewPosition;
+              
+              float hash(vec2 p) {
+                return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+              }
+              
+              float noise(vec2 p) {
+                vec2 i = floor(p);
+                vec2 f = fract(p);
+                f = f * f * (3.0 - 2.0 * f);
+                return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+                           mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
+              }
+              
               void main() {
+                vec3 viewDir = normalize(vViewPosition);
                 vec3 lightDir = normalize(lightPosition - vWorldPosition);
                 float NdotL = dot(vNormal, lightDir);
-                float lightSide = smoothstep(-0.3, 0.5, NdotL);
-                float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.0);
-                intensity *= 0.3 + lightSide * 0.7;
-                gl_FragColor = vec4(atmosphereColor, intensity * 0.6);
+                float NdotV = dot(vNormal, viewDir);
+                
+                float lightSide = smoothstep(-0.4, 0.6, NdotL);
+                
+                float fresnel = pow(1.0 - abs(NdotV), 4.0);
+                float rim = pow(1.0 - abs(NdotV), 2.5);
+                
+                vec2 uv = vec2(atan(vWorldPosition.x, vWorldPosition.z), vWorldPosition.y);
+                float shimmer = noise(uv * 3.0 + time * 0.5) * 0.15 + 0.85;
+                
+                vec3 glowColor = atmosphereColor * 1.3;
+                vec3 coreColor = atmosphereColor * 0.8 + vec3(0.2);
+                
+                float innerGlow = fresnel * 0.6 * shimmer;
+                float outerGlow = rim * 0.4;
+                float totalGlow = innerGlow + outerGlow;
+                
+                totalGlow *= 0.4 + lightSide * 0.6;
+                
+                vec3 finalColor = mix(coreColor, glowColor, fresnel);
+                
+                float alpha = totalGlow * 0.8;
+                alpha = clamp(alpha, 0.0, 0.9);
+                
+                gl_FragColor = vec4(finalColor, alpha);
               }
             `,
             side: THREE.BackSide,
@@ -1194,6 +1293,38 @@ export function RealisticSolarSystem() {
           refs.scene!.add(atmosphere);
           refs.disposables.push(atmosGeom);
           refs.materials.push(atmosMat);
+          
+          const outerGlowGeom = new THREE.SphereGeometry(planet.size * 1.3, 32, 32);
+          const outerGlowMat = new THREE.ShaderMaterial({
+            uniforms: {
+              glowColor: { value: new THREE.Vector3(atmosColor.r, atmosColor.g, atmosColor.b) },
+            },
+            vertexShader: `
+              varying vec3 vNormal;
+              void main() {
+                vNormal = normalize(normalMatrix * normal);
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+              }
+            `,
+            fragmentShader: `
+              uniform vec3 glowColor;
+              varying vec3 vNormal;
+              void main() {
+                float intensity = pow(0.65 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 5.0);
+                gl_FragColor = vec4(glowColor * 0.5, intensity * 0.3);
+              }
+            `,
+            side: THREE.BackSide,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            depthWrite: false,
+          });
+          const outerGlow = new THREE.Mesh(outerGlowGeom, outerGlowMat);
+          outerGlow.position.copy(mesh.position);
+          mesh.userData.outerGlow = outerGlow;
+          refs.scene!.add(outerGlow);
+          refs.disposables.push(outerGlowGeom);
+          refs.materials.push(outerGlowMat);
         }
       });
 
@@ -1282,6 +1413,9 @@ export function RealisticSolarSystem() {
         if (mesh.userData.atmosphere) {
           mesh.userData.atmosphere.visible = visibility > 0;
         }
+        if (mesh.userData.outerGlow) {
+          mesh.userData.outerGlow.visible = visibility > 0;
+        }
         
         if (mesh.visible) {
           const planet = mesh.userData.planet;
@@ -1290,7 +1424,7 @@ export function RealisticSolarSystem() {
           mesh.userData.angle += planet.orbitSpeed;
           mesh.position.x = Math.cos(mesh.userData.angle) * planet.distance;
           mesh.position.z = Math.sin(mesh.userData.angle) * planet.distance;
-          mesh.position.y = Math.sin(time * 0.5 + bobOffset) * 0.1;
+          mesh.position.y = Math.sin(time * 0.5 + bobOffset) * 0.15;
           
           mesh.rotation.y += planet.rotationSpeed;
 
@@ -1302,6 +1436,12 @@ export function RealisticSolarSystem() {
             mesh.userData.atmosphere.position.copy(mesh.position);
             const atmosMat = mesh.userData.atmosphere.material as THREE.ShaderMaterial;
             if (atmosMat.uniforms?.lightPosition) atmosMat.uniforms.lightPosition.value.set(0, 0, 0);
+            if (atmosMat.uniforms?.time) atmosMat.uniforms.time.value = time;
+          }
+          
+          if (mesh.userData.outerGlow) {
+            mesh.userData.outerGlow.position.copy(mesh.position);
+            mesh.userData.outerGlow.visible = mesh.visible;
           }
         }
       });
@@ -1322,8 +1462,10 @@ export function RealisticSolarSystem() {
     }
   };
 
+  const totalScrollHeight = `${galaxies.length * SCROLL_HEIGHT_PER_GALAXY}vh`;
+  
   return (
-    <div ref={containerRef} className="relative" style={{ height: '900vh' }}>
+    <div ref={containerRef} className="relative" style={{ height: totalScrollHeight }}>
       <div className="sticky top-0 h-screen overflow-hidden">
         {!isLoaded && (
           <div className="absolute inset-0 flex items-center justify-center bg-background z-50">
