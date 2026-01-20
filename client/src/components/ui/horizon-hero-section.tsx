@@ -15,12 +15,11 @@ interface ThreeRefs {
   renderer: THREE.WebGLRenderer | null;
   stars: THREE.Points[];
   nebula: THREE.Mesh | null;
-  mountains: THREE.Mesh[];
+  distantBodies: THREE.Mesh[];
   animationId: number | null;
   targetCameraX?: number;
   targetCameraY?: number;
   targetCameraZ?: number;
-  locations?: number[];
 }
 
 export function HorizonHeroSection() {
@@ -39,6 +38,7 @@ export function HorizonHeroSection() {
   const [currentSection, setCurrentSection] = useState(0);
   const [isReady, setIsReady] = useState(false);
   const [isPastHero, setIsPastHero] = useState(false);
+  const [webglFailed, setWebglFailed] = useState(false);
   const totalSections = 3;
   
   const threeRefs = useRef<ThreeRefs>({
@@ -47,7 +47,7 @@ export function HorizonHeroSection() {
     renderer: null,
     stars: [],
     nebula: null,
-    mountains: [],
+    distantBodies: [],
     animationId: null
   });
 
@@ -55,38 +55,57 @@ export function HorizonHeroSection() {
     if (!canvasRef.current) return;
 
     const initThree = () => {
-      const refs = threeRefs.current;
-      
-      refs.scene = new THREE.Scene();
-      refs.scene.fog = new THREE.FogExp2(0x000000, 0.00025);
+      try {
+        const refs = threeRefs.current;
+        
+        refs.scene = new THREE.Scene();
+        refs.scene.fog = new THREE.FogExp2(0x000000, 0.00025);
 
-      refs.camera = new THREE.PerspectiveCamera(
-        75,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        2000
-      );
-      refs.camera.position.z = 100;
-      refs.camera.position.y = 20;
+        refs.camera = new THREE.PerspectiveCamera(
+          75,
+          window.innerWidth / window.innerHeight,
+          0.1,
+          2000
+        );
+        refs.camera.position.z = 100;
+        refs.camera.position.y = 20;
 
-      refs.renderer = new THREE.WebGLRenderer({
-        canvas: canvasRef.current!,
-        antialias: true,
-        alpha: true
-      });
-      refs.renderer.setSize(window.innerWidth, window.innerHeight);
-      refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
-      refs.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      refs.renderer.toneMappingExposure = 0.6;
+        try {
+          refs.renderer = new THREE.WebGLRenderer({
+            canvas: canvasRef.current!,
+            antialias: false,
+            alpha: true,
+            powerPreference: 'low-power',
+            failIfMajorPerformanceCaveat: false
+          });
+        } catch (rendererError) {
+          console.warn('WebGL renderer creation failed:', rendererError);
+          setWebglFailed(true);
+          return;
+        }
 
-      createStarField();
-      createNebula();
-      createMountains();
-      createAtmosphere();
-      getLocation();
+        if (!refs.renderer.getContext()) {
+          console.warn('WebGL context not available');
+          setWebglFailed(true);
+          return;
+        }
 
-      animate();
-      setIsReady(true);
+        refs.renderer.setSize(window.innerWidth, window.innerHeight);
+        refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
+        refs.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        refs.renderer.toneMappingExposure = 0.6;
+
+        createStarField();
+        createNebula();
+        createDistantBodies();
+        createAtmosphere();
+
+        animate();
+        setIsReady(true);
+      } catch (error) {
+        console.warn('Three.js initialization failed:', error);
+        setWebglFailed(true);
+      }
     };
 
     const createStarField = () => {
@@ -182,25 +201,29 @@ export function HorizonHeroSection() {
       const refs = threeRefs.current;
       if (!refs.scene) return;
       
-      const geometry = new THREE.PlaneGeometry(4000, 2000, 20, 20);
+      const geometry = new THREE.PlaneGeometry(4000, 2000, 8, 8);
       const material = new THREE.ShaderMaterial({
         uniforms: {
           time: { value: 0 },
           color1: { value: new THREE.Color(0x00d4ff) },
           color2: { value: new THREE.Color(0x9333ea) },
-          opacity: { value: 0.3 }
+          color3: { value: new THREE.Color(0x1e40af) },
+          opacity: { value: 0.35 },
+          scrollProgress: { value: 0 }
         },
         vertexShader: `
           varying vec2 vUv;
           varying float vElevation;
           uniform float time;
+          uniform float scrollProgress;
           
           void main() {
             vUv = uv;
             vec3 pos = position;
             
-            float elevation = sin(pos.x * 0.01 + time) * cos(pos.y * 0.01 + time) * 20.0;
+            float elevation = sin(pos.x * 0.008 + time) * cos(pos.y * 0.008 + time) * 15.0;
             pos.z += elevation;
+            pos.z += scrollProgress * 200.0;
             vElevation = elevation;
             
             gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
@@ -209,17 +232,27 @@ export function HorizonHeroSection() {
         fragmentShader: `
           uniform vec3 color1;
           uniform vec3 color2;
+          uniform vec3 color3;
           uniform float opacity;
           uniform float time;
           varying vec2 vUv;
           varying float vElevation;
           
+          float noise(vec2 p) {
+            return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+          }
+          
           void main() {
-            float mixFactor = sin(vUv.x * 10.0 + time) * cos(vUv.y * 10.0 + time);
-            vec3 color = mix(color1, color2, mixFactor * 0.5 + 0.5);
+            float n = noise(vUv * 5.0 + time * 0.1);
+            float mixFactor1 = sin(vUv.x * 8.0 + time * 0.5) * cos(vUv.y * 6.0 + time * 0.3);
+            float mixFactor2 = cos(vUv.x * 4.0 - time * 0.2) * sin(vUv.y * 8.0 + time * 0.4);
             
-            float alpha = opacity * (1.0 - length(vUv - 0.5) * 2.0);
+            vec3 color = mix(color1, color2, mixFactor1 * 0.5 + 0.5);
+            color = mix(color, color3, mixFactor2 * 0.3 + n * 0.2);
+            
+            float alpha = opacity * (1.0 - length(vUv - 0.5) * 1.5);
             alpha *= 1.0 + vElevation * 0.01;
+            alpha = max(alpha, 0.0);
             
             gl_FragColor = vec4(color, alpha);
           }
@@ -237,45 +270,61 @@ export function HorizonHeroSection() {
       refs.nebula = nebula;
     };
 
-    const createMountains = () => {
+    const createDistantBodies = () => {
       const refs = threeRefs.current;
       if (!refs.scene) return;
       
-      const layers = [
-        { distance: -50, height: 60, color: 0x0a1628, opacity: 1 },
-        { distance: -150, height: 100, color: 0x112940, opacity: 0.6 }
+      const bodies = [
+        { x: -400, y: 100, z: -800, radius: 30, color: 0x2d3748, glowColor: 0x4a5568 },
+        { x: 350, y: -50, z: -900, radius: 20, color: 0x1a202c, glowColor: 0x2d3748 },
+        { x: -200, y: -80, z: -700, radius: 15, color: 0x2d3748, glowColor: 0x718096 },
+        { x: 500, y: 150, z: -1000, radius: 40, color: 0x1a1a2e, glowColor: 0x16213e }
       ];
 
-      layers.forEach((layer, index) => {
-        const points: THREE.Vector2[] = [];
-        const segments = 50;
-        
-        for (let i = 0; i <= segments; i++) {
-          const x = (i / segments - 0.5) * 1000;
-          const y = Math.sin(i * 0.1) * layer.height + 
-                   Math.sin(i * 0.05) * layer.height * 0.5 +
-                   Math.random() * layer.height * 0.2 - 100;
-          points.push(new THREE.Vector2(x, y));
-        }
-        
-        points.push(new THREE.Vector2(5000, -300));
-        points.push(new THREE.Vector2(-5000, -300));
-
-        const shape = new THREE.Shape(points);
-        const geometry = new THREE.ShapeGeometry(shape);
-        const material = new THREE.MeshBasicMaterial({
-          color: layer.color,
+      bodies.forEach((body) => {
+        const geometry = new THREE.CircleGeometry(body.radius, 16);
+        const material = new THREE.ShaderMaterial({
+          uniforms: {
+            baseColor: { value: new THREE.Color(body.color) },
+            glowColor: { value: new THREE.Color(body.glowColor) },
+            time: { value: 0 }
+          },
+          vertexShader: `
+            varying vec2 vUv;
+            void main() {
+              vUv = uv;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+          `,
+          fragmentShader: `
+            uniform vec3 baseColor;
+            uniform vec3 glowColor;
+            uniform float time;
+            varying vec2 vUv;
+            
+            void main() {
+              float dist = length(vUv - vec2(0.5)) * 2.0;
+              float glow = 1.0 - smoothstep(0.0, 1.0, dist);
+              float edge = smoothstep(0.7, 0.9, dist);
+              
+              vec3 color = mix(baseColor, glowColor, edge * 0.5);
+              float pulse = sin(time * 0.5) * 0.1 + 0.9;
+              color *= pulse;
+              
+              float alpha = glow * 0.8;
+              gl_FragColor = vec4(color, alpha);
+            }
+          `,
           transparent: true,
-          opacity: layer.opacity,
-          side: THREE.DoubleSide
+          blending: THREE.AdditiveBlending,
+          depthWrite: false
         });
 
-        const mountain = new THREE.Mesh(geometry, material);
-        mountain.position.z = layer.distance;
-        mountain.position.y = layer.distance;
-        mountain.userData = { baseZ: layer.distance, index };
-        refs.scene!.add(mountain);
-        refs.mountains.push(mountain);
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(body.x, body.y, body.z);
+        mesh.userData = { baseX: body.x, baseY: body.y, parallaxSpeed: 0.1 + Math.random() * 0.2 };
+        refs.scene!.add(mesh);
+        refs.distantBodies.push(mesh);
       });
     };
 
@@ -338,6 +387,15 @@ export function HorizonHeroSection() {
         (refs.nebula.material as THREE.ShaderMaterial).uniforms.time.value = time * 0.3;
       }
 
+      refs.distantBodies.forEach((body) => {
+        if ((body.material as THREE.ShaderMaterial).uniforms) {
+          (body.material as THREE.ShaderMaterial).uniforms.time.value = time;
+        }
+        const userData = body.userData;
+        body.position.x = userData.baseX + Math.sin(time * 0.1) * 5 * userData.parallaxSpeed;
+        body.position.y = userData.baseY + Math.cos(time * 0.15) * 3 * userData.parallaxSpeed;
+      });
+
       if (refs.camera && refs.targetCameraX !== undefined) {
         const smoothingFactor = 0.05;
         
@@ -353,12 +411,6 @@ export function HorizonHeroSection() {
         refs.camera.position.z = smoothCameraPos.current.z;
         refs.camera.lookAt(0, 10, -600);
       }
-
-      refs.mountains.forEach((mountain, i) => {
-        const parallaxFactor = 1 + i * 0.5;
-        mountain.position.x = Math.sin(time * 0.1) * 2 * parallaxFactor;
-        mountain.position.y = 50 + (Math.cos(time * 0.15) * 1 * parallaxFactor);
-      });
 
       if (refs.renderer && refs.scene && refs.camera) {
         refs.renderer.render(refs.scene, refs.camera);
@@ -392,9 +444,9 @@ export function HorizonHeroSection() {
         (starField.material as THREE.Material).dispose();
       });
 
-      refs.mountains.forEach(mountain => {
-        mountain.geometry.dispose();
-        (mountain.material as THREE.Material).dispose();
+      refs.distantBodies.forEach(body => {
+        body.geometry.dispose();
+        (body.material as THREE.Material).dispose();
       });
 
       if (refs.nebula) {
@@ -407,15 +459,6 @@ export function HorizonHeroSection() {
       }
     };
   }, []);
-
-  const getLocation = () => {
-    const refs = threeRefs.current;
-    const locations: number[] = [];
-    refs.mountains.forEach((mountain, i) => {
-      locations[i] = mountain.position.z;
-    });
-    refs.locations = locations;
-  };
 
   useEffect(() => {
     if (!isReady) return;
@@ -494,31 +537,27 @@ export function HorizonHeroSection() {
         const newSection = Math.min(Math.floor(progress * totalSections), totalSections - 1);
         setCurrentSection(newSection);
 
-      const refs = threeRefs.current;
-      
-      const totalProgress = progress * totalSections;
-      const sectionProgress = totalProgress % 1;
-      
-      const cameraPositions = [
-        { x: 0, y: 30, z: 300 },
-        { x: 0, y: 40, z: -50 },
-        { x: 0, y: 50, z: -700 }
-      ];
-      
-      const currentPos = cameraPositions[newSection] || cameraPositions[0];
-      const nextPos = cameraPositions[newSection + 1] || currentPos;
-      
-      refs.targetCameraX = currentPos.x + (nextPos.x - currentPos.x) * sectionProgress;
-      refs.targetCameraY = currentPos.y + (nextPos.y - currentPos.y) * sectionProgress;
-      refs.targetCameraZ = currentPos.z + (nextPos.z - currentPos.z) * sectionProgress;
+        const refs = threeRefs.current;
+        
+        const totalProgress = progress * totalSections;
+        const sectionProgress = totalProgress % 1;
+        
+        const cameraPositions = [
+          { x: 0, y: 30, z: 300 },
+          { x: 0, y: 40, z: -50 },
+          { x: 0, y: 50, z: -700 }
+        ];
+        
+        const currentPos = cameraPositions[newSection] || cameraPositions[0];
+        const nextPos = cameraPositions[newSection + 1] || currentPos;
+        
+        refs.targetCameraX = currentPos.x + (nextPos.x - currentPos.x) * sectionProgress;
+        refs.targetCameraY = currentPos.y + (nextPos.y - currentPos.y) * sectionProgress;
+        refs.targetCameraZ = currentPos.z + (nextPos.z - currentPos.z) * sectionProgress;
 
-      refs.mountains.forEach((mountain, i) => {
-        if (progress > 0.7) {
-          mountain.position.z = 600000;
-        } else if (refs.locations) {
-          mountain.position.z = refs.locations[i];
+        if (refs.nebula && (refs.nebula.material as THREE.ShaderMaterial).uniforms) {
+          (refs.nebula.material as THREE.ShaderMaterial).uniforms.scrollProgress.value = progress;
         }
-      });
       });
     };
 
@@ -554,11 +593,19 @@ export function HorizonHeroSection() {
 
   return (
     <div ref={containerRef} className="horizon-hero-container">
-      <canvas 
-        ref={canvasRef} 
-        className="horizon-hero-canvas" 
-        style={{ opacity: isPastHero ? 0 : 1, transition: 'opacity 0.5s ease' }}
-      />
+      {webglFailed ? (
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-slate-900 to-black">
+          <div className="absolute inset-0 opacity-30" style={{
+            backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.15), transparent 50%), radial-gradient(circle at 80% 30%, rgba(147, 51, 234, 0.15), transparent 50%)'
+          }} />
+        </div>
+      ) : (
+        <canvas 
+          ref={canvasRef} 
+          className="horizon-hero-canvas" 
+          style={{ opacity: isPastHero ? 0 : 1, transition: 'opacity 0.5s ease' }}
+        />
+      )}
       
       <div 
         ref={menuRef} 
