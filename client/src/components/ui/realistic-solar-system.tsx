@@ -1540,7 +1540,8 @@ export function RealisticSolarSystem() {
       >
         <div 
           ref={spacerRef} 
-          style={{ minHeight: '1500vh', height: `${typeof window !== 'undefined' ? window.innerHeight * 3 * 5 : 10800}px` }}
+          className="w-full"
+          style={{ height: '1500vh' }}
         />
       </div>
       
