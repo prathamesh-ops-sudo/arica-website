@@ -15,26 +15,124 @@ const attackTypes = [
 ];
 
 const cityCoordinates: Record<string, { lat: number; lng: number }> = {
-  'Moscow, Russia': { lat: 55.7558, lng: 37.6173 },
-  'Beijing, China': { lat: 39.9042, lng: 116.4074 },
+  // North America
   'New York, USA': { lat: 40.7128, lng: -74.006 },
-  'London, UK': { lat: 51.5074, lng: -0.1278 },
-  'Tokyo, Japan': { lat: 35.6762, lng: 139.6503 },
-  'São Paulo, Brazil': { lat: -23.5505, lng: -46.6333 },
-  'Mumbai, India': { lat: 19.076, lng: 72.8777 },
-  'Sydney, Australia': { lat: -33.8688, lng: 151.2093 },
-  'Paris, France': { lat: 48.8566, lng: 2.3522 },
-  'Seoul, South Korea': { lat: 37.5665, lng: 126.978 },
-  'Berlin, Germany': { lat: 52.52, lng: 13.405 },
-  'Toronto, Canada': { lat: 43.6532, lng: -79.3832 },
-  'Singapore': { lat: 1.3521, lng: 103.8198 },
-  'Dubai, UAE': { lat: 25.2048, lng: 55.2708 },
-  'Hong Kong': { lat: 22.3193, lng: 114.1694 },
   'Los Angeles, USA': { lat: 34.0522, lng: -118.2437 },
-  'Shanghai, China': { lat: 31.2304, lng: 121.4737 },
+  'Chicago, USA': { lat: 41.8781, lng: -87.6298 },
+  'Houston, USA': { lat: 29.7604, lng: -95.3698 },
+  'Phoenix, USA': { lat: 33.4484, lng: -112.074 },
+  'San Francisco, USA': { lat: 37.7749, lng: -122.4194 },
+  'Seattle, USA': { lat: 47.6062, lng: -122.3321 },
+  'Miami, USA': { lat: 25.7617, lng: -80.1918 },
+  'Denver, USA': { lat: 39.7392, lng: -104.9903 },
+  'Atlanta, USA': { lat: 33.749, lng: -84.388 },
+  'Boston, USA': { lat: 42.3601, lng: -71.0589 },
+  'Dallas, USA': { lat: 32.7767, lng: -96.797 },
+  'Toronto, Canada': { lat: 43.6532, lng: -79.3832 },
+  'Vancouver, Canada': { lat: 49.2827, lng: -123.1207 },
+  'Montreal, Canada': { lat: 45.5017, lng: -73.5673 },
+  'Mexico City, Mexico': { lat: 19.4326, lng: -99.1332 },
+  'Guadalajara, Mexico': { lat: 20.6597, lng: -103.3496 },
+  
+  // South America
+  'São Paulo, Brazil': { lat: -23.5505, lng: -46.6333 },
+  'Rio de Janeiro, Brazil': { lat: -22.9068, lng: -43.1729 },
+  'Buenos Aires, Argentina': { lat: -34.6037, lng: -58.3816 },
+  'Lima, Peru': { lat: -12.0464, lng: -77.0428 },
+  'Bogota, Colombia': { lat: 4.711, lng: -74.0721 },
+  'Santiago, Chile': { lat: -33.4489, lng: -70.6693 },
+  'Caracas, Venezuela': { lat: 10.4806, lng: -66.9036 },
+  'Quito, Ecuador': { lat: -0.1807, lng: -78.4678 },
+  
+  // Europe
+  'London, UK': { lat: 51.5074, lng: -0.1278 },
+  'Paris, France': { lat: 48.8566, lng: 2.3522 },
+  'Berlin, Germany': { lat: 52.52, lng: 13.405 },
+  'Munich, Germany': { lat: 48.1351, lng: 11.582 },
+  'Frankfurt, Germany': { lat: 50.1109, lng: 8.6821 },
   'Amsterdam, Netherlands': { lat: 52.3676, lng: 4.9041 },
+  'Brussels, Belgium': { lat: 50.8503, lng: 4.3517 },
+  'Madrid, Spain': { lat: 40.4168, lng: -3.7038 },
+  'Barcelona, Spain': { lat: 41.3851, lng: 2.1734 },
+  'Rome, Italy': { lat: 41.9028, lng: 12.4964 },
+  'Milan, Italy': { lat: 45.4642, lng: 9.19 },
+  'Vienna, Austria': { lat: 48.2082, lng: 16.3738 },
+  'Zurich, Switzerland': { lat: 47.3769, lng: 8.5417 },
   'Stockholm, Sweden': { lat: 59.3293, lng: 18.0686 },
+  'Oslo, Norway': { lat: 59.9139, lng: 10.7522 },
+  'Copenhagen, Denmark': { lat: 55.6761, lng: 12.5683 },
+  'Helsinki, Finland': { lat: 60.1699, lng: 24.9384 },
+  'Dublin, Ireland': { lat: 53.3498, lng: -6.2603 },
+  'Lisbon, Portugal': { lat: 38.7223, lng: -9.1393 },
+  'Warsaw, Poland': { lat: 52.2297, lng: 21.0122 },
+  'Prague, Czechia': { lat: 50.0755, lng: 14.4378 },
+  'Budapest, Hungary': { lat: 47.4979, lng: 19.0402 },
+  'Athens, Greece': { lat: 37.9838, lng: 23.7275 },
+  'Moscow, Russia': { lat: 55.7558, lng: 37.6173 },
+  'St Petersburg, Russia': { lat: 59.9311, lng: 30.3609 },
+  'Kyiv, Ukraine': { lat: 50.4501, lng: 30.5234 },
+  'Bucharest, Romania': { lat: 44.4268, lng: 26.1025 },
+  
+  // Asia
+  'Beijing, China': { lat: 39.9042, lng: 116.4074 },
+  'Shanghai, China': { lat: 31.2304, lng: 121.4737 },
+  'Shenzhen, China': { lat: 22.5431, lng: 114.0579 },
+  'Guangzhou, China': { lat: 23.1291, lng: 113.2644 },
+  'Hong Kong': { lat: 22.3193, lng: 114.1694 },
+  'Tokyo, Japan': { lat: 35.6762, lng: 139.6503 },
+  'Osaka, Japan': { lat: 34.6937, lng: 135.5023 },
+  'Seoul, South Korea': { lat: 37.5665, lng: 126.978 },
+  'Busan, South Korea': { lat: 35.1796, lng: 129.0756 },
+  'Taipei, Taiwan': { lat: 25.033, lng: 121.5654 },
+  'Singapore': { lat: 1.3521, lng: 103.8198 },
+  'Bangkok, Thailand': { lat: 13.7563, lng: 100.5018 },
+  'Ho Chi Minh, Vietnam': { lat: 10.8231, lng: 106.6297 },
+  'Hanoi, Vietnam': { lat: 21.0285, lng: 105.8542 },
+  'Jakarta, Indonesia': { lat: -6.2088, lng: 106.8456 },
+  'Kuala Lumpur, Malaysia': { lat: 3.139, lng: 101.6869 },
+  'Manila, Philippines': { lat: 14.5995, lng: 120.9842 },
+  'Mumbai, India': { lat: 19.076, lng: 72.8777 },
+  'Delhi, India': { lat: 28.7041, lng: 77.1025 },
+  'Bangalore, India': { lat: 12.9716, lng: 77.5946 },
+  'Chennai, India': { lat: 13.0827, lng: 80.2707 },
+  'Hyderabad, India': { lat: 17.385, lng: 78.4867 },
+  'Karachi, Pakistan': { lat: 24.8607, lng: 67.0011 },
+  'Lahore, Pakistan': { lat: 31.5204, lng: 74.3587 },
+  'Dhaka, Bangladesh': { lat: 23.8103, lng: 90.4125 },
+  
+  // Middle East
+  'Dubai, UAE': { lat: 25.2048, lng: 55.2708 },
+  'Abu Dhabi, UAE': { lat: 24.4539, lng: 54.3773 },
   'Tel Aviv, Israel': { lat: 32.0853, lng: 34.7818 },
+  'Riyadh, Saudi Arabia': { lat: 24.7136, lng: 46.6753 },
+  'Jeddah, Saudi Arabia': { lat: 21.4858, lng: 39.1925 },
+  'Tehran, Iran': { lat: 35.6892, lng: 51.389 },
+  'Istanbul, Turkey': { lat: 41.0082, lng: 28.9784 },
+  'Ankara, Turkey': { lat: 39.9334, lng: 32.8597 },
+  'Doha, Qatar': { lat: 25.2854, lng: 51.531 },
+  'Kuwait City, Kuwait': { lat: 29.3759, lng: 47.9774 },
+  'Beirut, Lebanon': { lat: 33.8938, lng: 35.5018 },
+  
+  // Africa
+  'Cairo, Egypt': { lat: 30.0444, lng: 31.2357 },
+  'Lagos, Nigeria': { lat: 6.5244, lng: 3.3792 },
+  'Johannesburg, South Africa': { lat: -26.2041, lng: 28.0473 },
+  'Cape Town, South Africa': { lat: -33.9249, lng: 18.4241 },
+  'Nairobi, Kenya': { lat: -1.2921, lng: 36.8219 },
+  'Casablanca, Morocco': { lat: 33.5731, lng: -7.5898 },
+  'Accra, Ghana': { lat: 5.6037, lng: -0.187 },
+  'Addis Ababa, Ethiopia': { lat: 9.0054, lng: 38.7636 },
+  'Tunis, Tunisia': { lat: 36.8065, lng: 10.1815 },
+  'Algiers, Algeria': { lat: 36.7538, lng: 3.0588 },
+  'Dar es Salaam, Tanzania': { lat: -6.7924, lng: 39.2083 },
+  
+  // Oceania
+  'Sydney, Australia': { lat: -33.8688, lng: 151.2093 },
+  'Melbourne, Australia': { lat: -37.8136, lng: 144.9631 },
+  'Brisbane, Australia': { lat: -27.4698, lng: 153.0251 },
+  'Perth, Australia': { lat: -31.9505, lng: 115.8605 },
+  'Auckland, New Zealand': { lat: -36.8509, lng: 174.7645 },
+  'Wellington, New Zealand': { lat: -41.2866, lng: 174.7756 },
 };
 
 const cities = Object.keys(cityCoordinates);
@@ -600,22 +698,26 @@ export default function AttackGlobe() {
 
   useEffect(() => {
     const addAttack = () => {
-      const newAttack = generateRandomAttack();
-      newAttack.id = attackIdCounter;
-      setAttackIdCounter(prev => prev + 1);
+      const attackCount = Math.random() > 0.7 ? 2 : 1;
       
-      addAttackArc(newAttack.from, newAttack.to, newAttack.severity);
+      for (let i = 0; i < attackCount; i++) {
+        const newAttack = generateRandomAttack();
+        newAttack.id = attackIdCounter + i;
+        
+        addAttackArc(newAttack.from, newAttack.to, newAttack.severity);
+        
+        setAttacks(prev => {
+          const updated = prev.map(a => ({ ...a, isNew: false }));
+          const newList = [newAttack, ...updated].slice(0, 15);
+          return newList;
+        });
+      }
       
-      setAttacks(prev => {
-        const updated = prev.map(a => ({ ...a, isNew: false }));
-        const newList = [newAttack, ...updated].slice(0, 12);
-        return newList;
-      });
-      
-      setLiveCounter(prev => prev + 1);
+      setAttackIdCounter(prev => prev + attackCount);
+      setLiveCounter(prev => prev + attackCount);
     };
 
-    const randomInterval = () => Math.floor(Math.random() * 2000) + 1000;
+    const randomInterval = () => Math.floor(Math.random() * 800) + 400;
     
     let timeoutId: NodeJS.Timeout;
     const scheduleNext = () => {
