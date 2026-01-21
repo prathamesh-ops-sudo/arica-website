@@ -238,60 +238,88 @@ export default function AttackGlobe() {
     refs.globeGroup = new THREE.Group();
     refs.scene.add(refs.globeGroup);
 
-    const sphereGeometry = new THREE.SphereGeometry(GLOBE_RADIUS, 48, 48);
-    const sphereMaterial = new THREE.MeshBasicMaterial({
-      color: 0x0a1628,
-      transparent: true,
-      opacity: 0.9,
+    const textureLoader = new THREE.TextureLoader();
+    
+    const earthColorTexture = textureLoader.load('/attached_assets/earth_color_4k.jpg');
+    const earthBumpTexture = textureLoader.load('/attached_assets/earth_bump_4k.jpg');
+    const earthNightTexture = textureLoader.load('/attached_assets/earth_nightlights_4k.jpg');
+    const earthCloudsTexture = textureLoader.load('/attached_assets/earth_clouds_4k.png');
+    
+    earthColorTexture.colorSpace = THREE.SRGBColorSpace;
+    earthNightTexture.colorSpace = THREE.SRGBColorSpace;
+
+    const sphereGeometry = new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64);
+    
+    const earthShaderMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        dayTexture: { value: earthColorTexture },
+        nightTexture: { value: earthNightTexture },
+        bumpTexture: { value: earthBumpTexture },
+        lightDirection: { value: new THREE.Vector3(1, 0.5, 1).normalize() },
+        time: { value: 0 },
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        varying vec3 vNormal;
+        varying vec3 vPosition;
+        
+        void main() {
+          vUv = uv;
+          vNormal = normalize(normalMatrix * normal);
+          vPosition = (modelMatrix * vec4(position, 1.0)).xyz;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform sampler2D dayTexture;
+        uniform sampler2D nightTexture;
+        uniform sampler2D bumpTexture;
+        uniform vec3 lightDirection;
+        uniform float time;
+        
+        varying vec2 vUv;
+        varying vec3 vNormal;
+        varying vec3 vPosition;
+        
+        void main() {
+          vec3 dayColor = texture2D(dayTexture, vUv).rgb;
+          vec3 nightColor = texture2D(nightTexture, vUv).rgb;
+          float bump = texture2D(bumpTexture, vUv).r;
+          
+          float dotNL = dot(vNormal, lightDirection);
+          float dayFactor = smoothstep(-0.2, 0.3, dotNL);
+          
+          nightColor *= vec3(1.0, 0.8, 0.4) * 1.5;
+          
+          vec3 finalColor = mix(nightColor, dayColor, dayFactor);
+          
+          finalColor += bump * 0.05;
+          
+          float fresnel = pow(1.0 - abs(dot(vNormal, normalize(-vPosition))), 2.0);
+          finalColor += vec3(0.0, 0.5, 1.0) * fresnel * 0.15;
+          
+          gl_FragColor = vec4(finalColor, 1.0);
+        }
+      `,
     });
-    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    
+    const sphere = new THREE.Mesh(sphereGeometry, earthShaderMaterial);
     refs.globeGroup.add(sphere);
 
-    const icoGeometry = new THREE.IcosahedronGeometry(GLOBE_RADIUS * 1.001, 4);
-    const wireframeMaterial = new THREE.LineBasicMaterial({
-      color: 0x00d4ff,
+    const cloudsGeometry = new THREE.SphereGeometry(GLOBE_RADIUS * 1.015, 48, 48);
+    const cloudsMaterial = new THREE.MeshBasicMaterial({
+      map: earthCloudsTexture,
       transparent: true,
-      opacity: 0.15,
+      opacity: 0.35,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
     });
-    const wireframeGeometry = new THREE.WireframeGeometry(icoGeometry);
-    const wireframeGlobe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
-    refs.globeGroup.add(wireframeGlobe);
+    const clouds = new THREE.Mesh(cloudsGeometry, cloudsMaterial);
+    refs.globeGroup.add(clouds);
+    (refs as any).clouds = clouds;
+    (refs as any).earthMaterial = earthShaderMaterial;
 
-    const latLineCount = 12;
-    const lngLineCount = 24;
-    const gridMaterial = new THREE.LineBasicMaterial({
-      color: 0x00d4ff,
-      transparent: true,
-      opacity: 0.08,
-    });
-
-    for (let i = 1; i < latLineCount; i++) {
-      const lat = (i / latLineCount) * Math.PI - Math.PI / 2;
-      const radius = GLOBE_RADIUS * 1.002 * Math.cos(lat);
-      const y = GLOBE_RADIUS * 1.002 * Math.sin(lat);
-      const curve = new THREE.EllipseCurve(0, 0, radius, radius, 0, 2 * Math.PI, false, 0);
-      const points = curve.getPoints(64).map(p => new THREE.Vector3(p.x, y, p.y));
-      const geometry = new THREE.BufferGeometry().setFromPoints(points);
-      const line = new THREE.Line(geometry, gridMaterial);
-      refs.globeGroup.add(line);
-    }
-
-    for (let i = 0; i < lngLineCount; i++) {
-      const lng = (i / lngLineCount) * Math.PI * 2;
-      const points: THREE.Vector3[] = [];
-      for (let j = 0; j <= 64; j++) {
-        const lat = (j / 64) * Math.PI - Math.PI / 2;
-        const x = GLOBE_RADIUS * 1.002 * Math.cos(lat) * Math.cos(lng);
-        const y = GLOBE_RADIUS * 1.002 * Math.sin(lat);
-        const z = GLOBE_RADIUS * 1.002 * Math.cos(lat) * Math.sin(lng);
-        points.push(new THREE.Vector3(x, y, z));
-      }
-      const geometry = new THREE.BufferGeometry().setFromPoints(points);
-      const line = new THREE.Line(geometry, gridMaterial);
-      refs.globeGroup.add(line);
-    }
-
-    const atmosphereGeom = new THREE.SphereGeometry(GLOBE_RADIUS * 1.12, 32, 32);
+    const atmosphereGeom = new THREE.SphereGeometry(GLOBE_RADIUS * 1.15, 32, 32);
     const atmosphereMat = new THREE.ShaderMaterial({
       uniforms: {
         glowColor: { value: new THREE.Color(0x00d4ff) },
@@ -307,8 +335,8 @@ export default function AttackGlobe() {
         uniform vec3 glowColor;
         varying vec3 vNormal;
         void main() {
-          float intensity = pow(0.6 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.5);
-          gl_FragColor = vec4(glowColor, intensity * 0.5);
+          float intensity = pow(0.55 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.0);
+          gl_FragColor = vec4(glowColor, intensity * 0.6);
         }
       `,
       side: THREE.BackSide,
@@ -433,6 +461,13 @@ export default function AttackGlobe() {
           }
         }
         refs.globeGroup.rotation.y += refs.rotationVelocityY;
+        
+        if ((refs as any).clouds) {
+          (refs as any).clouds.rotation.y += 0.0001;
+        }
+        if ((refs as any).earthMaterial) {
+          (refs as any).earthMaterial.uniforms.time.value = time;
+        }
       }
 
       refs.cityMarkers.forEach((marker, i) => {
