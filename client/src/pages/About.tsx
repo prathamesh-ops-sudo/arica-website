@@ -1,5 +1,5 @@
 import { motion, useInView, useSpring, useTransform } from "framer-motion";
-import { Shield, Target, Eye, Award, Users, Globe, Rocket, Building, TrendingUp, Crown } from "lucide-react";
+import { Shield, Target, Eye, Award, Users, Globe } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Team } from "@/components/Team";
 import { CTA } from "@/components/CTA";
@@ -31,12 +31,6 @@ const stats = [
   { icon: Shield, value: 100, suffix: "%", label: "Audit Success Rate" },
 ];
 
-const milestones = [
-  { year: "2010", title: "Founded", description: "Started with a vision to protect digital assets", icon: Building },
-  { year: "2015", title: "100 Clients", description: "Reached our first major milestone", icon: Users },
-  { year: "2020", title: "Global Expansion", description: "Extended services worldwide", icon: Rocket },
-  { year: "2024", title: "Industry Leader", description: "Recognized as top security firm", icon: Crown },
-];
 
 function useCountUp(end: number, duration: number = 2000, startOnView: boolean = true) {
   const [count, setCount] = useState(0);
@@ -146,106 +140,6 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
   );
 }
 
-function Timeline() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
-
-  return (
-    <section className="py-20 relative overflow-hidden" ref={containerRef}>
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0, 212, 255, 0.08) 1px, transparent 0)`,
-          backgroundSize: '60px 60px'
-        }} />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="font-display text-4xl font-bold mb-4">
-            Our <span className="text-gradient">Journey</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            From a small consulting firm to an industry leader, here's how we've grown
-          </p>
-        </motion.div>
-
-        <div className="relative">
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden md:block">
-            <motion.div
-              initial={{ scaleY: 0 }}
-              animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
-              transition={{ duration: 1.5, ease: "easeOut" }}
-              className="absolute inset-0 bg-gradient-to-b from-primary via-primary to-primary origin-top"
-              style={{ boxShadow: "0 0 20px rgba(0, 212, 255, 0.5)" }}
-            />
-          </div>
-
-          <div className="space-y-12 md:space-y-0">
-            {milestones.map((milestone, index) => (
-              <motion.div
-                key={milestone.year}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.3 + index * 0.2 }}
-                className={`relative md:flex items-center ${
-                  index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                }`}
-              >
-                <div className="md:w-1/2 md:px-8">
-                  <motion.div
-                    whileHover={{ 
-                      scale: 1.03,
-                      boxShadow: "0 0 40px rgba(0, 212, 255, 0.2)",
-                    }}
-                    className={`p-6 rounded-xl border border-white/10 bg-card/60 backdrop-blur-sm ${
-                      index % 2 === 0 ? "md:mr-auto md:text-right" : "md:ml-auto md:text-left"
-                    }`}
-                  >
-                    <div className={`flex items-center gap-3 mb-3 ${
-                      index % 2 === 0 ? "md:justify-end" : "md:justify-start"
-                    }`}>
-                      <div className="p-2 rounded-lg bg-primary/10">
-                        <milestone.icon className="w-5 h-5 text-primary" />
-                      </div>
-                      <span className="text-2xl font-bold text-primary">{milestone.year}</span>
-                    </div>
-                    <h3 className="font-display text-xl font-bold mb-2">{milestone.title}</h3>
-                    <p className="text-sm text-muted-foreground">{milestone.description}</p>
-                  </motion.div>
-                </div>
-
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={isInView ? { scale: 1 } : { scale: 0 }}
-                  transition={{ duration: 0.4, delay: 0.5 + index * 0.2 }}
-                  className="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-primary hidden md:block"
-                  style={{
-                    boxShadow: "0 0 20px rgba(0, 212, 255, 0.8), 0 0 40px rgba(0, 212, 255, 0.4)",
-                  }}
-                >
-                  <motion.div
-                    animate={{ scale: [1, 1.5, 1] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
-                    className="absolute inset-0 rounded-full bg-primary/30"
-                  />
-                </motion.div>
-
-                <div className="md:w-1/2" />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function FloatingParticles() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
@@ -281,13 +175,6 @@ export default function About() {
       <Navbar />
 
       <section className="pt-32 pb-20 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0, 212, 255, 0.12) 1px, transparent 0)`,
-            backgroundSize: '40px 40px'
-          }} />
-        </div>
-
         <motion.div
           className="absolute top-20 right-10 w-64 h-64 rounded-full opacity-10"
           style={{
@@ -339,8 +226,6 @@ export default function About() {
           </div>
         </div>
       </section>
-
-      <Timeline />
 
       <section className="py-20 relative overflow-hidden bg-card/30">
         <div className="max-w-7xl mx-auto px-6 relative z-10">
