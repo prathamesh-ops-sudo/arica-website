@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background';
 import { useGsapStagger } from '@/hooks/useGsapStagger';
+import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
 const CYAN = '#00D4FF';
 const PURPLE = '#9944ff';
@@ -445,11 +446,17 @@ export default function DevSecOps() {
     setIsRunning(false);
   };
 
+  const [isResetting, setIsResetting] = useState(false);
+
   const resetPipeline = () => {
+    setIsResetting(true);
     setIsRunning(false);
-    setPassedCount(0);
-    setBlockedCount(0);
-    setActiveSecurityType(null);
+    setTimeout(() => {
+      setPassedCount(0);
+      setBlockedCount(0);
+      setActiveSecurityType(null);
+      setIsResetting(false);
+    }, 600);
   };
 
   return (
@@ -495,14 +502,16 @@ export default function DevSecOps() {
             className="w-full h-[400px] rounded-2xl overflow-hidden border border-white/10 bg-black/40"
             data-testid="pipeline-canvas"
           >
-            <Canvas camera={{ position: [3, 6, 18], fov: 50 }}>
-              <CameraController />
-              <PipelineScene 
-                isRunning={isRunning} 
-                activeSecurityType={activeSecurityType}
-                onMetricsUpdate={handleMetricsUpdate}
-              />
-            </Canvas>
+            <WebGLFallback>
+              <Canvas camera={{ position: [3, 6, 18], fov: 50 }}>
+                <CameraController />
+                <PipelineScene 
+                  isRunning={isRunning} 
+                  activeSecurityType={activeSecurityType}
+                  onMetricsUpdate={handleMetricsUpdate}
+                />
+              </Canvas>
+            </WebGLFallback>
           </div>
 
           <div className="flex items-center justify-center gap-4 mt-6">
@@ -527,7 +536,12 @@ export default function DevSecOps() {
               className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 transition-all"
               data-testid="button-reset-pipeline"
             >
-              <RotateCcw className="w-5 h-5" />
+              <motion.div
+                animate={isResetting ? { rotate: -360 } : { rotate: 0 }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}
+              >
+                <RotateCcw className="w-5 h-5" />
+              </motion.div>
               Reset
             </motion.button>
           </div>
@@ -627,13 +641,19 @@ export default function DevSecOps() {
               <div className="text-3xl font-bold text-green-400">
                 <AnimatedCounter value={metrics.successRate} />%
               </div>
-              <div className="mt-2 h-2 rounded-full bg-white/10 overflow-hidden">
-                <motion.div 
-                  initial={{ width: 0 }}
-                  animate={{ width: `${metrics.successRate}%` }}
-                  transition={{ duration: 1.5, delay: 0.5 }}
-                  className="h-full bg-gradient-to-r from-green-500 to-green-400"
-                />
+              <div className="mt-3 flex items-end justify-between h-16 gap-1">
+                {[75, 82, 88, 91, 94, 89, 95].map((val, i) => (
+                  <motion.div
+                    key={i}
+                    className="flex-1 rounded-t bg-gradient-to-t from-green-600 to-green-400"
+                    initial={{ height: 0 }}
+                    animate={{ height: `${val}%` }}
+                    transition={{ delay: 0.3 + i * 0.1, duration: 0.5 }}
+                  />
+                ))}
+              </div>
+              <div className="flex justify-between text-[10px] text-white/40 mt-1">
+                <span>Mon</span><span>Sun</span>
               </div>
             </motion.div>
 

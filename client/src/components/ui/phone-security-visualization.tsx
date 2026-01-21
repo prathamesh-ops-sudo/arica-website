@@ -4,6 +4,7 @@ import React, { useRef, useMemo, useEffect, useState, useCallback } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, RoundedBox, Environment, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
+import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
 const CYAN = '#00D4FF';
 const PURPLE = '#9944ff';
@@ -316,7 +317,7 @@ function ShieldEffect({ active, flash, intensity = 1 }: ShieldEffectProps) {
   const shieldShader = useMemo(() => ({
     uniforms: {
       time: { value: 0 },
-      active: { value: 0 },
+      shieldActive: { value: 0 },
       flash: { value: 0 },
       color: { value: new THREE.Color(CYAN) },
       intensity: { value: intensity },
@@ -334,7 +335,7 @@ function ShieldEffect({ active, flash, intensity = 1 }: ShieldEffectProps) {
     `,
     fragmentShader: `
       uniform float time;
-      uniform float active;
+      uniform float shieldActive;
       uniform float flash;
       uniform vec3 color;
       uniform float intensity;
@@ -360,7 +361,7 @@ function ShieldEffect({ active, flash, intensity = 1 }: ShieldEffectProps) {
         finalColor += vec3(1.0, 1.0, 1.0) * flash * 3.0;
         finalColor *= intensity;
         
-        float alpha = (fresnel * 0.7 + hex * 0.2 + 0.05) * active * pulse;
+        float alpha = (fresnel * 0.7 + hex * 0.2 + 0.05) * shieldActive * pulse;
         alpha = max(alpha, flash * 0.9);
         alpha *= intensity;
         
@@ -377,7 +378,7 @@ function ShieldEffect({ active, flash, intensity = 1 }: ShieldEffectProps) {
     
     if (materialRef.current) {
       materialRef.current.uniforms.time.value = state.clock.elapsedTime;
-      materialRef.current.uniforms.active.value += (active ? 1 : 0 - materialRef.current.uniforms.active.value) * 0.08;
+      materialRef.current.uniforms.shieldActive.value += (active ? 1 : 0 - materialRef.current.uniforms.shieldActive.value) * 0.08;
       materialRef.current.uniforms.flash.value += (flash ? 1 : 0 - materialRef.current.uniforms.flash.value) * 0.15;
     }
   });
@@ -560,18 +561,51 @@ function Scene({ isScanning, onThreatBlocked, selectedDevice, onHotspotClick, at
       setMousePos({ x, y });
       
       if (isDragging) {
-        const deltaX = (e.clientX - dragStart.x) * 0.01;
-        const deltaY = (e.clientY - dragStart.y) * 0.01;
-        setDragRotation({ x: deltaY, y: deltaX });
+        const deltaX = (e.clientX - dragStart.x) * 0.008;
+        const deltaY = (e.clientY - dragStart.y) * 0.008;
+        const clampedX = Math.max(-0.8, Math.min(0.8, deltaY));
+        const targetRotation = { x: clampedX, y: deltaX };
+        setDragRotation(prev => ({
+          x: prev.x + (targetRotation.x - prev.x) * 0.15,
+          y: prev.y + (targetRotation.y - prev.y) * 0.15
+        }));
       }
     };
     
     const handleMouseDown = (e: MouseEvent) => {
       setIsDragging(true);
-      setDragStart({ x: e.clientX, y: e.clientY });
+      setDragStart({ x: e.clientX - dragRotation.y * 125, y: e.clientY - dragRotation.x * 125 });
     };
     
     const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        setIsDragging(true);
+        setDragStart({ 
+          x: e.touches[0].clientX - dragRotation.y * 125, 
+          y: e.touches[0].clientY - dragRotation.x * 125 
+        });
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isDragging && e.touches.length === 1) {
+        e.preventDefault();
+        const deltaX = (e.touches[0].clientX - dragStart.x) * 0.008;
+        const deltaY = (e.touches[0].clientY - dragStart.y) * 0.008;
+        const clampedX = Math.max(-0.8, Math.min(0.8, deltaY));
+        const targetRotation = { x: clampedX, y: deltaX };
+        setDragRotation(prev => ({
+          x: prev.x + (targetRotation.x - prev.x) * 0.15,
+          y: prev.y + (targetRotation.y - prev.y) * 0.15
+        }));
+      }
+    };
+
+    const handleTouchEnd = () => {
       setIsDragging(false);
     };
     
@@ -579,14 +613,20 @@ function Scene({ isScanning, onThreatBlocked, selectedDevice, onHotspotClick, at
     gl.domElement.addEventListener('mousedown', handleMouseDown);
     gl.domElement.addEventListener('mouseup', handleMouseUp);
     gl.domElement.addEventListener('mouseleave', handleMouseUp);
+    gl.domElement.addEventListener('touchstart', handleTouchStart, { passive: false });
+    gl.domElement.addEventListener('touchmove', handleTouchMove, { passive: false });
+    gl.domElement.addEventListener('touchend', handleTouchEnd);
     
     return () => {
       gl.domElement.removeEventListener('mousemove', handleMouseMove);
       gl.domElement.removeEventListener('mousedown', handleMouseDown);
       gl.domElement.removeEventListener('mouseup', handleMouseUp);
       gl.domElement.removeEventListener('mouseleave', handleMouseUp);
+      gl.domElement.removeEventListener('touchstart', handleTouchStart);
+      gl.domElement.removeEventListener('touchmove', handleTouchMove);
+      gl.domElement.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [gl, isDragging, dragStart]);
+  }, [gl, isDragging, dragStart, dragRotation]);
   
   const handleThreatBlocked = () => {
     setShieldFlash(true);
@@ -656,24 +696,26 @@ export function PhoneSecurityVisualization({ isScanning, onThreatBlocked }: Phon
   
   return (
     <div className="relative w-full h-[500px] rounded-2xl overflow-hidden bg-gradient-to-b from-slate-900/80 to-slate-950/80 border border-cyan-500/20">
-      <Canvas
-        camera={{ position: [0, 0, 6], fov: 45 }}
-        dpr={[1, 2]}
-        gl={{ 
-          antialias: true, 
-          alpha: true,
-          powerPreference: 'high-performance'
-        }}
-        style={{ cursor: 'grab' }}
-      >
-        <Scene 
-          isScanning={isScanning} 
-          onThreatBlocked={handleThreatBlocked}
-          selectedDevice={selectedDevice}
-          onHotspotClick={handleHotspotClick}
-          attackMode={attackMode}
-        />
-      </Canvas>
+      <WebGLFallback>
+        <Canvas
+          camera={{ position: [0, 0, 6], fov: 45 }}
+          dpr={[1, 2]}
+          gl={{ 
+            antialias: true, 
+            alpha: true,
+            powerPreference: 'high-performance'
+          }}
+          style={{ cursor: 'grab' }}
+        >
+          <Scene 
+            isScanning={isScanning} 
+            onThreatBlocked={handleThreatBlocked}
+            selectedDevice={selectedDevice}
+            onHotspotClick={handleHotspotClick}
+            attackMode={attackMode}
+          />
+        </Canvas>
+      </WebGLFallback>
       
       {/* Device selector carousel */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-black/60 backdrop-blur-xl rounded-full px-4 py-2 border border-cyan-500/30">

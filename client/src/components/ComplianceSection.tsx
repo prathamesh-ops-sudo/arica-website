@@ -1,13 +1,13 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
-import { ClipboardCheck, Bot, ArrowRight } from "lucide-react";
+import { ClipboardCheck, Bot, ArrowRight, Search, FileCheck, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import shieldImage from "@assets/generated_images/3d_shield_compliance_icon.png";
 
 const complianceItems = [
-  "Risk Assessment & Gap Analysis",
-  "ISMS Implementation & Documentation",
-  "Internal Audit & Management Review",
+  { text: "Risk Assessment & Gap Analysis", icon: Search },
+  { text: "ISMS Implementation & Documentation", icon: FileCheck },
+  { text: "Internal Audit & Management Review", icon: Shield },
 ];
 
 const certifications = [
@@ -63,11 +63,13 @@ export function ComplianceSection() {
               </div>
             </div>
 
-            <ul className="space-y-3 mb-8">
+            <ul className="space-y-4 mb-8">
               {complianceItems.map((item) => (
-                <li key={item} className="flex items-center gap-3 text-sm">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                  <span className="text-muted-foreground">{item}</span>
+                <li key={item.text} className="flex items-center gap-3 text-sm">
+                  <div className="p-1.5 rounded-md bg-primary/10 text-primary">
+                    <item.icon className="w-4 h-4" />
+                  </div>
+                  <span className="text-muted-foreground">{item.text}</span>
                 </li>
               ))}
             </ul>

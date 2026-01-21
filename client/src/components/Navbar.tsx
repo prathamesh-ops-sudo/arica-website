@@ -1,5 +1,5 @@
-import { HudNavigation } from "@/components/ui/hud-navigation";
+import { MegaNavigation } from "@/components/ui/mega-navigation";
 
 export function Navbar() {
-  return <HudNavigation />;
+  return <MegaNavigation />;
 }

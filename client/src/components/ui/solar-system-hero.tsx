@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion, AnimatePresence } from 'framer-motion';
+import { isWebGLAvailable } from '@/lib/webgl-utils';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -148,6 +149,11 @@ export function SolarSystemHero() {
 
   useEffect(() => {
     if (!canvasRef.current) return;
+    
+    if (!isWebGLAvailable()) {
+      setIsLoaded(true);
+      return;
+    }
 
     const refs = sceneRef.current;
 

@@ -287,6 +287,66 @@ export default function CloudSecurityCenter() {
           </motion.div>
 
           <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="container mx-auto px-6 mb-6"
+          >
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-gradient-to-br from-[#00D4FF]/20 to-[#00D4FF]/5 backdrop-blur-sm border border-[#00D4FF]/40 rounded-2xl p-4 relative overflow-hidden group hover:border-[#00D4FF] transition-all" data-testid="metric-card-resources">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#00D4FF]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                <div className="relative">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Server className="w-5 h-5 text-[#00D4FF]" />
+                    <span className="font-mono text-xs text-[#00D4FF]/70 uppercase">Total Resources</span>
+                  </div>
+                  <div className="text-3xl font-bold font-mono text-white">{animatedMetrics.resources}</div>
+                  <div className="text-xs text-[#00D4FF]/50 mt-1 flex items-center gap-1">
+                    <TrendingUp className="w-3 h-3" />
+                    +12% this month
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-red-500/20 to-red-500/5 backdrop-blur-sm border border-red-500/40 rounded-2xl p-4 relative overflow-hidden group hover:border-red-500 transition-all" data-testid="metric-card-threats">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                <div className="relative">
+                  <div className="flex items-center gap-2 mb-2">
+                    <AlertTriangle className="w-5 h-5 text-red-400" />
+                    <span className="font-mono text-xs text-red-400/70 uppercase">Active Threats</span>
+                  </div>
+                  <div className="text-3xl font-bold font-mono text-red-400">{animatedMetrics.threats}</div>
+                  <div className="text-xs text-red-400/50 mt-1">Requires attention</div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-green-500/20 to-green-500/5 backdrop-blur-sm border border-green-500/40 rounded-2xl p-4 relative overflow-hidden group hover:border-green-500 transition-all" data-testid="metric-card-containers">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-green-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                <div className="relative">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Container className="w-5 h-5 text-green-400" />
+                    <span className="font-mono text-xs text-green-400/70 uppercase">Running Containers</span>
+                  </div>
+                  <div className="text-3xl font-bold font-mono text-green-400">{animatedMetrics.containers}</div>
+                  <div className="text-xs text-green-400/50 mt-1">{containers.length} total deployed</div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-purple-500/20 to-purple-500/5 backdrop-blur-sm border border-purple-500/40 rounded-2xl p-4 relative overflow-hidden group hover:border-purple-500 transition-all" data-testid="metric-card-regions">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                <div className="relative">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Globe2 className="w-5 h-5 text-purple-400" />
+                    <span className="font-mono text-xs text-purple-400/70 uppercase">Active Regions</span>
+                  </div>
+                  <div className="text-3xl font-bold font-mono text-purple-400">{filteredRegions.length}</div>
+                  <div className="text-xs text-purple-400/50 mt-1">Across {selectedProvider === 'all' ? '3 providers' : selectedProvider.toUpperCase()}</div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}

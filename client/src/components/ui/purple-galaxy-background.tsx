@@ -1,6 +1,7 @@
 import { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
+import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
 const PURPLE = '#9944ff';
 const CYAN = '#00D4FF';
@@ -179,18 +180,20 @@ export function PurpleGalaxyBackground({ enabled = true }: PurpleGalaxyBackgroun
     <div 
       className="fixed inset-0 pointer-events-none z-background"
     >
-      <Canvas
-        camera={{ position: [0, 0, 12], fov: 60 }}
-        dpr={isMobile ? [1, 1] : [1, 2]}
-        gl={{ 
-          antialias: !isMobile, 
-          alpha: true,
-          powerPreference: 'high-performance'
-        }}
-        style={{ background: '#0a0a1e' }}
-      >
-        <GalaxyScene particleCount={particleCount} />
-      </Canvas>
+      <WebGLFallback>
+        <Canvas
+          camera={{ position: [0, 0, 12], fov: 60 }}
+          dpr={isMobile ? [1, 1] : [1, 2]}
+          gl={{ 
+            antialias: !isMobile, 
+            alpha: true,
+            powerPreference: 'high-performance'
+          }}
+          style={{ background: '#0a0a1e' }}
+        >
+          <GalaxyScene particleCount={particleCount} />
+        </Canvas>
+      </WebGLFallback>
     </div>
   );
 }

@@ -369,7 +369,7 @@ export default function MobileSecurity() {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="mt-4"
+                  className="mt-4 space-y-4"
                 >
                   <div className="p-4 rounded-xl bg-black/40 backdrop-blur-xl border border-[#00D4FF]/30">
                     <div className="flex flex-wrap items-center justify-between gap-4">
@@ -404,6 +404,42 @@ export default function MobileSecurity() {
                       </button>
                     </div>
                   </div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="p-4 rounded-xl bg-black/30 backdrop-blur-xl border border-purple-500/30"
+                  >
+                    <h4 className="text-sm font-semibold text-purple-400 mb-3 flex items-center gap-2">
+                      <Shield className="w-4 h-4" />
+                      OWASP Mobile Top 10 Security Checks
+                    </h4>
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                      {initialOWASPItems.map((item, i) => (
+                        <motion.div
+                          key={item.id}
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: 0.1 + i * 0.05 }}
+                          className="group relative p-2 rounded-lg bg-white/5 border border-white/10 hover:border-purple-500/50 transition-all cursor-help"
+                          data-testid={`owasp-preview-${item.id}`}
+                        >
+                          <div className="text-[10px] font-mono text-purple-400 mb-1">{item.id.toUpperCase()}</div>
+                          <div className="text-[10px] text-white/70 line-clamp-2">{item.name.replace(`${item.id.toUpperCase()}: `, '')}</div>
+                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 w-48">
+                            <div className="bg-[#000510] border border-purple-500/50 rounded-lg p-2 text-xs">
+                              <div className="text-purple-400 font-semibold mb-1">{item.name}</div>
+                              <div className="text-white/60">{item.description}</div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                    <p className="text-xs text-gray-500 mt-3 text-center">
+                      Hover over items for details • Full analysis after scan completion
+                    </p>
+                  </motion.div>
                 </motion.div>
               )}
             </AnimatePresence>

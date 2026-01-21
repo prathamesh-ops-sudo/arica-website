@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background';
 import { useGsapStagger } from '@/hooks/useGsapStagger';
+import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
 const CYAN = '#00D4FF';
 const PURPLE = '#9944ff';
@@ -582,19 +583,36 @@ function ConfettiEffect({ active }: { active: boolean }) {
 }
 
 export default function SecurityTraining() {
-  const [completedModules, setCompletedModules] = useState(3);
+  const [completedModules, setCompletedModules] = useState(() => {
+    const saved = localStorage.getItem('security-training-completed');
+    return saved ? parseInt(saved, 10) : 3;
+  });
   const [activeModule, setActiveModule] = useState(3);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
-  const [score, setScore] = useState(0);
+  const [score, setScore] = useState(() => {
+    const saved = localStorage.getItem('security-training-score');
+    return saved ? parseInt(saved, 10) : 0;
+  });
   const [showConfetti, setShowConfetti] = useState(false);
   const [shake, setShake] = useState(false);
-  const [streak, setStreak] = useState(7);
+  const [streak, setStreak] = useState(() => {
+    const saved = localStorage.getItem('security-training-streak');
+    return saved ? parseInt(saved, 10) : 7;
+  });
+  const [flippedCard, setFlippedCard] = useState<number | null>(null);
+  const [quizFeedback, setQuizFeedback] = useState<string | null>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const gsapContainerRef = useRef<HTMLDivElement>(null);
   
   useGsapStagger(gsapContainerRef);
+
+  useEffect(() => {
+    localStorage.setItem('security-training-completed', completedModules.toString());
+    localStorage.setItem('security-training-score', score.toString());
+    localStorage.setItem('security-training-streak', streak.toString());
+  }, [completedModules, score, streak]);
 
   const skills = [
     { name: 'Awareness', value: 85 },
@@ -626,9 +644,11 @@ export default function SecurityTraining() {
     if (isCorrect) {
       setScore(prev => prev + 1);
       setShowConfetti(true);
+      setQuizFeedback("Correct! Great job!");
       setTimeout(() => setShowConfetti(false), 2000);
     } else {
       setShake(true);
+      setQuizFeedback(`Incorrect. The correct answer was: ${quizQuestions[currentQuestion].options[quizQuestions[currentQuestion].correctAnswer]}`);
       setTimeout(() => setShake(false), 500);
     }
   };
@@ -638,6 +658,7 @@ export default function SecurityTraining() {
       setCurrentQuestion(prev => prev + 1);
       setSelectedAnswer(null);
       setShowResult(false);
+      setQuizFeedback(null);
     }
   };
 
@@ -693,13 +714,15 @@ export default function SecurityTraining() {
             className="w-full h-[350px] rounded-2xl overflow-hidden border border-white/10 bg-black/40"
             data-testid="learning-path-canvas"
           >
-            <Canvas camera={{ position: [2, 5, 15], fov: 50 }}>
-              <CameraController />
-              <LearningPathScene 
-                completedModules={completedModules} 
-                activeModule={activeModule}
-              />
-            </Canvas>
+            <WebGLFallback>
+              <Canvas camera={{ position: [2, 5, 15], fov: 50 }}>
+                <CameraController />
+                <LearningPathScene 
+                  completedModules={completedModules} 
+                  activeModule={activeModule}
+                />
+              </Canvas>
+            </WebGLFallback>
           </div>
         </div>
 
@@ -737,6 +760,7 @@ export default function SecurityTraining() {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.5 + i * 0.1 }}
+                    whileHover={badge.earned ? { scale: 1.1 } : undefined}
                     className={`flex items-center gap-2 p-2 rounded-lg border ${
                       badge.earned 
                         ? 'bg-cyan-500/10 border-cyan-500/30' 
@@ -744,7 +768,12 @@ export default function SecurityTraining() {
                     }`}
                     data-testid={`badge-${badge.name.toLowerCase().replace(' ', '-')}`}
                   >
-                    <badge.icon className={`w-4 h-4 ${badge.earned ? 'text-cyan-400' : 'text-gray-500'}`} />
+                    <motion.div
+                      animate={badge.earned ? { rotateY: [0, 360] } : undefined}
+                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+                    >
+                      <badge.icon className={`w-4 h-4 ${badge.earned ? 'text-cyan-400' : 'text-gray-500'}`} />
+                    </motion.div>
                     <span className="text-xs">{badge.name}</span>
                   </motion.div>
                 ))}
@@ -785,58 +814,119 @@ export default function SecurityTraining() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 * index }}
                 whileHover={{ scale: 1.02, y: -5 }}
-                className={`relative bg-white/5 backdrop-blur-xl rounded-2xl border p-6 cursor-pointer transition-all ${
+                className={`relative bg-white/5 backdrop-blur-xl rounded-2xl border p-6 cursor-pointer transition-all preserve-3d ${
                   index < completedModules 
                     ? 'border-green-500/30' 
                     : index === activeModule 
                       ? 'border-cyan-500/50' 
                       : 'border-white/10'
                 }`}
-                onClick={() => setActiveModule(index)}
+                onClick={() => flippedCard === index ? setFlippedCard(null) : setFlippedCard(index)}
+                style={{ 
+                  transformStyle: 'preserve-3d',
+                  perspective: '1000px'
+                }}
                 data-testid={`module-${module.id}`}
               >
-                {index < completedModules && (
-                  <div className="absolute top-4 right-4">
-                    <CheckCircle className="w-6 h-6 text-green-400" />
+                <motion.div
+                  animate={{ rotateY: flippedCard === index ? 180 : 0 }}
+                  transition={{ duration: 0.6 }}
+                  style={{ transformStyle: 'preserve-3d' }}
+                  className="relative"
+                >
+                  <div style={{ backfaceVisibility: 'hidden' }} className={flippedCard === index ? 'invisible' : ''}>
+                    {index < completedModules && (
+                      <div className="absolute top-0 right-0">
+                        <CheckCircle className="w-6 h-6 text-green-400" />
+                      </div>
+                    )}
+                    
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${
+                      index < completedModules ? 'bg-green-500/20' : 'bg-cyan-500/20'
+                    }`}>
+                      <module.icon className={`w-6 h-6 ${
+                        index < completedModules ? 'text-green-400' : 'text-cyan-400'
+                      }`} />
+                    </div>
+                    
+                    <h3 className="text-lg font-semibold mb-2">{module.name}</h3>
+                    <p className="text-sm text-gray-400 mb-4">{module.description}</p>
+                    
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="flex items-center gap-1 text-sm text-gray-400">
+                        <Clock className="w-4 h-4" />
+                        {module.duration}
+                      </div>
+                      <span className={`text-xs px-2 py-1 rounded-full border ${getDifficultyColor(module.difficulty)}`}>
+                        {module.difficulty}
+                      </span>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-400">Completion Rate</span>
+                        <span className="text-cyan-400">{module.completionRate}%</span>
+                      </div>
+                      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                        <motion.div
+                          className="h-full rounded-full"
+                          style={{ backgroundColor: CYAN }}
+                          initial={{ width: 0 }}
+                          animate={{ width: `${module.completionRate}%` }}
+                          transition={{ duration: 1, delay: 0.5 + index * 0.1 }}
+                        />
+                      </div>
+                    </div>
+                    <p className="text-xs text-center text-cyan-400/50 mt-3">Click to flip for details</p>
                   </div>
-                )}
-                
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${
-                  index < completedModules ? 'bg-green-500/20' : 'bg-cyan-500/20'
-                }`}>
-                  <module.icon className={`w-6 h-6 ${
-                    index < completedModules ? 'text-green-400' : 'text-cyan-400'
-                  }`} />
-                </div>
-                
-                <h3 className="text-lg font-semibold mb-2">{module.name}</h3>
-                <p className="text-sm text-gray-400 mb-4">{module.description}</p>
-                
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex items-center gap-1 text-sm text-gray-400">
-                    <Clock className="w-4 h-4" />
-                    {module.duration}
+                  
+                  <div 
+                    style={{ 
+                      backfaceVisibility: 'hidden',
+                      transform: 'rotateY(180deg)',
+                      position: flippedCard === index ? 'relative' : 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0
+                    }}
+                    className={flippedCard !== index ? 'invisible' : ''}
+                  >
+                    <h3 className="text-lg font-semibold mb-3 text-cyan-400">{module.name}</h3>
+                    <div className="space-y-3 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Duration:</span>
+                        <span className="text-white">{module.duration}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Difficulty:</span>
+                        <span className={module.difficulty === 'Beginner' ? 'text-green-400' : module.difficulty === 'Intermediate' ? 'text-yellow-400' : 'text-red-400'}>{module.difficulty}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Status:</span>
+                        <span className={index < completedModules ? 'text-green-400' : 'text-gray-400'}>{index < completedModules ? 'Completed' : 'Not Started'}</span>
+                      </div>
+                      <div className="pt-2 border-t border-white/10">
+                        <p className="text-gray-300">{module.description}</p>
+                      </div>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (index >= completedModules) {
+                            setCompletedModules(index + 1);
+                            setActiveModule(index + 1);
+                          }
+                          setFlippedCard(null);
+                        }}
+                        className="w-full py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-semibold"
+                      >
+                        {index < completedModules ? 'Review Module' : 'Start Module'}
+                      </motion.button>
+                    </div>
+                    <p className="text-xs text-center text-cyan-400/50 mt-3">Click to flip back</p>
                   </div>
-                  <span className={`text-xs px-2 py-1 rounded-full border ${getDifficultyColor(module.difficulty)}`}>
-                    {module.difficulty}
-                  </span>
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">Completion Rate</span>
-                    <span className="text-cyan-400">{module.completionRate}%</span>
-                  </div>
-                  <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full rounded-full"
-                      style={{ backgroundColor: CYAN }}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${module.completionRate}%` }}
-                      transition={{ duration: 1, delay: 0.5 + index * 0.1 }}
-                    />
-                  </div>
-                </div>
+                </motion.div>
               </motion.div>
             ))}
           </div>
@@ -911,6 +1001,30 @@ export default function SecurityTraining() {
                 </motion.button>
               ))}
             </div>
+
+            {quizFeedback && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`mb-4 p-4 rounded-xl border ${
+                  quizFeedback.startsWith('Correct') 
+                    ? 'bg-green-500/20 border-green-500/50 text-green-400' 
+                    : 'bg-red-500/20 border-red-500/50 text-red-400'
+                }`}
+              >
+                {quizFeedback.startsWith('Correct') ? (
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5" />
+                    {quizFeedback}
+                  </div>
+                ) : (
+                  <div className="flex items-start gap-2">
+                    <XCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                    <span>{quizFeedback}</span>
+                  </div>
+                )}
+              </motion.div>
+            )}
 
             <div className="flex justify-end gap-4">
               {!showResult ? (

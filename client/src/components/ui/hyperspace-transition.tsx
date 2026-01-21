@@ -3,6 +3,7 @@
 import React, { useRef, useMemo, useEffect, useState, useCallback, createContext, useContext } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { isWebGLAvailable } from '@/lib/webgl-utils';
 
 const CYAN = '#00D4FF';
 const PURPLE = '#9944ff';
@@ -246,7 +247,7 @@ export function HyperspaceTransitionProvider({ children }: HyperspaceTransitionP
   return (
     <HyperspaceContext.Provider value={contextValue}>
       {children}
-      {isTransitioning && (
+      {isTransitioning && isWebGLAvailable() && (
         <div
           className="fixed inset-0 pointer-events-none"
           style={{ zIndex: 9999 }}

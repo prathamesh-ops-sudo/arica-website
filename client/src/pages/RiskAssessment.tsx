@@ -4,11 +4,21 @@ import { Link } from 'wouter';
 import { 
   ArrowLeft, Shield, AlertTriangle, CheckCircle, TrendingUp, TrendingDown,
   Network, Code, Database, Lock, AlertCircle, FileCheck, ChevronDown, ChevronUp,
-  Target, Zap, Clock, ArrowRight
+  Target, Zap, Clock, ArrowRight, Info, HelpCircle
 } from 'lucide-react';
 import { AmbientParticles } from '@/components/ui/ambient-particles';
 import { GlassCard } from '@/components/ui/glass-card';
 import { AnimatedProgress, CircularProgress } from '@/components/ui/animated-progress';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+
+const riskCategoryTooltips: Record<string, string> = {
+  network: 'Evaluates firewall configurations, network segmentation, VPN security, and external exposure points.',
+  application: 'Assesses code vulnerabilities, API security, dependency management, and secure coding practices.',
+  data: 'Reviews encryption standards, backup procedures, data classification, and retention policies.',
+  access: 'Analyzes authentication mechanisms, privilege management, and identity governance.',
+  incident: 'Examines incident response capabilities, playbooks, and disaster recovery readiness.',
+  compliance: 'Tracks adherence to regulatory requirements and industry standards.',
+};
 
 interface RiskCategory {
   id: string;
@@ -147,6 +157,7 @@ export default function RiskAssessment() {
   const [actionItems, setActionItems] = useState(initialActionItems);
   const [expandedFramework, setExpandedFramework] = useState<string | null>(null);
   const [animatedTrend, setAnimatedTrend] = useState<number[]>([]);
+  const [expandedPriorities, setExpandedPriorities] = useState<string[]>(['urgent', 'high']);
 
   const targetScore = 35;
   const previousScore = 42;
@@ -212,10 +223,25 @@ export default function RiskAssessment() {
     ));
   };
 
+  const togglePriority = (priority: string) => {
+    setExpandedPriorities(prev => 
+      prev.includes(priority) 
+        ? prev.filter(p => p !== priority) 
+        : [...prev, priority]
+    );
+  };
+
+  const priorityGroups = ['urgent', 'high', 'medium', 'low'] as const;
+  const groupedActions = priorityGroups.map(priority => ({
+    priority,
+    items: actionItems.filter(item => item.priority === priority)
+  })).filter(group => group.items.length > 0);
+
   const addressedImpact = actionItems.filter(a => a.addressed).reduce((sum, a) => sum + a.impact, 0);
   const projectedScore = Math.max(0, targetScore - addressedImpact);
 
   return (
+    <TooltipProvider>
     <div className="min-h-screen aurora-bg text-white relative overflow-hidden">
       <AmbientParticles variant="network" count={30} color="#00D4FF" opacity={0.15} />
 
@@ -309,14 +335,41 @@ export default function RiskAssessment() {
                 </div>
                 <svg className="absolute inset-0 w-full h-full overflow-visible" preserveAspectRatio="none">
                   <defs>
-                    <filter id="glow-line">
-                      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                    <filter id="glow-line" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
                       <feMerge>
+                        <feMergeNode in="coloredBlur"/>
                         <feMergeNode in="coloredBlur"/>
                         <feMergeNode in="SourceGraphic"/>
                       </feMerge>
                     </filter>
+                    <filter id="glow-point" x="-100%" y="-100%" width="300%" height="300%">
+                      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                      <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                    <linearGradient id="trendGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#00D4FF" />
+                      <stop offset="50%" stopColor="#00D4FF" />
+                      <stop offset="100%" stopColor="#22c55e" />
+                    </linearGradient>
                   </defs>
+                  <polyline
+                    fill="none"
+                    stroke="url(#trendGradient)"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    filter="url(#glow-line)"
+                    opacity="0.4"
+                    points={animatedTrend.map((value, index) => 
+                      `${(index / (trendData.length - 1)) * 100}%,${100 - value}%`
+                    ).join(' ')}
+                  />
                   <polyline
                     fill="none"
                     stroke="url(#trendGradient)"
@@ -328,21 +381,24 @@ export default function RiskAssessment() {
                       `${(index / (trendData.length - 1)) * 100}%,${100 - value}%`
                     ).join(' ')}
                   />
-                  <defs>
-                    <linearGradient id="trendGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#00D4FF" />
-                      <stop offset="100%" stopColor="#9944ff" />
-                    </linearGradient>
-                  </defs>
                   {animatedTrend.map((value, index) => (
-                    <circle
-                      key={index}
-                      cx={`${(index / (trendData.length - 1)) * 100}%`}
-                      cy={`${100 - value}%`}
-                      r="5"
-                      fill="#00D4FF"
-                      filter="url(#glow-line)"
-                    />
+                    <g key={index}>
+                      <circle
+                        cx={`${(index / (trendData.length - 1)) * 100}%`}
+                        cy={`${100 - value}%`}
+                        r="8"
+                        fill={value <= 40 ? '#22c55e' : '#00D4FF'}
+                        opacity="0.3"
+                        filter="url(#glow-point)"
+                      />
+                      <circle
+                        cx={`${(index / (trendData.length - 1)) * 100}%`}
+                        cy={`${100 - value}%`}
+                        r="5"
+                        fill={value <= 40 ? '#22c55e' : '#00D4FF'}
+                        filter="url(#glow-point)"
+                      />
+                    </g>
                   ))}
                 </svg>
                 <div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-muted-foreground pt-2">
@@ -377,9 +433,21 @@ export default function RiskAssessment() {
                       <div className="p-3 rounded-xl bg-white/10">
                         <Icon className="w-6 h-6" />
                       </div>
-                      <div className="text-right">
-                        <div className="text-3xl font-bold">{category.score}</div>
-                        <div className="text-xs uppercase tracking-wide opacity-70">{category.status}</div>
+                      <div className="flex items-center gap-2">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button className="p-1 rounded-full hover:bg-white/10 transition-colors" data-testid={`tooltip-trigger-${category.id}`}>
+                              <HelpCircle className="w-4 h-4 text-muted-foreground" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-xs bg-[rgba(10,10,30,0.95)] border-[#00D4FF]/30">
+                            <p className="text-sm">{riskCategoryTooltips[category.id]}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                        <div className="text-right">
+                          <div className="text-3xl font-bold">{category.score}</div>
+                          <div className="text-xs uppercase tracking-wide opacity-70">{category.status}</div>
+                        </div>
                       </div>
                     </div>
                     <h4 className="font-semibold mb-2">{category.name}</h4>
@@ -424,15 +492,32 @@ export default function RiskAssessment() {
             className="mb-12 p-6"
             data-testid="threat-matrix"
           >
-            <h3 className="text-2xl font-bold mb-6">Threat Matrix</h3>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold">Threat Matrix</h3>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button className="p-2 rounded-full hover:bg-white/10 transition-colors" data-testid="threat-matrix-help">
+                    <HelpCircle className="w-5 h-5 text-muted-foreground" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs bg-[rgba(10,10,30,0.95)] border-[#00D4FF]/30">
+                  <p className="text-sm">Hover over threat dots to see details. Position indicates likelihood (x-axis) and impact (y-axis). Color indicates severity.</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
             <div className="relative">
-              <div className="absolute left-0 top-0 bottom-8 w-8 flex flex-col justify-between items-center text-xs text-muted-foreground">
-                <span>High</span>
-                <span className="writing-mode-vertical transform -rotate-180" style={{ writingMode: 'vertical-rl' }}>Impact</span>
-                <span>Low</span>
+              <div className="absolute left-0 top-0 bottom-12 w-12 flex flex-col justify-between items-center text-xs text-muted-foreground">
+                <span className="bg-red-500/20 px-1 rounded">5</span>
+                <span className="bg-orange-500/20 px-1 rounded">4</span>
+                <span className="bg-yellow-500/20 px-1 rounded">3</span>
+                <span className="bg-green-500/20 px-1 rounded">2</span>
+                <span className="bg-green-500/10 px-1 rounded">1</span>
               </div>
-              <div className="ml-10">
-                <div className="grid grid-cols-5 gap-1 aspect-square max-w-lg mx-auto">
+              <div className="absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 text-xs text-muted-foreground font-medium tracking-wider whitespace-nowrap">
+                IMPACT →
+              </div>
+              <div className="ml-14">
+                <div className="grid grid-cols-5 gap-1 aspect-square max-w-lg mx-auto border border-white/10 rounded-lg p-1 bg-white/5">
                   {[5, 4, 3, 2, 1].map(impact => (
                     [1, 2, 3, 4, 5].map(likelihood => {
                       const cellThreats = threats.filter(t => t.likelihood === likelihood && t.impact === impact);
@@ -466,10 +551,15 @@ export default function RiskAssessment() {
                     })
                   ))}
                 </div>
-                <div className="flex justify-between mt-2 text-xs text-muted-foreground max-w-lg mx-auto">
-                  <span>Low</span>
-                  <span>Likelihood</span>
-                  <span>High</span>
+                <div className="flex justify-between mt-2 text-xs text-muted-foreground max-w-lg mx-auto px-1">
+                  <span className="bg-green-500/10 px-1 rounded">1</span>
+                  <span className="bg-green-500/20 px-1 rounded">2</span>
+                  <span className="bg-yellow-500/20 px-1 rounded">3</span>
+                  <span className="bg-orange-500/20 px-1 rounded">4</span>
+                  <span className="bg-red-500/20 px-1 rounded">5</span>
+                </div>
+                <div className="text-center text-xs text-muted-foreground mt-2 font-medium tracking-wider">
+                  LIKELIHOOD →
                 </div>
               </div>
               <AnimatePresence>
@@ -534,45 +624,81 @@ export default function RiskAssessment() {
                   </div>
                 </div>
               )}
-              <div className="space-y-3 max-h-96 overflow-y-auto">
-                {actionItems.map((item) => (
-                  <motion.div
-                    key={item.id}
-                    layout
-                    className={`p-4 rounded-xl border transition-all ${
-                      item.addressed 
-                        ? 'bg-green-500/10 border-green-500/30 opacity-60' 
-                        : 'bg-white/5 border-white/10 hover:border-[#00D4FF]/50'
-                    }`}
-                    data-testid={`action-item-${item.id}`}
-                  >
-                    <div className="flex items-start gap-3">
+              <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+                {groupedActions.map((group) => {
+                  const isExpanded = expandedPriorities.includes(group.priority);
+                  const addressedCount = group.items.filter(i => i.addressed).length;
+                  const totalImpact = group.items.reduce((sum, i) => sum + i.impact, 0);
+                  
+                  return (
+                    <div key={group.priority} className="rounded-xl overflow-hidden border border-white/10">
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleActionItem(item.id);
-                        }}
-                        className={`mt-1 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
-                          item.addressed 
-                            ? 'bg-green-500 border-green-500' 
-                            : 'border-white/30 hover:border-[#00D4FF]'
-                        }`}
-                        data-testid={`checkbox-${item.id}`}
+                        onClick={() => togglePriority(group.priority)}
+                        className={`w-full p-4 flex items-center justify-between transition-all ${getPriorityStyle(group.priority).replace('border-', 'bg-').replace('/50', '/10')}`}
+                        data-testid={`accordion-${group.priority}`}
                       >
-                        {item.addressed && <CheckCircle className="w-3 h-3 text-white" />}
-                      </button>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className={`text-xs px-2 py-0.5 rounded-full border ${getPriorityStyle(item.priority)}`}>
-                            {item.priority}
+                        <div className="flex items-center gap-3">
+                          <span className={`text-sm font-semibold px-3 py-1 rounded-full border ${getPriorityStyle(group.priority)}`}>
+                            {group.priority.charAt(0).toUpperCase() + group.priority.slice(1)}
                           </span>
-                          <span className="text-xs text-muted-foreground">-{item.impact} pts impact</span>
+                          <span className="text-sm text-muted-foreground">
+                            {addressedCount}/{group.items.length} done • -{totalImpact} pts potential
+                          </span>
                         </div>
-                        <p className={`${item.addressed ? 'line-through' : ''}`}>{item.title}</p>
-                      </div>
+                        {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                      </button>
+                      <AnimatePresence>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="p-3 space-y-2 bg-white/5">
+                              {group.items.map((item) => (
+                                <motion.div
+                                  key={item.id}
+                                  layout
+                                  className={`p-3 rounded-lg border transition-all ${
+                                    item.addressed 
+                                      ? 'bg-green-500/10 border-green-500/30 opacity-60' 
+                                      : 'bg-white/5 border-white/10 hover:border-[#00D4FF]/50'
+                                  }`}
+                                  data-testid={`action-item-${item.id}`}
+                                >
+                                  <div className="flex items-start gap-3">
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleActionItem(item.id);
+                                      }}
+                                      className={`mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                                        item.addressed 
+                                          ? 'bg-green-500 border-green-500' 
+                                          : 'border-white/30 hover:border-[#00D4FF]'
+                                      }`}
+                                      data-testid={`checkbox-${item.id}`}
+                                    >
+                                      {item.addressed && <CheckCircle className="w-3 h-3 text-white" />}
+                                    </button>
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-2 mb-1">
+                                        <span className="text-xs text-muted-foreground">-{item.impact} pts impact</span>
+                                      </div>
+                                      <p className={`text-sm ${item.addressed ? 'line-through' : ''}`}>{item.title}</p>
+                                    </div>
+                                  </div>
+                                </motion.div>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
-                  </motion.div>
-                ))}
+                  );
+                })}
               </div>
             </GlassCard>
 
@@ -657,5 +783,6 @@ export default function RiskAssessment() {
         </div>
       </div>
     </div>
+    </TooltipProvider>
   );
 }

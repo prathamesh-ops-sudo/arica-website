@@ -1,12 +1,34 @@
 import { CyberAttackGlobe } from "@/components/ui/cyber-attack-globe";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
-import { ChevronLeft, Shield, AlertTriangle, Clock, Zap, Target, Globe2, Activity, ShieldCheck, ShieldAlert, ArrowRight } from "lucide-react";
+import { ChevronLeft, Shield, AlertTriangle, Clock, Zap, Target, Globe2, Activity, ShieldCheck, ShieldAlert, ArrowRight, ZoomIn, ZoomOut, RotateCcw, Search, Filter, X } from "lucide-react";
 import { useState, useEffect } from "react";
+import { WebGLFallback } from "@/components/ui/webgl-fallback";
+
+const attackTypes = [
+  { id: 'ddos', name: 'DDoS Attack', color: '#ff3344' },
+  { id: 'malware', name: 'Malware', color: '#ff9900' },
+  { id: 'phishing', name: 'Phishing', color: '#ffcc00' },
+  { id: 'ransomware', name: 'Ransomware', color: '#ff00ff' },
+  { id: 'bruteforce', name: 'Brute Force', color: '#00ffff' },
+];
+
+const recentAttacks = [
+  { id: 1, from: 'Moscow, Russia', to: 'New York, USA', type: 'DDoS Attack', severity: 'critical', time: '2s ago' },
+  { id: 2, from: 'Beijing, China', to: 'London, UK', type: 'Malware', severity: 'high', time: '5s ago' },
+  { id: 3, from: 'São Paulo, Brazil', to: 'Tokyo, Japan', type: 'Phishing', severity: 'medium', time: '8s ago' },
+  { id: 4, from: 'Seoul, Korea', to: 'Paris, France', type: 'Ransomware', severity: 'critical', time: '12s ago' },
+  { id: 5, from: 'Mumbai, India', to: 'Sydney, Australia', type: 'Brute Force', severity: 'low', time: '15s ago' },
+];
 
 export default function AttackGlobe() {
   const [liveCounter, setLiveCounter] = useState(2847);
   const [seconds, setSeconds] = useState(39);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [filteredAttacks, setFilteredAttacks] = useState(recentAttacks);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,6 +46,43 @@ export default function AttackGlobe() {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    let filtered = recentAttacks;
+    if (searchQuery) {
+      filtered = filtered.filter(attack => 
+        attack.from.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        attack.to.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        attack.type.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    if (selectedTypes.length > 0) {
+      filtered = filtered.filter(attack => 
+        selectedTypes.some(type => attack.type.toLowerCase().includes(type.toLowerCase()))
+      );
+    }
+    setFilteredAttacks(filtered);
+  }, [searchQuery, selectedTypes]);
+
+  const handleZoomIn = () => setZoomLevel(prev => Math.min(prev + 0.2, 2));
+  const handleZoomOut = () => setZoomLevel(prev => Math.max(prev - 0.2, 0.5));
+  const handleResetZoom = () => setZoomLevel(1);
+  
+  const toggleTypeFilter = (typeId: string) => {
+    setSelectedTypes(prev => 
+      prev.includes(typeId) ? prev.filter(t => t !== typeId) : [...prev, typeId]
+    );
+  };
+
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'critical': return 'text-red-500 bg-red-500/20 border-red-500/50';
+      case 'high': return 'text-orange-500 bg-orange-500/20 border-orange-500/50';
+      case 'medium': return 'text-yellow-500 bg-yellow-500/20 border-yellow-500/50';
+      case 'low': return 'text-green-500 bg-green-500/20 border-green-500/50';
+      default: return 'text-white/50 bg-white/10 border-white/20';
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#0a0a1e] relative overflow-hidden">
@@ -151,45 +210,209 @@ export default function AttackGlobe() {
               </div>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.4 }}
-              className="relative rounded-3xl overflow-hidden border border-[#00D4FF]/20 bg-[#0a0a1e]/80 backdrop-blur-sm"
-              style={{ 
-                height: 'min(65vh, 600px)',
-                boxShadow: '0 0 60px rgba(0, 212, 255, 0.1), inset 0 0 60px rgba(0, 212, 255, 0.02)'
-              }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0a0a1e]/50 pointer-events-none z-10" />
-              
-              <CyberAttackGlobe 
-                showStats={true} 
-                autoRotate={true}
-                attackFrequency={500}
-              />
-              
+            <div className="flex flex-col lg:flex-row gap-6">
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 1.5 }}
-                className="absolute top-1/2 left-0 -translate-y-1/2 bg-[#0a0a1e]/90 backdrop-blur-xl border-r border-t border-b border-[#00D4FF]/20 rounded-r-xl py-4 px-3 z-20 hidden xl:block"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1, delay: 0.4 }}
+                className="relative rounded-3xl overflow-hidden border border-[#00D4FF]/20 bg-[#0a0a1e]/80 backdrop-blur-sm flex-1"
+                style={{ 
+                  height: 'min(65vh, 600px)',
+                  boxShadow: '0 0 60px rgba(0, 212, 255, 0.1), inset 0 0 60px rgba(0, 212, 255, 0.02)',
+                  transform: `scale(${zoomLevel})`,
+                  transformOrigin: 'center center',
+                  transition: 'transform 0.3s ease-out'
+                }}
               >
-                <div className="text-[10px] text-white/40 uppercase tracking-wider mb-3 text-center">Major<br/>Targets</div>
-                <div className="flex flex-col gap-2">
-                  {['NYC', 'LON', 'TYO', 'MOS', 'SYD'].map((city, i) => (
-                    <motion.div
-                      key={city}
-                      className="text-[10px] font-mono text-[#00D4FF]/70 text-center"
-                      animate={{ opacity: [0.5, 1, 0.5] }}
-                      transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
-                    >
-                      {city}
-                    </motion.div>
-                  ))}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0a0a1e]/50 pointer-events-none z-10" />
+                
+                <WebGLFallback 
+                  showMessage={true}
+                  fallback={
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div 
+                        className="absolute inset-0 bg-gradient-to-br from-[#0a0a1e] via-[#1a0a2e] to-[#0a1a2e] animate-gradient-shift"
+                        style={{ backgroundSize: '400% 400%' }}
+                      />
+                      <div className="absolute inset-0 opacity-30">
+                        <div 
+                          className="absolute inset-0"
+                          style={{
+                            background: `
+                              radial-gradient(circle at 30% 40%, rgba(0, 212, 255, 0.2) 0%, transparent 40%),
+                              radial-gradient(circle at 70% 60%, rgba(153, 68, 255, 0.15) 0%, transparent 40%)
+                            `,
+                          }}
+                        />
+                      </div>
+                      <div className="relative z-10 text-center p-8">
+                        <Globe2 className="w-16 h-16 mx-auto mb-4 text-[#00D4FF]/50" />
+                        <p className="text-white/60 text-sm">Interactive globe requires WebGL support</p>
+                      </div>
+                    </div>
+                  }
+                >
+                  <CyberAttackGlobe 
+                    showStats={true} 
+                    autoRotate={true}
+                    attackFrequency={500}
+                  />
+                </WebGLFallback>
+                
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 1.5 }}
+                  className="absolute top-1/2 left-0 -translate-y-1/2 bg-[#0a0a1e]/90 backdrop-blur-xl border-r border-t border-b border-[#00D4FF]/20 rounded-r-xl py-4 px-3 z-20 hidden xl:block"
+                >
+                  <div className="text-[10px] text-white/40 uppercase tracking-wider mb-3 text-center">Major<br/>Targets</div>
+                  <div className="flex flex-col gap-2">
+                    {['NYC', 'LON', 'TYO', 'MOS', 'SYD'].map((city, i) => (
+                      <motion.div
+                        key={city}
+                        className="text-[10px] font-mono text-[#00D4FF]/70 text-center"
+                        animate={{ opacity: [0.5, 1, 0.5] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
+                      >
+                        {city}
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+
+                <div className="absolute top-4 right-4 z-30 flex flex-col gap-2">
+                  <button
+                    onClick={handleZoomIn}
+                    className="p-2 rounded-lg bg-[#0a0a1e]/90 backdrop-blur-xl border border-[#00D4FF]/30 hover:border-[#00D4FF]/60 transition-all"
+                    data-testid="btn-zoom-in"
+                  >
+                    <ZoomIn className="w-4 h-4 text-[#00D4FF]" />
+                  </button>
+                  <button
+                    onClick={handleZoomOut}
+                    className="p-2 rounded-lg bg-[#0a0a1e]/90 backdrop-blur-xl border border-[#00D4FF]/30 hover:border-[#00D4FF]/60 transition-all"
+                    data-testid="btn-zoom-out"
+                  >
+                    <ZoomOut className="w-4 h-4 text-[#00D4FF]" />
+                  </button>
+                  <button
+                    onClick={handleResetZoom}
+                    className="p-2 rounded-lg bg-[#0a0a1e]/90 backdrop-blur-xl border border-[#00D4FF]/30 hover:border-[#00D4FF]/60 transition-all"
+                    data-testid="btn-reset-zoom"
+                  >
+                    <RotateCcw className="w-4 h-4 text-[#00D4FF]" />
+                  </button>
+                </div>
+
+                <div className="absolute bottom-4 left-4 z-30 text-xs text-white/40 font-mono">
+                  Zoom: {Math.round(zoomLevel * 100)}% • Drag to rotate
                 </div>
               </motion.div>
-            </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="w-full lg:w-80 space-y-4"
+              >
+                <div className="backdrop-blur-xl bg-white/[0.02] border border-white/10 rounded-2xl p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Search className="w-4 h-4 text-[#00D4FF]" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search attacks..."
+                      className="flex-1 bg-transparent border-none outline-none text-sm text-white placeholder:text-white/30"
+                      data-testid="input-search-attacks"
+                    />
+                    <button
+                      onClick={() => setShowFilters(!showFilters)}
+                      className={`p-1.5 rounded-lg transition-all ${showFilters ? 'bg-[#00D4FF]/20 text-[#00D4FF]' : 'text-white/50 hover:text-white'}`}
+                      data-testid="btn-toggle-filters"
+                    >
+                      <Filter className="w-4 h-4" />
+                    </button>
+                  </div>
+                  
+                  <AnimatePresence>
+                    {showFilters && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="flex flex-wrap gap-2 pt-3 border-t border-white/10">
+                          {attackTypes.map((type) => (
+                            <button
+                              key={type.id}
+                              onClick={() => toggleTypeFilter(type.id)}
+                              className={`px-2 py-1 rounded-full text-xs font-medium transition-all ${
+                                selectedTypes.includes(type.id)
+                                  ? 'text-white'
+                                  : 'text-white/50 hover:text-white'
+                              }`}
+                              style={{
+                                backgroundColor: selectedTypes.includes(type.id) ? `${type.color}30` : 'transparent',
+                                borderWidth: 1,
+                                borderColor: selectedTypes.includes(type.id) ? type.color : 'rgba(255,255,255,0.1)'
+                              }}
+                              data-testid={`filter-${type.id}`}
+                            >
+                              {type.name}
+                            </button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                <div className="backdrop-blur-xl bg-white/[0.02] border border-white/10 rounded-2xl p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+                      <Activity className="w-4 h-4 text-[#ff3344]" />
+                      Live Attack Feed
+                    </h3>
+                    <motion.div 
+                      className="w-2 h-2 rounded-full bg-[#ff3344]"
+                      animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
+                      transition={{ duration: 1, repeat: Infinity }}
+                    />
+                  </div>
+                  <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                    {filteredAttacks.length > 0 ? (
+                      filteredAttacks.map((attack, i) => (
+                        <motion.div
+                          key={attack.id}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.1 }}
+                          className="p-3 rounded-xl bg-black/40 border border-white/5 hover:border-[#ff3344]/30 transition-all"
+                          data-testid={`attack-${attack.id}`}
+                        >
+                          <div className="flex items-center justify-between mb-1">
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase border ${getSeverityColor(attack.severity)}`}>
+                              {attack.severity}
+                            </span>
+                            <span className="text-[10px] text-white/40">{attack.time}</span>
+                          </div>
+                          <p className="text-xs text-white/70">{attack.type}</p>
+                          <p className="text-[10px] text-white/40 mt-1">
+                            {attack.from} → {attack.to}
+                          </p>
+                        </motion.div>
+                      ))
+                    ) : (
+                      <div className="text-center py-4 text-white/40 text-sm">
+                        No attacks match your filters
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            </div>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}

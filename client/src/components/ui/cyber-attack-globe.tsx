@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import { motion, AnimatePresence } from 'framer-motion';
+import { isWebGLAvailable } from '@/lib/webgl-utils';
 
 interface AttackData {
   id: string;
@@ -239,6 +240,11 @@ export function CyberAttackGlobe({
 
   useEffect(() => {
     if (!canvasRef.current) return;
+    
+    if (!isWebGLAvailable()) {
+      setIsLoaded(true);
+      return;
+    }
 
     const refs = sceneRef.current;
     const GLOBE_RADIUS = 5;

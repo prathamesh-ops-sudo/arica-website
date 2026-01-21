@@ -226,13 +226,13 @@ export function AsciiHeroSection() {
           </div>
           
           <div className="flex items-center gap-2 sm:gap-4 text-[7px] sm:text-[8px] lg:text-[9px] font-mono text-white/50">
-            <span className="hidden sm:inline">◐ MONITORING</span>
+            <span className="hidden sm:inline animate-monitoring-pulse">∞ MONITORING</span>
             <div className="flex gap-0.5 sm:gap-1">
               <div className="w-1 h-1 bg-primary rounded-full animate-pulse" />
               <div className="w-1 h-1 bg-primary/60 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
               <div className="w-1 h-1 bg-primary/30 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
             </div>
-            <span className="hidden sm:inline">FRAME: ∞</span>
+            <span className="hidden sm:inline">FRAME: <span className="inline-block animate-infinity-spin">∞</span></span>
           </div>
         </div>
       </div>

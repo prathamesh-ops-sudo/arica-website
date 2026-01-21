@@ -7,8 +7,10 @@ import { Link } from 'wouter';
 import {
   ArrowLeft, Shield, Building2, CheckCircle2, Clock,
   Target, Layers, Settings, Users, TrendingUp, Check,
-  Circle, ChevronRight, Sparkles, Hammer, HardHat
+  Circle, ChevronRight, Sparkles, Hammer, HardHat, Save
 } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
 const CYAN = '#00D4FF';
 const PURPLE = '#9944ff';
@@ -493,20 +495,56 @@ const deliverables = [
   { id: 12, name: 'Continuous Monitoring Setup', phase: 5, completed: false },
 ];
 
+const STORAGE_KEY = 'security-implementation-checklist';
+
+function loadChecklistState(): { id: number; completed: boolean }[] {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (e) {
+    console.warn('Failed to load checklist state');
+  }
+  return [];
+}
+
+function saveChecklistState(items: { id: number; completed: boolean }[]) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items.map(({ id, completed }) => ({ id, completed }))));
+  } catch (e) {
+    console.warn('Failed to save checklist state');
+  }
+}
+
 export default function SecurityImplementation() {
   const [currentPhase, setCurrentPhase] = useState(2);
   const [isBuilding, setIsBuilding] = useState(false);
   const [buildProgress, setBuildProgress] = useState(0.42);
-  const [deliverableItems, setDeliverableItems] = useState(deliverables);
+  const [deliverableItems, setDeliverableItems] = useState(() => {
+    const savedState = loadChecklistState();
+    if (savedState.length > 0) {
+      return deliverables.map(d => {
+        const saved = savedState.find(s => s.id === d.id);
+        return saved ? { ...d, completed: saved.completed } : d;
+      });
+    }
+    return deliverables;
+  });
   const [selectedPhase, setSelectedPhase] = useState<number | null>(null);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const isMobile = useIsMobile();
 
   const completedCount = deliverableItems.filter((d) => d.completed).length;
   const progressPercentage = Math.round((completedCount / deliverableItems.length) * 100);
 
   const toggleDeliverable = (id: number) => {
-    setDeliverableItems((prev) =>
-      prev.map((d) => (d.id === id ? { ...d, completed: !d.completed } : d))
-    );
+    setDeliverableItems((prev) => {
+      const updated = prev.map((d) => (d.id === id ? { ...d, completed: !d.completed } : d));
+      saveChecklistState(updated);
+      setLastSaved(new Date());
+      return updated;
+    });
   };
 
   useEffect(() => {
@@ -584,14 +622,16 @@ export default function SecurityImplementation() {
             className="w-full h-[400px] rounded-2xl overflow-hidden border border-white/10 bg-black/40 relative"
             data-testid="construction-canvas"
           >
-            <Canvas camera={{ position: [10, 6, 10], fov: 50 }}>
-              <CameraController />
-              <ConstructionScene
-                buildProgress={buildProgress}
-                currentPhase={currentPhase}
-                isBuilding={isBuilding}
-              />
-            </Canvas>
+            <WebGLFallback>
+              <Canvas camera={{ position: [10, 6, 10], fov: 50 }}>
+                <CameraController />
+                <ConstructionScene
+                  buildProgress={buildProgress}
+                  currentPhase={currentPhase}
+                  isBuilding={isBuilding}
+                />
+              </Canvas>
+            </WebGLFallback>
 
             {/* Overlay controls */}
             <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
@@ -769,73 +809,129 @@ export default function SecurityImplementation() {
             Implementation Timeline
           </h2>
 
-          <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 overflow-x-auto">
-            <div className="min-w-[800px]">
-              {/* Timeline header */}
-              <div className="flex items-center mb-4 text-sm text-white/40">
-                <div className="w-48 flex-shrink-0">Phase</div>
-                <div className="flex-1 flex">
-                  {['Week 1-2', 'Week 3-4', 'Week 5-8', 'Week 9-12', 'Week 13-16', 'Week 17+'].map((w, i) => (
-                    <div key={i} className="flex-1 text-center">{w}</div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Timeline rows */}
+          {/* Mobile stacked timeline */}
+          {isMobile ? (
+            <div className="space-y-3">
               {implementationPhases.map((phase, index) => {
+                const Icon = phase.icon;
                 const isActive = index === currentPhase;
                 const isComplete = index < currentPhase;
-                const startWeek = index * 2;
-                const duration = phase.duration === 'Ongoing' ? 6 : parseInt(phase.duration) || 3;
+                const phaseProgress = isComplete ? 100 : isActive ? Math.round(buildProgress * 100) : 0;
 
                 return (
-                  <div key={phase.id} className="flex items-center mb-3" data-testid={`timeline-row-${phase.id}`}>
-                    <div className="w-48 flex-shrink-0 flex items-center gap-2">
+                  <motion.div
+                    key={phase.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.05 * index }}
+                    className={`p-4 rounded-xl border ${
+                      isActive
+                        ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border-cyan-500/50'
+                        : isComplete
+                        ? 'bg-green-500/10 border-green-500/30'
+                        : 'bg-white/5 border-white/10'
+                    }`}
+                    data-testid={`timeline-row-${phase.id}`}
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 rounded-lg" style={{ backgroundColor: `${phase.color}20` }}>
+                        <Icon className="w-4 h-4" style={{ color: phase.color }} />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-sm">{phase.name}</h4>
+                        <span className="text-xs text-white/50">{phase.duration}</span>
+                      </div>
                       {isComplete ? (
-                        <CheckCircle2 className="w-4 h-4 text-green-400" />
+                        <CheckCircle2 className="w-5 h-5 text-green-400" />
                       ) : isActive ? (
-                        <Sparkles className="w-4 h-4 text-cyan-400" />
+                        <Sparkles className="w-5 h-5 text-cyan-400 animate-pulse" />
                       ) : (
-                        <Circle className="w-4 h-4 text-white/30" />
+                        <Circle className="w-5 h-5 text-white/30" />
                       )}
-                      <span className={`text-sm ${isActive ? 'text-white font-semibold' : 'text-white/60'}`}>
-                        {phase.name}
-                      </span>
                     </div>
-                    <div className="flex-1 flex relative h-8">
+                    <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                       <motion.div
-                        className="absolute h-6 rounded-lg flex items-center px-3"
-                        style={{
-                          left: `${(startWeek / 12) * 100}%`,
-                          width: `${(duration / 12) * 100}%`,
-                          backgroundColor: isComplete ? '#22c55e40' : isActive ? `${phase.color}40` : '#ffffff10',
-                          borderLeft: `3px solid ${isComplete ? '#22c55e' : phase.color}`,
-                        }}
-                        initial={{ scaleX: 0, opacity: 0 }}
-                        animate={{ scaleX: 1, opacity: 1 }}
-                        transition={{ delay: 0.1 * index, duration: 0.5 }}
-                      >
-                        <span className="text-xs text-white/80 whitespace-nowrap">{phase.duration}</span>
-                      </motion.div>
-
-                      {/* Milestone marker */}
-                      {isComplete && (
-                        <motion.div
-                          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-green-500 border-2 border-green-400 flex items-center justify-center"
-                          style={{ left: `${((startWeek + duration) / 12) * 100}%` }}
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          transition={{ delay: 0.2 * index }}
-                        >
-                          <Check className="w-2 h-2 text-white" />
-                        </motion.div>
-                      )}
+                        className="h-full rounded-full"
+                        style={{ backgroundColor: phase.color }}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${phaseProgress}%` }}
+                        transition={{ duration: 0.5 }}
+                      />
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
-          </div>
+          ) : (
+            /* Desktop Gantt timeline */
+            <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 overflow-x-auto">
+              <div className="min-w-[800px]">
+                {/* Timeline header */}
+                <div className="flex items-center mb-4 text-sm text-white/40">
+                  <div className="w-48 flex-shrink-0">Phase</div>
+                  <div className="flex-1 flex">
+                    {['Week 1-2', 'Week 3-4', 'Week 5-8', 'Week 9-12', 'Week 13-16', 'Week 17+'].map((w, i) => (
+                      <div key={i} className="flex-1 text-center">{w}</div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Timeline rows */}
+                {implementationPhases.map((phase, index) => {
+                  const isActive = index === currentPhase;
+                  const isComplete = index < currentPhase;
+                  const startWeek = index * 2;
+                  const duration = phase.duration === 'Ongoing' ? 6 : parseInt(phase.duration) || 3;
+
+                  return (
+                    <div key={phase.id} className="flex items-center mb-3" data-testid={`timeline-row-${phase.id}`}>
+                      <div className="w-48 flex-shrink-0 flex items-center gap-2">
+                        {isComplete ? (
+                          <CheckCircle2 className="w-4 h-4 text-green-400" />
+                        ) : isActive ? (
+                          <Sparkles className="w-4 h-4 text-cyan-400" />
+                        ) : (
+                          <Circle className="w-4 h-4 text-white/30" />
+                        )}
+                        <span className={`text-sm ${isActive ? 'text-white font-semibold' : 'text-white/60'}`}>
+                          {phase.name}
+                        </span>
+                      </div>
+                      <div className="flex-1 flex relative h-8">
+                        <motion.div
+                          className="absolute h-6 rounded-lg flex items-center px-3"
+                          style={{
+                            left: `${(startWeek / 12) * 100}%`,
+                            width: `${(duration / 12) * 100}%`,
+                            backgroundColor: isComplete ? '#22c55e40' : isActive ? `${phase.color}40` : '#ffffff10',
+                            borderLeft: `3px solid ${isComplete ? '#22c55e' : phase.color}`,
+                          }}
+                          initial={{ scaleX: 0, opacity: 0 }}
+                          animate={{ scaleX: 1, opacity: 1 }}
+                          transition={{ delay: 0.1 * index, duration: 0.5 }}
+                        >
+                          <span className="text-xs text-white/80 whitespace-nowrap">{phase.duration}</span>
+                        </motion.div>
+
+                        {/* Milestone marker */}
+                        {isComplete && (
+                          <motion.div
+                            className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-green-500 border-2 border-green-400 flex items-center justify-center"
+                            style={{ left: `${((startWeek + duration) / 12) * 100}%` }}
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ delay: 0.2 * index }}
+                          >
+                            <Check className="w-2 h-2 text-white" />
+                          </motion.div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </motion.div>
 
         {/* Deliverables Checklist */}
@@ -844,12 +940,12 @@ export default function SecurityImplementation() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
             <h2 className="text-2xl font-bold flex items-center gap-3">
               <CheckCircle2 className="w-6 h-6 text-cyan-400" />
               Deliverables Checklist
             </h2>
-            <div className="flex items-center gap-3 bg-white/5 backdrop-blur-xl rounded-xl px-4 py-2 border border-white/10">
+            <div className="flex flex-wrap items-center gap-3 bg-white/5 backdrop-blur-xl rounded-xl px-4 py-2 border border-white/10">
               <span className="text-white/60">Progress:</span>
               <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
                 {progressPercentage}%
@@ -858,9 +954,22 @@ export default function SecurityImplementation() {
                 <motion.div
                   className="h-full bg-gradient-to-r from-cyan-500 to-purple-500"
                   animate={{ width: `${progressPercentage}%` }}
-                  transition={{ duration: 0.5 }}
+                  transition={{ duration: 0.5, ease: 'easeOut' }}
                 />
               </div>
+              <AnimatePresence>
+                {lastSaved && (
+                  <motion.span
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 10 }}
+                    className="flex items-center gap-1 text-xs text-green-400"
+                  >
+                    <Save className="w-3 h-3" />
+                    Saved
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 

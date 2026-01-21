@@ -9,7 +9,6 @@ import {
 import { Link } from "wouter";
 import { Navbar } from "@/components/Navbar";
 import { CTA } from "@/components/CTA";
-import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Typewriter } from "@/components/ui/typewriter";
 import { AmbientParticles } from "@/components/ui/ambient-particles";
@@ -161,7 +160,6 @@ export default function ServicesPage() {
       ))}
 
       <CTA />
-      <Footer />
     </div>
   );
 }

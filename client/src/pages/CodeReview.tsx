@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import { ArrowLeft, Shield, AlertTriangle, CheckCircle, Bug, Lock, Key, Package, Code, Play, BarChart3, TrendingUp, TrendingDown } from 'lucide-react';
 import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background';
 import { useGsapStagger } from '@/hooks/useGsapStagger';
+import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
 const CYAN = '#00D4FF';
 const PURPLE = '#9944ff';
@@ -465,9 +466,11 @@ export default function CodeReview() {
     <div className="min-h-screen text-white relative overflow-hidden" style={{ backgroundColor: '#0a0a1e' }}>
       <PurpleGalaxyBackground />
       <div className="fixed inset-0 z-[1]" data-testid="code-review-3d-scene">
-        <Canvas camera={{ position: [0, 0, 15], fov: 60 }} gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }} dpr={[1, 2]}>
-          <CodeAnalysisScene isScanning={isScanning} />
-        </Canvas>
+        <WebGLFallback>
+          <Canvas camera={{ position: [0, 0, 15], fov: 60 }} gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }} dpr={[1, 2]}>
+            <CodeAnalysisScene isScanning={isScanning} />
+          </Canvas>
+        </WebGLFallback>
       </div>
 
       <div className="relative z-10">
@@ -546,12 +549,19 @@ export default function CodeReview() {
                   {[45, 38, 52, 41, 35, 28, 22].map((val, i) => (
                     <motion.div
                       key={i}
-                      className="flex-1 rounded-t"
+                      className="flex-1 rounded-t relative overflow-hidden"
                       style={{ background: `linear-gradient(to top, ${CYAN}, ${PURPLE})` }}
                       initial={{ height: 0 }}
                       animate={{ height: `${val}%` }}
-                      transition={{ delay: i * 0.1, duration: 0.5 }}
-                    />
+                      transition={{ delay: i * 0.15, duration: 0.8, ease: "easeOut" }}
+                    >
+                      <motion.div
+                        className="absolute inset-0 bg-white/20"
+                        initial={{ y: '100%' }}
+                        animate={{ y: '-100%' }}
+                        transition={{ duration: 1.5, delay: i * 0.15, repeat: Infinity, repeatDelay: 3 }}
+                      />
+                    </motion.div>
                   ))}
                 </div>
                 <div className="flex justify-between text-xs text-gray-500 mt-2">
@@ -593,23 +603,42 @@ export default function CodeReview() {
                     {isScanning ? 'Scanning...' : 'Scan'}
                   </button>
                 </div>
-                <div className="p-4 font-mono text-sm overflow-x-auto">
+                <div className="p-4 font-mono text-sm overflow-x-auto max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-cyan-500/30 scrollbar-track-transparent">
                   <pre className="text-gray-300">
                     {demoCode.split('\n').map((line, i) => {
                       const result = results.find(r => r.line === i + 1);
                       const lineColor = result 
-                        ? result.severity === 'critical' ? 'bg-red-500/20' 
-                        : result.severity === 'high' ? 'bg-orange-500/20'
-                        : result.severity === 'info' ? 'bg-green-500/10'
+                        ? result.severity === 'critical' ? 'bg-red-500/30 border-l-4 border-red-500' 
+                        : result.severity === 'high' ? 'bg-orange-500/30 border-l-4 border-orange-500'
+                        : result.severity === 'info' ? 'bg-green-500/20 border-l-4 border-green-500'
                         : '' : '';
                       
                       return (
-                        <div key={i} className={`flex ${lineColor} -mx-4 px-4`}>
+                        <motion.div 
+                          key={i} 
+                          className={`flex ${lineColor} -mx-4 px-4 py-0.5 transition-all`}
+                          initial={result ? { backgroundColor: 'transparent' } : undefined}
+                          animate={result ? { 
+                            backgroundColor: result.severity === 'critical' ? 'rgba(239, 68, 68, 0.3)' : 
+                                           result.severity === 'high' ? 'rgba(249, 115, 22, 0.3)' :
+                                           result.severity === 'info' ? 'rgba(34, 197, 94, 0.2)' : 'transparent'
+                          } : undefined}
+                          transition={{ duration: 0.5, delay: i * 0.05 }}
+                        >
                           <span className="text-gray-600 w-8 select-none">{i + 1}</span>
                           <span className={result && result.severity !== 'info' ? 'text-red-300' : result?.severity === 'info' ? 'text-green-300' : ''}>
                             {line || ' '}
                           </span>
-                        </div>
+                          {result && result.severity !== 'info' && (
+                            <motion.span 
+                              initial={{ opacity: 0, x: 10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              className="ml-auto text-xs text-red-400 opacity-70"
+                            >
+                              ⚠ {result.type}
+                            </motion.span>
+                          )}
+                        </motion.div>
                       );
                     })}
                   </pre>

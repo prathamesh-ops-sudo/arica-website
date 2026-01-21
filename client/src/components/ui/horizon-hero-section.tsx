@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Link } from 'wouter';
+import { useLocation } from 'wouter';
 import { Rocket } from 'lucide-react';
+import { useHyperspaceTransition } from './hyperspace-transition';
+import { isWebGLAvailable } from '@/lib/webgl-utils';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -39,7 +41,11 @@ export function HorizonHeroSection() {
   const [isReady, setIsReady] = useState(false);
   const [isPastHero, setIsPastHero] = useState(false);
   const [webglFailed, setWebglFailed] = useState(false);
+  const [scrollStarted, setScrollStarted] = useState(false);
   const totalSections = 3;
+  
+  const [, setLocation] = useLocation();
+  const { triggerTransition } = useHyperspaceTransition();
   
   const threeRefs = useRef<ThreeRefs>({
     scene: null,
@@ -53,6 +59,11 @@ export function HorizonHeroSection() {
 
   useEffect(() => {
     if (!canvasRef.current) return;
+    
+    if (!isWebGLAvailable()) {
+      setWebglFailed(true);
+      return;
+    }
 
     const initThree = () => {
       try {
@@ -526,6 +537,10 @@ export function HorizonHeroSection() {
         const heroEnd = heroHeight - windowHeight;
         const progress = Math.min(scrollY / heroEnd, 1);
         
+        if (scrollY > 20 && !scrollStarted) {
+          setScrollStarted(true);
+        }
+        
         const pastHero = scrollY > heroEnd;
         setIsPastHero(pastHero);
         
@@ -591,6 +606,13 @@ export function HorizonHeroSection() {
     }
   };
 
+  const handleEnterExperience = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    triggerTransition(() => {
+      setLocation('/experience');
+    });
+  }, [triggerTransition, setLocation]);
+
   return (
     <div ref={containerRef} className="horizon-hero-container">
       {webglFailed ? (
@@ -634,18 +656,18 @@ export function HorizonHeroSection() {
           </p>
         </div>
         
-        <Link 
-          href="/experience"
-          className="mt-8 inline-flex items-center gap-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold px-8 py-4 rounded-full hover:opacity-90 transition-all hover:scale-105 shadow-lg shadow-cyan-500/25"
+        <button 
+          onClick={handleEnterExperience}
+          className="mt-8 inline-flex items-center gap-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold px-8 py-4 rounded-full hover:opacity-90 transition-all hover:scale-105 shadow-lg shadow-cyan-500/25 cursor-pointer"
           data-testid="button-enter-experience"
         >
           <Rocket className="w-5 h-5" />
           Enter the Experience
-        </Link>
+        </button>
       </div>
 
       <div ref={scrollProgressRef} className="horizon-scroll-progress" style={{ visibility: 'hidden', opacity: isPastHero ? 0 : 1, pointerEvents: isPastHero ? 'none' : 'auto', transition: 'opacity 0.5s ease' }}>
-        <div className="horizon-scroll-text">SCROLL</div>
+        <div className="horizon-scroll-text" style={{ opacity: scrollStarted ? 0 : 1, transition: 'opacity 0.5s ease-out' }}>SCROLL</div>
         <div className="horizon-progress-track">
           <div 
             className="horizon-progress-fill" 

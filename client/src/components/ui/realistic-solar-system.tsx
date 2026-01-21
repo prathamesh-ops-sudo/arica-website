@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'wouter';
 import { ChevronRight, Shield, FileCheck, Code, X } from 'lucide-react';
+import { isWebGLAvailable } from '@/lib/webgl-utils';
 
 interface ModalContent {
   title: string;
@@ -938,6 +939,11 @@ export function RealisticSolarSystem() {
 
   useEffect(() => {
     if (!canvasRef.current) return;
+    
+    if (!isWebGLAvailable()) {
+      setIsLoaded(true);
+      return;
+    }
 
     const refs = sceneRef.current;
 

@@ -4,6 +4,7 @@ import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, Stars, Trail } from '@react-three/drei';
 import * as THREE from 'three';
+import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
 const CYAN = '#00D4FF';
 const PURPLE = '#9944ff';
@@ -415,18 +416,20 @@ export function R3FCyberHero() {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0" data-testid="r3f-cyber-hero">
-      <Canvas
-        camera={{ position: [0, 5, 30], fov: 60 }}
-        gl={{ 
-          alpha: true, 
-          antialias: true,
-          powerPreference: 'high-performance',
-        }}
-        style={{ background: 'transparent' }}
-        dpr={[1, 2]}
-      >
-        <Scene />
-      </Canvas>
+      <WebGLFallback>
+        <Canvas
+          camera={{ position: [0, 5, 30], fov: 60 }}
+          gl={{ 
+            alpha: true, 
+            antialias: true,
+            powerPreference: 'high-performance',
+          }}
+          style={{ background: 'transparent' }}
+          dpr={[1, 2]}
+        >
+          <Scene />
+        </Canvas>
+      </WebGLFallback>
     </div>
   );
 }

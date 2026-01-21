@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'wouter';
-import { ArrowLeft, Shield, CheckCircle, AlertTriangle, FileText, Users, Lock, Server, Database, Eye, Settings, Clock, TrendingUp } from 'lucide-react';
+import { ArrowLeft, Shield, CheckCircle, AlertTriangle, FileText, Users, Lock, Server, Database, Eye, Settings, Clock, TrendingUp, ChevronDown, ChevronUp } from 'lucide-react';
 import { GlassCard } from '@/components/ui/glass-card';
 import { AnimatedProgress, CircularProgress } from '@/components/ui/animated-progress';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ControlCategory {
   id: string;
@@ -39,16 +40,35 @@ const certificationStages = [
 
 export default function ComplianceDashboard() {
   const [selectedCategory, setSelectedCategory] = useState<ControlCategory | null>(null);
+  const [expandedOnMobile, setExpandedOnMobile] = useState(true);
+  const [animatedStages, setAnimatedStages] = useState<number[]>([]);
+  const isMobile = useIsMobile();
 
   const totalControls = isoCategories.reduce((sum, cat) => sum + cat.controls, 0);
   const totalCompliant = isoCategories.reduce((sum, cat) => sum + cat.compliant, 0);
   const totalInProgress = isoCategories.reduce((sum, cat) => sum + cat.inProgress, 0);
   const compliancePercentage = Math.round((totalCompliant / totalControls) * 100);
 
+  useEffect(() => {
+    const animateStages = async () => {
+      for (let i = 0; i < certificationStages.length; i++) {
+        await new Promise(resolve => setTimeout(resolve, 400));
+        setAnimatedStages(prev => [...prev, i]);
+      }
+    };
+    animateStages();
+  }, []);
+
   const getComplianceColor = (percentage: number) => {
     if (percentage >= 80) return 'text-green-400';
-    if (percentage >= 60) return 'text-yellow-400';
+    if (percentage >= 50) return 'text-yellow-400';
     return 'text-red-400';
+  };
+
+  const getProgressBarColor = (percentage: number) => {
+    if (percentage >= 80) return 'green';
+    if (percentage >= 50) return 'amber';
+    return 'red';
   };
 
   const getCategoryPercentage = (cat: ControlCategory) => Math.round((cat.compliant / cat.controls) * 100);
@@ -155,17 +175,59 @@ export default function ComplianceDashboard() {
                   <span className="text-sm text-amber-400">Stage 2 Audit</span>
                 </div>
                 <div className="space-y-3">
-                  {certificationStages.map((stage) => (
-                    <div key={stage.name} className="flex items-center gap-4">
-                      <span className="text-xs text-muted-foreground w-28 flex-shrink-0">{stage.name}</span>
-                      <AnimatedProgress
-                        value={stage.progress}
-                        color={stage.progress === 100 ? 'green' : stage.progress > 0 ? 'gradient' : 'cyan'}
-                        size="sm"
-                        className="flex-1"
-                      />
-                    </div>
-                  ))}
+                  {certificationStages.map((stage, index) => {
+                    const isAnimated = animatedStages.includes(index);
+                    const isComplete = stage.progress === 100;
+                    const isActive = stage.progress > 0 && stage.progress < 100;
+                    
+                    return (
+                      <motion.div 
+                        key={stage.name} 
+                        className="flex items-center gap-4"
+                        initial={{ opacity: 0.3 }}
+                        animate={{ 
+                          opacity: isAnimated ? 1 : 0.3,
+                          scale: isAnimated ? 1 : 0.98
+                        }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <div className="flex items-center gap-2 w-32 flex-shrink-0">
+                          <motion.div
+                            className={`w-2 h-2 rounded-full ${
+                              isComplete ? 'bg-green-500' : isActive ? 'bg-amber-500' : 'bg-gray-500'
+                            }`}
+                            animate={isAnimated && isActive ? {
+                              boxShadow: ['0 0 0 0 rgba(245,158,11,0.4)', '0 0 0 8px rgba(245,158,11,0)', '0 0 0 0 rgba(245,158,11,0.4)']
+                            } : isComplete ? {
+                              boxShadow: '0 0 8px rgba(34,197,94,0.6)'
+                            } : {}}
+                            transition={{ duration: 2, repeat: isActive ? Infinity : 0 }}
+                          />
+                          <span className={`text-xs ${isAnimated ? 'text-white' : 'text-muted-foreground'} transition-colors`}>
+                            {stage.name}
+                          </span>
+                        </div>
+                        <div className="flex-1 relative">
+                          <AnimatedProgress
+                            value={isAnimated ? stage.progress : 0}
+                            color={isComplete ? 'green' : isActive ? 'gradient' : 'cyan'}
+                            size="sm"
+                            className="flex-1"
+                          />
+                          {isAnimated && isComplete && (
+                            <motion.div
+                              className="absolute right-0 top-1/2 -translate-y-1/2"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ delay: 0.2, type: 'spring' }}
+                            >
+                              <CheckCircle className="w-4 h-4 text-green-400" />
+                            </motion.div>
+                          )}
+                        </div>
+                      </motion.div>
+                    );
+                  })}
                 </div>
               </GlassCard>
             </div>
@@ -174,15 +236,35 @@ export default function ComplianceDashboard() {
           <GlassCard glowColor="cyan" className="p-6 mb-12">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold">Annex A Control Categories</h3>
-              <div className="flex items-center gap-4 text-sm">
-                <span className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-green-500" /> Compliant</span>
-                <span className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-yellow-500" /> In Progress</span>
-                <span className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-red-500" /> Gap</span>
+              <div className="flex items-center gap-2">
+                {isMobile && (
+                  <button
+                    onClick={() => setExpandedOnMobile(!expandedOnMobile)}
+                    className="flex items-center gap-2 px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-sm mr-2"
+                    data-testid="button-toggle-categories"
+                  >
+                    {expandedOnMobile ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    {expandedOnMobile ? 'Collapse' : 'Expand'}
+                  </button>
+                )}
+                <div className="hidden md:flex items-center gap-4 text-sm">
+                  <span className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-green-500" /> Compliant</span>
+                  <span className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-yellow-500" /> In Progress</span>
+                  <span className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-red-500" /> Gap</span>
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {isoCategories.map((category, index) => {
+            <AnimatePresence>
+              {(expandedOnMobile || !isMobile) && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                    {isoCategories.map((category, index) => {
                 const Icon = category.icon;
                 const percentage = getCategoryPercentage(category);
                 const gaps = category.controls - category.compliant - category.inProgress;
@@ -263,7 +345,10 @@ export default function ComplianceDashboard() {
                   </GlassCard>
                 );
               })}
-            </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </GlassCard>
 
           <motion.div

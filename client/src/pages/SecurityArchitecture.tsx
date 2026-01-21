@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background';
 import { useGsapStagger } from '@/hooks/useGsapStagger';
+import { isWebGLAvailable } from '@/lib/webgl-utils';
 
 interface NetworkNode {
   id: string;
@@ -146,6 +147,10 @@ export default function SecurityArchitecture() {
   const [healthScore, setHealthScore] = useState(0);
   const [attackSimulation, setAttackSimulation] = useState(false);
   const [blockedAttacks, setBlockedAttacks] = useState(0);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const lastMousePos = useRef({ x: 0, y: 0 });
 
   const sceneRef = useRef<{
     scene: THREE.Scene | null;
@@ -197,6 +202,11 @@ export default function SecurityArchitecture() {
 
   const initScene = useCallback(() => {
     if (!canvasRef.current || !containerRef.current) return;
+    
+    if (!isWebGLAvailable()) {
+      console.warn('WebGL not available, skipping 3D rendering');
+      return;
+    }
 
     try {
       const width = containerRef.current.clientWidth;
@@ -790,7 +800,81 @@ export default function SecurityArchitecture() {
                   className="relative rounded-2xl overflow-hidden border border-[#00D4FF]/30 bg-[#000510]/80 backdrop-blur-sm"
                   style={{ height: '500px' }}
                   data-testid="network-topology-canvas"
+                  onWheel={(e) => {
+                    e.preventDefault();
+                    const delta = e.deltaY > 0 ? -0.1 : 0.1;
+                    setZoomLevel(prev => Math.max(0.5, Math.min(2, prev + delta)));
+                    if (sceneRef.current.camera) {
+                      sceneRef.current.camera.position.z = 18 / Math.max(0.5, Math.min(2, zoomLevel + delta));
+                    }
+                  }}
+                  onMouseDown={(e) => {
+                    if (e.button === 0 && e.shiftKey) {
+                      setIsDragging(true);
+                      lastMousePos.current = { x: e.clientX, y: e.clientY };
+                    }
+                  }}
+                  onMouseMove={(e) => {
+                    if (isDragging && sceneRef.current.camera) {
+                      const dx = (e.clientX - lastMousePos.current.x) * 0.01;
+                      const dy = (e.clientY - lastMousePos.current.y) * 0.01;
+                      setPanOffset(prev => ({ x: prev.x + dx, y: prev.y - dy }));
+                      sceneRef.current.camera.position.x = panOffset.x + dx;
+                      sceneRef.current.camera.position.y = panOffset.y - dy;
+                      lastMousePos.current = { x: e.clientX, y: e.clientY };
+                    }
+                  }}
+                  onMouseUp={() => setIsDragging(false)}
+                  onMouseLeave={() => setIsDragging(false)}
                 >
+                  <div className="absolute top-4 right-4 z-20 flex flex-col gap-2">
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => {
+                        setZoomLevel(prev => Math.min(2, prev + 0.2));
+                        if (sceneRef.current.camera) {
+                          sceneRef.current.camera.position.z = 18 / Math.min(2, zoomLevel + 0.2);
+                        }
+                      }}
+                      className="w-8 h-8 rounded-lg bg-[#00D4FF]/20 border border-[#00D4FF]/30 flex items-center justify-center text-[#00D4FF] hover:bg-[#00D4FF]/30 font-bold"
+                      data-testid="btn-zoom-in"
+                    >
+                      +
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => {
+                        setZoomLevel(prev => Math.max(0.5, prev - 0.2));
+                        if (sceneRef.current.camera) {
+                          sceneRef.current.camera.position.z = 18 / Math.max(0.5, zoomLevel - 0.2);
+                        }
+                      }}
+                      className="w-8 h-8 rounded-lg bg-[#00D4FF]/20 border border-[#00D4FF]/30 flex items-center justify-center text-[#00D4FF] hover:bg-[#00D4FF]/30 font-bold"
+                      data-testid="btn-zoom-out"
+                    >
+                      −
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => {
+                        setZoomLevel(1);
+                        setPanOffset({ x: 0, y: 0 });
+                        if (sceneRef.current.camera) {
+                          sceneRef.current.camera.position.set(0, 0, 18);
+                        }
+                      }}
+                      className="w-8 h-8 rounded-lg bg-[#00D4FF]/20 border border-[#00D4FF]/30 flex items-center justify-center text-[#00D4FF] hover:bg-[#00D4FF]/30 text-xs"
+                      data-testid="btn-reset-view"
+                    >
+                      ⌂
+                    </motion.button>
+                  </div>
+                  <div className="absolute bottom-4 right-4 z-20 text-xs text-[#00D4FF]/50 font-mono">
+                    {Math.round(zoomLevel * 100)}% | Shift+Drag to pan
+                  </div>
                   {!webglError && <canvas ref={canvasRef} className="w-full h-full" />}
 
                   {!isLoaded && !webglError && (

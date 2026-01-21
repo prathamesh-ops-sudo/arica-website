@@ -85,7 +85,8 @@ export function Services() {
               key={service.title}
               variants={item}
               data-testid={`card-service-${index}`}
-              className="group relative glass rounded-2xl p-8 hover:bg-card/80 transition-all duration-500"
+              className="group relative glass rounded-2xl p-8 hover:bg-card/80 transition-all duration-500 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/20"
+              whileHover={{ y: -4 }}
             >
               <div
                 className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${

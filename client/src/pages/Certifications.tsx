@@ -8,7 +8,7 @@ import {
   Sparkles, Star
 } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
-import { Footer } from '@/components/Footer';
+import { isWebGLAvailable } from '@/lib/webgl-utils';
 
 interface Certification {
   id: string;
@@ -151,7 +151,7 @@ const timelineSteps = [
 ];
 
 const trustStats = [
-  { label: 'Years Certified', value: 12, suffix: '+', icon: Award },
+  { label: 'Years Certified', value: 8, suffix: '+', icon: Award },
   { label: 'Audits Passed', value: 156, suffix: '', icon: CheckCircle },
   { label: 'Controls Maintained', value: 2847, suffix: '+', icon: TrendingUp },
   { label: 'Trusted Clients', value: 500, suffix: '+', icon: Users }
@@ -333,6 +333,11 @@ function CertificationBadges3D({
 
   useEffect(() => {
     if (!containerRef.current || !isMounted) return;
+    
+    if (!isWebGLAvailable()) {
+      console.warn('WebGL not available, skipping 3D rendering');
+      return;
+    }
 
     const container = containerRef.current;
     const width = container.clientWidth;
@@ -800,55 +805,126 @@ export default function Certifications() {
             transition={{ delay: 0.3 }}
             className="mb-16"
           >
-            <h2 className="text-3xl font-bold text-white text-center mb-8">
+            <h2 className="text-3xl font-bold text-white text-center mb-4">
               Certification Cards
             </h2>
+            <p className="text-center text-slate-400 mb-8">Click any card to flip and see details</p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {certifications.map((cert, index) => {
                 const Icon = cert.icon;
+                const [isFlipped, setIsFlipped] = useState(false);
+                
                 return (
-                  <motion.div
-                    key={cert.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 * index }}
-                    whileHover={{ scale: 1.02, y: -5 }}
-                    onClick={() => setSelectedCert(cert.id)}
-                    className="cursor-pointer bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl border border-slate-700 p-6 hover:border-slate-500 transition-all duration-300 group"
-                    data-testid={`certification-card-${cert.id}`}
-                  >
-                    <div className="flex items-start justify-between mb-4">
+                  <div key={cert.id} className="perspective-1000" style={{ perspective: '1000px' }}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ 
+                        opacity: 1, 
+                        y: 0,
+                        rotateY: isFlipped ? 180 : 0
+                      }}
+                      transition={{ 
+                        opacity: { delay: 0.1 * index },
+                        rotateY: { duration: 0.6, type: 'spring' }
+                      }}
+                      whileHover={{ scale: 1.02 }}
+                      onClick={() => setIsFlipped(!isFlipped)}
+                      className="cursor-pointer relative h-[280px]"
+                      style={{ transformStyle: 'preserve-3d' }}
+                      data-testid={`certification-card-${cert.id}`}
+                    >
+                      {/* Front of card */}
                       <div 
-                        className="w-14 h-14 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
-                        style={{ backgroundColor: `${cert.color}20`, border: `2px solid ${cert.color}` }}
+                        className="absolute inset-0 bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl border border-slate-700 p-6 hover:border-slate-500 transition-all duration-300 group backface-hidden"
+                        style={{ backfaceVisibility: 'hidden' }}
                       >
-                        <Icon className="w-7 h-7" style={{ color: cert.color }} />
+                        <div className="flex items-start justify-between mb-4">
+                          <div 
+                            className="w-14 h-14 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
+                            style={{ backgroundColor: `${cert.color}20`, border: `2px solid ${cert.color}` }}
+                          >
+                            <Icon className="w-7 h-7" style={{ color: cert.color }} />
+                          </div>
+                          <span 
+                            className="px-3 py-1 rounded-full text-xs font-medium"
+                            style={{ 
+                              backgroundColor: cert.status === 'Active' ? '#10B98120' : '#F59E0B20',
+                              color: cert.status === 'Active' ? '#10B981' : '#F59E0B'
+                            }}
+                          >
+                            {cert.status}
+                          </span>
+                        </div>
+
+                        <h3 className="text-xl font-bold text-white mb-1">{cert.name}</h3>
+                        <p className="text-sm text-slate-400 mb-4">{cert.fullName}</p>
+
+                        <div className="space-y-2 text-sm">
+                          <div className="flex items-center justify-between">
+                            <span className="text-slate-500">Last Audit</span>
+                            <span className="text-slate-300">{cert.lastAudit}</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-slate-500">Next Renewal</span>
+                            <span className="text-slate-300">{cert.nextRenewal}</span>
+                          </div>
+                        </div>
+                        
+                        <div className="absolute bottom-4 left-0 right-0 text-center">
+                          <span className="text-xs text-slate-500">Click to flip →</span>
+                        </div>
                       </div>
-                      <span 
-                        className="px-3 py-1 rounded-full text-xs font-medium"
+                      
+                      {/* Back of card */}
+                      <div 
+                        className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border p-6 backface-hidden"
                         style={{ 
-                          backgroundColor: cert.status === 'Active' ? '#10B98120' : '#F59E0B20',
-                          color: cert.status === 'Active' ? '#10B981' : '#F59E0B'
+                          backfaceVisibility: 'hidden', 
+                          transform: 'rotateY(180deg)',
+                          borderColor: cert.color 
                         }}
                       >
-                        {cert.status}
-                      </span>
-                    </div>
-
-                    <h3 className="text-xl font-bold text-white mb-1">{cert.name}</h3>
-                    <p className="text-sm text-slate-400 mb-4">{cert.fullName}</p>
-
-                    <div className="space-y-2 text-sm">
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500">Last Audit</span>
-                        <span className="text-slate-300">{cert.lastAudit}</span>
+                        <div className="flex items-center gap-2 mb-4">
+                          <div 
+                            className="w-10 h-10 rounded-lg flex items-center justify-center"
+                            style={{ backgroundColor: `${cert.color}20` }}
+                          >
+                            <Icon className="w-5 h-5" style={{ color: cert.color }} />
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-bold text-white">{cert.name}</h4>
+                            <p className="text-xs text-slate-400">Key Controls</p>
+                          </div>
+                        </div>
+                        
+                        <ul className="space-y-2 mb-4">
+                          {cert.details.slice(0, 4).map((detail, idx) => (
+                            <li key={idx} className="flex items-start gap-2 text-sm text-slate-300">
+                              <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: cert.color }} />
+                              <span>{detail}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedCert(cert.id);
+                          }}
+                          className="w-full py-2 rounded-lg text-sm font-medium text-white transition-all"
+                          style={{ backgroundColor: cert.color }}
+                        >
+                          View Full Details
+                        </motion.button>
+                        
+                        <div className="absolute bottom-4 left-0 right-0 text-center">
+                          <span className="text-xs text-slate-500">← Click to flip back</span>
+                        </div>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500">Next Renewal</span>
-                        <span className="text-slate-300">{cert.nextRenewal}</span>
-                      </div>
-                    </div>
-                  </motion.div>
+                    </motion.div>
+                  </div>
                 );
               })}
             </div>
@@ -864,23 +940,48 @@ export default function Certifications() {
               Certification Journey
             </h2>
             <div className="relative">
-              <div className="absolute top-1/2 left-0 right-0 h-1 bg-slate-700 -translate-y-1/2 hidden md:block" />
+              {/* Animated path line */}
+              <div className="absolute top-1/2 left-0 right-0 h-1 bg-slate-700 -translate-y-1/2 hidden md:block overflow-hidden">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-[#00D4FF] via-[#FFB800] to-[#10B981]"
+                  initial={{ width: 0 }}
+                  animate={{ width: '83%' }}
+                  transition={{ duration: 2, delay: 0.5, ease: 'easeOut' }}
+                />
+              </div>
+              
+              {/* Moving marker */}
+              <motion.div
+                className="absolute top-1/2 -translate-y-1/2 hidden md:block z-20"
+                initial={{ left: '0%' }}
+                animate={{ left: ['0%', '83%', '83%'] }}
+                transition={{ 
+                  duration: 3, 
+                  delay: 0.5,
+                  times: [0, 0.7, 1],
+                  ease: 'easeOut'
+                }}
+              >
+                <motion.div
+                  className="w-6 h-6 rounded-full bg-[#FFB800] shadow-[0_0_20px_rgba(255,184,0,0.6)]"
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                />
+              </motion.div>
+              
               <div className="grid md:grid-cols-6 gap-4">
                 {timelineSteps.map((step, index) => (
                   <motion.div
                     key={step.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 * index }}
+                    transition={{ delay: 0.1 * index + 0.3 }}
                     className="relative flex flex-col items-center"
                     data-testid={`timeline-step-${step.id}`}
                   >
                     <motion.div
                       className="w-12 h-12 rounded-full flex items-center justify-center z-10 mb-3"
-                      style={{
-                        backgroundColor: step.progress === 100 ? '#10B981' : '#F59E0B',
-                        boxShadow: `0 0 20px ${step.progress === 100 ? '#10B98150' : '#F59E0B50'}`
-                      }}
+                      initial={{ scale: 0 }}
                       animate={{
                         scale: [1, 1.1, 1],
                         boxShadow: [
@@ -889,7 +990,11 @@ export default function Certifications() {
                           `0 0 20px ${step.progress === 100 ? '#10B98150' : '#F59E0B50'}`
                         ]
                       }}
-                      transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 }}
+                      transition={{ duration: 2, repeat: Infinity, delay: 0.2 * index + 0.5 }}
+                      style={{
+                        backgroundColor: step.progress === 100 ? '#10B981' : '#F59E0B',
+                        boxShadow: `0 0 20px ${step.progress === 100 ? '#10B98150' : '#F59E0B50'}`
+                      }}
                     >
                       {step.progress === 100 ? (
                         <CheckCircle className="w-6 h-6 text-white" />
@@ -961,8 +1066,6 @@ export default function Certifications() {
           </motion.div>
         </div>
       </div>
-
-      <Footer />
 
       <AnimatePresence>
         {selectedCertification && (

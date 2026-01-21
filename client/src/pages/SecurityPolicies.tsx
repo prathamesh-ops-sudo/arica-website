@@ -5,11 +5,13 @@ import * as THREE from 'three';
 import { 
   ArrowLeft, Shield, FileText, Lock, Database, AlertTriangle, 
   Users, Briefcase, CheckCircle, XCircle, Plus, Link as LinkIcon,
-  Sparkles, Zap
+  Sparkles, Zap, HelpCircle, Info, MousePointer, Hand
 } from 'lucide-react';
 import { AmbientParticles } from '@/components/ui/ambient-particles';
 import { useScrollProgress } from '@/hooks/useScrollProgress';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { isWebGLAvailable } from '@/lib/webgl-utils';
 
 interface PolicyCategory {
   id: string;
@@ -284,6 +286,11 @@ function ThreeJSScene({
 
   useEffect(() => {
     if (!containerRef.current) return;
+    
+    if (!isWebGLAvailable()) {
+      console.warn('WebGL not available, skipping 3D rendering');
+      return;
+    }
 
     const container = containerRef.current;
     const width = container.clientWidth;
@@ -849,6 +856,7 @@ export default function SecurityPolicies() {
             </p>
           </motion.div>
 
+          <TooltipProvider>
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -856,15 +864,63 @@ export default function SecurityPolicies() {
             className="mb-12 p-6 rounded-3xl bg-black/40 backdrop-blur-xl border border-[#00D4FF]/30"
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold">Interactive Policy Viewer</h2>
-              <span className="text-sm text-muted-foreground">Click documents to view details</span>
+              <div className="flex items-center gap-3">
+                <h2 className="text-xl font-bold">Interactive Policy Viewer</h2>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button className="p-1.5 rounded-full hover:bg-white/10 transition-colors" data-testid="viewer-help-tooltip">
+                      <HelpCircle className="w-5 h-5 text-muted-foreground" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs bg-[rgba(10,10,30,0.95)] border-[#00D4FF]/30">
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium">How to interact:</p>
+                      <ul className="text-xs space-y-1 text-muted-foreground">
+                        <li className="flex items-center gap-2">
+                          <MousePointer className="w-3 h-3" /> Hover over documents to highlight
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Hand className="w-3 h-3" /> Click to flip and view details
+                        </li>
+                      </ul>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                {isMobile ? (
+                  <span className="flex items-center gap-1">
+                    <Hand className="w-4 h-4" /> Tap documents
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1">
+                    <MousePointer className="w-4 h-4" /> Click documents
+                  </span>
+                )}
+              </div>
             </div>
+            
+            {/* Instruction banner for mobile */}
+            {isMobile && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-4 p-3 rounded-xl bg-[#00D4FF]/10 border border-[#00D4FF]/30 text-sm"
+              >
+                <div className="flex items-center gap-2">
+                  <Info className="w-4 h-4 text-[#00D4FF]" />
+                  <span>Tap and drag to rotate view. Tap any document to see details.</span>
+                </div>
+              </motion.div>
+            )}
+            
             <ThreeJSScene 
               selectedPolicy={selectedPolicy}
               onPolicyClick={handlePolicyClick}
               isMobile={isMobile}
             />
           </motion.div>
+          </TooltipProvider>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
             <motion.div

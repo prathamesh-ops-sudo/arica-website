@@ -37,6 +37,20 @@ const authTests: AuthTest[] = [
   { name: 'Session Management', icon: Clock, status: 'pending' },
 ];
 
+interface AuthFlowStep {
+  id: string;
+  label: string;
+  status: 'pending' | 'active' | 'success' | 'warning' | 'error';
+}
+
+const authFlowSteps: AuthFlowStep[] = [
+  { id: 'request', label: 'Client Request', status: 'pending' },
+  { id: 'auth', label: 'Authentication', status: 'pending' },
+  { id: 'token', label: 'Token Validation', status: 'pending' },
+  { id: 'rate', label: 'Rate Limiting', status: 'pending' },
+  { id: 'response', label: 'API Response', status: 'pending' },
+];
+
 const rateLimitData = [
   [0.2, 0.3, 0.5, 0.4, 0.6, 0.8, 0.9, 1.0],
   [0.1, 0.2, 0.4, 0.5, 0.7, 0.6, 0.8, 0.7],
@@ -55,6 +69,10 @@ export default function ApiSecurityLab() {
   const [activeTab, setActiveTab] = useState<'auth' | 'rate-limit' | 'data' | 'request'>('request');
   const [authTestResults, setAuthTestResults] = useState(authTests);
   const [requestResponse, setRequestResponse] = useState<RequestResponse | null>(null);
+  const [flowSteps, setFlowSteps] = useState(authFlowSteps);
+  const [customMethod, setCustomMethod] = useState<'GET' | 'POST' | 'PUT' | 'DELETE'>('GET');
+  const [customHeaders, setCustomHeaders] = useState('Authorization: Bearer <token>');
+  const [customBody, setCustomBody] = useState('{"example": "data"}');
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -125,6 +143,7 @@ export default function ApiSecurityLab() {
     setScanComplete(false);
     setAuthTestResults(authTests.map(t => ({ ...t, status: 'pending' as const })));
     setRequestResponse(null);
+    setFlowSteps(authFlowSteps.map(s => ({ ...s, status: 'pending' as const })));
 
     const phases = [
       'Initializing API security scan...',
@@ -155,6 +174,14 @@ export default function ApiSecurityLab() {
             ));
           }
         }
+
+        const flowIndex = Math.min(Math.floor(currentPhase / 2), authFlowSteps.length - 1);
+        setFlowSteps(prev => prev.map((step, i) => ({
+          ...step,
+          status: i < flowIndex ? (Math.random() > 0.3 ? 'success' : 'warning') as AuthFlowStep['status']
+                : i === flowIndex ? 'active' as AuthFlowStep['status']
+                : 'pending' as AuthFlowStep['status']
+        })));
         
         currentPhase++;
       }
@@ -303,31 +330,71 @@ export default function ApiSecurityLab() {
             transition={{ delay: 0.2 }}
             className="max-w-3xl mx-auto mb-12"
           >
-            <div className="flex gap-4 p-2 rounded-2xl crt-panel backdrop-blur-xl">
-              <div className="flex-1 flex items-center gap-3 px-4">
-                <span className="text-terminal-green font-mono">$</span>
-                <Server className="w-5 h-5 text-terminal-cyan" />
-                <input
-                  type="text"
-                  value={targetUrl}
-                  onChange={(e) => setTargetUrl(e.target.value)}
-                  placeholder="Enter API endpoint URL..."
-                  className="flex-1 bg-transparent border-none outline-none crt-input font-mono text-terminal-cyan placeholder:text-cyan-400/30"
+            <div className="space-y-4">
+              <div className="flex gap-4 p-2 rounded-2xl crt-panel backdrop-blur-xl">
+                <div className="flex items-center gap-2 px-3 border-r border-white/10">
+                  <select
+                    value={customMethod}
+                    onChange={(e) => setCustomMethod(e.target.value as 'GET' | 'POST' | 'PUT' | 'DELETE')}
+                    className="bg-transparent text-terminal-green font-mono text-sm outline-none cursor-pointer"
+                    disabled={isScanning}
+                    data-testid="select-method"
+                  >
+                    <option value="GET" className="bg-[#000510]">GET</option>
+                    <option value="POST" className="bg-[#000510]">POST</option>
+                    <option value="PUT" className="bg-[#000510]">PUT</option>
+                    <option value="DELETE" className="bg-[#000510]">DELETE</option>
+                  </select>
+                </div>
+                <div className="flex-1 flex items-center gap-3 px-4">
+                  <Server className="w-5 h-5 text-terminal-cyan" />
+                  <input
+                    type="text"
+                    value={targetUrl}
+                    onChange={(e) => setTargetUrl(e.target.value)}
+                    placeholder="Enter API endpoint URL..."
+                    className="flex-1 bg-transparent border-none outline-none crt-input font-mono text-terminal-cyan placeholder:text-cyan-400/30"
+                    disabled={isScanning}
+                    data-testid="input-api-endpoint"
+                  />
+                  {!isScanning && <BlinkingCursor />}
+                </div>
+                <button
+                  onClick={startScan}
                   disabled={isScanning}
-                  data-testid="input-api-endpoint"
-                />
-                {!isScanning && <BlinkingCursor />}
+                  className="px-8 py-3 rounded-xl font-semibold font-mono hover:opacity-90 transition-all disabled:opacity-50 flex items-center gap-2"
+                  style={{ backgroundImage: 'linear-gradient(to right, #00D4FF, #a855f7)' }}
+                  data-testid="button-test-endpoint"
+                >
+                  <Send className="w-4 h-4" />
+                  {isScanning ? '> Testing...' : '> Test Endpoint'}
+                </button>
               </div>
-              <button
-                onClick={startScan}
-                disabled={isScanning}
-                className="px-8 py-3 rounded-xl font-semibold font-mono hover:opacity-90 transition-all disabled:opacity-50 flex items-center gap-2"
-                style={{ backgroundImage: 'linear-gradient(to right, #00D4FF, #a855f7)' }}
-                data-testid="button-test-endpoint"
-              >
-                <Send className="w-4 h-4" />
-                {isScanning ? '> Testing...' : '> Test Endpoint'}
-              </button>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-3 rounded-xl bg-black/40 border border-white/10">
+                  <label className="text-xs text-white/50 font-mono mb-2 block">Headers</label>
+                  <textarea
+                    value={customHeaders}
+                    onChange={(e) => setCustomHeaders(e.target.value)}
+                    className="w-full h-20 bg-transparent text-terminal-cyan font-mono text-xs outline-none resize-none placeholder:text-cyan-400/30"
+                    placeholder="Authorization: Bearer <token>"
+                    disabled={isScanning}
+                    data-testid="input-headers"
+                  />
+                </div>
+                <div className="p-3 rounded-xl bg-black/40 border border-white/10">
+                  <label className="text-xs text-white/50 font-mono mb-2 block">Request Body (JSON)</label>
+                  <textarea
+                    value={customBody}
+                    onChange={(e) => setCustomBody(e.target.value)}
+                    className="w-full h-20 bg-transparent text-terminal-cyan font-mono text-xs outline-none resize-none placeholder:text-cyan-400/30"
+                    placeholder='{"key": "value"}'
+                    disabled={isScanning}
+                    data-testid="input-body"
+                  />
+                </div>
+              </div>
             </div>
           </motion.div>
 
@@ -477,6 +544,49 @@ export default function ApiSecurityLab() {
                         <Key className="w-5 h-5 text-terminal-cyan" />
                         <span className="text-terminal-green">[AUTH]</span> Authentication Testing Results
                       </h3>
+
+                      <div className="mb-6 p-4 rounded-xl bg-black/40 border border-cyan-500/20">
+                        <h4 className="text-sm font-mono text-terminal-cyan mb-4">Authentication Flow Diagram</h4>
+                        <div className="flex items-center justify-between overflow-x-auto pb-2">
+                          {flowSteps.map((step, i) => (
+                            <div key={step.id} className="flex items-center">
+                              <motion.div
+                                className={`p-3 rounded-xl border-2 min-w-[100px] text-center transition-all ${
+                                  step.status === 'active' ? 'border-cyan-500 bg-cyan-500/20 shadow-lg shadow-cyan-500/30' :
+                                  step.status === 'success' ? 'border-green-500 bg-green-500/20' :
+                                  step.status === 'warning' ? 'border-yellow-500 bg-yellow-500/20' :
+                                  step.status === 'error' ? 'border-red-500 bg-red-500/20' :
+                                  'border-white/20 bg-white/5'
+                                }`}
+                                animate={step.status === 'active' ? { scale: [1, 1.05, 1] } : {}}
+                                transition={{ duration: 0.5, repeat: step.status === 'active' ? Infinity : 0 }}
+                              >
+                                <div className={`text-xs font-mono ${
+                                  step.status === 'active' ? 'text-cyan-400' :
+                                  step.status === 'success' ? 'text-green-400' :
+                                  step.status === 'warning' ? 'text-yellow-400' :
+                                  step.status === 'error' ? 'text-red-400' :
+                                  'text-white/50'
+                                }`}>
+                                  {step.label}
+                                </div>
+                                <div className="mt-1">
+                                  {step.status === 'success' && <CheckCircle className="w-4 h-4 text-green-500 mx-auto" />}
+                                  {step.status === 'warning' && <AlertTriangle className="w-4 h-4 text-yellow-500 mx-auto" />}
+                                  {step.status === 'error' && <XCircle className="w-4 h-4 text-red-500 mx-auto" />}
+                                  {step.status === 'active' && <div className="w-4 h-4 rounded-full border-2 border-cyan-500 border-t-transparent animate-spin mx-auto" />}
+                                </div>
+                              </motion.div>
+                              {i < flowSteps.length - 1 && (
+                                <div className={`w-8 h-0.5 mx-2 ${
+                                  step.status === 'success' || step.status === 'warning' ? 'bg-cyan-500' : 'bg-white/20'
+                                }`} />
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {authTestResults.map((test, index) => {
                           const Icon = test.icon;

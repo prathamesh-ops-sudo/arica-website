@@ -3,7 +3,6 @@ import { Shield, Target, Eye, Award, Users, Globe } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Team } from "@/components/Team";
 import { CTA } from "@/components/CTA";
-import { Footer } from "@/components/Footer";
 import { AmbientParticles } from "@/components/ui/ambient-particles";
 
 const values = [
@@ -200,7 +199,6 @@ export default function About() {
 
       <Team />
       <CTA />
-      <Footer />
     </div>
   );
 }

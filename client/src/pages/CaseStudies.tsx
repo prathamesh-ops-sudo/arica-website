@@ -2,7 +2,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ExternalLink, TrendingDown } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { EtherealShadow } from "@/components/ui/ethereal-shadow";
@@ -357,8 +356,6 @@ export default function CaseStudies() {
           </motion.div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 }
