@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { Link } from 'wouter';
 import { 
   ArrowLeft, Shield, AlertTriangle, CheckCircle, TrendingUp, TrendingDown,
   Network, Code, Database, Lock, AlertCircle, FileCheck, ChevronDown, ChevronUp,
-  Target, Zap, Clock, ArrowRight, Info, HelpCircle
+  Target, Zap, Clock, ArrowRight, Info, HelpCircle, Activity, ShieldAlert
 } from 'lucide-react';
 import { AmbientParticles } from '@/components/ui/ambient-particles';
 import { GlassCard } from '@/components/ui/glass-card';
-import { AnimatedProgress, CircularProgress } from '@/components/ui/animated-progress';
+import { AnimatedProgress } from '@/components/ui/animated-progress';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const riskCategoryTooltips: Record<string, string> = {
@@ -36,6 +36,16 @@ interface Threat {
   impact: number;
   severity: 'critical' | 'high' | 'medium' | 'low';
   description: string;
+}
+
+interface RiskEvent {
+  id: number;
+  type: string;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  source: string;
+  target: string;
+  time: string;
+  isNew?: boolean;
 }
 
 interface ActionItem {
@@ -117,6 +127,45 @@ const threats: Threat[] = [
   { id: 't10', name: 'Credential Theft', likelihood: 4, impact: 4, severity: 'critical', description: 'Stolen login credentials' },
 ];
 
+const riskEventTypes = [
+  'Suspicious Login',
+  'Port Scan Detected',
+  'Malware Signature',
+  'DDoS Attempt',
+  'SQL Injection',
+  'Brute Force Attack',
+  'Data Exfiltration',
+  'Privilege Escalation',
+  'Unauthorized Access',
+  'API Rate Limit',
+];
+
+const sourceLocations = [
+  'Beijing, China',
+  'Moscow, Russia',
+  'São Paulo, Brazil',
+  'Lagos, Nigeria',
+  'Mumbai, India',
+  'Unknown Proxy',
+  'Tor Exit Node',
+  'Berlin, Germany',
+  'London, UK',
+  'New York, USA',
+];
+
+const targetSystems = [
+  'Web Server #1',
+  'Database Cluster',
+  'API Gateway',
+  'Auth Service',
+  'File Storage',
+  'Email Server',
+  'VPN Endpoint',
+  'Load Balancer',
+  'CDN Edge',
+  'Admin Panel',
+];
+
 const initialActionItems: ActionItem[] = [
   { id: 'a1', title: 'Implement Multi-Factor Authentication', priority: 'urgent', impact: 8, addressed: false },
   { id: 'a2', title: 'Develop Incident Response Plan', priority: 'urgent', impact: 12, addressed: false },
@@ -151,6 +200,710 @@ const complianceFrameworks: ComplianceFramework[] = [
 
 const trendData = [68, 65, 62, 64, 58, 55, 52, 48, 45, 42, 38, 35];
 
+function AnimatedRiskGauge({ 
+  value, 
+  size = 192, 
+  strokeWidth = 12, 
+  label 
+}: { 
+  value: number; 
+  size?: number; 
+  strokeWidth?: number; 
+  label?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
+  const [displayValue, setDisplayValue] = useState(0);
+  const [pulseIntensity, setPulseIntensity] = useState(0);
+  
+  const radius = (size - strokeWidth) / 2;
+  const circumference = radius * 2 * Math.PI;
+  
+  const getColorByValue = (v: number) => {
+    if (v <= 33) return { color: '#22c55e', name: 'green' };
+    if (v <= 66) return { color: '#f59e0b', name: 'amber' };
+    return { color: '#ef4444', name: 'red' };
+  };
+  
+  const colorInfo = getColorByValue(value);
+
+  useEffect(() => {
+    if (!isInView) return;
+    
+    let currentValue = 0;
+    const increment = value / 60;
+    const timer = setInterval(() => {
+      currentValue = Math.min(currentValue + increment, value);
+      setDisplayValue(Math.round(currentValue));
+      if (currentValue >= value) clearInterval(timer);
+    }, 16);
+    
+    return () => clearInterval(timer);
+  }, [isInView, value]);
+
+  useEffect(() => {
+    const pulseTimer = setInterval(() => {
+      setPulseIntensity(prev => (prev + 0.05) % 1);
+    }, 50);
+    return () => clearInterval(pulseTimer);
+  }, []);
+
+  const strokeDashoffset = circumference - (displayValue / 100) * circumference;
+  const glowIntensity = 0.3 + Math.sin(pulseIntensity * Math.PI * 2) * 0.2;
+
+  return (
+    <div
+      ref={ref}
+      className="relative inline-flex items-center justify-center"
+      style={{ width: size, height: size }}
+      data-testid="animated-risk-gauge"
+    >
+      <svg className="transform -rotate-90" width={size} height={size}>
+        <defs>
+          <linearGradient id="gauge-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor={colorInfo.color} />
+            <stop offset="100%" stopColor={colorInfo.color} stopOpacity="0.6" />
+          </linearGradient>
+          <filter id="gauge-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="rgba(255,255,255,0.1)"
+          strokeWidth={strokeWidth}
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="url(#gauge-gradient)"
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          filter="url(#gauge-glow)"
+          style={{
+            transition: 'stroke-dashoffset 0.1s ease-out',
+            filter: `drop-shadow(0 0 ${8 + glowIntensity * 12}px ${colorInfo.color})`,
+          }}
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius + 4}
+          fill="none"
+          stroke={colorInfo.color}
+          strokeWidth="2"
+          strokeDasharray={circumference * 1.05}
+          strokeDashoffset={strokeDashoffset * 1.05}
+          opacity={glowIntensity}
+          strokeLinecap="round"
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <motion.span 
+          className="text-4xl font-bold"
+          style={{ color: colorInfo.color }}
+          animate={{ 
+            textShadow: [
+              `0 0 10px ${colorInfo.color}40`,
+              `0 0 20px ${colorInfo.color}60`,
+              `0 0 10px ${colorInfo.color}40`
+            ]
+          }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          {displayValue}
+        </motion.span>
+        {label && (
+          <span className="text-xs text-muted-foreground mt-1">{label}</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ThreatGridBackground({ riskLevel }: { riskLevel: number }) {
+  const gridSize = 20;
+  const [activeCells, setActiveCells] = useState<Set<number>>(new Set());
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const numActive = Math.ceil(riskLevel / 10);
+      const newActive = new Set<number>();
+      for (let i = 0; i < numActive; i++) {
+        newActive.add(Math.floor(Math.random() * (gridSize * gridSize)));
+      }
+      setActiveCells(newActive);
+    }, 2000);
+    
+    return () => clearInterval(interval);
+  }, [riskLevel]);
+
+  const getColor = () => {
+    if (riskLevel <= 33) return '#22c55e';
+    if (riskLevel <= 66) return '#f59e0b';
+    return '#ef4444';
+  };
+
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
+      <div 
+        className="absolute inset-0 opacity-20"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px',
+        }}
+      />
+      <svg className="absolute inset-0 w-full h-full">
+        {Array.from({ length: gridSize * gridSize }).map((_, i) => {
+          const x = (i % gridSize) * (100 / gridSize);
+          const y = Math.floor(i / gridSize) * (100 / gridSize);
+          const isActive = activeCells.has(i);
+          
+          return (
+            <motion.circle
+              key={i}
+              cx={`${x + 100 / gridSize / 2}%`}
+              cy={`${y + 100 / gridSize / 2}%`}
+              r={isActive ? 4 : 1}
+              fill={isActive ? getColor() : 'rgba(0,212,255,0.1)'}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ 
+                opacity: isActive ? [0, 0.8, 0] : 0.2,
+                scale: isActive ? [0, 1.5, 0] : 1,
+              }}
+              transition={{ 
+                duration: isActive ? 1.5 : 0,
+                ease: 'easeOut'
+              }}
+            />
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+function LiveThreatMatrix({ 
+  threats, 
+  hoveredThreat, 
+  setHoveredThreat 
+}: { 
+  threats: Threat[];
+  hoveredThreat: Threat | null;
+  setHoveredThreat: (t: Threat | null) => void;
+}) {
+  const [pulsingCells, setPulsingCells] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newPulsing = new Set<string>();
+      threats.forEach(t => {
+        if (Math.random() > 0.6) {
+          newPulsing.add(`${t.likelihood}-${t.impact}`);
+        }
+      });
+      setPulsingCells(newPulsing);
+    }, 1500);
+    return () => clearInterval(interval);
+  }, [threats]);
+
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'critical': return '#ef4444';
+      case 'high': return '#f97316';
+      case 'medium': return '#eab308';
+      case 'low': return '#22c55e';
+      default: return '#6b7280';
+    }
+  };
+
+  return (
+    <div className="relative">
+      <div className="absolute left-0 top-0 bottom-12 w-12 flex flex-col justify-between items-center text-xs text-muted-foreground">
+        {[5, 4, 3, 2, 1].map(n => (
+          <span key={n} className={`px-1 rounded ${
+            n >= 4 ? 'bg-red-500/20' : n >= 3 ? 'bg-orange-500/20' : 'bg-green-500/20'
+          }`}>{n}</span>
+        ))}
+      </div>
+      <div className="absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 text-xs text-muted-foreground font-medium tracking-wider whitespace-nowrap">
+        IMPACT →
+      </div>
+      <div className="ml-14">
+        <div className="grid grid-cols-5 gap-1 aspect-square max-w-lg mx-auto border border-white/10 rounded-lg p-1 bg-white/5">
+          {[5, 4, 3, 2, 1].map(impact => (
+            [1, 2, 3, 4, 5].map(likelihood => {
+              const cellThreats = threats.filter(t => t.likelihood === likelihood && t.impact === impact);
+              const riskLevel = likelihood * impact;
+              const isPulsing = pulsingCells.has(`${likelihood}-${impact}`);
+              let bgColor = 'bg-green-500/20';
+              if (riskLevel >= 15) bgColor = 'bg-red-500/30';
+              else if (riskLevel >= 8) bgColor = 'bg-orange-500/25';
+              else if (riskLevel >= 4) bgColor = 'bg-yellow-500/20';
+              
+              return (
+                <motion.div
+                  key={`${likelihood}-${impact}`}
+                  className={`${bgColor} rounded-lg p-2 relative flex items-center justify-center min-h-[60px] border border-white/5`}
+                  animate={isPulsing && cellThreats.length > 0 ? {
+                    boxShadow: [
+                      '0 0 0 rgba(0,212,255,0)',
+                      '0 0 20px rgba(0,212,255,0.4)',
+                      '0 0 0 rgba(0,212,255,0)'
+                    ],
+                    borderColor: ['rgba(255,255,255,0.05)', 'rgba(0,212,255,0.5)', 'rgba(255,255,255,0.05)']
+                  } : {}}
+                  transition={{ duration: 1 }}
+                >
+                  {cellThreats.map((threat, i) => (
+                    <motion.div
+                      key={threat.id}
+                      className="cursor-pointer absolute"
+                      style={{ 
+                        left: `${20 + (i * 20)}%`,
+                        top: '50%',
+                      }}
+                      whileHover={{ scale: 1.8 }}
+                      animate={isPulsing ? {
+                        scale: [1, 1.3, 1],
+                        boxShadow: [
+                          `0 0 10px ${getSeverityColor(threat.severity)}`,
+                          `0 0 25px ${getSeverityColor(threat.severity)}`,
+                          `0 0 10px ${getSeverityColor(threat.severity)}`
+                        ]
+                      } : {}}
+                      transition={{ duration: 0.8 }}
+                      onMouseEnter={() => setHoveredThreat(threat)}
+                      onMouseLeave={() => setHoveredThreat(null)}
+                      data-testid={`threat-dot-${threat.id}`}
+                    >
+                      <div
+                        className="w-4 h-4 rounded-full transform -translate-y-1/2"
+                        style={{ 
+                          backgroundColor: getSeverityColor(threat.severity),
+                          boxShadow: `0 0 12px ${getSeverityColor(threat.severity)}`
+                        }}
+                      />
+                    </motion.div>
+                  ))}
+                </motion.div>
+              );
+            })
+          ))}
+        </div>
+        <div className="flex justify-between mt-2 text-xs text-muted-foreground max-w-lg mx-auto px-1">
+          {[1, 2, 3, 4, 5].map(n => (
+            <span key={n} className={`px-1 rounded ${
+              n >= 4 ? 'bg-red-500/20' : n >= 3 ? 'bg-orange-500/20' : 'bg-green-500/20'
+            }`}>{n}</span>
+          ))}
+        </div>
+        <div className="text-center text-xs text-muted-foreground mt-2 font-medium tracking-wider">
+          LIKELIHOOD →
+        </div>
+      </div>
+      <AnimatePresence>
+        {hoveredThreat && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            className="absolute top-4 right-4 p-4 rounded-xl bg-[rgba(10,10,30,0.95)] backdrop-blur-xl border border-[#00D4FF]/40 max-w-xs"
+            style={{
+              boxShadow: `0 0 40px rgba(0,212,255,0.3), 0 0 80px ${getSeverityColor(hoveredThreat.severity)}20`
+            }}
+            data-testid="threat-tooltip"
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <motion.div 
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: getSeverityColor(hoveredThreat.severity) }}
+                animate={{ 
+                  boxShadow: [
+                    `0 0 5px ${getSeverityColor(hoveredThreat.severity)}`,
+                    `0 0 15px ${getSeverityColor(hoveredThreat.severity)}`,
+                    `0 0 5px ${getSeverityColor(hoveredThreat.severity)}`
+                  ]
+                }}
+                transition={{ duration: 1, repeat: Infinity }}
+              />
+              <span className="font-semibold">{hoveredThreat.name}</span>
+            </div>
+            <p className="text-sm text-muted-foreground mb-3">{hoveredThreat.description}</p>
+            <div className="flex gap-4 text-xs">
+              <span className="px-2 py-1 rounded bg-white/10">Likelihood: {hoveredThreat.likelihood}/5</span>
+              <span className="px-2 py-1 rounded bg-white/10">Impact: {hoveredThreat.impact}/5</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function RealTimeRiskFeed({ events }: { events: RiskEvent[] }) {
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'critical': return { bg: 'bg-red-500/20', text: 'text-red-400', border: 'border-red-500/50', glow: 'rgba(239,68,68,0.3)' };
+      case 'high': return { bg: 'bg-orange-500/20', text: 'text-orange-400', border: 'border-orange-500/50', glow: 'rgba(249,115,22,0.3)' };
+      case 'medium': return { bg: 'bg-yellow-500/20', text: 'text-yellow-400', border: 'border-yellow-500/50', glow: 'rgba(234,179,8,0.3)' };
+      case 'low': return { bg: 'bg-green-500/20', text: 'text-green-400', border: 'border-green-500/50', glow: 'rgba(34,197,94,0.3)' };
+      default: return { bg: 'bg-gray-500/20', text: 'text-gray-400', border: 'border-gray-500/50', glow: 'rgba(107,114,128,0.3)' };
+    }
+  };
+
+  return (
+    <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10">
+      <AnimatePresence mode="popLayout">
+        {events.map((event) => {
+          const colors = getSeverityColor(event.severity);
+          return (
+            <motion.div
+              key={event.id}
+              layout
+              initial={{ opacity: 0, x: -50, scale: 0.8 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: 50, scale: 0.8 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+              className={`p-3 rounded-lg border ${colors.bg} ${colors.border} relative overflow-hidden`}
+              style={event.isNew ? { boxShadow: `0 0 20px ${colors.glow}` } : {}}
+              data-testid={`risk-event-${event.id}`}
+            >
+              {event.isNew && (
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                  initial={{ x: '-100%' }}
+                  animate={{ x: '200%' }}
+                  transition={{ duration: 0.8 }}
+                />
+              )}
+              <div className="flex items-start justify-between relative z-10">
+                <div className="flex items-center gap-2">
+                  <motion.div
+                    animate={event.isNew ? { scale: [1, 1.2, 1] } : {}}
+                    transition={{ duration: 0.5, repeat: event.isNew ? 3 : 0 }}
+                  >
+                    <ShieldAlert className={`w-4 h-4 ${colors.text}`} />
+                  </motion.div>
+                  <div>
+                    <span className={`text-sm font-medium ${colors.text}`}>{event.type}</span>
+                    <div className="text-xs text-muted-foreground">
+                      {event.source} → {event.target}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className={`text-xs px-2 py-0.5 rounded-full ${colors.bg} ${colors.text} border ${colors.border}`}>
+                    {event.severity}
+                  </span>
+                  <span className="text-xs text-muted-foreground">{event.time}</span>
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function InteractiveRiskCard({
+  category,
+  isExpanded,
+  onToggle,
+  index
+}: {
+  category: RiskCategory;
+  isExpanded: boolean;
+  onToggle: () => void;
+  index: number;
+}) {
+  const Icon = category.icon;
+  const [isHovered, setIsHovered] = useState(false);
+  
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'critical': return '#ef4444';
+      case 'high': return '#f97316';
+      case 'medium': return '#f59e0b';
+      case 'low': return '#22c55e';
+      default: return '#00D4FF';
+    }
+  };
+
+  const getStatusGlowColor = (status: string): 'red' | 'amber' | 'green' | 'cyan' => {
+    switch (status) {
+      case 'critical': return 'red';
+      case 'high': return 'amber';
+      case 'medium': return 'amber';
+      case 'low': return 'green';
+      default: return 'cyan';
+    }
+  };
+
+  const statusColor = getStatusColor(category.status);
+
+  return (
+    <GlassCard
+      glowColor={getStatusGlowColor(category.status)}
+      className="p-6 relative overflow-hidden"
+      onClick={onToggle}
+      hover3D={true}
+      data-testid={`card-category-${category.id}`}
+    >
+      <motion.div
+        className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl"
+        style={{ backgroundColor: statusColor }}
+        animate={{
+          opacity: [0.1, 0.2, 0.1],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{ duration: 3, repeat: Infinity }}
+      />
+      
+      <div className="flex items-start justify-between mb-4 relative z-10">
+        <motion.div 
+          className="p-3 rounded-xl bg-white/10 border border-white/10"
+          animate={isHovered ? { 
+            boxShadow: `0 0 20px ${statusColor}40`,
+            borderColor: `${statusColor}50`
+          } : {}}
+        >
+          <Icon className="w-6 h-6" />
+        </motion.div>
+        <div className="flex items-center gap-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button className="p-1 rounded-full hover:bg-white/10 transition-colors" data-testid={`tooltip-trigger-${category.id}`}>
+                <HelpCircle className="w-4 h-4 text-muted-foreground" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent className="max-w-xs bg-[rgba(10,10,30,0.95)] border-[#00D4FF]/30">
+              <p className="text-sm">{riskCategoryTooltips[category.id]}</p>
+            </TooltipContent>
+          </Tooltip>
+          <div className="text-right">
+            <motion.div 
+              className="text-3xl font-bold"
+              style={{ color: statusColor }}
+              animate={{
+                textShadow: [
+                  `0 0 10px ${statusColor}20`,
+                  `0 0 20px ${statusColor}40`,
+                  `0 0 10px ${statusColor}20`
+                ]
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              {category.score}
+            </motion.div>
+            <motion.div 
+              className="text-xs uppercase tracking-wide flex items-center gap-1"
+              style={{ color: statusColor }}
+            >
+              <motion.div
+                className="w-2 h-2 rounded-full"
+                style={{ backgroundColor: statusColor }}
+                animate={{ 
+                  scale: [1, 1.3, 1],
+                  opacity: [0.7, 1, 0.7]
+                }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+              {category.status}
+            </motion.div>
+          </div>
+        </div>
+      </div>
+      
+      <h4 className="font-semibold mb-2 relative z-10">{category.name}</h4>
+      
+      <div className="relative z-10 mb-3">
+        <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+          <motion.div
+            className="h-full rounded-full"
+            style={{ 
+              backgroundColor: statusColor,
+              boxShadow: `0 0 10px ${statusColor}`
+            }}
+            initial={{ width: 0 }}
+            animate={{ width: `${100 - category.score}%` }}
+            transition={{ duration: 1, delay: index * 0.1 }}
+          />
+        </div>
+      </div>
+      
+      <div 
+        className="flex items-center justify-between text-sm opacity-70 relative z-10"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <span>{category.findings.length} findings</span>
+        <motion.div animate={{ rotate: isExpanded ? 180 : 0 }}>
+          <ChevronDown className="w-4 h-4" />
+        </motion.div>
+      </div>
+      
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="mt-4 pt-4 border-t border-white/10 relative z-10"
+          >
+            <ul className="space-y-2">
+              {category.findings.map((finding, i) => (
+                <motion.li 
+                  key={i} 
+                  className="flex items-start gap-2 text-sm"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                >
+                  <motion.div
+                    animate={{ 
+                      color: [statusColor, '#ffffff', statusColor]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
+                  >
+                    <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                  </motion.div>
+                  <span>{finding}</span>
+                </motion.li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </GlassCard>
+  );
+}
+
+function AnimatedTrendChart({ data, animatedData }: { data: number[]; animatedData: number[] }) {
+  const chartRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(chartRef, { once: true, margin: '-100px' });
+  const [pulsingPoint, setPulsingPoint] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!isInView) return;
+    const interval = setInterval(() => {
+      setPulsingPoint(Math.floor(Math.random() * animatedData.length));
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [isInView, animatedData.length]);
+
+  return (
+    <div ref={chartRef} className="relative h-48">
+      <div className="absolute inset-0 flex items-end justify-between gap-1">
+        {animatedData.map((value, index) => (
+          <motion.div
+            key={index}
+            initial={{ height: 0, opacity: 0 }}
+            animate={isInView ? { height: `${(value / 100) * 100}%`, opacity: 1 } : {}}
+            transition={{ duration: 0.5, delay: index * 0.08 }}
+            className={`flex-1 rounded-t-lg relative overflow-hidden ${
+              value <= 33 ? 'bg-green-500/60' : value <= 66 ? 'bg-yellow-500/60' : 'bg-red-500/60'
+            }`}
+            style={{
+              boxShadow: pulsingPoint === index 
+                ? `0 0 30px ${value <= 33 ? 'rgba(34,197,94,0.6)' : value <= 66 ? 'rgba(234,179,8,0.6)' : 'rgba(239,68,68,0.6)'}`
+                : `0 0 10px ${value <= 33 ? 'rgba(34,197,94,0.3)' : value <= 66 ? 'rgba(234,179,8,0.3)' : 'rgba(239,68,68,0.3)'}`
+            }}
+          >
+            {pulsingPoint === index && (
+              <motion.div
+                className="absolute inset-0 bg-white/20"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 0.5, 0] }}
+                transition={{ duration: 1 }}
+              />
+            )}
+          </motion.div>
+        ))}
+      </div>
+      <svg className="absolute inset-0 w-full h-full overflow-visible" preserveAspectRatio="none">
+        <defs>
+          <filter id="glow-line-enhanced" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <linearGradient id="trendGradientEnhanced" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#00D4FF" />
+            <stop offset="50%" stopColor="#00D4FF" />
+            <stop offset="100%" stopColor="#22c55e" />
+          </linearGradient>
+        </defs>
+        {isInView && animatedData.length > 1 && (
+          <>
+            <motion.polyline
+              fill="none"
+              stroke="url(#trendGradientEnhanced)"
+              strokeWidth="4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              filter="url(#glow-line-enhanced)"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 1 }}
+              transition={{ duration: 2, ease: 'easeOut' }}
+              points={animatedData.map((value, index) => 
+                `${(index / (data.length - 1)) * 100}%,${100 - value}%`
+              ).join(' ')}
+            />
+            {animatedData.map((value, index) => (
+              <motion.g key={index}>
+                <motion.circle
+                  cx={`${(index / (data.length - 1)) * 100}%`}
+                  cy={`${100 - value}%`}
+                  r={pulsingPoint === index ? 10 : 6}
+                  fill={value <= 40 ? '#22c55e' : '#00D4FF'}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ 
+                    scale: 1, 
+                    opacity: 1,
+                    r: pulsingPoint === index ? [6, 10, 6] : 6
+                  }}
+                  transition={{ 
+                    delay: index * 0.1 + 0.5,
+                    r: { duration: 1, repeat: pulsingPoint === index ? Infinity : 0 }
+                  }}
+                  style={{
+                    filter: `drop-shadow(0 0 ${pulsingPoint === index ? 15 : 8}px ${value <= 40 ? '#22c55e' : '#00D4FF'})`
+                  }}
+                />
+              </motion.g>
+            ))}
+          </>
+        )}
+      </svg>
+      <div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-muted-foreground pt-2">
+        <span>12 months ago</span>
+        <span>Today</span>
+      </div>
+    </div>
+  );
+}
+
 export default function RiskAssessment() {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [hoveredThreat, setHoveredThreat] = useState<Threat | null>(null);
@@ -158,10 +911,50 @@ export default function RiskAssessment() {
   const [expandedFramework, setExpandedFramework] = useState<string | null>(null);
   const [animatedTrend, setAnimatedTrend] = useState<number[]>([]);
   const [expandedPriorities, setExpandedPriorities] = useState<string[]>(['urgent', 'high']);
+  const [riskEvents, setRiskEvents] = useState<RiskEvent[]>([]);
+  const [eventIdCounter, setEventIdCounter] = useState(0);
 
   const targetScore = 35;
   const previousScore = 42;
   const improvement = previousScore - targetScore;
+
+  const generateRiskEvent = useCallback(() => {
+    const newEvent: RiskEvent = {
+      id: eventIdCounter,
+      type: riskEventTypes[Math.floor(Math.random() * riskEventTypes.length)],
+      severity: (['critical', 'high', 'medium', 'low'] as const)[Math.floor(Math.random() * 4)],
+      source: sourceLocations[Math.floor(Math.random() * sourceLocations.length)],
+      target: targetSystems[Math.floor(Math.random() * targetSystems.length)],
+      time: 'Just now',
+      isNew: true,
+    };
+    
+    setRiskEvents(prev => {
+      const updated = prev.map(e => ({ ...e, isNew: false, time: updateTime(e.time) }));
+      return [newEvent, ...updated].slice(0, 15);
+    });
+    setEventIdCounter(prev => prev + 1);
+  }, [eventIdCounter]);
+
+  const updateTime = (time: string) => {
+    if (time === 'Just now') return '5s ago';
+    if (time === '5s ago') return '10s ago';
+    if (time === '10s ago') return '30s ago';
+    if (time === '30s ago') return '1m ago';
+    if (time === '1m ago') return '2m ago';
+    return time;
+  };
+
+  useEffect(() => {
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => generateRiskEvent(), i * 100);
+    }
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(generateRiskEvent, 3000);
+    return () => clearInterval(interval);
+  }, [generateRiskEvent]);
 
   useEffect(() => {
     const duration = 2000;
@@ -181,12 +974,6 @@ export default function RiskAssessment() {
     return () => clearInterval(timer);
   }, []);
 
-  const getScoreColor = (score: number) => {
-    if (score <= 33) return { text: 'text-green-400', bg: 'bg-green-500', gradient: 'from-green-500 to-emerald-400' };
-    if (score <= 66) return { text: 'text-yellow-400', bg: 'bg-yellow-500', gradient: 'from-yellow-500 to-amber-400' };
-    return { text: 'text-red-400', bg: 'bg-red-500', gradient: 'from-red-500 to-rose-400' };
-  };
-
   const getPriorityStyle = (priority: string) => {
     switch (priority) {
       case 'urgent': return 'bg-red-500/20 text-red-400 border-red-500/50';
@@ -194,26 +981,6 @@ export default function RiskAssessment() {
       case 'medium': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
       case 'low': return 'bg-blue-500/20 text-blue-400 border-blue-500/50';
       default: return 'bg-gray-500/20 text-gray-400 border-gray-500/50';
-    }
-  };
-
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case 'critical': return 'bg-red-500';
-      case 'high': return 'bg-orange-500';
-      case 'medium': return 'bg-yellow-500';
-      case 'low': return 'bg-green-500';
-      default: return 'bg-gray-500';
-    }
-  };
-
-  const getStatusGlowColor = (status: string): 'red' | 'amber' | 'green' | 'cyan' => {
-    switch (status) {
-      case 'critical': return 'red';
-      case 'high': return 'amber';
-      case 'medium': return 'amber';
-      case 'low': return 'green';
-      default: return 'cyan';
     }
   };
 
@@ -243,6 +1010,7 @@ export default function RiskAssessment() {
   return (
     <TooltipProvider>
     <div className="min-h-screen aurora-bg text-white relative overflow-hidden">
+      <ThreatGridBackground riskLevel={targetScore} />
       <AmbientParticles variant="network" count={30} color="#00D4FF" opacity={0.15} />
 
       <div className="relative z-10">
@@ -263,18 +1031,45 @@ export default function RiskAssessment() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00D4FF]/10 border border-[#00D4FF]/30 mb-6">
-              <Target className="w-4 h-4 text-[#00D4FF]" />
-              <span className="text-[#00D4FF] text-sm font-medium">Risk Assessment</span>
-            </div>
+            <motion.div 
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00D4FF]/10 border border-[#00D4FF]/30 mb-6"
+              animate={{
+                boxShadow: [
+                  '0 0 20px rgba(0,212,255,0.1)',
+                  '0 0 40px rgba(0,212,255,0.2)',
+                  '0 0 20px rgba(0,212,255,0.1)'
+                ]
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
+              >
+                <Target className="w-4 h-4 text-[#00D4FF]" />
+              </motion.div>
+              <span className="text-[#00D4FF] text-sm font-medium">Live Risk Assessment</span>
+              <motion.div
+                className="w-2 h-2 rounded-full bg-green-500"
+                animate={{ opacity: [1, 0.3, 1] }}
+                transition={{ duration: 1, repeat: Infinity }}
+              />
+            </motion.div>
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
               Cybersecurity
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] to-purple-500">
+              <motion.span 
+                className="block text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] to-purple-500"
+                animate={{
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                }}
+                transition={{ duration: 5, repeat: Infinity }}
+                style={{ backgroundSize: '200% 200%' }}
+              >
                 Risk Assessment
-              </span>
+              </motion.span>
             </h1>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Comprehensive analysis of your organization's security posture with actionable insights and remediation priorities.
+              Real-time analysis of your organization's security posture with live threat detection and actionable insights.
             </p>
           </motion.div>
 
@@ -284,21 +1079,33 @@ export default function RiskAssessment() {
               className="lg:col-span-1 p-8 flex flex-col items-center justify-center"
               data-testid="risk-score-dashboard"
             >
-              <CircularProgress
+              <AnimatedRiskGauge
                 value={targetScore}
                 size={192}
                 strokeWidth={12}
-                color="green"
                 label="Risk Score"
-                className="mb-6"
-                data-testid="risk-circular-progress"
               />
-              <div className="text-center">
+              <div className="text-center mt-6">
                 <h3 className="text-xl font-bold mb-2">Overall Risk Level</h3>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-green-400 bg-white/10">
-                  <CheckCircle className="w-4 h-4" />
+                <motion.div 
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-green-400 bg-green-500/10 border border-green-500/30"
+                  animate={{
+                    boxShadow: [
+                      '0 0 10px rgba(34,197,94,0.2)',
+                      '0 0 20px rgba(34,197,94,0.4)',
+                      '0 0 10px rgba(34,197,94,0.2)'
+                    ]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  >
+                    <CheckCircle className="w-4 h-4" />
+                  </motion.div>
                   <span className="text-sm font-medium">Low Risk</span>
-                </div>
+                </motion.div>
                 <div className="flex items-center justify-center gap-2 mt-4 text-sm">
                   <TrendingDown className="w-4 h-4 text-green-400" />
                   <span className="text-green-400">-{improvement} pts</span>
@@ -313,179 +1120,73 @@ export default function RiskAssessment() {
               data-testid="risk-trend-chart"
             >
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold">Risk Score Trend</h3>
+                <h3 className="text-xl font-bold flex items-center gap-2">
+                  Risk Score Trend
+                  <motion.div
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <Activity className="w-5 h-5 text-[#00D4FF]" />
+                  </motion.div>
+                </h3>
                 <div className="flex items-center gap-2 text-green-400 text-sm">
                   <TrendingDown className="w-4 h-4" />
                   <span>Improving</span>
                 </div>
               </div>
-              <div className="relative h-48">
-                <div className="absolute inset-0 flex items-end justify-between gap-1">
-                  {animatedTrend.map((value, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ height: 0 }}
-                      animate={{ height: `${(value / 100) * 100}%` }}
-                      transition={{ duration: 0.3, delay: index * 0.05 }}
-                      className={`flex-1 rounded-t-lg ${
-                        value <= 33 ? 'bg-green-500/60 shadow-[0_0_10px_rgba(34,197,94,0.3)]' : value <= 66 ? 'bg-yellow-500/60 shadow-[0_0_10px_rgba(234,179,8,0.3)]' : 'bg-red-500/60 shadow-[0_0_10px_rgba(239,68,68,0.3)]'
-                      }`}
-                    />
-                  ))}
-                </div>
-                <svg className="absolute inset-0 w-full h-full overflow-visible" preserveAspectRatio="none">
-                  <defs>
-                    <filter id="glow-line" x="-50%" y="-50%" width="200%" height="200%">
-                      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                      <feMerge>
-                        <feMergeNode in="coloredBlur"/>
-                        <feMergeNode in="coloredBlur"/>
-                        <feMergeNode in="SourceGraphic"/>
-                      </feMerge>
-                    </filter>
-                    <filter id="glow-point" x="-100%" y="-100%" width="300%" height="300%">
-                      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                      <feMerge>
-                        <feMergeNode in="coloredBlur"/>
-                        <feMergeNode in="coloredBlur"/>
-                        <feMergeNode in="coloredBlur"/>
-                        <feMergeNode in="SourceGraphic"/>
-                      </feMerge>
-                    </filter>
-                    <linearGradient id="trendGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#00D4FF" />
-                      <stop offset="50%" stopColor="#00D4FF" />
-                      <stop offset="100%" stopColor="#22c55e" />
-                    </linearGradient>
-                  </defs>
-                  <polyline
-                    fill="none"
-                    stroke="url(#trendGradient)"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    filter="url(#glow-line)"
-                    opacity="0.4"
-                    points={animatedTrend.map((value, index) => 
-                      `${(index / (trendData.length - 1)) * 100}%,${100 - value}%`
-                    ).join(' ')}
-                  />
-                  <polyline
-                    fill="none"
-                    stroke="url(#trendGradient)"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    filter="url(#glow-line)"
-                    points={animatedTrend.map((value, index) => 
-                      `${(index / (trendData.length - 1)) * 100}%,${100 - value}%`
-                    ).join(' ')}
-                  />
-                  {animatedTrend.map((value, index) => (
-                    <g key={index}>
-                      <circle
-                        cx={`${(index / (trendData.length - 1)) * 100}%`}
-                        cy={`${100 - value}%`}
-                        r="8"
-                        fill={value <= 40 ? '#22c55e' : '#00D4FF'}
-                        opacity="0.3"
-                        filter="url(#glow-point)"
-                      />
-                      <circle
-                        cx={`${(index / (trendData.length - 1)) * 100}%`}
-                        cy={`${100 - value}%`}
-                        r="5"
-                        fill={value <= 40 ? '#22c55e' : '#00D4FF'}
-                        filter="url(#glow-point)"
-                      />
-                    </g>
-                  ))}
-                </svg>
-                <div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-muted-foreground pt-2">
-                  <span>12 months ago</span>
-                  <span>Today</span>
-                </div>
-              </div>
+              <AnimatedTrendChart data={trendData} animatedData={animatedTrend} />
             </GlassCard>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="mb-12"
-            data-testid="risk-categories-grid"
-          >
-            <h3 className="text-2xl font-bold mb-6">Risk Categories</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {riskCategories.map((category, index) => {
-                const Icon = category.icon;
-                const isExpanded = expandedCategory === category.id;
-                return (
-                  <GlassCard
-                    key={category.id}
-                    glowColor={getStatusGlowColor(category.status)}
-                    className="p-6"
-                    onClick={() => setExpandedCategory(isExpanded ? null : category.id)}
-                    data-testid={`card-category-${category.id}`}
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="p-3 rounded-xl bg-white/10">
-                        <Icon className="w-6 h-6" />
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button className="p-1 rounded-full hover:bg-white/10 transition-colors" data-testid={`tooltip-trigger-${category.id}`}>
-                              <HelpCircle className="w-4 h-4 text-muted-foreground" />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent className="max-w-xs bg-[rgba(10,10,30,0.95)] border-[#00D4FF]/30">
-                            <p className="text-sm">{riskCategoryTooltips[category.id]}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                        <div className="text-right">
-                          <div className="text-3xl font-bold">{category.score}</div>
-                          <div className="text-xs uppercase tracking-wide opacity-70">{category.status}</div>
-                        </div>
-                      </div>
-                    </div>
-                    <h4 className="font-semibold mb-2">{category.name}</h4>
-                    <AnimatedProgress
-                      value={100 - category.score}
-                      color={category.status === 'low' ? 'green' : category.status === 'critical' ? 'red' : 'amber'}
-                      size="md"
-                      showLabel={false}
-                      className="mb-3"
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <div className="lg:col-span-2">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                data-testid="risk-categories-grid"
+              >
+                <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                  Risk Categories
+                  <motion.div
+                    className="w-2 h-2 rounded-full bg-[#00D4FF]"
+                    animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {riskCategories.map((category, index) => (
+                    <InteractiveRiskCard
+                      key={category.id}
+                      category={category}
+                      isExpanded={expandedCategory === category.id}
+                      onToggle={() => setExpandedCategory(expandedCategory === category.id ? null : category.id)}
+                      index={index}
                     />
-                    <div className="flex items-center justify-between text-sm opacity-70">
-                      <span>{category.findings.length} findings</span>
-                      {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                    </div>
-                    <AnimatePresence>
-                      {isExpanded && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          className="mt-4 pt-4 border-t border-white/10"
-                        >
-                          <ul className="space-y-2">
-                            {category.findings.map((finding, i) => (
-                              <li key={i} className="flex items-start gap-2 text-sm">
-                                <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                                <span>{finding}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </GlassCard>
-                );
-              })}
+                  ))}
+                </div>
+              </motion.div>
             </div>
-          </motion.div>
+
+            <GlassCard
+              glowColor="red"
+              className="p-6"
+              data-testid="live-risk-feed"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold flex items-center gap-2">
+                  Live Risk Feed
+                  <motion.div
+                    className="w-2 h-2 rounded-full bg-red-500"
+                    animate={{ scale: [1, 1.3, 1], opacity: [1, 0.5, 1] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  />
+                </h3>
+                <span className="text-xs text-muted-foreground">{riskEvents.length} events</span>
+              </div>
+              <RealTimeRiskFeed events={riskEvents} />
+            </GlassCard>
+          </div>
 
           <GlassCard
             glowColor="purple"
@@ -493,7 +1194,15 @@ export default function RiskAssessment() {
             data-testid="threat-matrix"
           >
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold">Threat Matrix</h3>
+              <h3 className="text-2xl font-bold flex items-center gap-2">
+                Live Threat Matrix
+                <motion.div
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                >
+                  <Shield className="w-5 h-5 text-purple-400" />
+                </motion.div>
+              </h3>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button className="p-2 rounded-full hover:bg-white/10 transition-colors" data-testid="threat-matrix-help">
@@ -501,106 +1210,32 @@ export default function RiskAssessment() {
                   </button>
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs bg-[rgba(10,10,30,0.95)] border-[#00D4FF]/30">
-                  <p className="text-sm">Hover over threat dots to see details. Position indicates likelihood (x-axis) and impact (y-axis). Color indicates severity.</p>
+                  <p className="text-sm">Hover over threat dots to see details. Cells pulse when threats are actively detected. Position indicates likelihood (x-axis) and impact (y-axis).</p>
                 </TooltipContent>
               </Tooltip>
             </div>
-            <div className="relative">
-              <div className="absolute left-0 top-0 bottom-12 w-12 flex flex-col justify-between items-center text-xs text-muted-foreground">
-                <span className="bg-red-500/20 px-1 rounded">5</span>
-                <span className="bg-orange-500/20 px-1 rounded">4</span>
-                <span className="bg-yellow-500/20 px-1 rounded">3</span>
-                <span className="bg-green-500/20 px-1 rounded">2</span>
-                <span className="bg-green-500/10 px-1 rounded">1</span>
-              </div>
-              <div className="absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 text-xs text-muted-foreground font-medium tracking-wider whitespace-nowrap">
-                IMPACT →
-              </div>
-              <div className="ml-14">
-                <div className="grid grid-cols-5 gap-1 aspect-square max-w-lg mx-auto border border-white/10 rounded-lg p-1 bg-white/5">
-                  {[5, 4, 3, 2, 1].map(impact => (
-                    [1, 2, 3, 4, 5].map(likelihood => {
-                      const cellThreats = threats.filter(t => t.likelihood === likelihood && t.impact === impact);
-                      const riskLevel = likelihood * impact;
-                      let bgColor = 'bg-green-500/20';
-                      if (riskLevel >= 15) bgColor = 'bg-red-500/30';
-                      else if (riskLevel >= 8) bgColor = 'bg-orange-500/25';
-                      else if (riskLevel >= 4) bgColor = 'bg-yellow-500/20';
-                      
-                      return (
-                        <div
-                          key={`${likelihood}-${impact}`}
-                          className={`${bgColor} rounded-lg p-2 relative flex items-center justify-center min-h-[60px] border border-white/5`}
-                        >
-                          {cellThreats.map((threat, i) => (
-                            <div
-                              key={threat.id}
-                              className={`w-4 h-4 rounded-full ${getSeverityColor(threat.severity)} cursor-pointer hover:scale-150 transition-transform absolute shadow-[0_0_10px_currentColor]`}
-                              style={{ 
-                                left: `${20 + (i * 20)}%`,
-                                top: '50%',
-                                transform: 'translateY(-50%)'
-                              }}
-                              onMouseEnter={() => setHoveredThreat(threat)}
-                              onMouseLeave={() => setHoveredThreat(null)}
-                              data-testid={`threat-dot-${threat.id}`}
-                            />
-                          ))}
-                        </div>
-                      );
-                    })
-                  ))}
-                </div>
-                <div className="flex justify-between mt-2 text-xs text-muted-foreground max-w-lg mx-auto px-1">
-                  <span className="bg-green-500/10 px-1 rounded">1</span>
-                  <span className="bg-green-500/20 px-1 rounded">2</span>
-                  <span className="bg-yellow-500/20 px-1 rounded">3</span>
-                  <span className="bg-orange-500/20 px-1 rounded">4</span>
-                  <span className="bg-red-500/20 px-1 rounded">5</span>
-                </div>
-                <div className="text-center text-xs text-muted-foreground mt-2 font-medium tracking-wider">
-                  LIKELIHOOD →
-                </div>
-              </div>
-              <AnimatePresence>
-                {hoveredThreat && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    className="absolute top-4 right-4 p-4 rounded-xl bg-[rgba(10,10,30,0.9)] backdrop-blur-xl border border-[#00D4FF]/30 max-w-xs shadow-[0_0_30px_rgba(0,212,255,0.2)]"
-                    data-testid="threat-tooltip"
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className={`w-3 h-3 rounded-full ${getSeverityColor(hoveredThreat.severity)}`} />
-                      <span className="font-semibold">{hoveredThreat.name}</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-2">{hoveredThreat.description}</p>
-                    <div className="flex gap-4 text-xs">
-                      <span>Likelihood: {hoveredThreat.likelihood}/5</span>
-                      <span>Impact: {hoveredThreat.impact}/5</span>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+            <LiveThreatMatrix 
+              threats={threats} 
+              hoveredThreat={hoveredThreat}
+              setHoveredThreat={setHoveredThreat}
+            />
             <div className="flex items-center justify-center gap-6 mt-6 text-sm">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
-                <span>Critical</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.5)]" />
-                <span>High</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.5)]" />
-                <span>Medium</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-                <span>Low</span>
-              </div>
+              {[
+                { severity: 'Critical', color: '#ef4444' },
+                { severity: 'High', color: '#f97316' },
+                { severity: 'Medium', color: '#eab308' },
+                { severity: 'Low', color: '#22c55e' },
+              ].map(({ severity, color }) => (
+                <div key={severity} className="flex items-center gap-2">
+                  <motion.div 
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: color, boxShadow: `0 0 8px ${color}` }}
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: Math.random() }}
+                  />
+                  <span>{severity}</span>
+                </div>
+              ))}
             </div>
           </GlassCard>
 
@@ -617,12 +1252,16 @@ export default function RiskAssessment() {
                 </div>
               </div>
               {addressedImpact > 0 && (
-                <div className="mb-4 p-3 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm">
+                <motion.div 
+                  className="mb-4 p-3 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
                   <div className="flex items-center gap-2">
                     <TrendingDown className="w-4 h-4" />
                     <span>Projected score after addressing: <strong>{projectedScore}</strong> (-{addressedImpact} pts)</span>
                   </div>
-                </div>
+                </motion.div>
               )}
               <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
                 {groupedActions.map((group) => {
@@ -645,7 +1284,9 @@ export default function RiskAssessment() {
                             {addressedCount}/{group.items.length} done • -{totalImpact} pts potential
                           </span>
                         </div>
-                        {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                        <motion.div animate={{ rotate: isExpanded ? 180 : 0 }}>
+                          <ChevronDown className="w-5 h-5" />
+                        </motion.div>
                       </button>
                       <AnimatePresence>
                         {isExpanded && (
@@ -666,6 +1307,7 @@ export default function RiskAssessment() {
                                       ? 'bg-green-500/10 border-green-500/30 opacity-60' 
                                       : 'bg-white/5 border-white/10 hover:border-[#00D4FF]/50'
                                   }`}
+                                  whileHover={{ scale: 1.02 }}
                                   data-testid={`action-item-${item.id}`}
                                 >
                                   <div className="flex items-start gap-3">
@@ -722,9 +1364,9 @@ export default function RiskAssessment() {
                     >
                       <div className="flex items-center justify-between mb-3">
                         <h4 className="font-semibold">{framework.name}</h4>
-                        <div className="flex items-center gap-2">
-                          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                        </div>
+                        <motion.div animate={{ rotate: isExpanded ? 180 : 0 }}>
+                          <ChevronDown className="w-4 h-4" />
+                        </motion.div>
                       </div>
                       <AnimatedProgress
                         value={framework.progress}
@@ -742,14 +1384,26 @@ export default function RiskAssessment() {
                             <p className="text-sm text-muted-foreground mb-3">Key Requirements:</p>
                             <ul className="space-y-2">
                               {framework.requirements.map((req, i) => (
-                                <li key={i} className="flex items-center gap-2 text-sm">
-                                  <div className={`w-2 h-2 rounded-full ${
-                                    i < Math.ceil(framework.requirements.length * (framework.progress / 100))
-                                      ? 'bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.5)]'
-                                      : 'bg-white/20'
-                                  }`} />
+                                <motion.li 
+                                  key={i} 
+                                  className="flex items-center gap-2 text-sm"
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: i * 0.1 }}
+                                >
+                                  <motion.div 
+                                    className={`w-2 h-2 rounded-full ${
+                                      i < Math.ceil(framework.requirements.length * (framework.progress / 100))
+                                        ? 'bg-green-500'
+                                        : 'bg-white/20'
+                                    }`}
+                                    animate={i < Math.ceil(framework.requirements.length * (framework.progress / 100)) ? {
+                                      boxShadow: ['0 0 0 rgba(34,197,94,0)', '0 0 8px rgba(34,197,94,0.6)', '0 0 0 rgba(34,197,94,0)']
+                                    } : {}}
+                                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
+                                  />
                                   <span>{req}</span>
-                                </li>
+                                </motion.li>
                               ))}
                             </ul>
                           </motion.div>
@@ -766,7 +1420,15 @@ export default function RiskAssessment() {
             glowColor="cyan"
             className="text-center p-8"
           >
-            <Zap className="w-12 h-12 text-[#00D4FF] mx-auto mb-4" />
+            <motion.div
+              animate={{ 
+                rotate: [0, 10, -10, 0],
+                scale: [1, 1.1, 1]
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              <Zap className="w-12 h-12 text-[#00D4FF] mx-auto mb-4" />
+            </motion.div>
             <h3 className="text-2xl font-bold mb-2">Ready for a Complete Assessment?</h3>
             <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
               Our cybersecurity experts can provide a comprehensive risk assessment tailored to your organization's specific needs.

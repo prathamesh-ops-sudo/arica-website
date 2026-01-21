@@ -1,17 +1,18 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'wouter';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, Text, Stars } from '@react-three/drei';
 import * as THREE from 'three';
-import { ArrowLeft, Shield, AlertTriangle, CheckCircle, Bug, Lock, Key, Package, Code, Play, BarChart3, TrendingUp, TrendingDown } from 'lucide-react';
+import { ArrowLeft, Shield, AlertTriangle, CheckCircle, Bug, Lock, Key, Package, Code, Play, BarChart3, TrendingUp, TrendingDown, Zap, Target, FileCode, GitBranch, CheckCircle2, XCircle, Eye, ChevronDown, ChevronUp } from 'lucide-react';
 import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background';
 import { useGsapStagger } from '@/hooks/useGsapStagger';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
 const CYAN = '#00D4FF';
 const PURPLE = '#9944ff';
-const NAVY = '#000510';
+const RED = '#ff4444';
+const AMBER = '#ffaa44';
 
 const codeSnippets = [
   { code: 'SELECT * FROM users WHERE id = ' + "'$input'", vulnerable: true, type: 'SQL Injection' },
@@ -32,6 +33,56 @@ interface Particle {
   velocity: THREE.Vector3;
   color: THREE.Color;
   life: number;
+}
+
+function MatrixCodeRain() {
+  const chars = useMemo(() => {
+    const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+    return Array.from({ length: 50 }, (_, i) => ({
+      id: i,
+      char: matrixChars[Math.floor(Math.random() * matrixChars.length)],
+      left: Math.random() * 100,
+      delay: Math.random() * 10,
+      duration: 8 + Math.random() * 12,
+      opacity: 0.1 + Math.random() * 0.2,
+      size: 10 + Math.random() * 8,
+    }));
+  }, []);
+
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-[2]" aria-hidden="true">
+      <style>{`
+        @keyframes matrixFall {
+          0% { transform: translateY(-100vh); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { transform: translateY(100vh); opacity: 0; }
+        }
+        .matrix-char {
+          position: absolute;
+          font-family: 'Courier New', monospace;
+          color: ${CYAN};
+          text-shadow: 0 0 10px ${CYAN}, 0 0 20px ${CYAN};
+          animation: matrixFall linear infinite;
+        }
+      `}</style>
+      {chars.map(c => (
+        <span
+          key={c.id}
+          className="matrix-char"
+          style={{
+            left: `${c.left}%`,
+            opacity: c.opacity,
+            fontSize: c.size,
+            animationDelay: `${c.delay}s`,
+            animationDuration: `${c.duration}s`,
+          }}
+        >
+          {c.char}
+        </span>
+      ))}
+    </div>
+  );
 }
 
 function MatrixRain({ count = 100 }: { count?: number }) {
@@ -349,6 +400,321 @@ const demoCode = `function processUserInput(input) {
   return { query, safeQuery };
 }`;
 
+const pipelineStages = [
+  { id: 'parse', name: 'Parse', icon: FileCode, status: 'pending' },
+  { id: 'analyze', name: 'Analyze', icon: Target, status: 'pending' },
+  { id: 'detect', name: 'Detect', icon: Bug, status: 'pending' },
+  { id: 'review', name: 'Review', icon: Eye, status: 'pending' },
+  { id: 'report', name: 'Report', icon: CheckCircle2, status: 'pending' },
+];
+
+function AnimatedCounter({ value, label, icon: Icon, color, suffix = '' }: { value: number; label: string; icon: any; color: string; suffix?: string }) {
+  const [displayValue, setDisplayValue] = useState(0);
+  
+  useEffect(() => {
+    let start = 0;
+    const end = value;
+    const duration = 2000;
+    const startTime = Date.now();
+    
+    const animate = () => {
+      const now = Date.now();
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplayValue(Math.floor(start + (end - start) * eased));
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+    
+    animate();
+  }, [value]);
+
+  return (
+    <motion.div 
+      className="relative p-4 rounded-2xl border overflow-hidden group"
+      style={{ backgroundColor: `${color}10`, borderColor: `${color}40` }}
+      whileHover={{ scale: 1.05, borderColor: color }}
+      transition={{ type: 'spring', stiffness: 400 }}
+    >
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+        <div className="absolute inset-0" style={{ background: `radial-gradient(circle at center, ${color}20, transparent 70%)` }} />
+      </div>
+      <div className="relative z-10">
+        <Icon className="w-6 h-6 mb-2" style={{ color }} />
+        <div className="text-2xl font-bold" style={{ color }}>
+          {displayValue.toLocaleString()}{suffix}
+        </div>
+        <div className="text-sm text-gray-400">{label}</div>
+      </div>
+      <motion.div 
+        className="absolute bottom-0 left-0 h-1"
+        style={{ backgroundColor: color }}
+        initial={{ width: 0 }}
+        animate={{ width: '100%' }}
+        transition={{ duration: 2, ease: 'easeOut' }}
+      />
+    </motion.div>
+  );
+}
+
+function PulsingVulnerabilityMarker({ severity, delay = 0 }: { severity: string; delay?: number }) {
+  const color = severity === 'critical' ? RED : severity === 'high' ? AMBER : CYAN;
+  
+  return (
+    <motion.div 
+      className="absolute -left-2 top-1/2 -translate-y-1/2"
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ delay, type: 'spring' }}
+    >
+      <div className="relative">
+        <motion.div
+          className="w-4 h-4 rounded-full"
+          style={{ backgroundColor: color }}
+          animate={{ 
+            boxShadow: [`0 0 0 0 ${color}80`, `0 0 0 10px ${color}00`],
+          }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute inset-0 w-4 h-4 rounded-full"
+          style={{ backgroundColor: color }}
+          animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        />
+      </div>
+    </motion.div>
+  );
+}
+
+function InteractiveVulnerabilityCard({ 
+  result, 
+  index, 
+  isExpanded, 
+  onToggle 
+}: { 
+  result: { type: string; line: number; severity: string; message: string; codeSnippet?: string }; 
+  index: number; 
+  isExpanded: boolean; 
+  onToggle: () => void;
+}) {
+  const severityColors: Record<string, { bg: string; border: string; text: string; glow: string }> = {
+    critical: { bg: 'rgba(255, 68, 68, 0.15)', border: '#ff4444', text: '#ff6666', glow: '#ff4444' },
+    high: { bg: 'rgba(255, 170, 68, 0.15)', border: '#ffaa44', text: '#ffcc66', glow: '#ffaa44' },
+    medium: { bg: 'rgba(255, 255, 68, 0.15)', border: '#ffff44', text: '#ffff88', glow: '#ffff44' },
+    info: { bg: 'rgba(68, 255, 136, 0.15)', border: '#44ff88', text: '#88ffaa', glow: '#44ff88' },
+  };
+  
+  const colors = severityColors[result.severity] || severityColors.info;
+  
+  const codeForSeverity: Record<string, string> = {
+    'SQL Injection': `// Vulnerable code:\nconst query = "SELECT * FROM users WHERE id = '" + input + "'";\n\n// Fix:\nconst query = db.query('SELECT * FROM users WHERE id = ?', [input]);`,
+    'XSS': `// Vulnerable code:\ndocument.getElementById('output').innerHTML = input;\n\n// Fix:\ndocument.getElementById('output').textContent = input;\n// Or use: DOMPurify.sanitize(input)`,
+    'Hardcoded Secret': `// Vulnerable code:\nconst API_KEY = "sk-prod-abc123xyz789";\n\n// Fix:\nconst API_KEY = process.env.API_KEY;`,
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20, rotateY: -15 }}
+      animate={{ opacity: 1, x: 0, rotateY: 0 }}
+      transition={{ delay: index * 0.15, type: 'spring', stiffness: 100 }}
+      className="relative perspective-1000"
+      style={{ transformStyle: 'preserve-3d' }}
+    >
+      <motion.div
+        className="p-4 rounded-xl border cursor-pointer relative overflow-hidden"
+        style={{ 
+          backgroundColor: colors.bg,
+          borderColor: colors.border,
+          boxShadow: isExpanded ? `0 0 30px ${colors.glow}40` : 'none',
+        }}
+        whileHover={{ 
+          scale: 1.02,
+          rotateX: 2,
+          rotateY: 5,
+          boxShadow: `0 10px 40px ${colors.glow}30`,
+        }}
+        onClick={onToggle}
+        data-testid={`card-vulnerability-result-${index}`}
+      >
+        <PulsingVulnerabilityMarker severity={result.severity} delay={index * 0.1} />
+        
+        <div className="flex items-center justify-between mb-2 pl-4">
+          <div className="flex items-center gap-2">
+            <motion.span 
+              className="font-semibold"
+              style={{ color: colors.text }}
+              animate={{ textShadow: [`0 0 0px ${colors.glow}`, `0 0 10px ${colors.glow}`, `0 0 0px ${colors.glow}`] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              {result.type}
+            </motion.span>
+            <span className="text-xs px-2 py-0.5 rounded-full bg-black/40" style={{ color: colors.text }}>
+              {result.severity.toUpperCase()}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs px-2 py-0.5 rounded-full bg-black/30 text-gray-400">Line {result.line}</span>
+            {isExpanded ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+          </div>
+        </div>
+        
+        <p className="text-sm opacity-80 pl-4" style={{ color: colors.text }}>{result.message}</p>
+        
+        <AnimatePresence>
+          {isExpanded && codeForSeverity[result.type] && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="mt-4 pl-4 overflow-hidden"
+            >
+              <div className="p-3 rounded-lg bg-black/60 font-mono text-xs overflow-x-auto">
+                <pre className="text-gray-300">
+                  {codeForSeverity[result.type].split('\n').map((line, i) => (
+                    <div 
+                      key={i} 
+                      className={line.includes('// Fix:') ? 'text-green-400' : line.includes('// Vulnerable') ? 'text-red-400' : ''}
+                    >
+                      {line}
+                    </div>
+                  ))}
+                </pre>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <motion.div 
+          className="absolute top-0 right-0 w-20 h-20 opacity-10"
+          style={{ background: `radial-gradient(circle, ${colors.glow}, transparent 70%)` }}
+          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
+          transition={{ duration: 3, repeat: Infinity }}
+        />
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function CodeFlowPipeline({ scanProgress, isScanning }: { scanProgress: number; isScanning: boolean }) {
+  const stages = useMemo(() => {
+    const progressPerStage = 100 / pipelineStages.length;
+    return pipelineStages.map((stage, i) => {
+      const stageStart = i * progressPerStage;
+      const stageEnd = (i + 1) * progressPerStage;
+      let status: 'pending' | 'active' | 'complete' = 'pending';
+      
+      if (scanProgress >= stageEnd) status = 'complete';
+      else if (scanProgress > stageStart) status = 'active';
+      
+      return { ...stage, status };
+    });
+  }, [scanProgress]);
+
+  return (
+    <div className="relative">
+      <div className="flex items-center justify-between">
+        {stages.map((stage, i) => {
+          const Icon = stage.icon;
+          const isActive = stage.status === 'active';
+          const isComplete = stage.status === 'complete';
+          
+          return (
+            <div key={stage.id} className="flex items-center flex-1">
+              <motion.div
+                className="flex flex-col items-center relative z-10"
+                initial={{ scale: 0.8, opacity: 0.5 }}
+                animate={{ 
+                  scale: isActive ? 1.1 : 1,
+                  opacity: isActive || isComplete ? 1 : 0.5,
+                }}
+              >
+                <motion.div
+                  className="w-12 h-12 rounded-full flex items-center justify-center border-2 relative"
+                  style={{ 
+                    backgroundColor: isComplete ? `${CYAN}30` : isActive ? `${PURPLE}30` : 'rgba(0,0,0,0.4)',
+                    borderColor: isComplete ? CYAN : isActive ? PURPLE : 'rgba(255,255,255,0.2)',
+                  }}
+                  animate={isActive ? { 
+                    boxShadow: [`0 0 0 0 ${PURPLE}80`, `0 0 0 15px ${PURPLE}00`],
+                  } : {}}
+                  transition={{ duration: 1, repeat: isActive ? Infinity : 0 }}
+                >
+                  {isComplete ? (
+                    <CheckCircle className="w-6 h-6" style={{ color: CYAN }} />
+                  ) : (
+                    <Icon className="w-5 h-5" style={{ color: isActive ? PURPLE : 'rgba(255,255,255,0.5)' }} />
+                  )}
+                  
+                  {isActive && (
+                    <motion.div
+                      className="absolute inset-0 rounded-full border-2"
+                      style={{ borderColor: PURPLE }}
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                    />
+                  )}
+                </motion.div>
+                <span className={`text-xs mt-2 ${isActive || isComplete ? 'text-white' : 'text-gray-500'}`}>
+                  {stage.name}
+                </span>
+              </motion.div>
+              
+              {i < stages.length - 1 && (
+                <div className="flex-1 h-0.5 mx-2 relative overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
+                  <motion.div
+                    className="absolute inset-y-0 left-0"
+                    style={{ backgroundColor: CYAN }}
+                    initial={{ width: 0 }}
+                    animate={{ width: isComplete ? '100%' : isActive ? '50%' : '0%' }}
+                    transition={{ duration: 0.5 }}
+                  />
+                  {isActive && (
+                    <motion.div
+                      className="absolute inset-y-0 w-8 left-0"
+                      style={{ background: `linear-gradient(90deg, transparent, ${CYAN}, transparent)` }}
+                      animate={{ left: ['0%', '100%'] }}
+                      transition={{ duration: 1, repeat: Infinity }}
+                    />
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ScannerLineEffect({ scanProgress, isScanning }: { scanProgress: number; isScanning: boolean }) {
+  if (!isScanning) return null;
+  
+  const lineCount = 17;
+  const currentLine = Math.floor((scanProgress / 100) * lineCount);
+  
+  return (
+    <motion.div 
+      className="absolute left-0 right-0 h-6 pointer-events-none z-20"
+      style={{ 
+        top: `${(currentLine / lineCount) * 100}%`,
+        background: `linear-gradient(180deg, transparent, ${CYAN}40, ${CYAN}60, ${CYAN}40, transparent)`,
+        boxShadow: `0 0 20px ${CYAN}, 0 0 40px ${CYAN}50`,
+      }}
+      animate={{ 
+        opacity: [0.5, 1, 0.5],
+      }}
+      transition={{ duration: 0.5, repeat: Infinity }}
+    >
+      <div className="absolute inset-0" style={{ background: `linear-gradient(90deg, transparent, ${CYAN}, transparent)` }} />
+    </motion.div>
+  );
+}
+
 function AnimatedGauge({ value, max, label, color }: { value: number; max: number; label: string; color: string }) {
   const percentage = (value / max) * 100;
   const circumference = 2 * Math.PI * 40;
@@ -394,40 +760,27 @@ export default function CodeReview() {
   const [isScanning, setIsScanning] = useState(false);
   const [scanComplete, setScanComplete] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
+  const [linesScanned, setLinesScanned] = useState(0);
+  const [issuesFound, setIssuesFound] = useState(0);
+  const [securityScore, setSecurityScore] = useState(100);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const [results, setResults] = useState<{ type: string; line: number; severity: string; message: string }[]>([]);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const gsapContainerRef = useRef<HTMLDivElement>(null);
   
   useGsapStagger(gsapContainerRef);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   const startScan = () => {
     setIsScanning(true);
     setScanComplete(false);
     setScanProgress(0);
+    setLinesScanned(0);
+    setIssuesFound(0);
+    setSecurityScore(100);
     setResults([]);
+    setExpandedCard(null);
 
+    const totalLines = 847;
     const progressInterval = setInterval(() => {
       setScanProgress(prev => {
         if (prev >= 100) {
@@ -437,12 +790,22 @@ export default function CodeReview() {
           generateResults();
           return 100;
         }
+        
+        setLinesScanned(Math.floor((prev / 100) * totalLines));
+        
+        if (prev === 20) { setIssuesFound(1); setSecurityScore(85); }
+        if (prev === 40) { setIssuesFound(2); setSecurityScore(72); }
+        if (prev === 60) { setIssuesFound(3); setSecurityScore(65); }
+        
         return prev + 2;
       });
     }, 100);
   };
 
   const generateResults = () => {
+    setLinesScanned(847);
+    setIssuesFound(3);
+    setSecurityScore(65);
     setResults([
       { type: 'SQL Injection', line: 3, severity: 'critical', message: 'User input directly concatenated into SQL query' },
       { type: 'XSS', line: 6, severity: 'high', message: 'Unsanitized input assigned to innerHTML' },
@@ -452,19 +815,11 @@ export default function CodeReview() {
     ]);
   };
 
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case 'critical': return 'bg-red-500/20 text-red-400 border-red-500/50';
-      case 'high': return 'bg-orange-500/20 text-orange-400 border-orange-500/50';
-      case 'medium': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
-      case 'info': return 'bg-green-500/20 text-green-400 border-green-500/50';
-      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/50';
-    }
-  };
-
   return (
     <div className="min-h-screen text-white relative overflow-hidden" style={{ backgroundColor: '#0a0a1e' }}>
       <PurpleGalaxyBackground />
+      <MatrixCodeRain />
+      
       <div className="fixed inset-0 z-[1]" data-testid="code-review-3d-scene">
         <WebGLFallback>
           <Canvas camera={{ position: [0, 0, 15], fov: 60 }} gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }} dpr={[1, 2]}>
@@ -498,6 +853,33 @@ export default function CodeReview() {
             </p>
           </motion.div>
 
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ delay: 0.1 }}
+            className="mb-12"
+          >
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <AnimatedCounter value={linesScanned} label="Lines Scanned" icon={FileCode} color={CYAN} />
+              <AnimatedCounter value={issuesFound} label="Issues Found" icon={Bug} color={RED} />
+              <AnimatedCounter value={securityScore} label="Security Score" icon={Shield} color={securityScore > 70 ? '#44ff88' : AMBER} suffix="%" />
+              <AnimatedCounter value={scanComplete ? 5 : 0} label="Stages Complete" icon={GitBranch} color={PURPLE} />
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ delay: 0.15 }}
+            className="mb-12 p-6 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10"
+          >
+            <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
+              <Zap className="w-5 h-5" style={{ color: CYAN }} />
+              Code Review Pipeline
+            </h3>
+            <CodeFlowPipeline scanProgress={scanProgress} isScanning={isScanning} />
+          </motion.div>
+
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-16">
             <h2 className="text-2xl font-bold mb-6 text-center gsap-fade-in">Vulnerability Categories</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -510,18 +892,36 @@ export default function CodeReview() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: i * 0.1 }}
                     onClick={() => setActiveCategory(activeCategory === cat.id ? null : cat.id)}
-                    className={`p-4 rounded-2xl cursor-pointer transition-all border ${activeCategory === cat.id ? 'border-opacity-100 scale-105' : 'border-white/10 hover:border-white/30'}`}
+                    whileHover={{ 
+                      scale: 1.05,
+                      rotateY: 5,
+                      rotateX: 5,
+                      boxShadow: `0 10px 40px ${cat.color}40`,
+                    }}
+                    className={`p-4 rounded-2xl cursor-pointer transition-all border ${activeCategory === cat.id ? 'border-opacity-100' : 'border-white/10 hover:border-white/30'}`}
                     style={{ 
                       backgroundColor: activeCategory === cat.id ? `${cat.color}20` : 'rgba(0,0,0,0.4)',
-                      borderColor: activeCategory === cat.id ? cat.color : undefined
+                      borderColor: activeCategory === cat.id ? cat.color : undefined,
+                      transformStyle: 'preserve-3d',
                     }}
                     data-testid={`card-vulnerability-${cat.id}`}
                   >
-                    <Icon className="w-8 h-8 mb-3" style={{ color: cat.color }} />
+                    <motion.div
+                      animate={activeCategory === cat.id ? { rotateY: [0, 360] } : {}}
+                      transition={{ duration: 0.6 }}
+                    >
+                      <Icon className="w-8 h-8 mb-3" style={{ color: cat.color }} />
+                    </motion.div>
                     <h3 className="font-semibold text-sm mb-1">{cat.name}</h3>
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-gray-400">{cat.count} found</span>
-                      <span className="px-2 py-0.5 rounded-full bg-red-500/20 text-red-400">{cat.critical} critical</span>
+                      <motion.span 
+                        className="px-2 py-0.5 rounded-full bg-red-500/20 text-red-400"
+                        animate={{ scale: [1, 1.1, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        {cat.critical} critical
+                      </motion.span>
                     </div>
                   </motion.div>
                 );
@@ -587,55 +987,82 @@ export default function CodeReview() {
               <div className="rounded-3xl bg-black/60 backdrop-blur-xl border border-white/10 overflow-hidden">
                 <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-black/40">
                   <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                    <div className="w-3 h-3 rounded-full bg-green-500" />
+                    <motion.div 
+                      className="w-3 h-3 rounded-full bg-red-500"
+                      animate={isScanning ? { scale: [1, 1.2, 1] } : {}}
+                      transition={{ duration: 1, repeat: Infinity }}
+                    />
+                    <motion.div 
+                      className="w-3 h-3 rounded-full bg-yellow-500"
+                      animate={isScanning ? { scale: [1, 1.2, 1] } : {}}
+                      transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
+                    />
+                    <motion.div 
+                      className="w-3 h-3 rounded-full bg-green-500"
+                      animate={isScanning ? { scale: [1, 1.2, 1] } : {}}
+                      transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
+                    />
                   </div>
                   <span className="text-sm text-gray-400 font-mono">vulnerable-code.js</span>
-                  <button
+                  <motion.button
                     onClick={startScan}
                     disabled={isScanning}
                     className="flex items-center gap-2 px-4 py-1.5 rounded-lg font-medium text-sm transition-all disabled:opacity-50"
                     style={{ background: `linear-gradient(to right, ${CYAN}, ${PURPLE})` }}
+                    whileHover={{ scale: 1.05, boxShadow: `0 0 20px ${CYAN}50` }}
+                    whileTap={{ scale: 0.95 }}
                     data-testid="button-scan-code"
                   >
                     <Play className="w-4 h-4" />
                     {isScanning ? 'Scanning...' : 'Scan'}
-                  </button>
+                  </motion.button>
                 </div>
-                <div className="p-4 font-mono text-sm overflow-x-auto max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-cyan-500/30 scrollbar-track-transparent">
-                  <pre className="text-gray-300">
+                <div className="p-4 font-mono text-sm overflow-x-auto max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-cyan-500/30 scrollbar-track-transparent relative">
+                  <ScannerLineEffect scanProgress={scanProgress} isScanning={isScanning} />
+                  <pre className="text-gray-300 relative">
                     {demoCode.split('\n').map((line, i) => {
                       const result = results.find(r => r.line === i + 1);
-                      const lineColor = result 
-                        ? result.severity === 'critical' ? 'bg-red-500/30 border-l-4 border-red-500' 
-                        : result.severity === 'high' ? 'bg-orange-500/30 border-l-4 border-orange-500'
-                        : result.severity === 'info' ? 'bg-green-500/20 border-l-4 border-green-500'
-                        : '' : '';
+                      const isCurrentScanLine = isScanning && Math.floor((scanProgress / 100) * 17) === i;
                       
                       return (
                         <motion.div 
                           key={i} 
-                          className={`flex ${lineColor} -mx-4 px-4 py-0.5 transition-all`}
-                          initial={result ? { backgroundColor: 'transparent' } : undefined}
-                          animate={result ? { 
-                            backgroundColor: result.severity === 'critical' ? 'rgba(239, 68, 68, 0.3)' : 
-                                           result.severity === 'high' ? 'rgba(249, 115, 22, 0.3)' :
-                                           result.severity === 'info' ? 'rgba(34, 197, 94, 0.2)' : 'transparent'
-                          } : undefined}
-                          transition={{ duration: 0.5, delay: i * 0.05 }}
+                          className={`flex -mx-4 px-4 py-0.5 transition-all relative ${
+                            result 
+                              ? result.severity === 'critical' ? 'bg-red-500/30 border-l-4 border-red-500' 
+                              : result.severity === 'high' ? 'bg-orange-500/30 border-l-4 border-orange-500'
+                              : result.severity === 'info' ? 'bg-green-500/20 border-l-4 border-green-500'
+                              : '' 
+                              : ''
+                          }`}
+                          initial={{ opacity: 0.5 }}
+                          animate={{ 
+                            opacity: 1,
+                            backgroundColor: isCurrentScanLine ? `${CYAN}20` : undefined,
+                          }}
+                          transition={{ duration: 0.3 }}
                         >
                           <span className="text-gray-600 w-8 select-none">{i + 1}</span>
-                          <span className={result && result.severity !== 'info' ? 'text-red-300' : result?.severity === 'info' ? 'text-green-300' : ''}>
+                          <span className={
+                            result && result.severity !== 'info' ? 'text-red-300' : 
+                            result?.severity === 'info' ? 'text-green-300' : 
+                            isCurrentScanLine ? 'text-cyan-300' : ''
+                          }>
                             {line || ' '}
                           </span>
                           {result && result.severity !== 'info' && (
                             <motion.span 
                               initial={{ opacity: 0, x: 10 }}
                               animate={{ opacity: 1, x: 0 }}
-                              className="ml-auto text-xs text-red-400 opacity-70"
+                              className="ml-auto text-xs text-red-400 flex items-center gap-1"
                             >
-                              ⚠ {result.type}
+                              <motion.span
+                                animate={{ scale: [1, 1.3, 1] }}
+                                transition={{ duration: 1, repeat: Infinity }}
+                              >
+                                ⚠
+                              </motion.span>
+                              {result.type}
                             </motion.span>
                           )}
                         </motion.div>
@@ -646,16 +1073,29 @@ export default function CodeReview() {
                 {isScanning && (
                   <div className="px-4 py-3 border-t border-white/10">
                     <div className="flex items-center justify-between text-sm mb-2">
-                      <span style={{ color: CYAN }}>Analyzing code...</span>
+                      <motion.span 
+                        style={{ color: CYAN }}
+                        animate={{ opacity: [1, 0.5, 1] }}
+                        transition={{ duration: 1, repeat: Infinity }}
+                      >
+                        Analyzing code...
+                      </motion.span>
                       <span className="text-gray-400">{scanProgress}%</span>
                     </div>
-                    <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                    <div className="h-2 bg-white/10 rounded-full overflow-hidden relative">
                       <motion.div
-                        className="h-full"
+                        className="h-full relative"
                         style={{ background: `linear-gradient(to right, ${CYAN}, ${PURPLE})` }}
                         initial={{ width: 0 }}
                         animate={{ width: `${scanProgress}%` }}
-                      />
+                      >
+                        <motion.div
+                          className="absolute inset-y-0 right-0 w-8"
+                          style={{ background: `linear-gradient(90deg, transparent, white, transparent)` }}
+                          animate={{ opacity: [0.3, 0.8, 0.3] }}
+                          transition={{ duration: 0.5, repeat: Infinity }}
+                        />
+                      </motion.div>
                     </div>
                   </div>
                 )}
@@ -666,45 +1106,90 @@ export default function CodeReview() {
                   <h3 className="font-semibold flex items-center gap-2">
                     <Shield className="w-5 h-5" style={{ color: CYAN }} />
                     Scan Results
+                    {scanComplete && (
+                      <motion.span
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="ml-2 text-xs px-2 py-0.5 rounded-full"
+                        style={{ backgroundColor: `${CYAN}20`, color: CYAN }}
+                      >
+                        {results.length} findings
+                      </motion.span>
+                    )}
                   </h3>
                 </div>
                 <div className="p-4 space-y-3 max-h-96 overflow-y-auto">
-                  <AnimatePresence>
+                  <AnimatePresence mode="wait">
                     {!scanComplete && !isScanning && (
-                      <div className="text-center py-12 text-gray-500">
-                        <Code className="w-12 h-12 mx-auto mb-4 opacity-30" />
+                      <motion.div 
+                        className="text-center py-12 text-gray-500"
+                        exit={{ opacity: 0, scale: 0.9 }}
+                      >
+                        <motion.div
+                          animate={{ rotate: [0, 10, -10, 0] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
+                          <Code className="w-12 h-12 mx-auto mb-4 opacity-30" />
+                        </motion.div>
                         <p>Click "Scan" to analyze the code</p>
-                      </div>
+                      </motion.div>
+                    )}
+                    {isScanning && (
+                      <motion.div 
+                        className="text-center py-12"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                        >
+                          <Target className="w-12 h-12 mx-auto mb-4" style={{ color: CYAN }} />
+                        </motion.div>
+                        <p style={{ color: CYAN }}>Scanning for vulnerabilities...</p>
+                      </motion.div>
                     )}
                     {scanComplete && results.map((result, i) => (
-                      <motion.div
+                      <InteractiveVulnerabilityCard
                         key={i}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                        className={`p-3 rounded-xl border ${getSeverityColor(result.severity)}`}
-                        data-testid={`result-item-${i}`}
-                      >
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-medium text-sm">{result.type}</span>
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-black/30">Line {result.line}</span>
-                        </div>
-                        <p className="text-xs opacity-80">{result.message}</p>
-                      </motion.div>
+                        result={result}
+                        index={i}
+                        isExpanded={expandedCard === i}
+                        onToggle={() => setExpandedCard(expandedCard === i ? null : i)}
+                      />
                     ))}
                   </AnimatePresence>
                 </div>
                 {scanComplete && (
-                  <div className="px-4 py-3 border-t border-white/10 bg-black/40">
+                  <motion.div 
+                    className="px-4 py-3 border-t border-white/10 bg-black/40"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                  >
                     <div className="flex items-center justify-between text-sm">
                       <div className="flex items-center gap-4">
-                        <span className="text-red-400">2 Critical</span>
+                        <motion.span 
+                          className="text-red-400 flex items-center gap-1"
+                          animate={{ scale: [1, 1.05, 1] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
+                          <XCircle className="w-4 h-4" /> 2 Critical
+                        </motion.span>
                         <span className="text-orange-400">1 High</span>
-                        <span className="text-green-400">2 Safe</span>
+                        <span className="text-green-400 flex items-center gap-1">
+                          <CheckCircle className="w-4 h-4" /> 2 Safe
+                        </span>
                       </div>
-                      <CheckCircle className="w-5 h-5 text-green-400" />
+                      <motion.div
+                        animate={{ scale: [1, 1.1, 1] }}
+                        transition={{ duration: 1, repeat: Infinity }}
+                      >
+                        <CheckCircle className="w-5 h-5 text-green-400" />
+                      </motion.div>
                     </div>
-                  </div>
+                  </motion.div>
                 )}
               </div>
             </div>

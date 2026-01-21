@@ -7,7 +7,8 @@ import { Link } from 'wouter';
 import { 
   ArrowLeft, Play, RotateCcw, Shield, Code, Package, 
   Server, Eye, Lock, Zap, Clock, CheckCircle, XCircle, 
-  AlertTriangle, Search, FileSearch, Container, Key, ClipboardCheck
+  AlertTriangle, Search, FileSearch, Container, Key, ClipboardCheck,
+  Activity, GitBranch, Cpu, Database, Loader2
 } from 'lucide-react';
 import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background';
 import { useGsapStagger } from '@/hooks/useGsapStagger';
@@ -18,12 +19,12 @@ const PURPLE = '#9944ff';
 const NAVY = 'hsl(222, 47%, 5%)';
 
 const pipelineStages = [
-  { id: 'code', name: 'Code', position: [-12, 0, 0], color: CYAN },
-  { id: 'build', name: 'Build', position: [-6, 0, 0], color: '#00FF88' },
-  { id: 'test', name: 'Test', position: [0, 0, 0], color: '#FFD700' },
-  { id: 'security', name: 'Security Scan', position: [6, 0, 0], color: PURPLE },
-  { id: 'deploy', name: 'Deploy', position: [12, 0, 0], color: '#FF6B6B' },
-  { id: 'monitor', name: 'Monitor', position: [18, 0, 0], color: '#00D4FF' },
+  { id: 'code', name: 'Code', position: [-12, 0, 0], color: CYAN, icon: Code },
+  { id: 'build', name: 'Build', position: [-6, 0, 0], color: '#00FF88', icon: Package },
+  { id: 'test', name: 'Test', position: [0, 0, 0], color: '#FFD700', icon: Activity },
+  { id: 'security', name: 'Security Scan', position: [6, 0, 0], color: PURPLE, icon: Shield },
+  { id: 'deploy', name: 'Deploy', position: [12, 0, 0], color: '#FF6B6B', icon: Server },
+  { id: 'monitor', name: 'Monitor', position: [18, 0, 0], color: '#00D4FF', icon: Eye },
 ];
 
 interface PackageData {
@@ -35,16 +36,96 @@ interface PackageData {
   color: THREE.Color;
 }
 
-function PipelineStage({ position, name, color, isActive, isScanning }: { 
+function FlowingCodeBackground() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      <style>{`
+        @keyframes codeScroll {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(-50%); }
+        }
+        @keyframes gridPulse {
+          0%, 100% { opacity: 0.03; }
+          50% { opacity: 0.08; }
+        }
+        @keyframes scanLine {
+          0% { transform: translateY(-100%); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { transform: translateY(100vh); opacity: 0; }
+        }
+        @keyframes dataFlow {
+          0% { background-position: 0% 0%; }
+          100% { background-position: 0% 100%; }
+        }
+      `}</style>
+      
+      <div 
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `
+            linear-gradient(${CYAN}15 1px, transparent 1px),
+            linear-gradient(90deg, ${CYAN}15 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px',
+          animation: 'gridPulse 4s ease-in-out infinite',
+        }}
+      />
+      
+      {Array.from({ length: 10 }).map((_, i) => (
+        <div
+          key={i}
+          className="absolute top-0 text-[10px] font-mono select-none"
+          style={{
+            left: `${(i + 1) * 9}%`,
+            color: i % 2 === 0 ? CYAN : PURPLE,
+            opacity: 0.06,
+            animation: `codeScroll ${25 + i * 3}s linear infinite`,
+            animationDelay: `${i * 0.8}s`,
+          }}
+        >
+          {Array.from({ length: 60 }).map((_, j) => (
+            <div key={j} className="whitespace-nowrap leading-relaxed">
+              {['const', 'function', 'return', 'async', 'await', 'import', 'export', 'class', 'if', 'for', 'while', 'try'][j % 12]} {'{...}'}
+            </div>
+          ))}
+        </div>
+      ))}
+      
+      <div
+        className="absolute inset-x-0 h-[2px]"
+        style={{
+          background: `linear-gradient(90deg, transparent, ${CYAN}80, transparent)`,
+          animation: 'scanLine 6s linear infinite',
+          boxShadow: `0 0 30px ${CYAN}`,
+        }}
+      />
+      <div
+        className="absolute inset-x-0 h-[2px]"
+        style={{
+          background: `linear-gradient(90deg, transparent, ${PURPLE}80, transparent)`,
+          animation: 'scanLine 9s linear infinite',
+          animationDelay: '3s',
+          boxShadow: `0 0 30px ${PURPLE}`,
+        }}
+      />
+    </div>
+  );
+}
+
+function PipelineStage({ position, name, color, isActive, isScanning, stageIndex }: { 
   position: [number, number, number]; 
   name: string; 
   color: string;
   isActive: boolean;
   isScanning: boolean;
+  stageIndex: number;
 }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
   const laserRef = useRef<THREE.Mesh>(null);
+  const ringRef = useRef<THREE.Mesh>(null);
+  const scanPlaneRef = useRef<THREE.Mesh>(null);
   
   useFrame((state) => {
     if (meshRef.current) {
@@ -56,9 +137,17 @@ function PipelineStage({ position, name, color, isActive, isScanning }: {
     if (glowRef.current) {
       glowRef.current.scale.setScalar(1.5 + Math.sin(state.clock.elapsedTime * 2) * 0.2);
     }
+    if (ringRef.current && isActive) {
+      ringRef.current.rotation.z = state.clock.elapsedTime * 2;
+      ringRef.current.rotation.x = Math.sin(state.clock.elapsedTime) * 0.3;
+    }
     if (laserRef.current && isScanning) {
       laserRef.current.rotation.z = state.clock.elapsedTime * 8;
       laserRef.current.scale.y = 1 + Math.sin(state.clock.elapsedTime * 10) * 0.3;
+    }
+    if (scanPlaneRef.current && isScanning) {
+      scanPlaneRef.current.position.y = Math.sin(state.clock.elapsedTime * 5) * 1.5;
+      (scanPlaneRef.current.material as THREE.MeshBasicMaterial).opacity = 0.3 + Math.sin(state.clock.elapsedTime * 8) * 0.2;
     }
   });
 
@@ -68,6 +157,13 @@ function PipelineStage({ position, name, color, isActive, isScanning }: {
         <sphereGeometry args={[1.2, 16, 16]} />
         <meshBasicMaterial color={color} transparent opacity={isActive ? 0.15 : 0.05} />
       </mesh>
+      
+      {isActive && (
+        <mesh ref={ringRef} position={[0, 0, 0]}>
+          <torusGeometry args={[1.4, 0.03, 8, 32]} />
+          <meshBasicMaterial color={color} transparent opacity={0.6} />
+        </mesh>
+      )}
       
       <mesh ref={meshRef}>
         <octahedronGeometry args={[0.8, 0]} />
@@ -90,7 +186,29 @@ function PipelineStage({ position, name, color, isActive, isScanning }: {
             <cylinderGeometry args={[0.02, 0.02, 4, 8]} />
             <meshBasicMaterial color={PURPLE} transparent opacity={0.6} />
           </mesh>
-          <pointLight color={CYAN} intensity={2} distance={3} />
+          <mesh position={[0, 0, 0]} rotation={[Math.PI / 4, 0, Math.PI / 4]}>
+            <cylinderGeometry args={[0.015, 0.015, 4, 8]} />
+            <meshBasicMaterial color={CYAN} transparent opacity={0.4} />
+          </mesh>
+          
+          <mesh ref={scanPlaneRef} rotation={[Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[3, 3]} />
+            <meshBasicMaterial color={PURPLE} transparent opacity={0.2} side={THREE.DoubleSide} />
+          </mesh>
+          
+          {Array.from({ length: 8 }).map((_, i) => (
+            <mesh key={i} position={[
+              Math.cos(i * Math.PI / 4) * 1.8,
+              Math.sin(i * Math.PI / 4) * 1.8,
+              0
+            ]}>
+              <sphereGeometry args={[0.05, 8, 8]} />
+              <meshBasicMaterial color={CYAN} />
+            </mesh>
+          ))}
+          
+          <pointLight color={CYAN} intensity={3} distance={5} />
+          <pointLight color={PURPLE} intensity={2} distance={4} />
         </group>
       )}
 
@@ -103,12 +221,28 @@ function PipelineStage({ position, name, color, isActive, isScanning }: {
       >
         {name}
       </Text>
+      
+      <Text
+        position={[0, 1.5, 0]}
+        fontSize={0.3}
+        color={color}
+        anchorX="center"
+        anchorY="middle"
+      >
+        {`0${stageIndex + 1}`}
+      </Text>
     </group>
   );
 }
 
-function PipelineConnector({ start, end }: { start: [number, number, number]; end: [number, number, number] }) {
-  const points = useMemo(() => {
+function PipelineConnector({ start, end, isActive }: { 
+  start: [number, number, number]; 
+  end: [number, number, number];
+  isActive: boolean;
+}) {
+  const particlesRef = useRef<THREE.Points>(null);
+  
+  const { points, particlePositions, particleCount } = useMemo(() => {
     const p = [];
     for (let i = 0; i <= 20; i++) {
       const t = i / 20;
@@ -118,25 +252,76 @@ function PipelineConnector({ start, end }: { start: [number, number, number]; en
         start[2]
       ));
     }
-    return p;
+    
+    const count = 5;
+    const positions = new Float32Array(count * 3);
+    
+    return { points: p, particlePositions: positions, particleCount: count };
   }, [start, end]);
 
   const { geometry, material } = useMemo(() => {
     const geo = new THREE.BufferGeometry().setFromPoints(points);
-    const mat = new THREE.LineBasicMaterial({ color: CYAN, transparent: true, opacity: 0.4 });
+    const mat = new THREE.LineBasicMaterial({ 
+      color: CYAN, 
+      transparent: true, 
+      opacity: isActive ? 0.6 : 0.3 
+    });
     return { geometry: geo, material: mat };
-  }, [points]);
+  }, [points, isActive]);
+
+  const particleGeometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+    return geo;
+  }, [particlePositions]);
+
+  const particleMaterial = useMemo(() => {
+    return new THREE.PointsMaterial({
+      color: CYAN,
+      size: 0.15,
+      transparent: true,
+      opacity: 0.8,
+    });
+  }, []);
+
+  useFrame((state) => {
+    if (particlesRef.current && isActive) {
+      const positions = particlesRef.current.geometry.attributes.position.array as Float32Array;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const t = ((state.clock.elapsedTime * 0.5 + i * 0.2) % 1);
+        const idx = Math.floor(t * (points.length - 1));
+        const nextIdx = Math.min(idx + 1, points.length - 1);
+        const localT = (t * (points.length - 1)) - idx;
+        
+        positions[i * 3] = points[idx].x + (points[nextIdx].x - points[idx].x) * localT;
+        positions[i * 3 + 1] = points[idx].y + (points[nextIdx].y - points[idx].y) * localT;
+        positions[i * 3 + 2] = points[idx].z + (points[nextIdx].z - points[idx].z) * localT;
+      }
+      
+      particlesRef.current.geometry.attributes.position.needsUpdate = true;
+    }
+  });
 
   useEffect(() => {
     return () => {
       geometry.dispose();
       material.dispose();
+      particleGeometry.dispose();
+      particleMaterial.dispose();
     };
-  }, [geometry, material]);
+  }, [geometry, material, particleGeometry, particleMaterial]);
 
   const lineObj = useMemo(() => new THREE.Line(geometry, material), [geometry, material]);
 
-  return <primitive object={lineObj} />;
+  return (
+    <group>
+      <primitive object={lineObj} />
+      {isActive && (
+        <points ref={particlesRef} geometry={particleGeometry} material={particleMaterial} />
+      )}
+    </group>
+  );
 }
 
 function FlowingPackage({ packageData, onStageComplete }: { 
@@ -291,6 +476,7 @@ function PipelineScene({ isRunning, activeSecurityType, onMetricsUpdate }: {
           color={stage.color}
           isActive={isRunning || activeStageIndex === index}
           isScanning={isRunning && index === 3}
+          stageIndex={index}
         />
       ))}
 
@@ -299,6 +485,7 @@ function PipelineScene({ isRunning, activeSecurityType, onMetricsUpdate }: {
           key={`connector-${index}`}
           start={stage.position as [number, number, number]}
           end={pipelineStages[index + 1].position as [number, number, number]}
+          isActive={isRunning}
         />
       ))}
 
@@ -339,7 +526,8 @@ const securityIntegrations = [
     fullName: 'Static Analysis',
     icon: Code,
     description: 'Analyze source code for security vulnerabilities before compilation',
-    color: '#00D4FF'
+    color: '#00D4FF',
+    stats: { scansToday: 847, issuesFound: 23 }
   },
   { 
     id: 'dast', 
@@ -347,7 +535,8 @@ const securityIntegrations = [
     fullName: 'Dynamic Analysis',
     icon: Eye,
     description: 'Test running applications for runtime vulnerabilities',
-    color: '#FF6B6B'
+    color: '#FF6B6B',
+    stats: { scansToday: 156, issuesFound: 8 }
   },
   { 
     id: 'sca', 
@@ -355,7 +544,8 @@ const securityIntegrations = [
     fullName: 'Software Composition',
     icon: Package,
     description: 'Scan dependencies for known CVEs and license issues',
-    color: '#00FF88'
+    color: '#00FF88',
+    stats: { scansToday: 2341, issuesFound: 67 }
   },
   { 
     id: 'container', 
@@ -363,7 +553,8 @@ const securityIntegrations = [
     fullName: 'Container Scanning',
     icon: Container,
     description: 'Analyze container images for vulnerabilities and misconfigurations',
-    color: '#FFD700'
+    color: '#FFD700',
+    stats: { scansToday: 432, issuesFound: 12 }
   },
   { 
     id: 'secret', 
@@ -371,7 +562,8 @@ const securityIntegrations = [
     fullName: 'Secret Detection',
     icon: Key,
     description: 'Detect hardcoded secrets, API keys, and credentials in code',
-    color: PURPLE
+    color: PURPLE,
+    stats: { scansToday: 1893, issuesFound: 34 }
   },
   { 
     id: 'compliance', 
@@ -379,11 +571,12 @@ const securityIntegrations = [
     fullName: 'Compliance Checks',
     icon: ClipboardCheck,
     description: 'Validate against security policies and regulatory requirements',
-    color: '#FF8800'
+    color: '#FF8800',
+    stats: { scansToday: 567, issuesFound: 5 }
   },
 ];
 
-function AnimatedCounter({ value, duration = 2000 }: { value: number; duration?: number }) {
+function AnimatedCounter({ value, duration = 2000, suffix = '' }: { value: number; duration?: number; suffix?: string }) {
   const [displayValue, setDisplayValue] = useState(0);
   
   useEffect(() => {
@@ -405,7 +598,258 @@ function AnimatedCounter({ value, duration = 2000 }: { value: number; duration?:
     return () => cancelAnimationFrame(animationFrame);
   }, [value, duration]);
   
-  return <span>{displayValue.toLocaleString()}</span>;
+  return <span>{displayValue.toLocaleString()}{suffix}</span>;
+}
+
+function LiveMetric({ value, label, icon: Icon, color, trend, trendLabel }: {
+  value: number;
+  label: string;
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  color: string;
+  trend?: 'up' | 'down';
+  trendLabel?: string;
+}) {
+  const [isUpdating, setIsUpdating] = useState(false);
+  const prevValue = useRef(value);
+  
+  useEffect(() => {
+    if (value !== prevValue.current) {
+      setIsUpdating(true);
+      const timer = setTimeout(() => setIsUpdating(false), 500);
+      prevValue.current = value;
+      return () => clearTimeout(timer);
+    }
+  }, [value]);
+  
+  return (
+    <motion.div
+      animate={isUpdating ? { scale: [1, 1.02, 1] } : {}}
+      transition={{ duration: 0.3 }}
+      className="relative"
+    >
+      {isUpdating && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="absolute -inset-1 rounded-2xl"
+          style={{ 
+            background: `linear-gradient(135deg, ${color}20, transparent)`,
+            boxShadow: `0 0 20px ${color}30`
+          }}
+        />
+      )}
+      <div className="relative p-6 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-sm">
+        <div className="flex items-center gap-3 mb-4">
+          <motion.div 
+            className="w-10 h-10 rounded-lg flex items-center justify-center"
+            style={{ backgroundColor: `${color}20` }}
+            animate={isUpdating ? { rotate: [0, 360] } : {}}
+            transition={{ duration: 0.5 }}
+          >
+            <Icon className="w-5 h-5" style={{ color }} />
+          </motion.div>
+          <span className="text-white/60 text-sm">{label}</span>
+        </div>
+        <div className="text-3xl font-bold" style={{ color }}>
+          <AnimatedCounter value={value} />
+        </div>
+        {trendLabel && (
+          <div className={`mt-2 text-xs flex items-center gap-1 ${trend === 'up' ? 'text-green-400' : 'text-red-400'}`}>
+            {trend === 'up' ? '↑' : '↓'} {trendLabel}
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
+function InteractiveStageCard({ 
+  stage, 
+  index, 
+  isActive, 
+  onClick 
+}: { 
+  stage: typeof securityIntegrations[0];
+  index: number;
+  isActive: boolean;
+  onClick: () => void;
+}) {
+  const [isHovered, setIsHovered] = useState(false);
+  const Icon = stage.icon;
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.1 * index }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={onClick}
+      style={{
+        perspective: '1000px',
+      }}
+      className="cursor-pointer"
+      data-testid={`card-security-${stage.id}`}
+    >
+      <motion.div
+        animate={{
+          rotateX: isHovered ? -5 : 0,
+          rotateY: isHovered ? 5 : 0,
+          scale: isHovered ? 1.05 : 1,
+          z: isHovered ? 50 : 0,
+        }}
+        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        className={`relative p-4 rounded-xl transition-colors ${
+          isActive 
+            ? 'bg-white/15 border-2' 
+            : 'bg-black/40 border border-white/10 hover:border-white/30'
+        }`}
+        style={{ 
+          borderColor: isActive ? stage.color : undefined,
+          transformStyle: 'preserve-3d',
+          boxShadow: isHovered ? `0 25px 50px -12px ${stage.color}30` : 'none',
+        }}
+      >
+        <motion.div
+          className="absolute inset-0 rounded-xl pointer-events-none"
+          animate={{
+            opacity: isHovered ? 0.3 : 0,
+          }}
+          style={{
+            background: `radial-gradient(circle at center, ${stage.color}40, transparent 70%)`,
+          }}
+        />
+        
+        <div className="absolute top-2 right-2">
+          <motion.div
+            className="w-2 h-2 rounded-full"
+            style={{ backgroundColor: stage.color }}
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.5, 1, 0.5],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
+        </div>
+        
+        <motion.div 
+          className="w-12 h-12 rounded-lg flex items-center justify-center mb-3 mx-auto relative"
+          style={{ 
+            backgroundColor: `${stage.color}20`,
+            transform: 'translateZ(20px)',
+          }}
+          animate={isActive ? {
+            boxShadow: [`0 0 0px ${stage.color}`, `0 0 20px ${stage.color}`, `0 0 0px ${stage.color}`],
+          } : {}}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          <motion.div
+            animate={isActive ? { rotate: 360 } : { rotate: 0 }}
+            transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+          >
+            <Icon className="w-6 h-6" style={{ color: stage.color }} />
+          </motion.div>
+        </motion.div>
+        
+        <h3 className="font-semibold text-center text-sm">{stage.name}</h3>
+        <p className="text-xs text-white/50 text-center mt-1">{stage.fullName}</p>
+        
+        <AnimatePresence>
+          {isActive && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mt-3 pt-3 border-t border-white/10"
+            >
+              <p className="text-xs text-white/70 mb-3">{stage.description}</p>
+              
+              <div className="grid grid-cols-2 gap-2">
+                <div className="text-center p-2 rounded-lg bg-white/5">
+                  <div className="text-lg font-bold" style={{ color: stage.color }}>
+                    {stage.stats.scansToday}
+                  </div>
+                  <div className="text-[10px] text-white/40">Scans Today</div>
+                </div>
+                <div className="text-center p-2 rounded-lg bg-white/5">
+                  <div className="text-lg font-bold text-red-400">
+                    {stage.stats.issuesFound}
+                  </div>
+                  <div className="text-[10px] text-white/40">Issues Found</div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function BuildStatusIndicator({ isRunning, passedCount, blockedCount }: {
+  isRunning: boolean;
+  passedCount: number;
+  blockedCount: number;
+}) {
+  const total = passedCount + blockedCount;
+  const successRate = total > 0 ? (passedCount / total) * 100 : 100;
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex flex-wrap items-center justify-center gap-6 mt-4 p-4 rounded-xl bg-black/30 border border-white/10"
+    >
+      <div className="flex items-center gap-3">
+        <motion.div
+          animate={isRunning ? { rotate: 360 } : {}}
+          transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+        >
+          {isRunning ? (
+            <Loader2 className="w-5 h-5 text-cyan-400" />
+          ) : (
+            <Activity className="w-5 h-5 text-white/60" />
+          )}
+        </motion.div>
+        <span className={isRunning ? 'text-cyan-400' : 'text-white/60'}>
+          {isRunning ? 'Pipeline Active' : 'Pipeline Idle'}
+        </span>
+      </div>
+      
+      <div className="flex items-center gap-3">
+        <div className="w-32 h-2 rounded-full bg-white/10 overflow-hidden">
+          <motion.div
+            className="h-full rounded-full"
+            style={{
+              background: `linear-gradient(90deg, ${CYAN}, #00FF88)`,
+            }}
+            initial={{ width: 0 }}
+            animate={{ width: `${successRate}%` }}
+            transition={{ duration: 0.5 }}
+          />
+        </div>
+        <span className="text-sm text-white/60">
+          {successRate.toFixed(0)}% pass
+        </span>
+      </div>
+      
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 text-green-400">
+          <CheckCircle className="w-4 h-4" />
+          <span>{passedCount}</span>
+        </div>
+        <div className="flex items-center gap-2 text-red-400">
+          <XCircle className="w-4 h-4" />
+          <span>{blockedCount}</span>
+        </div>
+      </div>
+    </motion.div>
+  );
 }
 
 export default function DevSecOps() {
@@ -416,6 +860,7 @@ export default function DevSecOps() {
     issuesBlocked: 1247,
     mttr: 4.2,
     deployFrequency: 12,
+    buildsToday: 847,
   });
   const [passedCount, setPassedCount] = useState(0);
   const [blockedCount, setBlockedCount] = useState(0);
@@ -423,6 +868,18 @@ export default function DevSecOps() {
   const gsapContainerRef = useRef<HTMLDivElement>(null);
   
   useGsapStagger(gsapContainerRef);
+
+  useEffect(() => {
+    if (isRunning) {
+      const interval = setInterval(() => {
+        setMetrics(prev => ({
+          ...prev,
+          buildsToday: prev.buildsToday + Math.floor(Math.random() * 3),
+        }));
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [isRunning]);
 
   const handleMetricsUpdate = useCallback((passed: boolean) => {
     if (passed) {
@@ -462,6 +919,7 @@ export default function DevSecOps() {
   return (
     <div className="min-h-screen text-white relative overflow-hidden" style={{ backgroundColor: '#0a0a1e' }}>
       <PurpleGalaxyBackground />
+      <FlowingCodeBackground />
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-cyan-900/10 z-[1]" />
 
       <div className="fixed top-6 left-6 z-50">
@@ -482,8 +940,22 @@ export default function DevSecOps() {
           className="text-center mb-8"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-6 gsap-fade-in">
-            <Shield className="w-4 h-4 text-cyan-400" />
+            <motion.div
+              animate={{ rotate: isRunning ? 360 : 0 }}
+              transition={{ duration: 2, repeat: isRunning ? Infinity : 0, ease: 'linear' }}
+            >
+              <Shield className="w-4 h-4 text-cyan-400" />
+            </motion.div>
             <span className="text-cyan-400 text-sm font-medium">DevSecOps Pipeline</span>
+            {isRunning && (
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="ml-2 px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 text-xs"
+              >
+                LIVE
+              </motion.span>
+            )}
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-4 gsap-fade-in">
             Security-Integrated
@@ -499,9 +971,21 @@ export default function DevSecOps() {
         <div className="mb-8">
           <div 
             ref={canvasRef}
-            className="w-full h-[400px] rounded-2xl overflow-hidden border border-white/10 bg-black/40"
+            className="w-full h-[400px] rounded-2xl overflow-hidden border border-white/10 bg-black/40 relative"
             data-testid="pipeline-canvas"
           >
+            <div className="absolute inset-0 pointer-events-none z-10">
+              <div 
+                className="absolute inset-0 opacity-30"
+                style={{
+                  background: `
+                    radial-gradient(circle at 20% 50%, ${CYAN}10 0%, transparent 40%),
+                    radial-gradient(circle at 80% 50%, ${PURPLE}10 0%, transparent 40%)
+                  `,
+                }}
+              />
+            </div>
+            
             <WebGLFallback>
               <Canvas camera={{ position: [3, 6, 18], fov: 50 }}>
                 <CameraController />
@@ -526,8 +1010,22 @@ export default function DevSecOps() {
               }`}
               data-testid="button-run-pipeline"
             >
-              {isRunning ? <XCircle className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-              {isRunning ? 'Stop Pipeline' : 'Run Pipeline'}
+              {isRunning ? (
+                <>
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 0.5, repeat: Infinity }}
+                  >
+                    <XCircle className="w-5 h-5" />
+                  </motion.div>
+                  Stop Pipeline
+                </>
+              ) : (
+                <>
+                  <Play className="w-5 h-5" />
+                  Run Pipeline
+                </>
+              )}
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -546,22 +1044,11 @@ export default function DevSecOps() {
             </motion.button>
           </div>
 
-          {isRunning && (
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex justify-center gap-8 mt-4"
-            >
-              <div className="flex items-center gap-2 text-green-400">
-                <CheckCircle className="w-4 h-4" />
-                <span>Passed: {passedCount}</span>
-              </div>
-              <div className="flex items-center gap-2 text-red-400">
-                <XCircle className="w-4 h-4" />
-                <span>Blocked: {blockedCount}</span>
-              </div>
-            </motion.div>
-          )}
+          <BuildStatusIndicator 
+            isRunning={isRunning}
+            passedCount={passedCount}
+            blockedCount={blockedCount}
+          />
         </div>
 
         <motion.div
@@ -572,50 +1059,17 @@ export default function DevSecOps() {
         >
           <h2 className="text-2xl font-bold mb-6 text-center gsap-fade-in">Security Integration Points</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {securityIntegrations.map((integration, index) => {
-              const Icon = integration.icon;
-              const isActive = activeSecurityType === integration.id;
-              
-              return (
-                <motion.div
-                  key={integration.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 * index }}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  onClick={() => setActiveSecurityType(isActive ? null : integration.id)}
-                  className={`relative p-4 rounded-xl cursor-pointer transition-all ${
-                    isActive 
-                      ? 'bg-white/10 border-2' 
-                      : 'bg-black/40 border border-white/10 hover:border-white/30'
-                  }`}
-                  style={{ borderColor: isActive ? integration.color : undefined }}
-                  data-testid={`card-security-${integration.id}`}
-                >
-                  <div 
-                    className="w-12 h-12 rounded-lg flex items-center justify-center mb-3 mx-auto"
-                    style={{ backgroundColor: `${integration.color}20` }}
-                  >
-                    <Icon className="w-6 h-6" style={{ color: integration.color }} />
-                  </div>
-                  <h3 className="font-semibold text-center text-sm">{integration.name}</h3>
-                  <p className="text-xs text-white/50 text-center mt-1">{integration.fullName}</p>
-                  
-                  <AnimatePresence>
-                    {isActive && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="mt-3 pt-3 border-t border-white/10"
-                      >
-                        <p className="text-xs text-white/70">{integration.description}</p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              );
-            })}
+            {securityIntegrations.map((integration, index) => (
+              <InteractiveStageCard
+                key={integration.id}
+                stage={integration}
+                index={index}
+                isActive={activeSecurityType === integration.id}
+                onClick={() => setActiveSecurityType(
+                  activeSecurityType === integration.id ? null : integration.id
+                )}
+              />
+            ))}
           </div>
         </motion.div>
 
@@ -625,57 +1079,40 @@ export default function DevSecOps() {
           transition={{ delay: 0.4 }}
           className="mb-12"
         >
-          <h2 className="text-2xl font-bold mb-6 text-center gsap-fade-in">Pipeline Metrics Dashboard</h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="p-6 rounded-2xl bg-black/40 border border-white/10 gsap-fade-in"
-              data-testid="metric-success-rate"
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
-                  <CheckCircle className="w-5 h-5 text-green-400" />
-                </div>
-                <span className="text-white/60 text-sm">Build Success Rate</span>
-              </div>
-              <div className="text-3xl font-bold text-green-400">
-                <AnimatedCounter value={metrics.successRate} />%
-              </div>
-              <div className="mt-3 flex items-end justify-between h-16 gap-1">
-                {[75, 82, 88, 91, 94, 89, 95].map((val, i) => (
-                  <motion.div
-                    key={i}
-                    className="flex-1 rounded-t bg-gradient-to-t from-green-600 to-green-400"
-                    initial={{ height: 0 }}
-                    animate={{ height: `${val}%` }}
-                    transition={{ delay: 0.3 + i * 0.1, duration: 0.5 }}
-                  />
-                ))}
-              </div>
-              <div className="flex justify-between text-[10px] text-white/40 mt-1">
-                <span>Mon</span><span>Sun</span>
-              </div>
-            </motion.div>
-
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="p-6 rounded-2xl bg-black/40 border border-white/10 gsap-fade-in"
-              data-testid="metric-issues-blocked"
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-red-400" />
-                </div>
-                <span className="text-white/60 text-sm">Security Issues Blocked</span>
-              </div>
-              <div className="text-3xl font-bold text-red-400">
-                <AnimatedCounter value={metrics.issuesBlocked} />
-              </div>
-              <div className="mt-2 text-xs text-white/40">
-                +{blockedCount} this session
-              </div>
-            </motion.div>
-
+          <h2 className="text-2xl font-bold mb-6 text-center gsap-fade-in">Live Pipeline Metrics</h2>
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-6">
+            <LiveMetric
+              value={metrics.buildsToday}
+              label="Builds Today"
+              icon={GitBranch}
+              color="#00D4FF"
+              trend="up"
+              trendLabel="+12% from yesterday"
+            />
+            <LiveMetric
+              value={Math.round(metrics.successRate)}
+              label="Success Rate %"
+              icon={CheckCircle}
+              color="#00FF88"
+              trend="up"
+              trendLabel="+2.3% this week"
+            />
+            <LiveMetric
+              value={metrics.issuesBlocked}
+              label="Issues Blocked"
+              icon={Shield}
+              color="#FF6B6B"
+              trend="down"
+              trendLabel="-15% (good!)"
+            />
+            <LiveMetric
+              value={metrics.deployFrequency}
+              label="Deploys/Day"
+              icon={Zap}
+              color={PURPLE}
+              trend="up"
+              trendLabel="+8% this week"
+            />
             <motion.div
               whileHover={{ scale: 1.02 }}
               className="p-6 rounded-2xl bg-black/40 border border-white/10"
@@ -685,35 +1122,55 @@ export default function DevSecOps() {
                 <div className="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center">
                   <Clock className="w-5 h-5 text-yellow-400" />
                 </div>
-                <span className="text-white/60 text-sm">Mean Time to Remediate</span>
+                <span className="text-white/60 text-sm">MTTR</span>
               </div>
               <div className="text-3xl font-bold text-yellow-400">
                 {metrics.mttr}h
               </div>
-              <div className="mt-2 text-xs text-white/40">
-                -23% from last month
-              </div>
-            </motion.div>
-
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="p-6 rounded-2xl bg-black/40 border border-white/10"
-              data-testid="metric-deploy-frequency"
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-cyan-400" />
-                </div>
-                <span className="text-white/60 text-sm">Deployment Frequency</span>
-              </div>
-              <div className="text-3xl font-bold text-cyan-400">
-                <AnimatedCounter value={metrics.deployFrequency} />/day
-              </div>
-              <div className="mt-2 text-xs text-white/40">
-                +8% from last week
+              <div className="mt-2 text-xs text-green-400">
+                ↓ -23% from last month
               </div>
             </motion.div>
           </div>
+          
+          <motion.div
+            className="mt-6 p-6 rounded-2xl bg-black/40 border border-white/10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+          >
+            <h3 className="text-lg font-semibold mb-4">Weekly Build Activity</h3>
+            <div className="flex items-end justify-between h-32 gap-2">
+              {[65, 82, 78, 91, 85, 94, 88].map((val, i) => (
+                <motion.div
+                  key={i}
+                  className="flex-1 rounded-t relative group"
+                  style={{
+                    background: `linear-gradient(to top, ${CYAN}, ${PURPLE})`,
+                  }}
+                  initial={{ height: 0 }}
+                  animate={{ height: `${val}%` }}
+                  transition={{ delay: 0.7 + i * 0.1, duration: 0.5 }}
+                >
+                  <motion.div
+                    className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ color: CYAN }}
+                  >
+                    {val}%
+                  </motion.div>
+                </motion.div>
+              ))}
+            </div>
+            <div className="flex justify-between text-xs text-white/40 mt-2">
+              <span>Mon</span>
+              <span>Tue</span>
+              <span>Wed</span>
+              <span>Thu</span>
+              <span>Fri</span>
+              <span>Sat</span>
+              <span>Sun</span>
+            </div>
+          </motion.div>
         </motion.div>
 
         <motion.div

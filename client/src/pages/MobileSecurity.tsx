@@ -321,7 +321,6 @@ export default function MobileSecurity() {
           >
             <PhoneSecurityVisualization 
               isScanning={isScanning}
-              threatsBlocked={threatsBlocked}
               onThreatBlocked={handleThreatBlocked}
             />
           </motion.div>
