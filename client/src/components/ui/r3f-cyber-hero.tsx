@@ -34,7 +34,9 @@ function CyberGrid() {
       varying vec3 vPosition;
       
       void main() {
-        vec2 grid = abs(fract(vPosition.xz * 0.5) - 0.5) / fwidth(vPosition.xz * 0.5);
+        // Offset grid by 1.0 to avoid center line at X=0/Z=0
+        vec2 offsetPos = vPosition.xz + vec2(1.0, 1.0);
+        vec2 grid = abs(fract(offsetPos * 0.5) - 0.5) / fwidth(offsetPos * 0.5);
         float line = min(grid.x, grid.y);
         float gridLine = 1.0 - min(line, 1.0);
         
