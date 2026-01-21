@@ -1043,40 +1043,6 @@ export function RealisticSolarSystem() {
             center: new THREE.Vector3(0, 0, 0),
           };
           
-          if (!trailParticlesRef.current) {
-            const particleCount = 100;
-            const positions = new Float32Array(particleCount * 3);
-            const sizes = new Float32Array(particleCount);
-            const alphas = new Float32Array(particleCount);
-            
-            for (let i = 0; i < particleCount; i++) {
-              positions[i * 3] = (Math.random() - 0.5) * 20;
-              positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
-              positions[i * 3 + 2] = -10 - Math.random() * 80;
-              sizes[i] = 1 + Math.random() * 2;
-              alphas[i] = 0;
-            }
-            
-            const trailGeom = new THREE.BufferGeometry();
-            trailGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            trailGeom.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-            trailGeom.setAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
-            
-            const trailMat = new THREE.ShaderMaterial({
-              uniforms: {
-                trailColor: { value: new THREE.Vector3(warpColor.r, warpColor.g, warpColor.b) },
-              },
-              vertexShader: trailParticleShader.vertexShader,
-              fragmentShader: trailParticleShader.fragmentShader,
-              transparent: true,
-              depthWrite: false,
-              blending: THREE.AdditiveBlending,
-            });
-            
-            const trailParticles = new THREE.Points(trailGeom, trailMat);
-            sceneRef.current.scene.add(trailParticles);
-            trailParticlesRef.current = trailParticles;
-          }
         }
         
         sceneRef.current.galaxyGroups.forEach((group) => {
@@ -1861,7 +1827,6 @@ export function RealisticSolarSystem() {
     physics.planetScatter = { active: true, progress: 0 };
     
     createShockwave();
-    createTrailParticles();
     
     sceneRef.current.galaxyGroups.forEach((group) => {
       group.planets.forEach((mesh) => {
@@ -1970,23 +1935,6 @@ export function RealisticSolarSystem() {
       }
     }
     
-    if (trailParticlesRef.current && warpEffect > 0.3) {
-      const positions = trailParticlesRef.current.geometry.attributes.position.array as Float32Array;
-      const alphas = trailParticlesRef.current.geometry.attributes.alpha.array as Float32Array;
-      
-      for (let i = 0; i < alphas.length; i++) {
-        positions[i * 3 + 2] += 2 * warpEffect;
-        if (positions[i * 3 + 2] > 50) {
-          positions[i * 3 + 2] = -80;
-          positions[i * 3] = (Math.random() - 0.5) * 20;
-          positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
-        }
-        alphas[i] = warpEffect * 0.8;
-      }
-      
-      trailParticlesRef.current.geometry.attributes.position.needsUpdate = true;
-      trailParticlesRef.current.geometry.attributes.alpha.needsUpdate = true;
-    }
 
     refs.starLayers.forEach((layer) => {
       const speed = (layer as any).userData.speed;
