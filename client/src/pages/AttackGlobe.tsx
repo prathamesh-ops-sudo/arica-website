@@ -101,6 +101,7 @@ export default function AttackGlobe() {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [attacks, setAttacks] = useState<Attack[]>([]);
   const [attackIdCounter, setAttackIdCounter] = useState(0);
+  const [webglFailed, setWebglFailed] = useState(false);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -213,13 +214,26 @@ export default function AttackGlobe() {
     refs.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
     refs.camera.position.set(0, 0, 14);
 
-    refs.renderer = new THREE.WebGLRenderer({
-      canvas: canvasRef.current,
-      antialias: true,
-      alpha: true,
-    });
-    refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    refs.renderer.setClearColor(0x0a0a1e, 0);
+    try {
+      refs.renderer = new THREE.WebGLRenderer({
+        canvas: canvasRef.current,
+        antialias: true,
+        alpha: true,
+        failIfMajorPerformanceCaveat: false,
+      });
+      refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      refs.renderer.setClearColor(0x0a0a1e, 0);
+    } catch (e) {
+      console.warn('WebGL not available:', e);
+      setWebglFailed(true);
+      return;
+    }
+    
+    if (!refs.renderer.getContext()) {
+      console.warn('WebGL context unavailable');
+      setWebglFailed(true);
+      return;
+    }
 
     refs.globeGroup = new THREE.Group();
     refs.scene.add(refs.globeGroup);
@@ -681,11 +695,21 @@ export default function AttackGlobe() {
         className="absolute inset-0 w-full h-full"
         style={{ zIndex: 1 }}
       >
-        <canvas 
-          ref={canvasRef}
-          className="w-full h-full"
-          data-testid="globe-canvas"
-        />
+        {webglFailed ? (
+          <div className="w-full h-full flex items-center justify-center bg-[#0a0a1e]" data-testid="webgl-fallback">
+            <div className="text-center p-8">
+              <Globe2 className="w-24 h-24 mx-auto mb-4 text-[#00D4FF]/50" />
+              <h3 className="text-xl font-semibold text-white/80 mb-2">3D Globe Unavailable</h3>
+              <p className="text-white/50">WebGL is required for the interactive globe visualization.</p>
+            </div>
+          </div>
+        ) : (
+          <canvas 
+            ref={canvasRef}
+            className="w-full h-full"
+            data-testid="globe-canvas"
+          />
+        )}
       </div>
       
       <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a1e]/30 via-transparent to-[#0a0a1e]/80 pointer-events-none" style={{ zIndex: 2 }} />
