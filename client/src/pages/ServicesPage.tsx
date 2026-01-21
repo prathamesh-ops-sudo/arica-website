@@ -1,10 +1,15 @@
-import { motion } from "framer-motion";
+import { motion, useInView, useSpring, useTransform, useScroll } from "framer-motion";
 import {
   Shield,
   Scale,
   Code,
   CheckCircle,
   ArrowRight,
+  Lock,
+  ShieldCheck,
+  KeyRound,
+  Fingerprint,
+  type LucideIcon,
 } from "lucide-react";
 import { Link } from "wouter";
 import { Navbar } from "@/components/Navbar";
@@ -12,6 +17,7 @@ import { CTA } from "@/components/CTA";
 import { Button } from "@/components/ui/button";
 import { Typewriter } from "@/components/ui/typewriter";
 import { AmbientParticles } from "@/components/ui/ambient-particles";
+import { useRef, useState, useEffect, useCallback } from "react";
 
 const services = [
   {
@@ -28,6 +34,12 @@ const services = [
       "API Security Testing",
       "Social Engineering Assessments",
     ],
+    stats: [
+      { label: "VAPT Assessments", value: 500, suffix: "+" },
+      { label: "Vulnerabilities Found", value: 12500, suffix: "+" },
+      { label: "Client Satisfaction", value: 99, suffix: "%" },
+    ],
+    color: "cyan" as const,
   },
   {
     id: "iso-audit",
@@ -43,6 +55,12 @@ const services = [
       "Certification Support",
       "Continuous Compliance Monitoring",
     ],
+    stats: [
+      { label: "Successful Audits", value: 150, suffix: "+" },
+      { label: "Certifications Achieved", value: 98, suffix: "%" },
+      { label: "Compliance Rate", value: 100, suffix: "%" },
+    ],
+    color: "purple" as const,
   },
   {
     id: "custom-software",
@@ -58,12 +76,382 @@ const services = [
       "Secure API Development",
       "Enterprise Solutions",
     ],
+    stats: [
+      { label: "Projects Delivered", value: 200, suffix: "+" },
+      { label: "Lines of Secure Code", value: 2, suffix: "M+" },
+      { label: "On-Time Delivery", value: 95, suffix: "%" },
+    ],
+    color: "cyan" as const,
   },
 ];
+
+const floatingElements = [
+  { Icon: Shield, size: 24, initialX: 5, initialY: 20, speed: 0.3 },
+  { Icon: Lock, size: 20, initialX: 90, initialY: 15, speed: 0.5 },
+  { Icon: ShieldCheck, size: 28, initialX: 15, initialY: 60, speed: 0.4 },
+  { Icon: KeyRound, size: 22, initialX: 85, initialY: 70, speed: 0.35 },
+  { Icon: Fingerprint, size: 26, initialX: 8, initialY: 85, speed: 0.45 },
+  { Icon: Lock, size: 18, initialX: 92, initialY: 45, speed: 0.55 },
+  { Icon: Shield, size: 20, initialX: 50, initialY: 10, speed: 0.25 },
+  { Icon: ShieldCheck, size: 22, initialX: 75, initialY: 90, speed: 0.38 },
+];
+
+function FloatingSecurityElements() {
+  const { scrollY } = useScroll();
+  
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+      {floatingElements.map((el, index) => (
+        <FloatingIcon key={index} element={el} scrollY={scrollY} index={index} />
+      ))}
+    </div>
+  );
+}
+
+function FloatingIcon({ 
+  element, 
+  scrollY, 
+  index 
+}: { 
+  element: typeof floatingElements[0]; 
+  scrollY: ReturnType<typeof useScroll>['scrollY']; 
+  index: number;
+}) {
+  const y = useTransform(
+    scrollY,
+    [0, 3000],
+    [0, -element.speed * 500]
+  );
+  
+  const opacity = useTransform(
+    scrollY,
+    [0, 500, 2500, 3000],
+    [0.08, 0.15, 0.15, 0.05]
+  );
+
+  return (
+    <motion.div
+      className="absolute"
+      style={{
+        left: `${element.initialX}%`,
+        top: `${element.initialY}%`,
+        y,
+        opacity,
+      }}
+      animate={{
+        y: [0, -15, 0],
+        rotate: [0, 5, -5, 0],
+      }}
+      transition={{
+        duration: 6 + index * 0.5,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      <element.Icon 
+        size={element.size} 
+        className="text-primary/30"
+        strokeWidth={1}
+      />
+    </motion.div>
+  );
+}
+
+function Card3D({ 
+  children, 
+  className = "",
+  glowColor = "cyan"
+}: { 
+  children: React.ReactNode; 
+  className?: string;
+  glowColor?: "cyan" | "purple";
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [rotateX, setRotateX] = useState(0);
+  const [rotateY, setRotateY] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const [glowPosition, setGlowPosition] = useState({ x: 50, y: 50 });
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    
+    const rect = cardRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    const mouseX = e.clientX - centerX;
+    const mouseY = e.clientY - centerY;
+    
+    const rotateXValue = (mouseY / (rect.height / 2)) * -8;
+    const rotateYValue = (mouseX / (rect.width / 2)) * 8;
+    
+    setRotateX(rotateXValue);
+    setRotateY(rotateYValue);
+    
+    const glowX = ((e.clientX - rect.left) / rect.width) * 100;
+    const glowY = ((e.clientY - rect.top) / rect.height) * 100;
+    setGlowPosition({ x: glowX, y: glowY });
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setRotateX(0);
+    setRotateY(0);
+    setIsHovered(false);
+    setGlowPosition({ x: 50, y: 50 });
+  }, []);
+
+  const glowColorValue = glowColor === "cyan" ? "0, 212, 255" : "153, 68, 255";
+
+  return (
+    <motion.div
+      ref={cardRef}
+      className={`relative ${className}`}
+      style={{
+        perspective: "1000px",
+        transformStyle: "preserve-3d",
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={handleMouseLeave}
+      animate={{
+        rotateX: rotateX,
+        rotateY: rotateY,
+        y: isHovered ? -8 : 0,
+        boxShadow: isHovered 
+          ? `0 25px 50px -12px rgba(${glowColorValue}, 0.25), 0 0 0 1px rgba(${glowColorValue}, 0.3)`
+          : "0 10px 30px -15px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05)",
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+      }}
+    >
+      <div
+        className="absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-300"
+        style={{
+          background: `radial-gradient(circle at ${glowPosition.x}% ${glowPosition.y}%, rgba(${glowColorValue}, ${isHovered ? 0.15 : 0}) 0%, transparent 60%)`,
+          opacity: isHovered ? 1 : 0,
+        }}
+      />
+      <div
+        className="absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-300"
+        style={{
+          border: `1px solid rgba(${glowColorValue}, ${isHovered ? 0.5 : 0.1})`,
+          boxShadow: isHovered ? `inset 0 0 30px rgba(${glowColorValue}, 0.1)` : "none",
+        }}
+      />
+      {children}
+    </motion.div>
+  );
+}
+
+function AnimatedIcon({ 
+  Icon, 
+  color = "cyan" 
+}: { 
+  Icon: LucideIcon; 
+  color?: "cyan" | "purple";
+}) {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  const glowColor = color === "cyan" ? "rgba(0, 212, 255, 0.6)" : "rgba(153, 68, 255, 0.6)";
+  const bgColor = color === "cyan" ? "bg-primary/10" : "bg-purple-500/10";
+  const textColor = color === "cyan" ? "text-primary" : "text-purple-400";
+
+  return (
+    <motion.div
+      className={`inline-flex p-3 rounded-xl ${bgColor} ${textColor} cursor-pointer relative`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      animate={{
+        scale: isHovered ? 1.15 : 1,
+        boxShadow: isHovered 
+          ? `0 0 30px ${glowColor}, 0 0 60px ${glowColor}`
+          : `0 0 15px ${glowColor.replace('0.6', '0.2')}`,
+      }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+    >
+      <motion.div
+        className="absolute inset-0 rounded-xl"
+        style={{
+          background: `radial-gradient(circle, ${glowColor.replace('0.6', '0.3')} 0%, transparent 70%)`,
+        }}
+        animate={{
+          opacity: [0.5, 1, 0.5],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      <Icon className="w-8 h-8 relative z-10" />
+    </motion.div>
+  );
+}
+
+function CountUpStat({ 
+  value, 
+  suffix = "", 
+  label,
+  color = "cyan"
+}: { 
+  value: number; 
+  suffix?: string; 
+  label: string;
+  color?: "cyan" | "purple";
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [displayValue, setDisplayValue] = useState(0);
+  
+  const springValue = useSpring(0, {
+    stiffness: 50,
+    damping: 20,
+  });
+
+  useEffect(() => {
+    if (isInView) {
+      springValue.set(value);
+    }
+  }, [isInView, value, springValue]);
+
+  useEffect(() => {
+    const unsubscribe = springValue.on("change", (latest) => {
+      setDisplayValue(Math.round(latest));
+    });
+    return unsubscribe;
+  }, [springValue]);
+
+  const textColor = color === "cyan" ? "text-primary" : "text-purple-400";
+  const glowColor = color === "cyan" ? "drop-shadow-[0_0_8px_rgba(0,212,255,0.5)]" : "drop-shadow-[0_0_8px_rgba(153,68,255,0.5)]";
+
+  return (
+    <div ref={ref} className="text-center">
+      <motion.div
+        className={`text-3xl md:text-4xl font-bold ${textColor} ${glowColor} tabular-nums`}
+        initial={{ opacity: 0, y: 20 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.5 }}
+      >
+        {displayValue.toLocaleString()}{suffix}
+      </motion.div>
+      <motion.div
+        className="text-sm text-muted-foreground mt-1"
+        initial={{ opacity: 0 }}
+        animate={isInView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        {label}
+      </motion.div>
+    </div>
+  );
+}
+
+function StaggeredFeatures({ 
+  features, 
+  color = "cyan" 
+}: { 
+  features: string[]; 
+  color?: "cyan" | "purple";
+}) {
+  const ref = useRef<HTMLUListElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+  return (
+    <ul ref={ref} className="space-y-4">
+      {features.map((feature, index) => (
+        <motion.li
+          key={feature}
+          className="flex items-start gap-3"
+          initial={{ opacity: 0, x: -20 }}
+          animate={isInView ? { opacity: 1, x: 0 } : {}}
+          transition={{
+            duration: 0.4,
+            delay: index * 0.1,
+            ease: "easeOut",
+          }}
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={isInView ? { scale: 1 } : {}}
+            transition={{
+              type: "spring",
+              stiffness: 500,
+              damping: 25,
+              delay: index * 0.1 + 0.2,
+            }}
+          >
+            <CheckCircle className={`w-5 h-5 mt-0.5 flex-shrink-0 ${color === "cyan" ? "text-primary" : "text-purple-400"}`} />
+          </motion.div>
+          <span className="text-muted-foreground">{feature}</span>
+        </motion.li>
+      ))}
+    </ul>
+  );
+}
+
+function AnimatedProgressBar({
+  value,
+  label,
+  color = "cyan"
+}: {
+  value: number;
+  label: string;
+  color?: "cyan" | "purple";
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const [displayValue, setDisplayValue] = useState(0);
+  
+  const springValue = useSpring(0, { stiffness: 50, damping: 20 });
+
+  useEffect(() => {
+    if (isInView) {
+      springValue.set(value);
+    }
+  }, [isInView, value, springValue]);
+
+  useEffect(() => {
+    const unsubscribe = springValue.on("change", (latest) => {
+      setDisplayValue(Math.round(latest));
+    });
+    return unsubscribe;
+  }, [springValue]);
+
+  const animatedWidth = useTransform(springValue, (val) => `${val}%`);
+  
+  const barColor = color === "cyan" 
+    ? "bg-gradient-to-r from-primary to-cyan-400" 
+    : "bg-gradient-to-r from-purple-500 to-purple-400";
+  const glowColor = color === "cyan"
+    ? "shadow-[0_0_20px_rgba(0,212,255,0.6)]"
+    : "shadow-[0_0_20px_rgba(153,68,255,0.6)]";
+
+  return (
+    <div ref={ref} className="mb-4">
+      <div className="flex justify-between mb-2">
+        <span className="text-sm text-muted-foreground">{label}</span>
+        <span className={`text-sm font-bold ${color === "cyan" ? "text-primary" : "text-purple-400"}`}>
+          {displayValue}%
+        </span>
+      </div>
+      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+        <motion.div
+          className={`h-full rounded-full ${barColor} ${glowColor}`}
+          style={{ width: animatedWidth }}
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function ServicesPage() {
   return (
     <div className="min-h-screen bg-background aurora-bg">
+      <FloatingSecurityElements />
       <AmbientParticles variant="dots" count={25} opacity={0.12} />
       <Navbar />
 
@@ -83,7 +471,11 @@ export default function ServicesPage() {
             className="max-w-3xl"
           >
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 mb-6">
-              <span className="w-1.5 h-1.5 bg-primary rounded-full" />
+              <motion.span 
+                className="w-1.5 h-1.5 bg-primary rounded-full"
+                animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
               <span className="text-xs text-primary font-medium tracking-wider uppercase">
                 Our Services
               </span>
@@ -117,8 +509,8 @@ export default function ServicesPage() {
               className="grid lg:grid-cols-2 gap-16 items-start"
             >
               <div className={index % 2 === 1 ? "lg:order-2" : ""}>
-                <div className="inline-flex p-3 rounded-xl bg-primary/10 text-primary mb-6">
-                  <service.icon className="w-8 h-8" />
+                <div className="mb-6">
+                  <AnimatedIcon Icon={service.icon} color={service.color} />
                 </div>
                 <h2 className="font-display text-4xl font-bold mb-6">
                   {service.title}
@@ -126,6 +518,19 @@ export default function ServicesPage() {
                 <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                   {service.description}
                 </p>
+                
+                <div className="grid grid-cols-3 gap-4 mb-8 p-4 rounded-xl bg-card/50 border border-white/5">
+                  {service.stats.map((stat) => (
+                    <CountUpStat
+                      key={stat.label}
+                      value={stat.value}
+                      suffix={stat.suffix}
+                      label={stat.label}
+                      color={service.color}
+                    />
+                  ))}
+                </div>
+
                 <Link href="/contact">
                   <Button
                     data-testid={`button-service-${service.id}`}
@@ -137,23 +542,35 @@ export default function ServicesPage() {
                 </Link>
               </div>
 
-              <div
-                className={`rounded-2xl p-8 border border-white/10 bg-card/50 ${
+              <Card3D
+                className={`rounded-2xl bg-card/50 backdrop-blur-sm overflow-hidden ${
                   index % 2 === 1 ? "lg:order-1" : ""
                 }`}
+                glowColor={service.color}
               >
-                <h3 className="font-display text-xl font-bold mb-6">
-                  What's Included
-                </h3>
-                <ul className="space-y-4">
-                  {service.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 mt-0.5 flex-shrink-0 text-primary" />
-                      <span className="text-muted-foreground">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                <div className="p-8 relative z-10">
+                  <h3 className="font-display text-xl font-bold mb-6 flex items-center gap-2">
+                    <motion.div
+                      className={`w-2 h-2 rounded-full ${service.color === "cyan" ? "bg-primary" : "bg-purple-500"}`}
+                      animate={{ scale: [1, 1.3, 1] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    />
+                    What's Included
+                  </h3>
+                  <StaggeredFeatures features={service.features} color={service.color} />
+                  
+                  <div className="mt-8 pt-6 border-t border-white/10">
+                    <h4 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wider">
+                      Success Rate
+                    </h4>
+                    <AnimatedProgressBar
+                      value={service.stats[1]?.value || 95}
+                      label={service.stats[1]?.label || "Success Rate"}
+                      color={service.color}
+                    />
+                  </div>
+                </div>
+              </Card3D>
             </motion.div>
           </div>
         </section>

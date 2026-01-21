@@ -1,9 +1,10 @@
-import { motion } from "framer-motion";
-import { Shield, Target, Eye, Award, Users, Globe } from "lucide-react";
+import { motion, useInView, useSpring, useTransform } from "framer-motion";
+import { Shield, Target, Eye, Award, Users, Globe, Rocket, Building, TrendingUp, Crown } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Team } from "@/components/Team";
 import { CTA } from "@/components/CTA";
 import { AmbientParticles } from "@/components/ui/ambient-particles";
+import { useRef, useState, useEffect, useCallback } from "react";
 
 const values = [
   {
@@ -24,16 +25,259 @@ const values = [
 ];
 
 const stats = [
-  { icon: Users, value: "200+", label: "Security Assessments" },
-  { icon: Globe, value: "50+", label: "Enterprise Clients" },
-  { icon: Award, value: "10+", label: "Years Experience" },
-  { icon: Shield, value: "100%", label: "Audit Success Rate" },
+  { icon: Users, value: 200, suffix: "+", label: "Security Assessments" },
+  { icon: Globe, value: 50, suffix: "+", label: "Enterprise Clients" },
+  { icon: Award, value: 10, suffix: "+", label: "Years Experience" },
+  { icon: Shield, value: 100, suffix: "%", label: "Audit Success Rate" },
 ];
+
+const milestones = [
+  { year: "2010", title: "Founded", description: "Started with a vision to protect digital assets", icon: Building },
+  { year: "2015", title: "100 Clients", description: "Reached our first major milestone", icon: Users },
+  { year: "2020", title: "Global Expansion", description: "Extended services worldwide", icon: Rocket },
+  { year: "2024", title: "Industry Leader", description: "Recognized as top security firm", icon: Crown },
+];
+
+function useCountUp(end: number, duration: number = 2000, startOnView: boolean = true) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const hasStarted = useRef(false);
+
+  useEffect(() => {
+    if (!startOnView || (isInView && !hasStarted.current)) {
+      hasStarted.current = true;
+      const startTime = Date.now();
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        setCount(Math.floor(easeOut * end));
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        }
+      };
+      requestAnimationFrame(animate);
+    }
+  }, [isInView, end, duration, startOnView]);
+
+  return { count, ref };
+}
+
+function AnimatedStat({ stat, index }: { stat: typeof stats[0]; index: number }) {
+  const { count, ref } = useCountUp(stat.value, 2000);
+  
+  return (
+    <motion.div
+      ref={ref}
+      key={stat.label}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      whileHover={{ 
+        scale: 1.05,
+        boxShadow: "0 0 30px rgba(0, 212, 255, 0.3)",
+      }}
+      data-testid={`stat-${index}`}
+      className="rounded-xl p-6 border border-white/10 bg-card/50 text-center cursor-pointer transition-all duration-300 hover:border-primary/50 hover:bg-card/80"
+    >
+      <stat.icon className="w-6 h-6 text-primary mx-auto mb-3" />
+      <p className="font-display text-3xl font-bold text-primary mb-1">
+        {count}{stat.suffix}
+      </p>
+      <p className="text-sm text-muted-foreground">{stat.label}</p>
+    </motion.div>
+  );
+}
+
+function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
+  const [rotateX, setRotateX] = useState(0);
+  const [rotateY, setRotateY] = useState(0);
+  const [glowX, setGlowX] = useState(50);
+  const [glowY, setGlowY] = useState(50);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    const rotateXValue = ((y - centerY) / centerY) * -10;
+    const rotateYValue = ((x - centerX) / centerX) * 10;
+    
+    setRotateX(rotateXValue);
+    setRotateY(rotateYValue);
+    setGlowX((x / rect.width) * 100);
+    setGlowY((y / rect.height) * 100);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setRotateX(0);
+    setRotateY(0);
+    setGlowX(50);
+    setGlowY(50);
+  }, []);
+
+  return (
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+        transformStyle: "preserve-3d",
+      }}
+      whileHover={{ scale: 1.02 }}
+      className={`relative transition-transform duration-200 ease-out ${className}`}
+    >
+      <div
+        className="absolute inset-0 rounded-xl opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+        style={{
+          background: `radial-gradient(circle at ${glowX}% ${glowY}%, rgba(0, 212, 255, 0.3), transparent 50%)`,
+        }}
+      />
+      <div className="absolute inset-0 rounded-xl border-2 border-transparent hover:border-primary/40 transition-colors duration-300 pointer-events-none" />
+      {children}
+    </motion.div>
+  );
+}
+
+function Timeline() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+
+  return (
+    <section className="py-20 relative overflow-hidden" ref={containerRef}>
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0, 212, 255, 0.08) 1px, transparent 0)`,
+          backgroundSize: '60px 60px'
+        }} />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="font-display text-4xl font-bold mb-4">
+            Our <span className="text-gradient">Journey</span>
+          </h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            From a small consulting firm to an industry leader, here's how we've grown
+          </p>
+        </motion.div>
+
+        <div className="relative">
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden md:block">
+            <motion.div
+              initial={{ scaleY: 0 }}
+              animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+              className="absolute inset-0 bg-gradient-to-b from-primary via-primary to-primary origin-top"
+              style={{ boxShadow: "0 0 20px rgba(0, 212, 255, 0.5)" }}
+            />
+          </div>
+
+          <div className="space-y-12 md:space-y-0">
+            {milestones.map((milestone, index) => (
+              <motion.div
+                key={milestone.year}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                animate={isInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.3 + index * 0.2 }}
+                className={`relative md:flex items-center ${
+                  index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+                }`}
+              >
+                <div className="md:w-1/2 md:px-8">
+                  <motion.div
+                    whileHover={{ 
+                      scale: 1.03,
+                      boxShadow: "0 0 40px rgba(0, 212, 255, 0.2)",
+                    }}
+                    className={`p-6 rounded-xl border border-white/10 bg-card/60 backdrop-blur-sm ${
+                      index % 2 === 0 ? "md:mr-auto md:text-right" : "md:ml-auto md:text-left"
+                    }`}
+                  >
+                    <div className={`flex items-center gap-3 mb-3 ${
+                      index % 2 === 0 ? "md:justify-end" : "md:justify-start"
+                    }`}>
+                      <div className="p-2 rounded-lg bg-primary/10">
+                        <milestone.icon className="w-5 h-5 text-primary" />
+                      </div>
+                      <span className="text-2xl font-bold text-primary">{milestone.year}</span>
+                    </div>
+                    <h3 className="font-display text-xl font-bold mb-2">{milestone.title}</h3>
+                    <p className="text-sm text-muted-foreground">{milestone.description}</p>
+                  </motion.div>
+                </div>
+
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={isInView ? { scale: 1 } : { scale: 0 }}
+                  transition={{ duration: 0.4, delay: 0.5 + index * 0.2 }}
+                  className="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-primary hidden md:block"
+                  style={{
+                    boxShadow: "0 0 20px rgba(0, 212, 255, 0.8), 0 0 40px rgba(0, 212, 255, 0.4)",
+                  }}
+                >
+                  <motion.div
+                    animate={{ scale: [1, 1.5, 1] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
+                    className="absolute inset-0 rounded-full bg-primary/30"
+                  />
+                </motion.div>
+
+                <div className="md:w-1/2" />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FloatingParticles() {
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+      {Array.from({ length: 20 }).map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 bg-primary/20 rounded-full"
+          initial={{
+            x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+            y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+          }}
+          animate={{
+            y: [null, Math.random() * -200 - 100],
+            opacity: [0, 0.6, 0],
+          }}
+          transition={{
+            duration: 8 + Math.random() * 4,
+            repeat: Infinity,
+            delay: Math.random() * 5,
+            ease: "linear",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default function About() {
   return (
     <div className="min-h-screen bg-background aurora-bg">
-      <AmbientParticles variant="network" count={18} opacity={0.1} />
+      <AmbientParticles variant="network" count={25} opacity={0.15} />
+      <FloatingParticles />
       <Navbar />
 
       <section className="pt-32 pb-20 relative overflow-hidden">
@@ -44,6 +288,18 @@ export default function About() {
           }} />
         </div>
 
+        <motion.div
+          className="absolute top-20 right-10 w-64 h-64 rounded-full opacity-10"
+          style={{
+            background: "radial-gradient(circle, rgba(0, 212, 255, 0.4) 0%, transparent 70%)",
+          }}
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.1, 0.15, 0.1],
+          }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        />
+
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -52,7 +308,11 @@ export default function About() {
             className="max-w-3xl"
           >
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 mb-6">
-              <span className="w-1.5 h-1.5 bg-primary rounded-full" />
+              <motion.span 
+                className="w-1.5 h-1.5 bg-primary rounded-full"
+                animate={{ opacity: [1, 0.4, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
               <span className="text-xs text-primary font-medium tracking-wider uppercase">
                 About Us
               </span>
@@ -74,25 +334,13 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-6">
             {stats.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                data-testid={`stat-${index}`}
-                className="rounded-xl p-6 border border-white/10 bg-card/50 text-center"
-              >
-                <stat.icon className="w-6 h-6 text-primary mx-auto mb-3" />
-                <p className="font-display text-3xl font-bold text-primary mb-1">
-                  {stat.value}
-                </p>
-                <p className="text-sm text-muted-foreground">{stat.label}</p>
-              </motion.div>
+              <AnimatedStat key={stat.label} stat={stat} index={index} />
             ))}
           </div>
         </div>
       </section>
+
+      <Timeline />
 
       <section className="py-20 relative overflow-hidden bg-card/30">
         <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -133,7 +381,15 @@ export default function About() {
               transition={{ duration: 0.6 }}
               className="grid grid-cols-2 gap-4"
             >
-              <div className="rounded-xl p-6 border border-white/10 bg-card/80 col-span-2">
+              <motion.div 
+                className="rounded-xl p-6 border border-white/10 bg-card/80 col-span-2"
+                whileHover={{ 
+                  scale: 1.02,
+                  borderColor: "rgba(0, 212, 255, 0.4)",
+                  boxShadow: "0 0 30px rgba(0, 212, 255, 0.15)",
+                }}
+                transition={{ duration: 0.3 }}
+              >
                 <h3 className="font-display text-lg font-bold mb-2 text-halo-white">
                   Our Mission
                 </h3>
@@ -141,20 +397,36 @@ export default function About() {
                   To deliver expert security assessments, compliance guidance,
                   and secure software solutions that protect organizations.
                 </p>
-              </div>
-              <div className="rounded-xl p-5 border border-white/10 bg-card/80">
+              </motion.div>
+              <motion.div 
+                className="rounded-xl p-5 border border-white/10 bg-card/80"
+                whileHover={{ 
+                  scale: 1.05,
+                  borderColor: "rgba(0, 212, 255, 0.4)",
+                  boxShadow: "0 0 25px rgba(0, 212, 255, 0.15)",
+                }}
+                transition={{ duration: 0.3 }}
+              >
                 <h3 className="font-display font-bold mb-2 text-halo-white">Vision</h3>
                 <p className="text-xs text-muted-foreground">
                   A world where every business can operate securely in the
                   digital realm.
                 </p>
-              </div>
-              <div className="rounded-xl p-5 border border-white/10 bg-card/80">
+              </motion.div>
+              <motion.div 
+                className="rounded-xl p-5 border border-white/10 bg-card/80"
+                whileHover={{ 
+                  scale: 1.05,
+                  borderColor: "rgba(0, 212, 255, 0.4)",
+                  boxShadow: "0 0 25px rgba(0, 212, 255, 0.15)",
+                }}
+                transition={{ duration: 0.3 }}
+              >
                 <h3 className="font-display font-bold mb-2 text-halo-white">Values</h3>
                 <p className="text-xs text-muted-foreground">
                   Security first, precision, and transparency in every engagement.
                 </p>
-              </div>
+              </motion.div>
             </motion.div>
           </div>
         </div>
@@ -182,15 +454,25 @@ export default function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="rounded-xl p-8 border border-white/10 bg-card/50 text-center"
               >
-                <div className="inline-flex p-3 rounded-xl bg-primary/10 text-primary mb-6">
-                  <value.icon className="w-6 h-6" />
-                </div>
-                <h3 className="font-display text-xl font-bold mb-3">
-                  {value.title}
-                </h3>
-                <p className="text-sm text-muted-foreground">{value.description}</p>
+                <TiltCard className="h-full">
+                  <div className="rounded-xl p-8 border border-white/10 bg-card/50 text-center h-full transition-colors duration-300 hover:bg-card/70 hover:border-primary/30">
+                    <motion.div 
+                      className="inline-flex p-3 rounded-xl bg-primary/10 text-primary mb-6"
+                      whileHover={{ 
+                        scale: 1.1,
+                        boxShadow: "0 0 25px rgba(0, 212, 255, 0.4)",
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <value.icon className="w-6 h-6" />
+                    </motion.div>
+                    <h3 className="font-display text-xl font-bold mb-3">
+                      {value.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">{value.description}</p>
+                  </div>
+                </TiltCard>
               </motion.div>
             ))}
           </div>
