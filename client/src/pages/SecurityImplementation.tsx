@@ -7,7 +7,9 @@ import { Link } from 'wouter';
 import {
   ArrowLeft, Shield, Building2, CheckCircle2, Clock,
   Target, Layers, Settings, Users, TrendingUp, Check,
-  Circle, ChevronRight, Sparkles, Hammer, HardHat, Save
+  Circle, ChevronRight, Sparkles, Hammer, HardHat, Save,
+  ChevronDown, ChevronUp, Activity, Bug, ShieldCheck, Zap,
+  AlertTriangle, Lock, Eye, Database
 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
@@ -70,7 +72,7 @@ function BuildingBlock3D({ block, isActive }: { block: BuildingBlock; isActive: 
     if (glowRef.current) {
       const pulse = Math.sin(state.clock.elapsedTime * 3 + block.id) * 0.1 + 0.2;
       glowRef.current.scale.setScalar(1.2 + pulse);
-      (glowRef.current.material as THREE.MeshBasicMaterial).opacity = isActive ? 0.3 : 0.1;
+      (glowRef.current.material as THREE.MeshBasicMaterial).opacity = isActive ? 0.2 : 0.05;
     }
   });
 
@@ -78,7 +80,7 @@ function BuildingBlock3D({ block, isActive }: { block: BuildingBlock; isActive: 
     <group>
       <mesh ref={glowRef} position={block.targetPosition}>
         <boxGeometry args={[1.1, 0.55, 1.1]} />
-        <meshBasicMaterial color={block.color} transparent opacity={0.15} />
+        <meshBasicMaterial color={block.color} transparent opacity={0.1} />
       </mesh>
       
       <Trail
@@ -92,9 +94,11 @@ function BuildingBlock3D({ block, isActive }: { block: BuildingBlock; isActive: 
           <meshStandardMaterial
             color={block.color}
             emissive={block.color}
-            emissiveIntensity={isActive ? 0.5 : 0.2}
+            emissiveIntensity={isActive ? 0.3 : 0.1}
             metalness={0.7}
             roughness={0.3}
+            transparent
+            opacity={0.8}
           />
         </mesh>
       </Trail>
@@ -122,40 +126,34 @@ function Crane({ position, isActive }: { position: [number, number, number]; isA
 
   return (
     <group position={position}>
-      {/* Crane base */}
       <mesh position={[0, 0, 0]}>
         <cylinderGeometry args={[0.8, 1, 0.5, 8]} />
-        <meshStandardMaterial color="#333" metalness={0.9} roughness={0.3} />
+        <meshStandardMaterial color="#333" metalness={0.9} roughness={0.3} transparent opacity={0.6} />
       </mesh>
       
-      {/* Crane tower */}
       <mesh position={[0, 3, 0]}>
         <boxGeometry args={[0.4, 6, 0.4]} />
-        <meshStandardMaterial color="#FFD700" metalness={0.6} roughness={0.4} />
+        <meshStandardMaterial color="#FFD700" metalness={0.6} roughness={0.4} transparent opacity={0.6} />
       </mesh>
       
-      {/* Rotating arm */}
       <group ref={armRef} position={[0, 6, 0]}>
         <mesh position={[2, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
           <boxGeometry args={[0.3, 4, 0.3]} />
-          <meshStandardMaterial color="#FFD700" metalness={0.6} roughness={0.4} />
+          <meshStandardMaterial color="#FFD700" metalness={0.6} roughness={0.4} transparent opacity={0.6} />
         </mesh>
         
-        {/* Cable */}
         <mesh ref={cableRef} position={[3.5, -1.5, 0]}>
           <cylinderGeometry args={[0.02, 0.02, 3, 8]} />
-          <meshBasicMaterial color={CYAN} />
+          <meshBasicMaterial color={CYAN} transparent opacity={0.5} />
         </mesh>
         
-        {/* Hook */}
         <mesh ref={hookRef} position={[3.5, -3, 0]}>
           <sphereGeometry args={[0.15, 8, 8]} />
-          <meshStandardMaterial color={CYAN} emissive={CYAN} emissiveIntensity={0.5} />
+          <meshStandardMaterial color={CYAN} emissive={CYAN} emissiveIntensity={0.3} transparent opacity={0.7} />
         </mesh>
       </group>
       
-      {/* Construction light */}
-      <pointLight position={[0, 7, 0]} color={CYAN} intensity={isActive ? 2 : 0.5} distance={10} />
+      <pointLight position={[0, 7, 0]} color={CYAN} intensity={isActive ? 1 : 0.3} distance={10} />
     </group>
   );
 }
@@ -197,7 +195,7 @@ function ParticleSystem({ particles }: { particles: Particle[] }) {
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         <bufferAttribute attach="attributes-color" args={[colors, 3]} />
       </bufferGeometry>
-      <pointsMaterial size={0.1} vertexColors transparent opacity={0.8} />
+      <pointsMaterial size={0.08} vertexColors transparent opacity={0.5} />
     </points>
   );
 }
@@ -205,31 +203,28 @@ function ParticleSystem({ particles }: { particles: Particle[] }) {
 function BuildingFoundation() {
   return (
     <group position={[0, -2.5, 0]}>
-      {/* Main platform */}
       <mesh>
         <boxGeometry args={[8, 0.3, 8]} />
-        <meshStandardMaterial color="#1a1a2e" metalness={0.8} roughness={0.3} />
+        <meshStandardMaterial color="#1a1a2e" metalness={0.8} roughness={0.3} transparent opacity={0.5} />
       </mesh>
       
-      {/* Grid lines */}
       {[-3, -1.5, 0, 1.5, 3].map((x, i) => (
         <mesh key={`grid-x-${i}`} position={[x, 0.16, 0]}>
           <boxGeometry args={[0.02, 0.02, 8]} />
-          <meshBasicMaterial color={CYAN} transparent opacity={0.3} />
+          <meshBasicMaterial color={CYAN} transparent opacity={0.15} />
         </mesh>
       ))}
       {[-3, -1.5, 0, 1.5, 3].map((z, i) => (
         <mesh key={`grid-z-${i}`} position={[0, 0.16, z]}>
           <boxGeometry args={[8, 0.02, 0.02]} />
-          <meshBasicMaterial color={CYAN} transparent opacity={0.3} />
+          <meshBasicMaterial color={CYAN} transparent opacity={0.15} />
         </mesh>
       ))}
       
-      {/* Corner pillars */}
       {[[-3.5, -3.5], [-3.5, 3.5], [3.5, -3.5], [3.5, 3.5]].map(([x, z], i) => (
         <mesh key={`pillar-${i}`} position={[x, 0.5, z]}>
           <cylinderGeometry args={[0.15, 0.2, 1, 8]} />
-          <meshStandardMaterial color={PURPLE} emissive={PURPLE} emissiveIntensity={0.3} />
+          <meshStandardMaterial color={PURPLE} emissive={PURPLE} emissiveIntensity={0.2} transparent opacity={0.5} />
         </mesh>
       ))}
     </group>
@@ -261,7 +256,6 @@ function SecurityFortress({ blocks, currentPhase, buildProgress }: {
         />
       ))}
       
-      {/* Fortress walls hint */}
       {buildProgress > 0.3 && (
         <group position={[0, 0, 0]}>
           {[0, 1, 2, 3].map((i) => (
@@ -278,23 +272,22 @@ function SecurityFortress({ blocks, currentPhase, buildProgress }: {
               <meshStandardMaterial
                 color={CYAN}
                 transparent
-                opacity={0.1}
+                opacity={0.05}
                 emissive={CYAN}
-                emissiveIntensity={0.2}
+                emissiveIntensity={0.1}
               />
             </mesh>
           ))}
         </group>
       )}
       
-      {/* Shield dome appearing as building completes */}
       {buildProgress > 0.7 && (
         <mesh position={[0, 2, 0]}>
           <sphereGeometry args={[5, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
           <meshStandardMaterial
             color={CYAN}
             transparent
-            opacity={(buildProgress - 0.7) * 0.3}
+            opacity={(buildProgress - 0.7) * 0.15}
             side={THREE.DoubleSide}
             wireframe
           />
@@ -348,8 +341,7 @@ function ConstructionScene({ buildProgress, currentPhase, isBuilding }: {
         setParticles((prev) => {
           const newParticles = [...prev];
           
-          // Add new particles
-          for (let i = 0; i < 3; i++) {
+          for (let i = 0; i < 2; i++) {
             newParticles.push({
               position: new THREE.Vector3(
                 (Math.random() - 0.5) * 4,
@@ -366,10 +358,9 @@ function ConstructionScene({ buildProgress, currentPhase, isBuilding }: {
             });
           }
 
-          // Remove dead particles
-          return newParticles.filter((p) => p.life > 0).slice(-100);
+          return newParticles.filter((p) => p.life > 0).slice(-50);
         });
-      }, 100);
+      }, 150);
 
       return () => clearInterval(interval);
     }
@@ -377,14 +368,14 @@ function ConstructionScene({ buildProgress, currentPhase, isBuilding }: {
 
   return (
     <>
-      <ambientLight intensity={0.3} />
-      <pointLight position={[10, 10, 10]} intensity={1} color={CYAN} />
-      <pointLight position={[-10, 5, -10]} intensity={0.5} color={PURPLE} />
+      <ambientLight intensity={0.2} />
+      <pointLight position={[10, 10, 10]} intensity={0.6} color={CYAN} />
+      <pointLight position={[-10, 5, -10]} intensity={0.3} color={PURPLE} />
       <spotLight
         position={[0, 15, 0]}
         angle={0.5}
         penumbra={0.5}
-        intensity={isBuilding ? 2 : 0.5}
+        intensity={isBuilding ? 1 : 0.3}
         color={CYAN}
       />
 
@@ -399,12 +390,11 @@ function ConstructionScene({ buildProgress, currentPhase, isBuilding }: {
 
       <ParticleSystem particles={particles} />
 
-      <Stars radius={100} depth={50} count={2000} factor={4} fade speed={0.5} />
+      <Stars radius={100} depth={50} count={1000} factor={3} fade speed={0.3} />
 
-      {/* Ground plane */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2.7, 0]}>
         <planeGeometry args={[50, 50]} />
-        <meshStandardMaterial color={NAVY} transparent opacity={0.5} />
+        <meshStandardMaterial color={NAVY} transparent opacity={0.3} />
       </mesh>
     </>
   );
@@ -429,8 +419,10 @@ const implementationPhases = [
     name: 'Assessment & Planning',
     icon: Target,
     duration: '2-3 weeks',
+    description: 'Comprehensive security assessment and strategic planning phase to identify gaps and create roadmap.',
     deliverables: ['Gap Analysis Report', 'Risk Assessment', 'Project Roadmap', 'Resource Plan'],
     dependencies: ['Business Requirements', 'Stakeholder Sign-off'],
+    tasks: ['Stakeholder interviews', 'Asset inventory', 'Threat modeling', 'Budget estimation'],
     color: CYAN,
   },
   {
@@ -438,8 +430,10 @@ const implementationPhases = [
     name: 'Architecture Design',
     icon: Layers,
     duration: '3-4 weeks',
+    description: 'Design the security architecture framework with detailed network and data flow specifications.',
     deliverables: ['Security Architecture Doc', 'Network Diagrams', 'Data Flow Maps', 'Tool Selection'],
     dependencies: ['Assessment Completion', 'Budget Approval'],
+    tasks: ['Zero-trust design', 'Network segmentation', 'Encryption strategy', 'Vendor evaluation'],
     color: '#00FF88',
   },
   {
@@ -447,8 +441,10 @@ const implementationPhases = [
     name: 'Core Controls Deployment',
     icon: Settings,
     duration: '6-8 weeks',
+    description: 'Deploy and configure essential security controls including IAM, firewalls, and monitoring systems.',
     deliverables: ['IAM Implementation', 'Firewall Configuration', 'Encryption Setup', 'SIEM Deployment'],
     dependencies: ['Architecture Sign-off', 'Infrastructure Ready'],
+    tasks: ['SSO configuration', 'Firewall rules', 'Certificate management', 'Log aggregation'],
     color: '#FFD700',
   },
   {
@@ -456,8 +452,10 @@ const implementationPhases = [
     name: 'Integration & Testing',
     icon: Building2,
     duration: '4-5 weeks',
+    description: 'Integrate security controls and conduct comprehensive testing including penetration tests.',
     deliverables: ['Integration Tests', 'Penetration Test Report', 'Vulnerability Assessment', 'Performance Report'],
     dependencies: ['Core Controls Active', 'Test Environment'],
+    tasks: ['API integration', 'Penetration testing', 'Load testing', 'Compliance validation'],
     color: PURPLE,
   },
   {
@@ -465,8 +463,10 @@ const implementationPhases = [
     name: 'User Training & Rollout',
     icon: Users,
     duration: '3-4 weeks',
+    description: 'Train end users and security team, then execute phased rollout across the organization.',
     deliverables: ['Training Materials', 'User Documentation', 'Rollout Plan', 'Support Procedures'],
     dependencies: ['Testing Complete', 'Training Schedule'],
+    tasks: ['Training sessions', 'Documentation', 'Phased deployment', 'Support setup'],
     color: '#FF6B6B',
   },
   {
@@ -474,8 +474,10 @@ const implementationPhases = [
     name: 'Continuous Improvement',
     icon: TrendingUp,
     duration: 'Ongoing',
+    description: 'Establish continuous monitoring, incident response, and security optimization processes.',
     deliverables: ['Monitoring Dashboard', 'Incident Playbooks', 'Metrics Reports', 'Optimization Plan'],
     dependencies: ['Full Deployment', 'Baseline Metrics'],
+    tasks: ['24/7 monitoring', 'Incident response', 'Quarterly reviews', 'Threat intelligence'],
     color: '#00D4FF',
   },
 ];
@@ -517,6 +519,136 @@ function saveChecklistState(items: { id: number; completed: boolean }[]) {
   }
 }
 
+function AnimatedCounter({ value, duration = 2000, suffix = '' }: { value: number; duration?: number; suffix?: string }) {
+  const [displayValue, setDisplayValue] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    if (hasAnimated) return;
+    
+    const startTime = Date.now();
+    const startValue = 0;
+    
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(startValue + (value - startValue) * easeOut);
+      
+      setDisplayValue(current);
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setHasAnimated(true);
+      }
+    };
+    
+    const timeout = setTimeout(() => {
+      animate();
+    }, 500);
+    
+    return () => clearTimeout(timeout);
+  }, [value, duration, hasAnimated]);
+
+  return <span>{displayValue}{suffix}</span>;
+}
+
+function MetricCard({ icon: Icon, label, value, suffix = '', color, delay = 0 }: {
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  label: string;
+  value: number;
+  suffix?: string;
+  color: string;
+  delay?: number;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20, scale: 0.9 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ delay, duration: 0.5, type: 'spring' }}
+      className="relative p-5 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 overflow-hidden group hover:bg-white/10 transition-all"
+      data-testid={`metric-${label.toLowerCase().replace(/\s+/g, '-')}`}
+    >
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+        <div className="absolute inset-0 bg-gradient-to-br" style={{ background: `linear-gradient(135deg, ${color}10, transparent)` }} />
+      </div>
+      
+      <div className="relative z-10">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="p-2 rounded-xl" style={{ backgroundColor: `${color}20` }}>
+            <Icon className="w-5 h-5" style={{ color }} />
+          </div>
+          <span className="text-sm text-white/60">{label}</span>
+        </div>
+        
+        <div className="text-3xl font-bold" style={{ color }}>
+          <AnimatedCounter value={value} suffix={suffix} />
+        </div>
+        
+        <motion.div
+          className="absolute bottom-0 left-0 h-1 rounded-full"
+          style={{ backgroundColor: color }}
+          initial={{ width: 0 }}
+          animate={{ width: '100%' }}
+          transition={{ delay: delay + 0.5, duration: 1, ease: 'easeOut' }}
+        />
+      </div>
+    </motion.div>
+  );
+}
+
+function PhaseProgressIndicator({ phases, currentPhase, buildProgress }: {
+  phases: typeof implementationPhases;
+  currentPhase: number;
+  buildProgress: number;
+}) {
+  return (
+    <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
+      {phases.map((phase, index) => {
+        const isComplete = index < currentPhase;
+        const isActive = index === currentPhase;
+        const phaseProgress = isComplete ? 100 : isActive ? Math.round(buildProgress * 100) : 0;
+        
+        return (
+          <motion.div
+            key={phase.id}
+            className="flex items-center gap-2 flex-shrink-0"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1 }}
+          >
+            <motion.div
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                isComplete
+                  ? 'bg-green-500 text-white'
+                  : isActive
+                  ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white'
+                  : 'bg-white/10 text-white/40'
+              }`}
+              animate={isActive ? { scale: [1, 1.1, 1] } : {}}
+              transition={{ repeat: Infinity, duration: 2 }}
+            >
+              {isComplete ? <Check className="w-4 h-4" /> : index + 1}
+            </motion.div>
+            
+            {index < phases.length - 1 && (
+              <div className="w-8 h-1 bg-white/10 rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-cyan-500 to-green-500"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${isComplete ? 100 : isActive ? phaseProgress : 0}%` }}
+                  transition={{ duration: 0.5 }}
+                />
+              </div>
+            )}
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function SecurityImplementation() {
   const [currentPhase, setCurrentPhase] = useState(2);
   const [isBuilding, setIsBuilding] = useState(false);
@@ -533,10 +665,15 @@ export default function SecurityImplementation() {
   });
   const [selectedPhase, setSelectedPhase] = useState<number | null>(null);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [phaseTransition, setPhaseTransition] = useState(false);
   const isMobile = useIsMobile();
 
   const completedCount = deliverableItems.filter((d) => d.completed).length;
   const progressPercentage = Math.round((completedCount / deliverableItems.length) * 100);
+  
+  const controlsImplemented = Math.floor(buildProgress * securityControls.length);
+  const vulnerabilitiesFixed = Math.floor(buildProgress * 47);
+  const complianceScore = Math.floor(buildProgress * 98);
 
   const toggleDeliverable = (id: number) => {
     setDeliverableItems((prev) => {
@@ -551,17 +688,28 @@ export default function SecurityImplementation() {
     if (isBuilding) {
       const interval = setInterval(() => {
         setBuildProgress((prev) => {
-          if (prev >= 1) {
+          const newProgress = prev + 0.005;
+          
+          const newPhase = Math.min(5, Math.floor(newProgress * 6));
+          if (newPhase > currentPhase && newPhase <= 5) {
+            setPhaseTransition(true);
+            setTimeout(() => {
+              setCurrentPhase(newPhase);
+              setPhaseTransition(false);
+            }, 300);
+          }
+          
+          if (newProgress >= 1) {
             setIsBuilding(false);
             return 1;
           }
-          return prev + 0.005;
+          return newProgress;
         });
       }, 50);
 
       return () => clearInterval(interval);
     }
-  }, [isBuilding]);
+  }, [isBuilding, currentPhase]);
 
   const startBuild = () => {
     setIsBuilding(true);
@@ -571,13 +719,13 @@ export default function SecurityImplementation() {
     setBuildProgress(0);
     setIsBuilding(false);
     setCurrentPhase(0);
+    setPhaseTransition(false);
   };
 
   return (
     <div className="min-h-screen text-white relative overflow-hidden" style={{ backgroundColor: NAVY }}>
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-cyan-900/10" />
 
-      {/* Header */}
       <div className="fixed top-6 left-6 z-50">
         <Link
           href="/experience"
@@ -590,7 +738,6 @@ export default function SecurityImplementation() {
       </div>
 
       <div className="relative z-10 container mx-auto px-6 py-24">
-        {/* Title Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -611,7 +758,43 @@ export default function SecurityImplementation() {
           </p>
         </motion.div>
 
-        {/* 3D Canvas Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="mb-8"
+        >
+          <h2 className="text-xl font-bold mb-4 flex items-center gap-3">
+            <Activity className="w-5 h-5 text-cyan-400" />
+            Live Metrics Dashboard
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <MetricCard
+              icon={ShieldCheck}
+              label="Controls Implemented"
+              value={controlsImplemented}
+              suffix={`/${securityControls.length}`}
+              color={CYAN}
+              delay={0}
+            />
+            <MetricCard
+              icon={Bug}
+              label="Vulnerabilities Fixed"
+              value={vulnerabilitiesFixed}
+              color="#22c55e"
+              delay={0.1}
+            />
+            <MetricCard
+              icon={Shield}
+              label="Compliance Score"
+              value={complianceScore}
+              suffix="%"
+              color={PURPLE}
+              delay={0.2}
+            />
+          </div>
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -619,7 +802,8 @@ export default function SecurityImplementation() {
           className="mb-8"
         >
           <div
-            className="w-full h-[400px] rounded-2xl overflow-hidden border border-white/10 bg-black/40 relative"
+            className="w-full h-[350px] rounded-2xl overflow-hidden border border-white/10 bg-black/20 relative"
+            style={{ opacity: 0.85 }}
             data-testid="construction-canvas"
           >
             <WebGLFallback>
@@ -633,14 +817,13 @@ export default function SecurityImplementation() {
               </Canvas>
             </WebGLFallback>
 
-            {/* Overlay controls */}
-            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+            <div className="absolute bottom-4 left-4 right-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={isBuilding ? () => setIsBuilding(false) : startBuild}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 transition-all"
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 transition-all shadow-lg shadow-cyan-500/25"
                   data-testid="button-build"
                 >
                   {isBuilding ? (
@@ -667,15 +850,14 @@ export default function SecurityImplementation() {
                 </motion.button>
               </div>
 
-              {/* Progress bar */}
               <div className="flex items-center gap-4 bg-black/60 backdrop-blur-xl rounded-xl px-4 py-2 border border-white/10">
                 <span className="text-sm text-white/60">Build Progress</span>
-                <div className="w-48 h-2 bg-white/10 rounded-full overflow-hidden">
+                <div className="w-32 sm:w-48 h-2 bg-white/10 rounded-full overflow-hidden">
                   <motion.div
                     className="h-full bg-gradient-to-r from-cyan-500 to-purple-500"
                     initial={{ width: 0 }}
                     animate={{ width: `${buildProgress * 100}%` }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.3 }}
                   />
                 </div>
                 <span className="text-sm font-semibold text-cyan-400">
@@ -683,20 +865,46 @@ export default function SecurityImplementation() {
                 </span>
               </div>
             </div>
+            
+            <AnimatePresence>
+              {phaseTransition && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+                >
+                  <motion.div
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 1.5, opacity: 0 }}
+                    className="flex items-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/50"
+                  >
+                    <Sparkles className="w-6 h-6 text-cyan-400 animate-pulse" />
+                    <span className="text-xl font-bold text-white">Phase Complete!</span>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </motion.div>
 
-        {/* Implementation Phases */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
           className="mb-12"
         >
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+          <h2 className="text-2xl font-bold mb-4 flex items-center gap-3">
             <Layers className="w-6 h-6 text-cyan-400" />
             Implementation Phases
           </h2>
+          
+          <PhaseProgressIndicator
+            phases={implementationPhases}
+            currentPhase={currentPhase}
+            buildProgress={buildProgress}
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {implementationPhases.map((phase, index) => {
@@ -704,6 +912,7 @@ export default function SecurityImplementation() {
               const isActive = index === currentPhase;
               const isComplete = index < currentPhase;
               const phaseProgress = isComplete ? 100 : isActive ? Math.round(buildProgress * 100) : 0;
+              const isExpanded = selectedPhase === index;
 
               return (
                 <motion.div
@@ -711,82 +920,151 @@ export default function SecurityImplementation() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * index }}
-                  onClick={() => setSelectedPhase(selectedPhase === index ? null : index)}
-                  className={`p-6 rounded-2xl border cursor-pointer transition-all ${
+                  layout
+                  onClick={() => setSelectedPhase(isExpanded ? null : index)}
+                  className={`p-6 rounded-2xl border cursor-pointer transition-all duration-300 ${
                     isActive
-                      ? 'bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border-cyan-500/50'
+                      ? 'bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border-cyan-500/50 shadow-lg shadow-cyan-500/10'
                       : isComplete
                       ? 'bg-green-500/10 border-green-500/30'
-                      : 'bg-white/5 border-white/10 hover:bg-white/10'
+                      : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
                   }`}
                   data-testid={`phase-card-${phase.id}`}
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div
+                  <div className="flex items-start justify-between mb-3">
+                    <motion.div
                       className="p-3 rounded-xl"
                       style={{ backgroundColor: `${phase.color}20` }}
+                      whileHover={{ scale: 1.1, rotate: 5 }}
                     >
                       <Icon className="w-6 h-6" style={{ color: phase.color }} />
+                    </motion.div>
+                    <div className="flex items-center gap-2">
+                      {isComplete ? (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: 'spring', stiffness: 500 }}
+                        >
+                          <CheckCircle2 className="w-6 h-6 text-green-400" />
+                        </motion.div>
+                      ) : isActive ? (
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="w-5 h-5 text-cyan-400 animate-pulse" />
+                          <span className="text-xs font-semibold text-cyan-400 animate-pulse">ACTIVE</span>
+                        </div>
+                      ) : (
+                        <Circle className="w-6 h-6 text-white/30" />
+                      )}
+                      <motion.div
+                        animate={{ rotate: isExpanded ? 180 : 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <ChevronDown className="w-5 h-5 text-white/40" />
+                      </motion.div>
                     </div>
-                    {isComplete ? (
-                      <CheckCircle2 className="w-6 h-6 text-green-400" />
-                    ) : isActive ? (
-                      <div className="flex items-center gap-2">
-                        <Sparkles className="w-5 h-5 text-cyan-400 animate-pulse" />
-                        <span className="text-xs font-semibold text-cyan-400">ACTIVE</span>
-                      </div>
-                    ) : (
-                      <Circle className="w-6 h-6 text-white/30" />
-                    )}
                   </div>
 
-                  <h3 className="text-lg font-semibold mb-2">{phase.name}</h3>
+                  <h3 className="text-lg font-semibold mb-1">{phase.name}</h3>
+                  
+                  <p className="text-sm text-white/50 mb-3 line-clamp-2">{phase.description}</p>
 
                   <div className="flex items-center gap-2 text-sm text-white/60 mb-4">
                     <Clock className="w-4 h-4" />
                     <span>{phase.duration}</span>
+                    {isActive && (
+                      <motion.span
+                        className="ml-2 text-xs text-cyan-400 font-medium"
+                        animate={{ opacity: [1, 0.5, 1] }}
+                        transition={{ repeat: Infinity, duration: 1.5 }}
+                      >
+                        {phaseProgress}% complete
+                      </motion.span>
+                    )}
                   </div>
 
-                  {/* Progress bar */}
-                  <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden mb-4">
+                  <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden mb-2">
                     <motion.div
-                      className="h-full"
+                      className="h-full rounded-full"
                       style={{ backgroundColor: phase.color }}
                       initial={{ width: 0 }}
                       animate={{ width: `${phaseProgress}%` }}
-                      transition={{ duration: 0.5 }}
+                      transition={{ duration: 0.5, ease: 'easeOut' }}
                     />
                   </div>
 
                   <AnimatePresence>
-                    {selectedPhase === index && (
+                    {isExpanded && (
                       <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="mt-4 pt-4 border-t border-white/10"
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden"
                       >
-                        <div className="mb-4">
-                          <h4 className="text-sm font-semibold text-white/80 mb-2">Deliverables</h4>
-                          <ul className="space-y-1">
-                            {phase.deliverables.map((d, i) => (
-                              <li key={i} className="flex items-center gap-2 text-sm text-white/60">
-                                <ChevronRight className="w-3 h-3 text-cyan-400" />
-                                {d}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-semibold text-white/80 mb-2">Dependencies</h4>
-                          <ul className="space-y-1">
-                            {phase.dependencies.map((d, i) => (
-                              <li key={i} className="flex items-center gap-2 text-sm text-white/60">
-                                <ChevronRight className="w-3 h-3 text-purple-400" />
-                                {d}
-                              </li>
-                            ))}
-                          </ul>
+                        <div className="mt-4 pt-4 border-t border-white/10 space-y-4">
+                          <div>
+                            <h4 className="text-sm font-semibold text-white/80 mb-2 flex items-center gap-2">
+                              <Zap className="w-4 h-4 text-yellow-400" />
+                              Key Tasks
+                            </h4>
+                            <ul className="space-y-1.5">
+                              {phase.tasks.map((task, i) => (
+                                <motion.li
+                                  key={i}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: i * 0.05 }}
+                                  className="flex items-center gap-2 text-sm text-white/60"
+                                >
+                                  <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: phase.color }} />
+                                  {task}
+                                </motion.li>
+                              ))}
+                            </ul>
+                          </div>
+                          
+                          <div>
+                            <h4 className="text-sm font-semibold text-white/80 mb-2 flex items-center gap-2">
+                              <Database className="w-4 h-4 text-cyan-400" />
+                              Deliverables
+                            </h4>
+                            <ul className="space-y-1.5">
+                              {phase.deliverables.map((d, i) => (
+                                <motion.li
+                                  key={i}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: i * 0.05 }}
+                                  className="flex items-center gap-2 text-sm text-white/60"
+                                >
+                                  <ChevronRight className="w-3 h-3 text-cyan-400" />
+                                  {d}
+                                </motion.li>
+                              ))}
+                            </ul>
+                          </div>
+                          
+                          <div>
+                            <h4 className="text-sm font-semibold text-white/80 mb-2 flex items-center gap-2">
+                              <Lock className="w-4 h-4 text-purple-400" />
+                              Dependencies
+                            </h4>
+                            <ul className="space-y-1.5">
+                              {phase.dependencies.map((d, i) => (
+                                <motion.li
+                                  key={i}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: i * 0.05 }}
+                                  className="flex items-center gap-2 text-sm text-white/60"
+                                >
+                                  <AlertTriangle className="w-3 h-3 text-yellow-400" />
+                                  {d}
+                                </motion.li>
+                              ))}
+                            </ul>
+                          </div>
                         </div>
                       </motion.div>
                     )}
@@ -797,7 +1075,6 @@ export default function SecurityImplementation() {
           </div>
         </motion.div>
 
-        {/* Timeline / Gantt-style */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -809,7 +1086,6 @@ export default function SecurityImplementation() {
             Implementation Timeline
           </h2>
 
-          {/* Mobile stacked timeline */}
           {isMobile ? (
             <div className="space-y-3">
               {implementationPhases.map((phase, index) => {
@@ -863,10 +1139,8 @@ export default function SecurityImplementation() {
               })}
             </div>
           ) : (
-            /* Desktop Gantt timeline */
             <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 overflow-x-auto">
               <div className="min-w-[800px]">
-                {/* Timeline header */}
                 <div className="flex items-center mb-4 text-sm text-white/40">
                   <div className="w-48 flex-shrink-0">Phase</div>
                   <div className="flex-1 flex">
@@ -876,7 +1150,6 @@ export default function SecurityImplementation() {
                   </div>
                 </div>
 
-                {/* Timeline rows */}
                 {implementationPhases.map((phase, index) => {
                   const isActive = index === currentPhase;
                   const isComplete = index < currentPhase;
@@ -913,7 +1186,6 @@ export default function SecurityImplementation() {
                           <span className="text-xs text-white/80 whitespace-nowrap">{phase.duration}</span>
                         </motion.div>
 
-                        {/* Milestone marker */}
                         {isComplete && (
                           <motion.div
                             className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-green-500 border-2 border-green-400 flex items-center justify-center"
@@ -934,7 +1206,6 @@ export default function SecurityImplementation() {
           )}
         </motion.div>
 
-        {/* Deliverables Checklist */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -984,6 +1255,8 @@ export default function SecurityImplementation() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.05 * index }}
                   onClick={() => toggleDeliverable(item.id)}
+                  whileHover={{ scale: 1.01, x: 4 }}
+                  whileTap={{ scale: 0.99 }}
                   className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
                     item.completed
                       ? 'bg-green-500/10 border-green-500/30 hover:bg-green-500/20'
@@ -996,6 +1269,8 @@ export default function SecurityImplementation() {
                       item.completed ? 'bg-green-500' : 'bg-white/10'
                     }`}
                     whileTap={{ scale: 0.9 }}
+                    animate={item.completed ? { scale: [1, 1.2, 1] } : {}}
+                    transition={{ duration: 0.3 }}
                   >
                     {item.completed && <Check className="w-4 h-4 text-white" />}
                   </motion.div>
