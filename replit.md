@@ -121,6 +121,31 @@ Strategic animation effects used throughout the site (not overused to avoid "che
 - **AnimeNavbar** - Floating pill-style navigation with smooth active state transitions
 - **Aurora BG** - Subtle animated gradient background applied to all pages
 
+## Recent Enhancements (January 2026)
+
+### Global Components
+- **MegaNavigation** (`@/components/ui/mega-navigation.tsx`) - Fixed glassmorphism navigation bar with dropdown menus for Compliance, Secure Software, and Security Services categories. Mobile hamburger menu with slide-out panel. ARIA labels and keyboard navigation for accessibility.
+- **SiteFooter** (`@/components/ui/site-footer.tsx`) - Global footer with company info, quick links, contact details, social icons, and cyber grid pattern background.
+- **CyberSpinner** (`@/components/ui/cyber-spinner.tsx`) - 3D rotating shield loading indicator with pulsing cyan glow. Size variants: sm/md/lg.
+- **WebGLFallback** (`@/components/ui/webgl-fallback.tsx`) - Wrapper component that shows graceful fallback UI when WebGL is unavailable.
+- **HyperspaceTransition** (`@/components/ui/hyperspace-transition.tsx`) - Three.js starfield animation for page transitions.
+
+### WebGL Fallback System
+- **webgl-utils.ts** (`@/lib/webgl-utils.ts`) - Detection utilities: `isWebGLAvailable()`, `isWebGL2Available()`, `getWebGLContext()`, `WEBGL_SUPPORTED` constant.
+- All Three.js and R3F components are wrapped with WebGL detection to prevent crashes in unsupported environments.
+
+### Accessibility Features
+- Skip-to-content link
+- ARIA labels on navigation dropdowns (aria-haspopup, aria-expanded)
+- Keyboard navigation (Tab, Enter/Space, Escape)
+- Focus-visible outlines with cyan glow
+
+### Page-Specific Enhancements
+- **Experience Hub**: Welcome header, category portals, navigation instructions, ambient particles
+- **Compliance Pages**: Collapsible sections, color-coded progress bars, card flip animations
+- **Secure Software Pages**: Zoom controls, bar charts, code highlighting, quiz feedback with localStorage
+- **Security Services Pages**: Zoom/search controls, URL validation, API input fields, OWASP tooltips
+
 ## Page Structure
 - **Home** (`/`): Hero with 3D robot, Services grid, Forensics section, Compliance section, CTA
 - **Services** (`/services`): Typewriter header, 3 core services with detailed features
