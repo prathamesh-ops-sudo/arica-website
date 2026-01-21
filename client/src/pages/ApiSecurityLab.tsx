@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'wouter';
-import { ArrowLeft, Shield, AlertTriangle, CheckCircle, XCircle, Key, Lock, Server, Database, Zap, Eye, Clock, Send, Code, FileJson } from 'lucide-react';
-import { CRTScreen, BlinkingCursor } from '@/components/ui/crt-screen';
+import { ArrowLeft, Shield, AlertTriangle, CheckCircle, XCircle, Key, Lock, Server, Zap, Eye, Clock, Send, FileJson } from 'lucide-react';
 
 interface ApiVulnerability {
   id: string;
@@ -73,68 +72,6 @@ export default function ApiSecurityLab() {
   const [customMethod, setCustomMethod] = useState<'GET' | 'POST' | 'PUT' | 'DELETE'>('GET');
   const [customHeaders, setCustomHeaders] = useState('Authorization: Bearer <token>');
   const [customBody, setCustomBody] = useState('{"example": "data"}');
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const particles: { x: number; y: number; vx: number; vy: number; size: number; alpha: number }[] = [];
-
-    for (let i = 0; i < 100; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        size: Math.random() * 2 + 1,
-        alpha: Math.random() * 0.5 + 0.1,
-      });
-    }
-
-    let animationId: number;
-
-    const animate = () => {
-      ctx.fillStyle = 'rgba(0, 5, 16, 0.1)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach((p) => {
-        p.x += p.vx;
-        p.y += p.vy;
-
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 212, 255, ${p.alpha})`;
-        ctx.fill();
-      });
-
-      animationId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      cancelAnimationFrame(animationId);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   const startScan = () => {
     setIsScanning(true);
@@ -203,7 +140,6 @@ export default function ApiSecurityLab() {
 
   const generateResults = () => {
     const severities: ('critical' | 'high' | 'medium' | 'low' | 'info')[] = ['critical', 'high', 'medium', 'low', 'info'];
-    const categories: ('auth' | 'rate-limit' | 'data-exposure' | 'injection')[] = ['auth', 'rate-limit', 'data-exposure', 'injection'];
     
     const vulnerabilityTypes = [
       { name: 'Broken Object Level Authorization', category: 'auth' },
@@ -265,21 +201,21 @@ export default function ApiSecurityLab() {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'text-red-500 bg-red-500/20 border-red-500/50';
-      case 'high': return 'text-orange-500 bg-orange-500/20 border-orange-500/50';
-      case 'medium': return 'text-yellow-500 bg-yellow-500/20 border-yellow-500/50';
-      case 'low': return 'text-blue-400 bg-blue-400/20 border-blue-400/50';
-      case 'info': return 'text-gray-400 bg-gray-400/20 border-gray-400/50';
-      default: return 'text-white bg-white/20 border-white/50';
+      case 'critical': return 'text-red-400 bg-red-950/50 border-red-900/50';
+      case 'high': return 'text-orange-400 bg-orange-950/50 border-orange-900/50';
+      case 'medium': return 'text-amber-400 bg-amber-950/50 border-amber-900/50';
+      case 'low': return 'text-slate-300 bg-slate-800/50 border-slate-700/50';
+      case 'info': return 'text-slate-400 bg-slate-800/50 border-slate-700/50';
+      default: return 'text-slate-300 bg-slate-800/50 border-slate-700/50';
     }
   };
 
   const getHeatmapColor = (value: number) => {
-    if (value > 0.8) return 'bg-red-500';
-    if (value > 0.6) return 'bg-orange-500';
-    if (value > 0.4) return 'bg-yellow-500';
-    if (value > 0.2) return 'bg-cyan-500';
-    return 'bg-cyan-900';
+    if (value > 0.8) return 'bg-red-600';
+    if (value > 0.6) return 'bg-orange-600';
+    if (value > 0.4) return 'bg-amber-600';
+    if (value > 0.2) return 'bg-slate-500';
+    return 'bg-slate-700';
   };
 
   const criticalCount = vulnerabilities.filter(v => v.severity === 'critical').length;
@@ -287,483 +223,459 @@ export default function ApiSecurityLab() {
   const mediumCount = vulnerabilities.filter(v => v.severity === 'medium').length;
 
   return (
-    <div className="min-h-screen text-white relative overflow-hidden" style={{ backgroundColor: '#000510' }}>
-      <canvas ref={canvasRef} className="fixed inset-0 z-0" />
+    <div className="min-h-screen bg-slate-950 text-slate-100">
+      <div className="fixed top-6 left-6 z-50">
+        <Link
+          href="/experience"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/80 border border-slate-700/50 hover:bg-slate-700/80 transition-colors"
+          data-testid="link-back-experience"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span className="text-sm">Back to Experience</span>
+        </Link>
+      </div>
 
-      <div className="relative z-10">
-        <div className="fixed top-6 left-6 z-50">
-          <Link
-            href="/experience"
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/10 hover:bg-white/20 transition-all"
-            data-testid="link-back-experience"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Experience</span>
-          </Link>
-        </div>
+      <div className="container mx-auto px-6 py-24">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/60 border border-slate-700/50 mb-6">
+            <Server className="w-4 h-4 text-slate-400" />
+            <span className="text-slate-300 text-sm font-medium">API Security Lab</span>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-semibold mb-4 text-slate-100">
+            API Security
+            <span className="block text-slate-400 mt-1">
+              Testing Laboratory
+            </span>
+          </h1>
+          <p className="text-slate-500 max-w-2xl mx-auto text-sm">
+            Simulate comprehensive API security testing. Analyze authentication flows, rate limiting, data exposure, and common API vulnerabilities.
+          </p>
+        </motion.div>
 
-        <div className="container mx-auto px-6 py-24">
-          <CRTScreen className="rounded-2xl" scanlineIntensity="subtle">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12 p-6"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full crt-panel mb-6">
-              <Server className="w-4 h-4 text-terminal-cyan" />
-              <span className="text-sm font-mono crt-terminal-text text-terminal-cyan">API Security Lab</span>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-4 font-mono crt-terminal-text">
-              <span className="text-terminal-cyan">API Security</span>
-              <span className="block text-terminal-green crt-phosphor-text">
-                Testing Laboratory
-              </span>
-            </h1>
-            <p className="text-gray-400 max-w-2xl mx-auto font-mono text-sm">
-              Simulate comprehensive API security testing. Analyze authentication flows, rate limiting, data exposure, and common API vulnerabilities.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="max-w-3xl mx-auto mb-12"
-          >
-            <div className="space-y-4">
-              <div className="flex gap-4 p-2 rounded-2xl crt-panel backdrop-blur-xl">
-                <div className="flex items-center gap-2 px-3 border-r border-white/10">
-                  <select
-                    value={customMethod}
-                    onChange={(e) => setCustomMethod(e.target.value as 'GET' | 'POST' | 'PUT' | 'DELETE')}
-                    className="bg-transparent text-terminal-green font-mono text-sm outline-none cursor-pointer"
-                    disabled={isScanning}
-                    data-testid="select-method"
-                  >
-                    <option value="GET" className="bg-[#000510]">GET</option>
-                    <option value="POST" className="bg-[#000510]">POST</option>
-                    <option value="PUT" className="bg-[#000510]">PUT</option>
-                    <option value="DELETE" className="bg-[#000510]">DELETE</option>
-                  </select>
-                </div>
-                <div className="flex-1 flex items-center gap-3 px-4">
-                  <Server className="w-5 h-5 text-terminal-cyan" />
-                  <input
-                    type="text"
-                    value={targetUrl}
-                    onChange={(e) => setTargetUrl(e.target.value)}
-                    placeholder="Enter API endpoint URL..."
-                    className="flex-1 bg-transparent border-none outline-none crt-input font-mono text-terminal-cyan placeholder:text-cyan-400/30"
-                    disabled={isScanning}
-                    data-testid="input-api-endpoint"
-                  />
-                  {!isScanning && <BlinkingCursor />}
-                </div>
-                <button
-                  onClick={startScan}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="max-w-3xl mx-auto mb-12"
+        >
+          <div className="space-y-4">
+            <div className="flex gap-3 p-2 rounded-xl bg-slate-900/80 border border-slate-700/50">
+              <div className="flex items-center gap-2 px-3 border-r border-slate-700/50">
+                <select
+                  value={customMethod}
+                  onChange={(e) => setCustomMethod(e.target.value as 'GET' | 'POST' | 'PUT' | 'DELETE')}
+                  className="bg-transparent text-emerald-400 font-mono text-sm outline-none cursor-pointer"
                   disabled={isScanning}
-                  className="px-8 py-3 rounded-xl font-semibold font-mono hover:opacity-90 transition-all disabled:opacity-50 flex items-center gap-2"
-                  style={{ backgroundImage: 'linear-gradient(to right, #00D4FF, #a855f7)' }}
-                  data-testid="button-test-endpoint"
+                  data-testid="select-method"
                 >
-                  <Send className="w-4 h-4" />
-                  {isScanning ? '> Testing...' : '> Test Endpoint'}
-                </button>
+                  <option value="GET" className="bg-slate-900">GET</option>
+                  <option value="POST" className="bg-slate-900">POST</option>
+                  <option value="PUT" className="bg-slate-900">PUT</option>
+                  <option value="DELETE" className="bg-slate-900">DELETE</option>
+                </select>
               </div>
+              <div className="flex-1 flex items-center gap-3 px-4">
+                <Server className="w-5 h-5 text-slate-500" />
+                <input
+                  type="text"
+                  value={targetUrl}
+                  onChange={(e) => setTargetUrl(e.target.value)}
+                  placeholder="Enter API endpoint URL..."
+                  className="flex-1 bg-transparent border-none outline-none font-mono text-sm text-slate-200 placeholder:text-slate-600"
+                  disabled={isScanning}
+                  data-testid="input-api-endpoint"
+                />
+              </div>
+              <button
+                onClick={startScan}
+                disabled={isScanning}
+                className="px-6 py-2.5 rounded-lg font-medium text-sm bg-slate-700 hover:bg-slate-600 border border-slate-600/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                data-testid="button-test-endpoint"
+              >
+                <Send className="w-4 h-4" />
+                {isScanning ? 'Testing...' : 'Test Endpoint'}
+              </button>
+            </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-3 rounded-xl bg-black/40 border border-white/10">
-                  <label className="text-xs text-white/50 font-mono mb-2 block">Headers</label>
-                  <textarea
-                    value={customHeaders}
-                    onChange={(e) => setCustomHeaders(e.target.value)}
-                    className="w-full h-20 bg-transparent text-terminal-cyan font-mono text-xs outline-none resize-none placeholder:text-cyan-400/30"
-                    placeholder="Authorization: Bearer <token>"
-                    disabled={isScanning}
-                    data-testid="input-headers"
-                  />
-                </div>
-                <div className="p-3 rounded-xl bg-black/40 border border-white/10">
-                  <label className="text-xs text-white/50 font-mono mb-2 block">Request Body (JSON)</label>
-                  <textarea
-                    value={customBody}
-                    onChange={(e) => setCustomBody(e.target.value)}
-                    className="w-full h-20 bg-transparent text-terminal-cyan font-mono text-xs outline-none resize-none placeholder:text-cyan-400/30"
-                    placeholder='{"key": "value"}'
-                    disabled={isScanning}
-                    data-testid="input-body"
-                  />
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
+                <label className="text-xs text-slate-500 font-medium mb-2 block">Headers</label>
+                <textarea
+                  value={customHeaders}
+                  onChange={(e) => setCustomHeaders(e.target.value)}
+                  className="w-full h-20 bg-transparent text-slate-300 font-mono text-xs outline-none resize-none placeholder:text-slate-600"
+                  placeholder="Authorization: Bearer <token>"
+                  disabled={isScanning}
+                  data-testid="input-headers"
+                />
+              </div>
+              <div className="p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
+                <label className="text-xs text-slate-500 font-medium mb-2 block">Request Body (JSON)</label>
+                <textarea
+                  value={customBody}
+                  onChange={(e) => setCustomBody(e.target.value)}
+                  className="w-full h-20 bg-transparent text-slate-300 font-mono text-xs outline-none resize-none placeholder:text-slate-600"
+                  placeholder='{"key": "value"}'
+                  disabled={isScanning}
+                  data-testid="input-body"
+                />
               </div>
             </div>
-          </motion.div>
+          </div>
+        </motion.div>
 
-          <AnimatePresence>
-            {isScanning && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="max-w-3xl mx-auto mb-12"
-              >
-                <div className="p-8 rounded-3xl crt-panel backdrop-blur-xl">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-sm font-mono crt-terminal-text flex items-center gap-2 text-terminal-cyan">
-                      <span className="text-terminal-green">$</span>
-                      {scanPhase}
-                      <BlinkingCursor />
-                    </span>
-                    <span className="text-sm text-terminal-green font-mono">{Math.round(scanProgress)}%</span>
-                  </div>
-                  <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full"
-                      style={{ backgroundImage: 'linear-gradient(to right, #00D4FF, #a855f7)' }}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${scanProgress}%` }}
-                      transition={{ duration: 0.1 }}
-                    />
-                  </div>
-                  <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {authTestResults.map((test, i) => {
-                      const Icon = test.icon;
-                      const isActive = scanProgress > (i + 1) * 20;
-                      return (
-                        <div
-                          key={test.name}
-                          className={`p-3 rounded-xl border transition-all ${
-                            isActive ? 'border-opacity-50 bg-opacity-10' : 'border-white/10 bg-white/5'
-                          }`}
-                          style={isActive ? { borderColor: 'rgba(0, 212, 255, 0.5)', backgroundColor: 'rgba(0, 212, 255, 0.1)' } : {}}
-                        >
-                          <Icon className={`w-5 h-5 mb-2 ${isActive ? '' : 'text-white/30'}`} style={isActive ? { color: '#00D4FF' } : {}} />
-                          <span className={`text-xs ${isActive ? 'text-white' : 'text-white/30'}`}>
-                            {test.name.split(' ')[0]}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
+        <AnimatePresence>
+          {isScanning && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              className="max-w-3xl mx-auto mb-12"
+            >
+              <div className="p-6 rounded-xl bg-slate-900/60 border border-slate-700/50">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-sm text-slate-400 font-mono">
+                    {scanPhase}
+                  </span>
+                  <span className="text-sm text-slate-300 font-mono">{Math.round(scanProgress)}%</span>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <AnimatePresence>
-            {scanComplete && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="max-w-5xl mx-auto"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                  <div className="p-6 rounded-2xl bg-black/40 backdrop-blur-xl border border-white/10">
-                    <div className="text-3xl font-bold text-white mb-1">{vulnerabilities.length}</div>
-                    <div className="text-sm text-gray-400">Total Found</div>
-                  </div>
-                  <div className="p-6 rounded-2xl bg-red-500/10 backdrop-blur-xl border border-red-500/30">
-                    <div className="text-3xl font-bold text-red-500 mb-1">{criticalCount}</div>
-                    <div className="text-sm text-red-400/70">Critical</div>
-                  </div>
-                  <div className="p-6 rounded-2xl bg-orange-500/10 backdrop-blur-xl border border-orange-500/30">
-                    <div className="text-3xl font-bold text-orange-500 mb-1">{highCount}</div>
-                    <div className="text-sm text-orange-400/70">High</div>
-                  </div>
-                  <div className="p-6 rounded-2xl bg-yellow-500/10 backdrop-blur-xl border border-yellow-500/30">
-                    <div className="text-3xl font-bold text-yellow-500 mb-1">{mediumCount}</div>
-                    <div className="text-sm text-yellow-400/70">Medium</div>
-                  </div>
+                <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                  <motion.div
+                    className="h-full bg-slate-500"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${scanProgress}%` }}
+                    transition={{ duration: 0.1 }}
+                  />
                 </div>
-
-                <div className="flex gap-2 mb-6 overflow-x-auto">
-                  {[
-                    { id: 'request', label: 'Request/Response', icon: FileJson },
-                    { id: 'auth', label: 'Authentication', icon: Key },
-                    { id: 'rate-limit', label: 'Rate Limiting', icon: Zap },
-                    { id: 'data', label: 'Data Exposure', icon: Eye },
-                  ].map((tab) => {
-                    const Icon = tab.icon;
+                <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {authTestResults.map((test, i) => {
+                    const Icon = test.icon;
+                    const isActive = scanProgress > (i + 1) * 20;
                     return (
-                      <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id as typeof activeTab)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap ${
-                          activeTab === tab.id
-                            ? 'text-white'
-                            : 'bg-white/5 text-white/60 hover:bg-white/10'
+                      <div
+                        key={test.name}
+                        className={`p-3 rounded-lg border transition-colors ${
+                          isActive ? 'border-slate-600/50 bg-slate-800/40' : 'border-slate-800/50 bg-slate-900/40'
                         }`}
-                        style={activeTab === tab.id ? { backgroundColor: 'rgba(0, 212, 255, 0.2)', borderColor: 'rgba(0, 212, 255, 0.5)' } : {}}
-                        data-testid={`tab-${tab.id}`}
                       >
-                        <Icon className="w-4 h-4" />
-                        {tab.label}
-                      </button>
+                        <Icon className={`w-5 h-5 mb-2 ${isActive ? 'text-slate-300' : 'text-slate-600'}`} />
+                        <span className={`text-xs ${isActive ? 'text-slate-300' : 'text-slate-600'}`}>
+                          {test.name.split(' ')[0]}
+                        </span>
+                      </div>
                     );
                   })}
                 </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-                <div className="p-6 rounded-3xl crt-panel backdrop-blur-xl mb-8">
-                  {activeTab === 'request' && requestResponse && (
-                    <div>
-                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2 font-mono text-terminal-cyan">
-                        <FileJson className="w-5 h-5 text-terminal-cyan" />
-                        <span className="text-terminal-green">[REQ]</span> Request/Response Visualization
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="p-4 rounded-xl bg-black/60 border border-cyan-500/20">
-                          <div className="flex items-center gap-2 mb-3">
-                            <span className="px-2 py-1 rounded text-xs font-mono bg-terminal-green/20 text-terminal-green">
-                              {requestResponse.method}
-                            </span>
-                            <span className="text-sm font-mono text-terminal-cyan crt-terminal-text">{requestResponse.endpoint}</span>
-                          </div>
-                          <div className="text-xs font-mono text-terminal-green mb-2">// Headers:</div>
-                          <pre className="text-xs font-mono text-terminal-cyan overflow-x-auto crt-terminal-text" data-testid="request-headers">
-                            {JSON.stringify(requestResponse.headers, null, 2)}
-                          </pre>
+        <AnimatePresence>
+          {scanComplete && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="max-w-5xl mx-auto"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div className="p-5 rounded-xl bg-slate-900/60 border border-slate-700/50">
+                  <div className="text-3xl font-semibold text-slate-100 mb-1">{vulnerabilities.length}</div>
+                  <div className="text-sm text-slate-500">Total Found</div>
+                </div>
+                <div className="p-5 rounded-xl bg-red-950/30 border border-red-900/30">
+                  <div className="text-3xl font-semibold text-red-400 mb-1">{criticalCount}</div>
+                  <div className="text-sm text-red-500/70">Critical</div>
+                </div>
+                <div className="p-5 rounded-xl bg-orange-950/30 border border-orange-900/30">
+                  <div className="text-3xl font-semibold text-orange-400 mb-1">{highCount}</div>
+                  <div className="text-sm text-orange-500/70">High</div>
+                </div>
+                <div className="p-5 rounded-xl bg-amber-950/30 border border-amber-900/30">
+                  <div className="text-3xl font-semibold text-amber-400 mb-1">{mediumCount}</div>
+                  <div className="text-sm text-amber-500/70">Medium</div>
+                </div>
+              </div>
+
+              <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+                {[
+                  { id: 'request', label: 'Request/Response', icon: FileJson },
+                  { id: 'auth', label: 'Authentication', icon: Key },
+                  { id: 'rate-limit', label: 'Rate Limiting', icon: Zap },
+                  { id: 'data', label: 'Data Exposure', icon: Eye },
+                ].map((tab) => {
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id as typeof activeTab)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors whitespace-nowrap ${
+                        activeTab === tab.id
+                          ? 'bg-slate-700 text-slate-100 border border-slate-600/50'
+                          : 'bg-slate-900/60 text-slate-400 border border-slate-800/50 hover:bg-slate-800/60'
+                      }`}
+                      data-testid={`tab-${tab.id}`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="p-6 rounded-xl bg-slate-900/60 border border-slate-700/50 mb-8">
+                {activeTab === 'request' && requestResponse && (
+                  <div>
+                    <h3 className="text-lg font-medium mb-4 flex items-center gap-2 text-slate-200">
+                      <FileJson className="w-5 h-5 text-slate-400" />
+                      Request/Response Visualization
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-4 rounded-lg bg-slate-950/50 border border-slate-800/50">
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className="px-2 py-1 rounded text-xs font-mono bg-emerald-950/50 text-emerald-400 border border-emerald-900/50">
+                            {requestResponse.method}
+                          </span>
+                          <span className="text-sm font-mono text-slate-300">{requestResponse.endpoint}</span>
                         </div>
-                        <div className="p-4 rounded-xl bg-black/60 border border-cyan-500/20">
-                          <div className="flex items-center gap-2 mb-3">
-                            <span className={`px-2 py-1 rounded text-xs font-mono ${requestResponse.status === 200 ? 'bg-terminal-green/20 text-terminal-green' : 'bg-red-500/20 text-red-400'}`}>
-                              {requestResponse.status}
-                            </span>
-                            <span className="text-sm text-terminal-cyan font-mono">{requestResponse.responseTime}ms</span>
-                          </div>
-                          <div className="text-xs font-mono text-terminal-green mb-2">// Response Body:</div>
-                          <pre className="text-xs font-mono text-terminal-cyan overflow-x-auto crt-terminal-text" data-testid="response-body">
-                            {JSON.stringify(requestResponse.body, null, 2)}
-                          </pre>
+                        <div className="text-xs font-mono text-slate-500 mb-2">// Headers:</div>
+                        <pre className="text-xs font-mono text-slate-400 overflow-x-auto" data-testid="request-headers">
+                          {JSON.stringify(requestResponse.headers, null, 2)}
+                        </pre>
+                      </div>
+                      <div className="p-4 rounded-lg bg-slate-950/50 border border-slate-800/50">
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className={`px-2 py-1 rounded text-xs font-mono ${requestResponse.status === 200 ? 'bg-emerald-950/50 text-emerald-400 border border-emerald-900/50' : 'bg-red-950/50 text-red-400 border border-red-900/50'}`}>
+                            {requestResponse.status}
+                          </span>
+                          <span className="text-xs text-slate-500">{requestResponse.responseTime}ms</span>
                         </div>
+                        <div className="text-xs font-mono text-slate-500 mb-2">// Response Body:</div>
+                        <pre className="text-xs font-mono text-slate-400 overflow-x-auto" data-testid="response-body">
+                          {JSON.stringify(requestResponse.body, null, 2)}
+                        </pre>
                       </div>
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  {activeTab === 'auth' && (
-                    <div>
-                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2 font-mono text-terminal-cyan">
-                        <Key className="w-5 h-5 text-terminal-cyan" />
-                        <span className="text-terminal-green">[AUTH]</span> Authentication Testing Results
-                      </h3>
-
-                      <div className="mb-6 p-4 rounded-xl bg-black/40 border border-cyan-500/20">
-                        <h4 className="text-sm font-mono text-terminal-cyan mb-4">Authentication Flow Diagram</h4>
-                        <div className="flex items-center justify-between overflow-x-auto pb-2">
-                          {flowSteps.map((step, i) => (
-                            <div key={step.id} className="flex items-center">
-                              <motion.div
-                                className={`p-3 rounded-xl border-2 min-w-[100px] text-center transition-all ${
-                                  step.status === 'active' ? 'border-cyan-500 bg-cyan-500/20 shadow-lg shadow-cyan-500/30' :
-                                  step.status === 'success' ? 'border-green-500 bg-green-500/20' :
-                                  step.status === 'warning' ? 'border-yellow-500 bg-yellow-500/20' :
-                                  step.status === 'error' ? 'border-red-500 bg-red-500/20' :
-                                  'border-white/20 bg-white/5'
-                                }`}
-                                animate={step.status === 'active' ? { scale: [1, 1.05, 1] } : {}}
-                                transition={{ duration: 0.5, repeat: step.status === 'active' ? Infinity : 0 }}
-                              >
-                                <div className={`text-xs font-mono ${
-                                  step.status === 'active' ? 'text-cyan-400' :
-                                  step.status === 'success' ? 'text-green-400' :
-                                  step.status === 'warning' ? 'text-yellow-400' :
-                                  step.status === 'error' ? 'text-red-400' :
-                                  'text-white/50'
-                                }`}>
-                                  {step.label}
-                                </div>
-                                <div className="mt-1">
-                                  {step.status === 'success' && <CheckCircle className="w-4 h-4 text-green-500 mx-auto" />}
-                                  {step.status === 'warning' && <AlertTriangle className="w-4 h-4 text-yellow-500 mx-auto" />}
-                                  {step.status === 'error' && <XCircle className="w-4 h-4 text-red-500 mx-auto" />}
-                                  {step.status === 'active' && <div className="w-4 h-4 rounded-full border-2 border-cyan-500 border-t-transparent animate-spin mx-auto" />}
-                                </div>
-                              </motion.div>
-                              {i < flowSteps.length - 1 && (
-                                <div className={`w-8 h-0.5 mx-2 ${
-                                  step.status === 'success' || step.status === 'warning' ? 'bg-cyan-500' : 'bg-white/20'
-                                }`} />
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {authTestResults.map((test, index) => {
-                          const Icon = test.icon;
-                          return (
-                            <motion.div
-                              key={test.name}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: index * 0.1 }}
-                              className="p-4 rounded-xl bg-black/60 border border-white/10 flex items-center justify-between"
-                              data-testid={`auth-test-${index}`}
-                            >
+                {activeTab === 'auth' && (
+                  <div>
+                    <h3 className="text-lg font-medium mb-4 flex items-center gap-2 text-slate-200">
+                      <Key className="w-5 h-5 text-slate-400" />
+                      Authentication Security Analysis
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                      {authTestResults.map((test) => {
+                        const Icon = test.icon;
+                        return (
+                          <div
+                            key={test.name}
+                            className={`p-4 rounded-lg border ${
+                              test.status === 'pass' ? 'bg-emerald-950/20 border-emerald-900/30' :
+                              test.status === 'fail' ? 'bg-red-950/20 border-red-900/30' :
+                              'bg-slate-900/40 border-slate-800/50'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
                               <div className="flex items-center gap-3">
-                                <Icon className="w-5 h-5" style={{ color: '#00D4FF' }} />
-                                <span className="font-medium">{test.name}</span>
+                                <Icon className={`w-5 h-5 ${
+                                  test.status === 'pass' ? 'text-emerald-400' :
+                                  test.status === 'fail' ? 'text-red-400' :
+                                  'text-slate-500'
+                                }`} />
+                                <span className="text-sm font-medium text-slate-200">{test.name}</span>
                               </div>
                               {test.status === 'pass' ? (
-                                <CheckCircle className="w-5 h-5 text-green-500" />
+                                <CheckCircle className="w-5 h-5 text-emerald-400" />
                               ) : test.status === 'fail' ? (
-                                <XCircle className="w-5 h-5 text-red-500" />
+                                <XCircle className="w-5 h-5 text-red-400" />
                               ) : (
-                                <div className="w-5 h-5 rounded-full border-2 border-white/30 border-t-transparent animate-spin" />
+                                <div className="w-5 h-5 rounded-full border-2 border-slate-600 border-t-transparent animate-spin" />
                               )}
-                            </motion.div>
-                          );
-                        })}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <div className="p-4 rounded-lg bg-slate-950/50 border border-slate-800/50">
+                      <h4 className="text-sm font-medium text-slate-300 mb-4">Authentication Flow</h4>
+                      <div className="flex items-center justify-between">
+                        {flowSteps.map((step, i) => (
+                          <div key={step.id} className="flex items-center">
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-xs font-medium ${
+                              step.status === 'success' ? 'bg-emerald-950/50 text-emerald-400 border border-emerald-900/50' :
+                              step.status === 'warning' ? 'bg-amber-950/50 text-amber-400 border border-amber-900/50' :
+                              step.status === 'error' ? 'bg-red-950/50 text-red-400 border border-red-900/50' :
+                              step.status === 'active' ? 'bg-slate-700 text-slate-200 border border-slate-600/50' :
+                              'bg-slate-900 text-slate-600 border border-slate-800/50'
+                            }`}>
+                              {i + 1}
+                            </div>
+                            {i < flowSteps.length - 1 && (
+                              <div className={`w-8 h-0.5 ${
+                                step.status === 'success' || step.status === 'warning' ? 'bg-slate-600' : 'bg-slate-800'
+                              }`} />
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex justify-between mt-2">
+                        {flowSteps.map((step) => (
+                          <span key={step.id} className="text-[10px] text-slate-500 w-10 text-center">
+                            {step.label.split(' ')[0]}
+                          </span>
+                        ))}
                       </div>
                     </div>
-                  )}
-
-                  {activeTab === 'rate-limit' && (
-                    <div>
-                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2 font-mono text-terminal-cyan">
-                        <Zap className="w-5 h-5 text-terminal-cyan" />
-                        <span className="text-terminal-green">[RATE]</span> Rate Limiting Analysis Heatmap
-                      </h3>
-                      <div className="p-4 rounded-xl bg-black/60 border border-white/10">
-                        <div className="flex items-center justify-between mb-4">
-                          <span className="text-sm text-white/50">Request Density Over Time</span>
-                          <div className="flex items-center gap-2 text-xs">
-                            <span className="text-white/50">Low</span>
-                            <div className="flex gap-1">
-                              <div className="w-4 h-4 rounded bg-cyan-900" />
-                              <div className="w-4 h-4 rounded bg-cyan-500" />
-                              <div className="w-4 h-4 rounded bg-yellow-500" />
-                              <div className="w-4 h-4 rounded bg-orange-500" />
-                              <div className="w-4 h-4 rounded bg-red-500" />
-                            </div>
-                            <span className="text-white/50">High</span>
-                          </div>
-                        </div>
-                        <div className="grid gap-1" data-testid="rate-limit-heatmap">
-                          {rateLimitData.map((row, rowIndex) => (
-                            <div key={rowIndex} className="flex gap-1">
-                              {row.map((value, colIndex) => (
-                                <motion.div
-                                  key={colIndex}
-                                  initial={{ opacity: 0, scale: 0.5 }}
-                                  animate={{ opacity: 1, scale: 1 }}
-                                  transition={{ delay: (rowIndex * 8 + colIndex) * 0.02 }}
-                                  className={`flex-1 h-8 rounded ${getHeatmapColor(value)}`}
-                                  style={{ opacity: 0.7 + value * 0.3 }}
-                                />
-                              ))}
-                            </div>
-                          ))}
-                        </div>
-                        <div className="flex justify-between mt-2 text-xs text-white/30">
-                          <span>00:00</span>
-                          <span>06:00</span>
-                          <span>12:00</span>
-                          <span>18:00</span>
-                          <span>24:00</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {activeTab === 'data' && (
-                    <div>
-                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2 font-mono text-terminal-cyan">
-                        <Eye className="w-5 h-5 text-terminal-cyan" />
-                        <span className="text-terminal-green">[DATA]</span> Data Exposure Testing Results
-                      </h3>
-                      <div className="space-y-3">
-                        {vulnerabilities.filter(v => v.category === 'data-exposure').length > 0 ? (
-                          vulnerabilities.filter(v => v.category === 'data-exposure').map((vuln, index) => (
-                            <motion.div
-                              key={vuln.id}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: index * 0.1 }}
-                              className="p-4 rounded-xl bg-white/5 border border-white/10"
-                              data-testid={`data-exposure-${index}`}
-                            >
-                              <div className="flex items-center gap-3 mb-2">
-                                <span className={`px-2 py-0.5 rounded text-xs font-medium uppercase border ${getSeverityColor(vuln.severity)}`}>
-                                  {vuln.severity}
-                                </span>
-                                <span className="font-medium">{vuln.type}</span>
-                              </div>
-                              <p className="text-sm text-gray-400 mb-2">{vuln.description}</p>
-                              <code className="text-xs px-2 py-1 rounded" style={{ color: '#00D4FF', backgroundColor: 'rgba(0, 212, 255, 0.1)' }}>
-                                {vuln.endpoint}
-                              </code>
-                            </motion.div>
-                          ))
-                        ) : (
-                          <div className="text-center py-8">
-                            <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
-                            <p className="text-green-400">No data exposure vulnerabilities detected!</p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="p-6 rounded-3xl crt-panel backdrop-blur-xl">
-                  <h3 className="text-xl font-bold mb-6 font-mono text-terminal-cyan flex items-center gap-2">
-                    <span className="text-terminal-green">[SYS]</span> All Vulnerabilities Report
-                  </h3>
-                  <div className="space-y-3">
-                    {vulnerabilities.map((vuln, index) => (
-                      <motion.div
-                        key={vuln.id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="p-4 rounded-xl bg-black/60 border border-cyan-500/20 hover:border-cyan-500/40 transition-all"
-                        data-testid={`vulnerability-${index}`}
-                      >
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                              <span className={`px-2 py-0.5 rounded text-xs font-mono uppercase border ${getSeverityColor(vuln.severity)}`}>
-                                {vuln.severity}
-                              </span>
-                              <span className="font-mono text-terminal-cyan">{vuln.type}</span>
-                            </div>
-                            <p className="text-sm text-gray-400 mb-1 font-mono">{vuln.description}</p>
-                            <code className="text-xs px-2 py-1 rounded font-mono text-terminal-green bg-green-500/10">
-                              {vuln.endpoint}
-                            </code>
-                          </div>
-                          <AlertTriangle className="w-5 h-5 text-yellow-500 flex-shrink-0" />
-                        </div>
-                      </motion.div>
-                    ))}
-                    {vulnerabilities.length === 0 && (
-                      <div className="text-center py-8">
-                        <CheckCircle className="w-12 h-12 text-terminal-green mx-auto mb-4" />
-                        <p className="text-terminal-green font-mono">[OK] No vulnerabilities detected!</p>
-                      </div>
-                    )}
                   </div>
-                </div>
+                )}
 
-                <div className="mt-8 text-center">
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold hover:opacity-90 transition-all"
-                    style={{ backgroundImage: 'linear-gradient(to right, #00D4FF, #a855f7)' }}
-                    data-testid="link-get-assessment"
-                  >
-                    <Shield className="w-5 h-5" />
-                    Get Professional API Security Assessment
-                  </Link>
-                  <p className="text-sm text-gray-400 mt-4 font-mono">
-                    This is a simulation. Real API security assessments are performed by our certified security experts.
-                  </p>
+                {activeTab === 'rate-limit' && (
+                  <div>
+                    <h3 className="text-lg font-medium mb-4 flex items-center gap-2 text-slate-200">
+                      <Zap className="w-5 h-5 text-slate-400" />
+                      Rate Limiting Analysis
+                    </h3>
+                    <div className="p-4 rounded-lg bg-slate-950/50 border border-slate-800/50 mb-4">
+                      <h4 className="text-sm font-medium text-slate-300 mb-3">Request Rate Heatmap</h4>
+                      <div className="grid gap-1">
+                        {rateLimitData.map((row, i) => (
+                          <div key={i} className="flex gap-1">
+                            {row.map((value, j) => (
+                              <div
+                                key={j}
+                                className={`w-8 h-6 rounded ${getHeatmapColor(value)}`}
+                                title={`${(value * 100).toFixed(0)}% capacity`}
+                              />
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-4 mt-3 text-xs text-slate-500">
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 rounded bg-slate-700" />
+                          <span>Low</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 rounded bg-amber-600" />
+                          <span>Medium</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 rounded bg-red-600" />
+                          <span>High</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="p-3 rounded-lg bg-slate-950/50 border border-slate-800/50 text-center">
+                        <div className="text-2xl font-semibold text-slate-100">100</div>
+                        <div className="text-xs text-slate-500">Requests/min</div>
+                      </div>
+                      <div className="p-3 rounded-lg bg-slate-950/50 border border-slate-800/50 text-center">
+                        <div className="text-2xl font-semibold text-slate-100">87</div>
+                        <div className="text-xs text-slate-500">Remaining</div>
+                      </div>
+                      <div className="p-3 rounded-lg bg-slate-950/50 border border-slate-800/50 text-center">
+                        <div className="text-2xl font-semibold text-slate-100">45s</div>
+                        <div className="text-xs text-slate-500">Reset</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'data' && (
+                  <div>
+                    <h3 className="text-lg font-medium mb-4 flex items-center gap-2 text-slate-200">
+                      <Eye className="w-5 h-5 text-slate-400" />
+                      Data Exposure Analysis
+                    </h3>
+                    <div className="space-y-3">
+                      {vulnerabilities.filter(v => v.category === 'data-exposure').map((vuln) => (
+                        <div
+                          key={vuln.id}
+                          className="p-4 rounded-lg bg-slate-950/50 border border-slate-800/50"
+                        >
+                          <div className="flex items-center gap-3 mb-2">
+                            <span className={`px-2 py-0.5 rounded text-xs font-medium uppercase border ${getSeverityColor(vuln.severity)}`}>
+                              {vuln.severity}
+                            </span>
+                            <span className="font-medium text-slate-200">{vuln.type}</span>
+                          </div>
+                          <p className="text-sm text-slate-500 mb-2">{vuln.description}</p>
+                          <code className="text-xs text-slate-400 bg-slate-800/50 px-2 py-1 rounded font-mono">{vuln.endpoint}</code>
+                        </div>
+                      ))}
+                      {vulnerabilities.filter(v => v.category === 'data-exposure').length === 0 && (
+                        <div className="text-center py-8">
+                          <CheckCircle className="w-10 h-10 text-emerald-500/70 mx-auto mb-3" />
+                          <p className="text-slate-400 text-sm">No data exposure vulnerabilities detected</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="p-6 rounded-xl bg-slate-900/60 border border-slate-700/50">
+                <h3 className="text-lg font-medium mb-6 text-slate-200 flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-slate-400" />
+                  All Vulnerabilities
+                </h3>
+                <div className="space-y-3">
+                  {vulnerabilities.map((vuln, index) => (
+                    <motion.div
+                      key={vuln.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="p-4 rounded-lg bg-slate-950/50 border border-slate-800/50 hover:border-slate-700/50 transition-colors"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <span className={`px-2 py-0.5 rounded text-xs font-medium uppercase border ${getSeverityColor(vuln.severity)}`}>
+                              {vuln.severity}
+                            </span>
+                            <span className="font-medium text-slate-200">{vuln.type}</span>
+                          </div>
+                          <p className="text-sm text-slate-500 mb-2">{vuln.description}</p>
+                          <code className="text-xs text-slate-400 bg-slate-800/50 px-2 py-1 rounded font-mono">{vuln.endpoint}</code>
+                        </div>
+                        <XCircle className="w-5 h-5 text-red-500/70 flex-shrink-0" />
+                      </div>
+                    </motion.div>
+                  ))}
+                  {vulnerabilities.length === 0 && (
+                    <div className="text-center py-8">
+                      <CheckCircle className="w-12 h-12 text-emerald-500/70 mx-auto mb-4" />
+                      <p className="text-slate-400">No vulnerabilities detected</p>
+                    </div>
+                  )}
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-          </CRTScreen>
-        </div>
+              </div>
+
+              <div className="mt-8 text-center">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium bg-slate-700 hover:bg-slate-600 border border-slate-600/50 transition-colors"
+                  data-testid="link-get-assessment"
+                >
+                  <Shield className="w-5 h-5" />
+                  Get Professional API Security Assessment
+                </Link>
+                <p className="text-sm text-slate-600 mt-4">
+                  This is a simulation. Real API security assessments are performed by our certified experts.
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

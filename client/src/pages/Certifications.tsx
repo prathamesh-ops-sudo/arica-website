@@ -749,9 +749,9 @@ export default function Certifications() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12"
           >
-            <Link href="/" className="inline-flex items-center gap-2 text-[#00D4FF] hover:text-[#00D4FF]/80 transition-colors mb-8">
+            <Link href="/experience" className="inline-flex items-center gap-2 text-[#00D4FF] hover:text-[#00D4FF]/80 transition-colors mb-8" data-testid="link-back-experience">
               <ArrowLeft className="w-4 h-4" />
-              Back to Home
+              Back to Experience
             </Link>
             
             <div className="flex items-center justify-center gap-3 mb-4">

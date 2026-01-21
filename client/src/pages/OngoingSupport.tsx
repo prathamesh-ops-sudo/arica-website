@@ -642,12 +642,12 @@ export default function OngoingSupport() {
         <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#000510]/90 border-b border-[#00D4FF]/20">
           <div className="container mx-auto px-6 py-3 flex items-center justify-between">
             <Link
-              href="/"
+              href="/experience"
               className="flex items-center gap-2 text-[#00D4FF] hover:text-[#00D4FF]/80 transition-colors font-mono text-sm"
-              data-testid="link-back-home"
+              data-testid="link-back-experience"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Back to Home</span>
+              <span>Back to Experience</span>
             </Link>
 
             <div className="flex items-center gap-4">

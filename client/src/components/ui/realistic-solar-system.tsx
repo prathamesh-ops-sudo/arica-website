@@ -3,9 +3,10 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'wouter';
+import { useLocation } from 'wouter';
 import { ChevronRight, Shield, FileCheck, Code, X } from 'lucide-react';
 import { isWebGLAvailable } from '@/lib/webgl-utils';
+import { useHyperspaceTransition } from '@/components/ui/hyperspace-transition';
 
 interface ModalContent {
   title: string;
@@ -858,6 +859,8 @@ export function RealisticSolarSystem() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalPlanet, setModalPlanet] = useState<PlanetConfig | null>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
+  const [, setLocation] = useLocation();
+  const { triggerTransition } = useHyperspaceTransition();
   const prevScrollRef = useRef(0);
   const lastGalaxyRef = useRef<string>(galaxies[0].id);
   const transitionCooldownRef = useRef(false);
@@ -2383,8 +2386,11 @@ export function RealisticSolarSystem() {
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </button>
                 ) : (
-                  <Link
-                    href={activePlanet.actionType === 'attack-globe' ? '/attack-globe' : activePlanet.link}
+                  <button
+                    onClick={() => {
+                      const targetUrl = activePlanet.actionType === 'attack-globe' ? '/attack-globe' : activePlanet.link;
+                      triggerTransition(() => setLocation(targetUrl));
+                    }}
                     className="flex items-center gap-2 font-semibold px-5 py-3 rounded-full hover:opacity-90 transition-all group"
                     style={{
                       background: `linear-gradient(135deg, ${activeGalaxy.colorTheme.primary}, ${activeGalaxy.colorTheme.secondary})`,
@@ -2393,7 +2399,7 @@ export function RealisticSolarSystem() {
                   >
                     <span>{activePlanet.actionType === 'attack-globe' ? 'View Cyber Attacks' : 'Learn More'}</span>
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
+                  </button>
                 )}
               </motion.div>
             </motion.div>
@@ -2540,17 +2546,19 @@ export function RealisticSolarSystem() {
               <p className="text-muted-foreground mb-6">{modalPlanet.description}</p>
 
               <div className="flex gap-3">
-                <Link
-                  href="/contact"
+                <button
                   className="flex-1 text-center py-3 rounded-full font-semibold transition-all hover:opacity-90"
                   style={{
                     background: `linear-gradient(135deg, ${activeGalaxy.colorTheme.primary}, ${activeGalaxy.colorTheme.secondary})`,
                   }}
-                  onClick={() => setModalOpen(false)}
+                  onClick={() => {
+                    setModalOpen(false);
+                    triggerTransition(() => setLocation('/contact'));
+                  }}
                   data-testid="link-modal-contact"
                 >
                   Get Started
-                </Link>
+                </button>
                 <button
                   onClick={() => setModalOpen(false)}
                   className="px-6 py-3 rounded-full font-semibold bg-white/10 hover:bg-white/20 transition-colors"
