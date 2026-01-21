@@ -690,159 +690,174 @@ export default function AttackGlobe() {
 
   return (
     <div className="min-h-screen bg-[#0a0a1e] relative overflow-hidden">
-      <div 
-        ref={containerRef}
-        className="absolute inset-0 w-full h-full"
-        style={{ zIndex: 1 }}
-      >
-        {webglFailed ? (
-          <div className="w-full h-full flex items-center justify-center bg-[#0a0a1e]" data-testid="webgl-fallback">
-            <div className="text-center p-8">
-              <Globe2 className="w-24 h-24 mx-auto mb-4 text-[#00D4FF]/50" />
-              <h3 className="text-xl font-semibold text-white/80 mb-2">3D Globe Unavailable</h3>
-              <p className="text-white/50">WebGL is required for the interactive globe visualization.</p>
+      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#0a0a1e]/80 border-b border-[#00D4FF]/10">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+          <Link 
+            href="/experience"
+            className="flex items-center gap-2 text-[#00D4FF] hover:text-white transition-colors text-sm font-medium"
+            data-testid="link-back-experience"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            <span>Back to Experience</span>
+          </Link>
+          
+          <div className="flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-2 text-white/60 text-sm">
+              <Activity className="w-4 h-4 text-[#00D4FF]" />
+              <span>Live Monitoring</span>
             </div>
-          </div>
-        ) : (
-          <canvas 
-            ref={canvasRef}
-            className="w-full h-full"
-            data-testid="globe-canvas"
-          />
-        )}
-      </div>
-      
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a1e]/30 via-transparent to-[#0a0a1e]/80 pointer-events-none" style={{ zIndex: 2 }} />
-      
-      <div className="relative" style={{ zIndex: 10 }}>
-        <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#0a0a1e]/80 border-b border-[#00D4FF]/10">
-          <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-            <Link 
-              href="/experience"
-              className="flex items-center gap-2 text-[#00D4FF] hover:text-white transition-colors text-sm font-medium"
-              data-testid="link-back-experience"
+            <motion.div 
+              className="flex items-center gap-2 bg-[#ff3344]/10 px-4 py-2 rounded-full border border-[#ff3344]/30"
+              animate={{ 
+                boxShadow: ['0 0 10px rgba(255,51,68,0.2)', '0 0 25px rgba(255,51,68,0.4)', '0 0 10px rgba(255,51,68,0.2)']
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
             >
-              <ChevronLeft className="w-4 h-4" />
-              <span>Back to Experience</span>
-            </Link>
+              <motion.div 
+                className="w-2 h-2 rounded-full bg-[#ff3344]"
+                animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
+                transition={{ duration: 1, repeat: Infinity }}
+              />
+              <span className="text-xs text-[#ff3344] font-bold uppercase tracking-wider">Live</span>
+            </motion.div>
+          </div>
+        </div>
+      </header>
+
+      <main className="pt-24 pb-12 px-4">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-6"
+          >
+            <motion.div 
+              className="inline-flex items-center gap-3 bg-[#ff3344]/10 border border-[#ff3344]/30 rounded-full px-6 py-2 mb-4 backdrop-blur-xl"
+              animate={{ 
+                boxShadow: ['0 0 15px rgba(255,51,68,0.1)', '0 0 30px rgba(255,51,68,0.2)', '0 0 15px rgba(255,51,68,0.1)']
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              <AlertTriangle className="w-4 h-4 text-[#ff3344]" />
+              <span className="text-[#ff3344] font-medium text-sm">Global Threat Intelligence Active</span>
+            </motion.div>
             
-            <div className="flex items-center gap-4">
-              <div className="hidden md:flex items-center gap-2 text-white/60 text-sm">
-                <Activity className="w-4 h-4 text-[#00D4FF]" />
-                <span>Live Monitoring</span>
-              </div>
-              <motion.div 
-                className="flex items-center gap-2 bg-[#ff3344]/10 px-4 py-2 rounded-full border border-[#ff3344]/30"
-                animate={{ 
-                  boxShadow: ['0 0 10px rgba(255,51,68,0.2)', '0 0 25px rgba(255,51,68,0.4)', '0 0 10px rgba(255,51,68,0.2)']
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <motion.div 
-                  className="w-2 h-2 rounded-full bg-[#ff3344]"
-                  animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                />
-                <span className="text-xs text-[#ff3344] font-bold uppercase tracking-wider">Live</span>
-              </motion.div>
-            </div>
-          </div>
-        </header>
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-3 tracking-tight">
+              <span className="text-white drop-shadow-lg">Real-Time </span>
+              <span className="bg-gradient-to-r from-[#00D4FF] to-[#00ff88] bg-clip-text text-transparent">Cyber Attack</span>
+              <span className="text-white drop-shadow-lg"> Monitoring</span>
+            </h1>
+            
+            <p className="text-white/70 text-base md:text-lg max-w-2xl mx-auto drop-shadow-lg">
+              Witness the invisible war. Every second, thousands of attacks target businesses worldwide.
+            </p>
+          </motion.div>
 
-        <main className="pt-24 pb-12 px-4">
-          <div className="max-w-7xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-8"
-            >
-              <motion.div 
-                className="inline-flex items-center gap-3 bg-[#ff3344]/10 border border-[#ff3344]/30 rounded-full px-6 py-2 mb-6 backdrop-blur-xl"
-                animate={{ 
-                  boxShadow: ['0 0 15px rgba(255,51,68,0.1)', '0 0 30px rgba(255,51,68,0.2)', '0 0 15px rgba(255,51,68,0.1)']
-                }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
-                <AlertTriangle className="w-4 h-4 text-[#ff3344]" />
-                <span className="text-[#ff3344] font-medium text-sm">Global Threat Intelligence Active</span>
-              </motion.div>
-              
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 tracking-tight">
-                <span className="text-white drop-shadow-lg">Real-Time </span>
-                <span className="bg-gradient-to-r from-[#00D4FF] to-[#00ff88] bg-clip-text text-transparent">Cyber Attack</span>
-                <br />
-                <span className="text-white drop-shadow-lg">Monitoring</span>
-              </h1>
-              
-              <p className="text-white/70 text-lg md:text-xl max-w-2xl mx-auto mb-8 drop-shadow-lg">
-                Witness the invisible war. Every second, thousands of attacks target businesses worldwide.
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8"
-            >
-              <div className="backdrop-blur-xl bg-[#0a0a1e]/70 border border-white/10 rounded-2xl p-5 group hover:border-[#ff3344]/30 transition-all duration-500">
-                <div className="flex items-center justify-between mb-3">
-                  <Clock className="w-5 h-5 text-[#ff3344]" />
-                  <motion.span 
-                    className="text-[#ff3344] text-2xl font-bold font-mono"
-                    key={seconds}
-                    initial={{ scale: 1.2, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                  >
-                    {seconds}s
-                  </motion.span>
-                </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-white mb-1">Every 39</h3>
-                <p className="text-white/40 text-sm">Seconds a Hack Occurs</p>
-              </div>
-              
-              <div className="backdrop-blur-xl bg-[#0a0a1e]/70 border border-white/10 rounded-2xl p-5 group hover:border-[#00D4FF]/30 transition-all duration-500">
-                <div className="flex items-center justify-between mb-3">
-                  <Target className="w-5 h-5 text-[#00D4FF]" />
-                  <Zap className="w-4 h-4 text-[#00D4FF] animate-pulse" />
-                </div>
-                <motion.h3 
-                  className="text-2xl md:text-3xl font-bold text-white mb-1"
-                  key={liveCounter}
-                  initial={{ scale: 1.05 }}
-                  animate={{ scale: 1 }}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6"
+          >
+            <div className="backdrop-blur-xl bg-[#0a0a1e]/70 border border-white/10 rounded-2xl p-4 group hover:border-[#ff3344]/30 transition-all duration-500">
+              <div className="flex items-center justify-between mb-2">
+                <Clock className="w-4 h-4 text-[#ff3344]" />
+                <motion.span 
+                  className="text-[#ff3344] text-xl font-bold font-mono"
+                  key={seconds}
+                  initial={{ scale: 1.2, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
                 >
-                  {liveCounter.toLocaleString()}
-                </motion.h3>
-                <p className="text-white/40 text-sm">Attacks Detected Today</p>
+                  {seconds}s
+                </motion.span>
               </div>
-              
-              <div className="backdrop-blur-xl bg-[#0a0a1e]/70 border border-white/10 rounded-2xl p-5 group hover:border-yellow-500/30 transition-all duration-500">
-                <div className="flex items-center justify-between mb-3">
-                  <ShieldAlert className="w-5 h-5 text-yellow-500" />
-                  <span className="text-[10px] text-yellow-500/70 uppercase font-medium">2025</span>
-                </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-white mb-1">$4.45M</h3>
-                <p className="text-white/40 text-sm">Avg. Breach Cost</p>
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-1">Every 39</h3>
+              <p className="text-white/40 text-xs">Seconds a Hack Occurs</p>
+            </div>
+            
+            <div className="backdrop-blur-xl bg-[#0a0a1e]/70 border border-white/10 rounded-2xl p-4 group hover:border-[#00D4FF]/30 transition-all duration-500">
+              <div className="flex items-center justify-between mb-2">
+                <Target className="w-4 h-4 text-[#00D4FF]" />
+                <Zap className="w-3 h-3 text-[#00D4FF] animate-pulse" />
               </div>
-              
-              <div className="backdrop-blur-xl bg-[#0a0a1e]/70 border border-white/10 rounded-2xl p-5 group hover:border-purple-500/30 transition-all duration-500">
-                <div className="flex items-center justify-between mb-3">
-                  <Globe2 className="w-5 h-5 text-purple-400" />
-                  <span className="text-[10px] text-purple-400/70 uppercase font-medium">Global</span>
-                </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-white mb-1">$10.5T</h3>
-                <p className="text-white/40 text-sm">Annual Cybercrime Cost</p>
+              <motion.h3 
+                className="text-xl md:text-2xl font-bold text-white mb-1"
+                key={liveCounter}
+                initial={{ scale: 1.05 }}
+                animate={{ scale: 1 }}
+              >
+                {liveCounter.toLocaleString()}
+              </motion.h3>
+              <p className="text-white/40 text-xs">Attacks Detected Today</p>
+            </div>
+            
+            <div className="backdrop-blur-xl bg-[#0a0a1e]/70 border border-white/10 rounded-2xl p-4 group hover:border-yellow-500/30 transition-all duration-500">
+              <div className="flex items-center justify-between mb-2">
+                <ShieldAlert className="w-4 h-4 text-yellow-500" />
+                <span className="text-[10px] text-yellow-500/70 uppercase font-medium">2025</span>
               </div>
-            </motion.div>
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-1">$4.45M</h3>
+              <p className="text-white/40 text-xs">Avg. Breach Cost</p>
+            </div>
+            
+            <div className="backdrop-blur-xl bg-[#0a0a1e]/70 border border-white/10 rounded-2xl p-4 group hover:border-purple-500/30 transition-all duration-500">
+              <div className="flex items-center justify-between mb-2">
+                <Globe2 className="w-4 h-4 text-purple-400" />
+                <span className="text-[10px] text-purple-400/70 uppercase font-medium">Global</span>
+              </div>
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-1">$10.5T</h3>
+              <p className="text-white/40 text-xs">Annual Cybercrime Cost</p>
+            </div>
+          </motion.div>
 
-            <div className="flex justify-end mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8"
+          >
+            <div className="lg:col-span-2">
+              <div 
+                ref={containerRef}
+                className="relative w-full aspect-square lg:aspect-[4/3] rounded-3xl overflow-hidden border border-[#00D4FF]/20 bg-[#050510]"
+                style={{ boxShadow: '0 0 60px rgba(0,212,255,0.15), inset 0 0 60px rgba(0,212,255,0.05)' }}
+              >
+                {webglFailed ? (
+                  <div className="w-full h-full flex items-center justify-center" data-testid="webgl-fallback">
+                    <div className="text-center p-8">
+                      <Globe2 className="w-24 h-24 mx-auto mb-4 text-[#00D4FF]/50" />
+                      <h3 className="text-xl font-semibold text-white/80 mb-2">3D Globe Unavailable</h3>
+                      <p className="text-white/50">WebGL is required for the interactive globe visualization.</p>
+                    </div>
+                  </div>
+                ) : (
+                  <canvas 
+                    ref={canvasRef}
+                    className="w-full h-full"
+                    data-testid="globe-canvas"
+                  />
+                )}
+                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+                  <div className="backdrop-blur-md bg-black/50 rounded-full px-4 py-2 border border-white/10">
+                    <span className="text-xs text-white/60">Drag to rotate</span>
+                  </div>
+                  <motion.div 
+                    className="backdrop-blur-md bg-[#ff3344]/20 rounded-full px-4 py-2 border border-[#ff3344]/30"
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <span className="text-xs text-[#ff3344] font-medium">{attacks.length} Active Threats</span>
+                  </motion.div>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="w-full lg:w-96 space-y-4"
               >
                 <div className="backdrop-blur-xl bg-[#0a0a1e]/70 border border-white/10 rounded-2xl p-4">
                   <div className="flex items-center gap-2 mb-3">
@@ -956,13 +971,14 @@ export default function AttackGlobe() {
                 </div>
               </motion.div>
             </div>
+          </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="mt-8 text-center"
-            >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="mt-8 text-center"
+          >
               <div className="backdrop-blur-xl bg-gradient-to-r from-[#00D4FF]/10 via-[#00D4FF]/20 to-[#00D4FF]/10 border border-[#00D4FF]/20 rounded-3xl p-8 md:p-12 relative overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#00D4FF]/5 via-transparent to-transparent" />
                 
@@ -1035,7 +1051,6 @@ export default function AttackGlobe() {
             </motion.div>
           </div>
         </main>
-      </div>
     </div>
   );
 }
