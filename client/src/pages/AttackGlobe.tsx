@@ -1,7 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
 import { ChevronLeft, Shield, AlertTriangle, Clock, Zap, Target, Globe2, Activity, ShieldCheck, ShieldAlert, ArrowRight, Search, Filter, X } from "lucide-react";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import * as THREE from "three";
 
 const attackTypes = [
   { id: 'ddos', name: 'DDoS Attack', color: '#ff3344' },
@@ -13,28 +14,30 @@ const attackTypes = [
   { id: 'ransomware', name: 'Ransomware', color: '#cc00ff' },
 ];
 
-const cities = [
-  'Moscow, Russia',
-  'Beijing, China',
-  'New York, USA',
-  'London, UK',
-  'Tokyo, Japan',
-  'São Paulo, Brazil',
-  'Mumbai, India',
-  'Sydney, Australia',
-  'Paris, France',
-  'Seoul, South Korea',
-  'Berlin, Germany',
-  'Toronto, Canada',
-  'Singapore',
-  'Dubai, UAE',
-  'Hong Kong',
-  'Los Angeles, USA',
-  'Shanghai, China',
-  'Amsterdam, Netherlands',
-  'Stockholm, Sweden',
-  'Tel Aviv, Israel',
-];
+const cityCoordinates: Record<string, { lat: number; lng: number }> = {
+  'Moscow, Russia': { lat: 55.7558, lng: 37.6173 },
+  'Beijing, China': { lat: 39.9042, lng: 116.4074 },
+  'New York, USA': { lat: 40.7128, lng: -74.006 },
+  'London, UK': { lat: 51.5074, lng: -0.1278 },
+  'Tokyo, Japan': { lat: 35.6762, lng: 139.6503 },
+  'São Paulo, Brazil': { lat: -23.5505, lng: -46.6333 },
+  'Mumbai, India': { lat: 19.076, lng: 72.8777 },
+  'Sydney, Australia': { lat: -33.8688, lng: 151.2093 },
+  'Paris, France': { lat: 48.8566, lng: 2.3522 },
+  'Seoul, South Korea': { lat: 37.5665, lng: 126.978 },
+  'Berlin, Germany': { lat: 52.52, lng: 13.405 },
+  'Toronto, Canada': { lat: 43.6532, lng: -79.3832 },
+  'Singapore': { lat: 1.3521, lng: 103.8198 },
+  'Dubai, UAE': { lat: 25.2048, lng: 55.2708 },
+  'Hong Kong': { lat: 22.3193, lng: 114.1694 },
+  'Los Angeles, USA': { lat: 34.0522, lng: -118.2437 },
+  'Shanghai, China': { lat: 31.2304, lng: 121.4737 },
+  'Amsterdam, Netherlands': { lat: 52.3676, lng: 4.9041 },
+  'Stockholm, Sweden': { lat: 59.3293, lng: 18.0686 },
+  'Tel Aviv, Israel': { lat: 32.0853, lng: 34.7818 },
+};
+
+const cities = Object.keys(cityCoordinates);
 
 interface Attack {
   id: number;
@@ -46,6 +49,50 @@ interface Attack {
   isNew?: boolean;
 }
 
+interface AttackArc {
+  mesh: THREE.Line;
+  glowMesh: THREE.Line;
+  progress: number;
+  speed: number;
+  curve: THREE.QuadraticBezierCurve3;
+  startPos: THREE.Vector3;
+  endPos: THREE.Vector3;
+  severity: string;
+  pulseMarker: THREE.Mesh;
+  impactMarker: THREE.Mesh;
+}
+
+function latLngToVector3(lat: number, lng: number, radius: number): THREE.Vector3 {
+  const phi = (90 - lat) * (Math.PI / 180);
+  const theta = (lng + 180) * (Math.PI / 180);
+  return new THREE.Vector3(
+    -radius * Math.sin(phi) * Math.cos(theta),
+    radius * Math.cos(phi),
+    radius * Math.sin(phi) * Math.sin(theta)
+  );
+}
+
+function createArcCurve(
+  start: THREE.Vector3,
+  end: THREE.Vector3,
+  arcHeight: number
+): THREE.QuadraticBezierCurve3 {
+  const midPoint = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
+  const distance = start.distanceTo(end);
+  midPoint.normalize().multiplyScalar(start.length() + distance * arcHeight);
+  return new THREE.QuadraticBezierCurve3(start, midPoint, end);
+}
+
+function getSeverityHexColor(severity: string): number {
+  switch (severity) {
+    case 'critical': return 0xff3344;
+    case 'high': return 0xff9900;
+    case 'medium': return 0xffcc00;
+    case 'low': return 0x00ff88;
+    default: return 0x00d4ff;
+  }
+}
+
 export default function AttackGlobe() {
   const [liveCounter, setLiveCounter] = useState(2847);
   const [seconds, setSeconds] = useState(39);
@@ -54,6 +101,454 @@ export default function AttackGlobe() {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [attacks, setAttacks] = useState<Attack[]>([]);
   const [attackIdCounter, setAttackIdCounter] = useState(0);
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const sceneRef = useRef<{
+    scene: THREE.Scene | null;
+    camera: THREE.PerspectiveCamera | null;
+    renderer: THREE.WebGLRenderer | null;
+    globeGroup: THREE.Group | null;
+    arcs: AttackArc[];
+    cityMarkers: Map<string, THREE.Mesh>;
+    animationId: number | null;
+    clock: THREE.Clock;
+    isDragging: boolean;
+    lastMouseX: number;
+    lastMouseY: number;
+    rotationVelocityY: number;
+  }>({
+    scene: null,
+    camera: null,
+    renderer: null,
+    globeGroup: null,
+    arcs: [],
+    cityMarkers: new Map(),
+    animationId: null,
+    clock: new THREE.Clock(),
+    isDragging: false,
+    lastMouseX: 0,
+    lastMouseY: 0,
+    rotationVelocityY: 0.002,
+  });
+
+  const addAttackArc = useCallback((from: string, to: string, severity: string) => {
+    const refs = sceneRef.current;
+    if (!refs.scene || !refs.globeGroup) return;
+
+    const fromCoords = cityCoordinates[from];
+    const toCoords = cityCoordinates[to];
+    if (!fromCoords || !toCoords) return;
+
+    const GLOBE_RADIUS = 5;
+    const startPos = latLngToVector3(fromCoords.lat, fromCoords.lng, GLOBE_RADIUS);
+    const endPos = latLngToVector3(toCoords.lat, toCoords.lng, GLOBE_RADIUS);
+
+    const curve = createArcCurve(startPos, endPos, 0.4);
+    const points = curve.getPoints(60);
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+
+    const color = getSeverityHexColor(severity);
+    
+    const material = new THREE.LineBasicMaterial({
+      color,
+      transparent: true,
+      opacity: 0,
+      linewidth: 2,
+    });
+
+    const line = new THREE.Line(geometry, material);
+    refs.globeGroup.add(line);
+
+    const glowMaterial = new THREE.LineBasicMaterial({
+      color,
+      transparent: true,
+      opacity: 0,
+      linewidth: 4,
+    });
+    const glowLine = new THREE.Line(geometry.clone(), glowMaterial);
+    refs.globeGroup.add(glowLine);
+
+    const pulseGeom = new THREE.SphereGeometry(0.1, 12, 12);
+    const pulseMat = new THREE.MeshBasicMaterial({
+      color,
+      transparent: true,
+      opacity: 1,
+    });
+    const pulseMarker = new THREE.Mesh(pulseGeom, pulseMat);
+    pulseMarker.position.copy(startPos);
+    refs.globeGroup.add(pulseMarker);
+
+    const impactGeom = new THREE.SphereGeometry(0.15, 12, 12);
+    const impactMat = new THREE.MeshBasicMaterial({
+      color,
+      transparent: true,
+      opacity: 0,
+    });
+    const impactMarker = new THREE.Mesh(impactGeom, impactMat);
+    impactMarker.position.copy(endPos);
+    refs.globeGroup.add(impactMarker);
+
+    refs.arcs.push({
+      mesh: line,
+      glowMesh: glowLine,
+      progress: 0,
+      speed: 0.012 + Math.random() * 0.008,
+      curve,
+      startPos: startPos.clone(),
+      endPos: endPos.clone(),
+      severity,
+      pulseMarker,
+      impactMarker,
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!canvasRef.current || !containerRef.current) return;
+
+    const refs = sceneRef.current;
+    const GLOBE_RADIUS = 5;
+
+    refs.scene = new THREE.Scene();
+    refs.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+    refs.camera.position.set(0, 0, 14);
+
+    refs.renderer = new THREE.WebGLRenderer({
+      canvas: canvasRef.current,
+      antialias: true,
+      alpha: true,
+    });
+    refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    refs.renderer.setClearColor(0x0a0a1e, 0);
+
+    refs.globeGroup = new THREE.Group();
+    refs.scene.add(refs.globeGroup);
+
+    const sphereGeometry = new THREE.SphereGeometry(GLOBE_RADIUS, 48, 48);
+    const sphereMaterial = new THREE.MeshBasicMaterial({
+      color: 0x0a1628,
+      transparent: true,
+      opacity: 0.9,
+    });
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    refs.globeGroup.add(sphere);
+
+    const icoGeometry = new THREE.IcosahedronGeometry(GLOBE_RADIUS * 1.001, 4);
+    const wireframeMaterial = new THREE.LineBasicMaterial({
+      color: 0x00d4ff,
+      transparent: true,
+      opacity: 0.15,
+    });
+    const wireframeGeometry = new THREE.WireframeGeometry(icoGeometry);
+    const wireframeGlobe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
+    refs.globeGroup.add(wireframeGlobe);
+
+    const latLineCount = 12;
+    const lngLineCount = 24;
+    const gridMaterial = new THREE.LineBasicMaterial({
+      color: 0x00d4ff,
+      transparent: true,
+      opacity: 0.08,
+    });
+
+    for (let i = 1; i < latLineCount; i++) {
+      const lat = (i / latLineCount) * Math.PI - Math.PI / 2;
+      const radius = GLOBE_RADIUS * 1.002 * Math.cos(lat);
+      const y = GLOBE_RADIUS * 1.002 * Math.sin(lat);
+      const curve = new THREE.EllipseCurve(0, 0, radius, radius, 0, 2 * Math.PI, false, 0);
+      const points = curve.getPoints(64).map(p => new THREE.Vector3(p.x, y, p.y));
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      const line = new THREE.Line(geometry, gridMaterial);
+      refs.globeGroup.add(line);
+    }
+
+    for (let i = 0; i < lngLineCount; i++) {
+      const lng = (i / lngLineCount) * Math.PI * 2;
+      const points: THREE.Vector3[] = [];
+      for (let j = 0; j <= 64; j++) {
+        const lat = (j / 64) * Math.PI - Math.PI / 2;
+        const x = GLOBE_RADIUS * 1.002 * Math.cos(lat) * Math.cos(lng);
+        const y = GLOBE_RADIUS * 1.002 * Math.sin(lat);
+        const z = GLOBE_RADIUS * 1.002 * Math.cos(lat) * Math.sin(lng);
+        points.push(new THREE.Vector3(x, y, z));
+      }
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      const line = new THREE.Line(geometry, gridMaterial);
+      refs.globeGroup.add(line);
+    }
+
+    const atmosphereGeom = new THREE.SphereGeometry(GLOBE_RADIUS * 1.12, 32, 32);
+    const atmosphereMat = new THREE.ShaderMaterial({
+      uniforms: {
+        glowColor: { value: new THREE.Color(0x00d4ff) },
+      },
+      vertexShader: `
+        varying vec3 vNormal;
+        void main() {
+          vNormal = normalize(normalMatrix * normal);
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 glowColor;
+        varying vec3 vNormal;
+        void main() {
+          float intensity = pow(0.6 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.5);
+          gl_FragColor = vec4(glowColor, intensity * 0.5);
+        }
+      `,
+      side: THREE.BackSide,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const atmosphere = new THREE.Mesh(atmosphereGeom, atmosphereMat);
+    refs.scene.add(atmosphere);
+
+    Object.entries(cityCoordinates).forEach(([city, coords]) => {
+      const pos = latLngToVector3(coords.lat, coords.lng, GLOBE_RADIUS);
+      
+      const markerGeom = new THREE.SphereGeometry(0.06, 8, 8);
+      const markerMat = new THREE.MeshBasicMaterial({
+        color: 0x00d4ff,
+        transparent: true,
+        opacity: 0.9,
+      });
+      const marker = new THREE.Mesh(markerGeom, markerMat);
+      marker.position.copy(pos);
+      refs.globeGroup!.add(marker);
+      refs.cityMarkers.set(city, marker);
+
+      const ringGeom = new THREE.RingGeometry(0.1, 0.14, 16);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0x00d4ff,
+        transparent: true,
+        opacity: 0.3,
+        side: THREE.DoubleSide,
+      });
+      const ring = new THREE.Mesh(ringGeom, ringMat);
+      ring.position.copy(pos);
+      ring.lookAt(new THREE.Vector3(0, 0, 0));
+      refs.globeGroup!.add(ring);
+    });
+
+    const particleCount = 300;
+    const particlePositions = new Float32Array(particleCount * 3);
+    for (let i = 0; i < particleCount; i++) {
+      const radius = 7 + Math.random() * 4;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      particlePositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+      particlePositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+      particlePositions[i * 3 + 2] = radius * Math.cos(phi);
+    }
+    const particleGeom = new THREE.BufferGeometry();
+    particleGeom.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+    const particleMat = new THREE.PointsMaterial({
+      color: 0x00d4ff,
+      size: 0.03,
+      transparent: true,
+      opacity: 0.4,
+      blending: THREE.AdditiveBlending,
+    });
+    const particles = new THREE.Points(particleGeom, particleMat);
+    refs.scene.add(particles);
+
+    const updateSize = () => {
+      if (!containerRef.current || !refs.renderer || !refs.camera) return;
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      refs.camera.aspect = width / height;
+      refs.camera.updateProjectionMatrix();
+      refs.renderer.setSize(width, height);
+    };
+    updateSize();
+    window.addEventListener('resize', updateSize);
+
+    const handleMouseDown = (e: MouseEvent) => {
+      refs.isDragging = true;
+      refs.lastMouseX = e.clientX;
+    };
+
+    const handleMouseUp = () => {
+      refs.isDragging = false;
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (refs.isDragging && refs.globeGroup) {
+        const deltaX = e.clientX - refs.lastMouseX;
+        refs.rotationVelocityY = deltaX * 0.005;
+        refs.lastMouseX = e.clientX;
+      }
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        refs.isDragging = true;
+        refs.lastMouseX = e.touches[0].clientX;
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (refs.isDragging && refs.globeGroup && e.touches.length === 1) {
+        const deltaX = e.touches[0].clientX - refs.lastMouseX;
+        refs.rotationVelocityY = deltaX * 0.005;
+        refs.lastMouseX = e.touches[0].clientX;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      refs.isDragging = false;
+    };
+
+    containerRef.current?.addEventListener('mousedown', handleMouseDown);
+    containerRef.current?.addEventListener('mousemove', handleMouseMove);
+    containerRef.current?.addEventListener('touchstart', handleTouchStart);
+    containerRef.current?.addEventListener('touchmove', handleTouchMove);
+    containerRef.current?.addEventListener('touchend', handleTouchEnd);
+    window.addEventListener('mouseup', handleMouseUp);
+
+    const animate = () => {
+      refs.animationId = requestAnimationFrame(animate);
+      const time = refs.clock.getElapsedTime();
+
+      if (refs.globeGroup) {
+        if (!refs.isDragging) {
+          refs.rotationVelocityY *= 0.98;
+          if (Math.abs(refs.rotationVelocityY) < 0.002) {
+            refs.rotationVelocityY = 0.002;
+          }
+        }
+        refs.globeGroup.rotation.y += refs.rotationVelocityY;
+      }
+
+      refs.cityMarkers.forEach((marker, i) => {
+        const pulse = Math.sin(time * 2 + i.charCodeAt(0) * 0.1) * 0.3 + 0.7;
+        (marker.material as THREE.MeshBasicMaterial).opacity = pulse;
+      });
+
+      refs.arcs = refs.arcs.filter(arc => {
+        arc.progress += arc.speed;
+
+        const fadeIn = Math.min(arc.progress * 4, 1);
+        const fadeOut = 1 - Math.max((arc.progress - 0.75) * 4, 0);
+        const baseOpacity = fadeIn * fadeOut;
+        
+        const pulse = Math.sin(time * 15 + arc.progress * 30) * 0.2 + 0.8;
+        
+        (arc.mesh.material as THREE.LineBasicMaterial).opacity = baseOpacity * 0.9;
+        (arc.glowMesh.material as THREE.LineBasicMaterial).opacity = baseOpacity * pulse * 0.5;
+
+        const currentPoint = arc.curve.getPoint(Math.min(arc.progress, 1));
+        arc.pulseMarker.position.copy(currentPoint);
+        
+        const pulseScale = 0.8 + Math.sin(time * 20) * 0.4;
+        arc.pulseMarker.scale.setScalar(pulseScale);
+        (arc.pulseMarker.material as THREE.MeshBasicMaterial).opacity = baseOpacity;
+
+        if (arc.progress > 0.9) {
+          const impactOpacity = (arc.progress - 0.9) * 10;
+          const impactScale = 1 + impactOpacity * 2;
+          arc.impactMarker.scale.setScalar(impactScale);
+          (arc.impactMarker.material as THREE.MeshBasicMaterial).opacity = (1 - impactOpacity) * 0.8;
+        }
+
+        if (arc.progress >= 1.2) {
+          refs.globeGroup?.remove(arc.mesh);
+          refs.globeGroup?.remove(arc.glowMesh);
+          refs.globeGroup?.remove(arc.pulseMarker);
+          refs.globeGroup?.remove(arc.impactMarker);
+          arc.mesh.geometry.dispose();
+          (arc.mesh.material as THREE.Material).dispose();
+          arc.glowMesh.geometry.dispose();
+          (arc.glowMesh.material as THREE.Material).dispose();
+          arc.pulseMarker.geometry.dispose();
+          (arc.pulseMarker.material as THREE.Material).dispose();
+          arc.impactMarker.geometry.dispose();
+          (arc.impactMarker.material as THREE.Material).dispose();
+          return false;
+        }
+
+        return true;
+      });
+
+      particles.rotation.y += 0.0003;
+
+      if (refs.renderer && refs.scene && refs.camera) {
+        refs.renderer.render(refs.scene, refs.camera);
+      }
+    };
+    animate();
+
+    return () => {
+      if (refs.animationId) cancelAnimationFrame(refs.animationId);
+      window.removeEventListener('resize', updateSize);
+      window.removeEventListener('mouseup', handleMouseUp);
+      containerRef.current?.removeEventListener('mousedown', handleMouseDown);
+      containerRef.current?.removeEventListener('mousemove', handleMouseMove);
+      containerRef.current?.removeEventListener('touchstart', handleTouchStart);
+      containerRef.current?.removeEventListener('touchmove', handleTouchMove);
+      containerRef.current?.removeEventListener('touchend', handleTouchEnd);
+      
+      refs.arcs.forEach(arc => {
+        arc.mesh.geometry.dispose();
+        (arc.mesh.material as THREE.Material).dispose();
+        arc.glowMesh.geometry.dispose();
+        (arc.glowMesh.material as THREE.Material).dispose();
+        arc.pulseMarker.geometry.dispose();
+        (arc.pulseMarker.material as THREE.Material).dispose();
+        arc.impactMarker.geometry.dispose();
+        (arc.impactMarker.material as THREE.Material).dispose();
+      });
+      refs.arcs = [];
+      
+      refs.cityMarkers.forEach(marker => {
+        marker.geometry.dispose();
+        (marker.material as THREE.Material).dispose();
+      });
+      refs.cityMarkers.clear();
+      
+      if (refs.globeGroup) {
+        refs.globeGroup.traverse((object) => {
+          if (object instanceof THREE.Mesh || object instanceof THREE.Line || object instanceof THREE.Points) {
+            object.geometry?.dispose();
+            if (object.material) {
+              if (Array.isArray(object.material)) {
+                object.material.forEach(m => m.dispose());
+              } else {
+                (object.material as THREE.Material).dispose();
+              }
+            }
+          }
+        });
+        refs.scene?.remove(refs.globeGroup);
+      }
+      
+      if (refs.scene) {
+        refs.scene.traverse((object) => {
+          if (object instanceof THREE.Mesh || object instanceof THREE.Line || object instanceof THREE.Points) {
+            object.geometry?.dispose();
+            if (object.material) {
+              if (Array.isArray(object.material)) {
+                object.material.forEach(m => m.dispose());
+              } else {
+                (object.material as THREE.Material).dispose();
+              }
+            }
+          }
+        });
+      }
+      
+      if (refs.renderer) {
+        refs.renderer.dispose();
+        refs.renderer.forceContextLoss();
+      }
+      
+      refs.scene = null;
+      refs.camera = null;
+      refs.renderer = null;
+      refs.globeGroup = null;
+    };
+  }, []);
 
   const generateRandomAttack = useCallback((): Attack => {
     const fromCity = cities[Math.floor(Math.random() * cities.length)];
@@ -95,6 +590,8 @@ export default function AttackGlobe() {
       newAttack.id = attackIdCounter;
       setAttackIdCounter(prev => prev + 1);
       
+      addAttackArc(newAttack.from, newAttack.to, newAttack.severity);
+      
       setAttacks(prev => {
         const updated = prev.map(a => ({ ...a, isNew: false }));
         const newList = [newAttack, ...updated].slice(0, 12);
@@ -116,7 +613,7 @@ export default function AttackGlobe() {
     
     scheduleNext();
     return () => clearTimeout(timeoutId);
-  }, [attackIdCounter, generateRandomAttack]);
+  }, [attackIdCounter, generateRandomAttack, addAttackArc]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -179,13 +676,17 @@ export default function AttackGlobe() {
 
   return (
     <div className="min-h-screen bg-[#0a0a1e] relative overflow-hidden">
-      <iframe 
-        src="https://clara.io/embed/d8f7f934-c140-43ea-a765-97d08cd4e841?renderer=webgl"
-        className="absolute inset-0 w-full h-full border-0"
+      <div 
+        ref={containerRef}
+        className="absolute inset-0 w-full h-full"
         style={{ zIndex: 1 }}
-        allowFullScreen
-        title="Earth Globe"
-      />
+      >
+        <canvas 
+          ref={canvasRef}
+          className="w-full h-full"
+          data-testid="globe-canvas"
+        />
+      </div>
       
       <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a1e]/30 via-transparent to-[#0a0a1e]/80 pointer-events-none" style={{ zIndex: 2 }} />
       
