@@ -240,96 +240,52 @@ export default function AttackGlobe() {
 
     const sphereGeometry = new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64);
     
-    const earthMaterial = new THREE.ShaderMaterial({
-      uniforms: {
-        time: { value: 0 },
-      },
-      vertexShader: `
-        varying vec2 vUv;
-        varying vec3 vNormal;
-        varying vec3 vPosition;
-        
-        void main() {
-          vUv = uv;
-          vNormal = normalize(normalMatrix * normal);
-          vPosition = position;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        varying vec2 vUv;
-        varying vec3 vNormal;
-        varying vec3 vPosition;
-        uniform float time;
-        
-        float noise(vec2 p) {
-          return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
-        }
-        
-        float smoothNoise(vec2 p) {
-          vec2 i = floor(p);
-          vec2 f = fract(p);
-          f = f * f * (3.0 - 2.0 * f);
-          float a = noise(i);
-          float b = noise(i + vec2(1.0, 0.0));
-          float c = noise(i + vec2(0.0, 1.0));
-          float d = noise(i + vec2(1.0, 1.0));
-          return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
-        }
-        
-        float fbm(vec2 p) {
-          float v = 0.0;
-          float a = 0.5;
-          for (int i = 0; i < 5; i++) {
-            v += a * smoothNoise(p);
-            p *= 2.0;
-            a *= 0.5;
-          }
-          return v;
-        }
-        
-        void main() {
-          vec2 uv = vUv;
-          
-          float continent = fbm(uv * 8.0 + vec2(1.5, 0.3));
-          continent = smoothstep(0.4, 0.55, continent);
-          
-          vec3 oceanColor = vec3(0.02, 0.15, 0.35);
-          vec3 oceanDeep = vec3(0.01, 0.08, 0.2);
-          vec3 landColor = vec3(0.12, 0.25, 0.12);
-          vec3 landLight = vec3(0.18, 0.35, 0.15);
-          vec3 desertColor = vec3(0.35, 0.3, 0.18);
-          vec3 snowColor = vec3(0.85, 0.88, 0.92);
-          
-          float oceanDepth = fbm(uv * 12.0);
-          vec3 ocean = mix(oceanDeep, oceanColor, oceanDepth);
-          
-          float landVariation = fbm(uv * 20.0 + vec2(5.0, 3.0));
-          float latitude = abs(uv.y - 0.5) * 2.0;
-          
-          vec3 land = mix(landColor, landLight, landVariation);
-          land = mix(land, desertColor, smoothstep(0.2, 0.4, fbm(uv * 6.0 + vec2(2.0, 1.0))) * (1.0 - latitude));
-          land = mix(land, snowColor, smoothstep(0.75, 0.95, latitude));
-          
-          vec3 baseColor = mix(ocean, land, continent);
-          
-          vec3 lightDir = normalize(vec3(1.0, 0.5, 1.0));
-          float diffuse = max(dot(vNormal, lightDir), 0.0);
-          float ambient = 0.25;
-          
-          float fresnel = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 3.0);
-          vec3 fresnelColor = vec3(0.0, 0.6, 1.0) * fresnel * 0.3;
-          
-          vec3 finalColor = baseColor * (ambient + diffuse * 0.8) + fresnelColor;
-          
-          gl_FragColor = vec4(finalColor, 1.0);
-        }
-      `,
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.crossOrigin = 'anonymous';
+    
+    const earthTexture = textureLoader.load(
+      'https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg',
+      (texture) => {
+        texture.colorSpace = THREE.SRGBColorSpace;
+        earthMaterial.needsUpdate = true;
+      }
+    );
+    
+    const bumpTexture = textureLoader.load(
+      'https://unpkg.com/three-globe@2.31.0/example/img/earth-topology.png'
+    );
+    
+    const earthMaterial = new THREE.MeshPhongMaterial({
+      map: earthTexture,
+      bumpMap: bumpTexture,
+      bumpScale: 0.05,
+      shininess: 5,
+      specular: new THREE.Color(0x333333),
     });
     
     const sphere = new THREE.Mesh(sphereGeometry, earthMaterial);
     refs.globeGroup.add(sphere);
-    (refs as any).earthMaterial = earthMaterial;
+    
+    const cloudsGeometry = new THREE.SphereGeometry(GLOBE_RADIUS * 1.01, 48, 48);
+    const cloudsTexture = textureLoader.load(
+      'https://unpkg.com/three-globe@2.31.0/example/img/earth-clouds.png'
+    );
+    const cloudsMaterial = new THREE.MeshPhongMaterial({
+      map: cloudsTexture,
+      transparent: true,
+      opacity: 0.4,
+      depthWrite: false,
+    });
+    const clouds = new THREE.Mesh(cloudsGeometry, cloudsMaterial);
+    refs.globeGroup.add(clouds);
+    (refs as any).clouds = clouds;
+    
+    const ambientLight = new THREE.AmbientLight(0x555555);
+    refs.scene.add(ambientLight);
+    
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+    directionalLight.position.set(5, 3, 5);
+    refs.scene.add(directionalLight);
 
     const atmosphereGeom = new THREE.SphereGeometry(GLOBE_RADIUS * 1.15, 32, 32);
     const atmosphereMat = new THREE.ShaderMaterial({
@@ -474,8 +430,8 @@ export default function AttackGlobe() {
         }
         refs.globeGroup.rotation.y += refs.rotationVelocityY;
         
-        if ((refs as any).earthMaterial) {
-          (refs as any).earthMaterial.uniforms.time.value = refs.clock.getElapsedTime();
+        if ((refs as any).clouds) {
+          (refs as any).clouds.rotation.y += 0.0001;
         }
       }
 
