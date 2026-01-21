@@ -240,75 +240,53 @@ export default function AttackGlobe() {
 
     const textureLoader = new THREE.TextureLoader();
     
-    const earthColorTexture = textureLoader.load('/attached_assets/earth_color_4k.jpg');
-    const earthBumpTexture = textureLoader.load('/attached_assets/earth_bump_4k.jpg');
-    const earthNightTexture = textureLoader.load('/attached_assets/earth_nightlights_4k.jpg');
-    const earthCloudsTexture = textureLoader.load('/attached_assets/earth_clouds_4k.png');
-    
-    earthColorTexture.colorSpace = THREE.SRGBColorSpace;
-    earthNightTexture.colorSpace = THREE.SRGBColorSpace;
-
     const sphereGeometry = new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64);
     
-    const earthShaderMaterial = new THREE.ShaderMaterial({
-      uniforms: {
-        dayTexture: { value: earthColorTexture },
-        nightTexture: { value: earthNightTexture },
-        bumpTexture: { value: earthBumpTexture },
-        lightDirection: { value: new THREE.Vector3(1, 0.5, 1).normalize() },
-        time: { value: 0 },
-      },
-      vertexShader: `
-        varying vec2 vUv;
-        varying vec3 vNormal;
-        varying vec3 vPosition;
-        
-        void main() {
-          vUv = uv;
-          vNormal = normalize(normalMatrix * normal);
-          vPosition = (modelMatrix * vec4(position, 1.0)).xyz;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        uniform sampler2D dayTexture;
-        uniform sampler2D nightTexture;
-        uniform sampler2D bumpTexture;
-        uniform vec3 lightDirection;
-        uniform float time;
-        
-        varying vec2 vUv;
-        varying vec3 vNormal;
-        varying vec3 vPosition;
-        
-        void main() {
-          vec3 dayColor = texture2D(dayTexture, vUv).rgb;
-          vec3 nightColor = texture2D(nightTexture, vUv).rgb;
-          float bump = texture2D(bumpTexture, vUv).r;
-          
-          float dotNL = dot(vNormal, lightDirection);
-          float dayFactor = smoothstep(-0.2, 0.3, dotNL);
-          
-          nightColor *= vec3(1.0, 0.8, 0.4) * 1.5;
-          
-          vec3 finalColor = mix(nightColor, dayColor, dayFactor);
-          
-          finalColor += bump * 0.05;
-          
-          float fresnel = pow(1.0 - abs(dot(vNormal, normalize(-vPosition))), 2.0);
-          finalColor += vec3(0.0, 0.5, 1.0) * fresnel * 0.15;
-          
-          gl_FragColor = vec4(finalColor, 1.0);
-        }
-      `,
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 2.0);
+    directionalLight.position.set(5, 3, 5);
+    refs.scene.add(directionalLight);
+    
+    const directionalLight2 = new THREE.DirectionalLight(0x4488ff, 0.5);
+    directionalLight2.position.set(-5, -2, -5);
+    refs.scene.add(directionalLight2);
+    
+    const ambientLight = new THREE.AmbientLight(0x666688, 0.8);
+    refs.scene.add(ambientLight);
+    
+    const earthMaterial = new THREE.MeshPhongMaterial({
+      color: 0x1a3a5c,
+      shininess: 25,
+      specular: 0x333333,
     });
     
-    const sphere = new THREE.Mesh(sphereGeometry, earthShaderMaterial);
+    const sphere = new THREE.Mesh(sphereGeometry, earthMaterial);
     refs.globeGroup.add(sphere);
+    
+    textureLoader.load(
+      '/attached_assets/earth_color_4k.jpg',
+      (texture) => {
+        texture.colorSpace = THREE.SRGBColorSpace;
+        earthMaterial.map = texture;
+        earthMaterial.color.set(0xffffff);
+        earthMaterial.needsUpdate = true;
+      },
+      undefined,
+      (error) => {
+        console.warn('Failed to load earth color texture:', error);
+      }
+    );
+    
+    textureLoader.load(
+      '/attached_assets/earth_bump_4k.jpg',
+      (texture) => {
+        earthMaterial.bumpMap = texture;
+        earthMaterial.bumpScale = 0.04;
+        earthMaterial.needsUpdate = true;
+      }
+    );
 
-    const cloudsGeometry = new THREE.SphereGeometry(GLOBE_RADIUS * 1.015, 48, 48);
+    const cloudsGeometry = new THREE.SphereGeometry(GLOBE_RADIUS * 1.02, 48, 48);
     const cloudsMaterial = new THREE.MeshBasicMaterial({
-      map: earthCloudsTexture,
       transparent: true,
       opacity: 0.35,
       blending: THREE.AdditiveBlending,
@@ -317,7 +295,14 @@ export default function AttackGlobe() {
     const clouds = new THREE.Mesh(cloudsGeometry, cloudsMaterial);
     refs.globeGroup.add(clouds);
     (refs as any).clouds = clouds;
-    (refs as any).earthMaterial = earthShaderMaterial;
+    
+    textureLoader.load(
+      '/attached_assets/earth_clouds_4k.png',
+      (texture) => {
+        cloudsMaterial.map = texture;
+        cloudsMaterial.needsUpdate = true;
+      }
+    );
 
     const atmosphereGeom = new THREE.SphereGeometry(GLOBE_RADIUS * 1.15, 32, 32);
     const atmosphereMat = new THREE.ShaderMaterial({
@@ -463,10 +448,7 @@ export default function AttackGlobe() {
         refs.globeGroup.rotation.y += refs.rotationVelocityY;
         
         if ((refs as any).clouds) {
-          (refs as any).clouds.rotation.y += 0.0001;
-        }
-        if ((refs as any).earthMaterial) {
-          (refs as any).earthMaterial.uniforms.time.value = time;
+          (refs as any).clouds.rotation.y += 0.0002;
         }
       }
 
