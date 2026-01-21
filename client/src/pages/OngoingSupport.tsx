@@ -72,36 +72,6 @@ const supportServices = [
   },
 ];
 
-const slaTiers = [
-  {
-    name: 'Bronze',
-    color: '#CD7F32',
-    responseTime: '4 hours',
-    features: ['Business hours support', 'Email support', 'Monthly reports'],
-    price: '$2,500/mo',
-  },
-  {
-    name: 'Silver',
-    color: '#C0C0C0',
-    responseTime: '1 hour',
-    features: ['Extended hours (6AM-10PM)', 'Email & phone', 'Weekly reports', 'Patch management'],
-    price: '$5,000/mo',
-  },
-  {
-    name: 'Gold',
-    color: '#FFD700',
-    responseTime: '30 minutes',
-    features: ['24/7 support', 'All channels', 'Daily reports', 'Threat intelligence', 'Quarterly reviews'],
-    price: '$10,000/mo',
-  },
-  {
-    name: 'Platinum',
-    color: '#E5E4E2',
-    responseTime: '< 15 minutes',
-    features: ['24/7 dedicated team', 'Priority escalation', 'Real-time dashboards', 'Full SIEM integration', 'Incident response retainer'],
-    price: '$25,000/mo',
-  },
-];
 
 function HolographicScreen({ position, rotation, size, color, pulseSpeed = 1 }: {
   position: [number, number, number];
@@ -507,110 +477,6 @@ function ServiceCard({ service }: { service: typeof supportServices[0] }) {
   );
 }
 
-function SLATierCard({ tier, index, isSelected, onSelect }: { 
-  tier: typeof slaTiers[0]; 
-  index: number; 
-  isSelected: boolean;
-  onSelect: () => void;
-}) {
-  const [isHovered, setIsHovered] = useState(false);
-  
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onClick={onSelect}
-      className={`relative bg-[#000a15]/80 backdrop-blur-sm border rounded-xl p-6 overflow-hidden transition-all duration-300 cursor-pointer ${
-        isSelected 
-          ? 'border-2 ring-2 ring-offset-2 ring-offset-[#000510]' 
-          : 'border-[#00D4FF]/20 hover:border-[#00D4FF]/50'
-      }`}
-      style={isSelected ? { borderColor: tier.color, ringColor: tier.color } : undefined}
-      data-testid={`sla-tier-${tier.name.toLowerCase()}`}
-    >
-      {isSelected && (
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          className="absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: tier.color }}
-        >
-          <CheckCircle className="w-4 h-4 text-black" />
-        </motion.div>
-      )}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        animate={{
-          background: isHovered 
-            ? `radial-gradient(circle at 50% 0%, ${tier.color}20 0%, transparent 70%)`
-            : 'transparent'
-        }}
-        transition={{ duration: 0.3 }}
-      />
-      
-      <motion.div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-16 -translate-y-1/2"
-        animate={{
-          scale: isHovered ? [1, 1.2, 1] : 1,
-          opacity: isHovered ? 1 : 0.5
-        }}
-        transition={{ duration: 0.5, repeat: isHovered ? Infinity : 0, repeatDelay: 1 }}
-      >
-        <Shield className="w-full h-full" style={{ color: tier.color }} />
-      </motion.div>
-      
-      <div className="mt-6 text-center mb-4">
-        <h3 className="font-mono text-2xl font-bold" style={{ color: tier.color }}>{tier.name}</h3>
-        <p className="text-3xl font-bold text-white mt-2">{tier.price}</p>
-      </div>
-      
-      <div className="text-center py-3 mb-4 bg-[#00D4FF]/5 rounded-lg border border-[#00D4FF]/20">
-        <span className="text-xs text-[#00D4FF]/70 block">Response Time</span>
-        <span className="text-xl font-mono font-bold text-[#00D4FF]">{tier.responseTime}</span>
-      </div>
-      
-      <ul className="space-y-2">
-        {tier.features.map((feature, i) => (
-          <motion.li 
-            key={i}
-            initial={{ opacity: 0, x: -10 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.1 + i * 0.05 }}
-            className="flex items-center gap-2 text-sm text-[#00D4FF]/80"
-          >
-            <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
-            {feature}
-          </motion.li>
-        ))}
-      </ul>
-      
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className={`w-full mt-6 py-3 rounded-lg font-mono font-bold transition-all ${
-          isSelected ? 'bg-gradient-to-r' : ''
-        }`}
-        style={{ 
-          backgroundColor: isSelected ? tier.color : `${tier.color}20`,
-          borderColor: tier.color,
-          borderWidth: 1,
-          color: isSelected ? '#000' : tier.color
-        }}
-        onClick={(e) => {
-          e.stopPropagation();
-          onSelect();
-        }}
-      >
-        {isSelected ? 'Selected ✓' : 'Select Plan'}
-      </motion.button>
-    </motion.div>
-  );
-}
-
 export default function OngoingSupport() {
   const [metrics, setMetrics] = useState({
     uptime: 99.99,
@@ -618,8 +484,6 @@ export default function OngoingSupport() {
     threatsBlocked: 15847,
     activeSessions: 247,
   });
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const [showConfirmation, setShowConfirmation] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#000510] text-white relative overflow-hidden">
@@ -667,15 +531,17 @@ export default function OngoingSupport() {
 
         <main className="pt-20">
           <section className="relative h-[60vh] min-h-[500px]">
-            <WebGLFallback className="absolute inset-0">
-              <Canvas
-                camera={{ position: [0, 2, 8], fov: 60 }}
-                className="absolute inset-0"
-                dpr={[1, 2]}
-              >
-                <CommandCenterScene />
-              </Canvas>
-            </WebGLFallback>
+            <div className="absolute inset-0">
+              <WebGLFallback>
+                <Canvas
+                  camera={{ position: [0, 2, 8], fov: 60 }}
+                  className="absolute inset-0"
+                  dpr={[1, 2]}
+                >
+                  <CommandCenterScene />
+                </Canvas>
+              </WebGLFallback>
+            </div>
             
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <motion.div
@@ -765,122 +631,6 @@ export default function OngoingSupport() {
               </div>
             </div>
           </section>
-
-          <section className="py-16 px-6 bg-gradient-to-b from-transparent via-[#00D4FF]/5 to-transparent">
-            <div className="container mx-auto">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="text-center mb-12"
-              >
-                <div className="inline-flex items-center gap-2 bg-[#00D4FF]/10 border border-[#00D4FF]/30 rounded px-4 py-2 mb-4 font-mono text-xs">
-                  <Lock className="w-4 h-4 text-[#00D4FF]" />
-                  <span className="text-[#00D4FF]">SLA GUARANTEED</span>
-                </div>
-                <h2 className="font-mono text-3xl md:text-4xl font-bold mb-4">
-                  <span className="text-white">Service Level </span>
-                  <span className="text-[#00D4FF]">Agreements</span>
-                </h2>
-                <p className="text-[#00D4FF]/60 font-mono text-sm max-w-2xl mx-auto">
-                  Choose the protection level that matches your security requirements
-                </p>
-              </motion.div>
-
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {slaTiers.map((tier, index) => (
-                  <SLATierCard 
-                    key={tier.name} 
-                    tier={tier} 
-                    index={index} 
-                    isSelected={selectedPlan === tier.name}
-                    onSelect={() => {
-                      setSelectedPlan(tier.name);
-                      setShowConfirmation(true);
-                    }}
-                  />
-                ))}
-              </div>
-              
-              {selectedPlan && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-8 text-center"
-                >
-                  <div className="inline-flex items-center gap-4 p-4 bg-[#00D4FF]/10 border border-[#00D4FF]/30 rounded-xl">
-                    <span className="text-[#00D4FF]">Selected Plan:</span>
-                    <span className="font-bold text-white">{selectedPlan}</span>
-                    <span className="text-[#00D4FF]/60">|</span>
-                    <span className="text-white">{slaTiers.find(t => t.name === selectedPlan)?.price}</span>
-                  </div>
-                </motion.div>
-              )}
-            </div>
-          </section>
-
-          <AnimatePresence>
-            {showConfirmation && selectedPlan && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
-                onClick={() => setShowConfirmation(false)}
-              >
-                <motion.div
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.9, opacity: 0 }}
-                  onClick={(e) => e.stopPropagation()}
-                  className="bg-[#000510] border border-[#00D4FF]/30 rounded-2xl p-8 max-w-md w-full text-center"
-                  data-testid="plan-confirmation-modal"
-                >
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.2, type: "spring" }}
-                    className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: slaTiers.find(t => t.name === selectedPlan)?.color + '30' }}
-                  >
-                    <CheckCircle className="w-8 h-8" style={{ color: slaTiers.find(t => t.name === selectedPlan)?.color }} />
-                  </motion.div>
-                  <h3 className="text-2xl font-bold text-white mb-2">Plan Selected!</h3>
-                  <p className="text-[#00D4FF]/70 mb-4">
-                    You've selected the <span className="font-bold" style={{ color: slaTiers.find(t => t.name === selectedPlan)?.color }}>{selectedPlan}</span> plan
-                  </p>
-                  <div className="p-4 bg-[#00D4FF]/5 rounded-xl border border-[#00D4FF]/20 mb-6">
-                    <div className="text-3xl font-bold text-white mb-1">{slaTiers.find(t => t.name === selectedPlan)?.price}</div>
-                    <div className="text-sm text-[#00D4FF]/60">Response Time: {slaTiers.find(t => t.name === selectedPlan)?.responseTime}</div>
-                  </div>
-                  <div className="flex gap-4">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setShowConfirmation(false)}
-                      className="flex-1 py-3 rounded-lg border border-[#00D4FF]/30 text-[#00D4FF] font-mono hover:bg-[#00D4FF]/10"
-                    >
-                      Close
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => {
-                        setShowConfirmation(false);
-                      }}
-                      className="flex-1 py-3 rounded-lg font-mono font-bold"
-                      style={{ 
-                        backgroundColor: slaTiers.find(t => t.name === selectedPlan)?.color,
-                        color: '#000'
-                      }}
-                    >
-                      Confirm
-                    </motion.button>
-                  </div>
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
 
           <section className="py-16 px-6">
             <div className="container mx-auto">

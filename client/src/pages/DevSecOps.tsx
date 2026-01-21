@@ -38,7 +38,7 @@ interface PackageData {
 
 function FlowingCodeBackground() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-40">
       <style>{`
         @keyframes codeScroll {
           0% { transform: translateY(0); }

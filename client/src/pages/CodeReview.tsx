@@ -50,7 +50,7 @@ function MatrixCodeRain() {
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-[2]" aria-hidden="true">
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-30" aria-hidden="true">
       <style>{`
         @keyframes matrixFall {
           0% { transform: translateY(-100vh); opacity: 0; }
