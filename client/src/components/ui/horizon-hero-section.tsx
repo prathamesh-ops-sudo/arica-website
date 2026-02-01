@@ -131,21 +131,18 @@ export function HorizonHeroSection() {
         const sizes = new Float32Array(starCount);
 
         for (let j = 0; j < starCount; j++) {
-          const radius = 200 + Math.random() * 800;
-          const theta = Math.random() * Math.PI * 2;
-          const phi = Math.acos(Math.random() * 1.6 - 0.8);
-
-          let x = radius * Math.sin(phi) * Math.cos(theta);
-          let y = radius * Math.sin(phi) * Math.sin(theta);
-          let z = radius * Math.cos(phi);
+          let x, y, z;
+          let attempts = 0;
           
-          const distFromCenter = Math.sqrt(x * x + y * y);
-          if (distFromCenter < 50) {
-            const pushOut = 50 + Math.random() * 100;
-            const pushAngle = Math.random() * Math.PI * 2;
-            x = Math.cos(pushAngle) * pushOut;
-            y = Math.sin(pushAngle) * pushOut;
-          }
+          do {
+            x = (Math.random() - 0.5) * 1600;
+            y = (Math.random() - 0.5) * 1600;
+            z = -200 - Math.random() * 800;
+            attempts++;
+          } while (Math.abs(x) < 80 && Math.abs(y) < 80 && attempts < 10);
+          
+          if (Math.abs(x) < 80) x = (Math.random() > 0.5 ? 1 : -1) * (100 + Math.random() * 200);
+          if (Math.abs(y) < 80) y = (Math.random() > 0.5 ? 1 : -1) * (100 + Math.random() * 200);
 
           positions[j * 3] = x;
           positions[j * 3 + 1] = y;
