@@ -132,17 +132,25 @@ export function HorizonHeroSection() {
 
         for (let j = 0; j < starCount; j++) {
           let x, y, z;
-          let attempts = 0;
           
-          do {
-            x = (Math.random() - 0.5) * 1600;
+          const side = Math.floor(Math.random() * 4);
+          const margin = 150;
+          
+          if (side === 0) {
+            x = -800 + Math.random() * (800 - margin);
             y = (Math.random() - 0.5) * 1600;
-            z = -200 - Math.random() * 800;
-            attempts++;
-          } while (Math.abs(x) < 80 && Math.abs(y) < 80 && attempts < 10);
+          } else if (side === 1) {
+            x = margin + Math.random() * (800 - margin);
+            y = (Math.random() - 0.5) * 1600;
+          } else if (side === 2) {
+            x = (Math.random() - 0.5) * 1600;
+            y = -800 + Math.random() * (800 - margin);
+          } else {
+            x = (Math.random() - 0.5) * 1600;
+            y = margin + Math.random() * (800 - margin);
+          }
           
-          if (Math.abs(x) < 80) x = (Math.random() > 0.5 ? 1 : -1) * (100 + Math.random() * 200);
-          if (Math.abs(y) < 80) y = (Math.random() > 0.5 ? 1 : -1) * (100 + Math.random() * 200);
+          z = -200 - Math.random() * 800;
 
           positions[j * 3] = x;
           positions[j * 3 + 1] = y;
@@ -185,12 +193,8 @@ export function HorizonHeroSection() {
               vColor = color;
               vec3 pos = position;
               
-              float angle = time * 0.05 * (1.0 - depth * 0.3);
-              mat2 rot = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
-              pos.xy = rot * pos.xy;
-              
               vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-              gl_PointSize = size * (300.0 / -mvPosition.z);
+              gl_PointSize = size * (200.0 / -mvPosition.z);
               gl_Position = projectionMatrix * mvPosition;
             }
           `,
