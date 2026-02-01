@@ -6,8 +6,10 @@ import { Float, Stars, Trail } from '@react-three/drei';
 import * as THREE from 'three';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
-const CYAN = '#00D4FF';
-const PURPLE = '#9944ff';
+const WINE = '#8B2252';
+const MAROON = '#722F37';
+const ROSE = '#C08081';
+const BURGUNDY = '#6B1C32';
 
 function CyberGrid() {
   const gridRef = useRef<THREE.Group>(null);
@@ -16,7 +18,7 @@ function CyberGrid() {
   const gridShader = useMemo(() => ({
     uniforms: {
       time: { value: 0 },
-      color: { value: new THREE.Color(CYAN) },
+      color: { value: new THREE.Color(WINE) },
     },
     vertexShader: `
       varying vec2 vUv;
@@ -80,8 +82,8 @@ function SecurityShield({ position, rotation, scale = 1 }: { position: [number, 
   const shieldShader = useMemo(() => ({
     uniforms: {
       time: { value: 0 },
-      color1: { value: new THREE.Color(CYAN) },
-      color2: { value: new THREE.Color(PURPLE) },
+      color1: { value: new THREE.Color(WINE) },
+      color2: { value: new THREE.Color(BURGUNDY) },
     },
     vertexShader: `
       varying vec3 vNormal;
@@ -165,12 +167,12 @@ function DataParticles({ count = 500 }: { count?: number }) {
 
   const colors = useMemo(() => {
     const cols = new Float32Array(count * 3);
-    const cyan = new THREE.Color(CYAN);
-    const purple = new THREE.Color(PURPLE);
+    const wine = new THREE.Color(WINE);
+    const rose = new THREE.Color(ROSE);
     
     for (let i = 0; i < count; i++) {
       const mix = Math.random();
-      const color = cyan.clone().lerp(purple, mix);
+      const color = wine.clone().lerp(rose, mix);
       cols[i * 3] = color.r;
       cols[i * 3 + 1] = color.g;
       cols[i * 3 + 2] = color.b;
@@ -241,8 +243,8 @@ function SecurityRing() {
   const ringShader = useMemo(() => ({
     uniforms: {
       time: { value: 0 },
-      color1: { value: new THREE.Color(CYAN) },
-      color2: { value: new THREE.Color(PURPLE) },
+      color1: { value: new THREE.Color(WINE) },
+      color2: { value: new THREE.Color(BURGUNDY) },
     },
     vertexShader: `
       varying vec2 vUv;
@@ -315,7 +317,7 @@ function InnerRing() {
     <mesh ref={ringRef} position={[0, 0, -10]}>
       <torusGeometry args={[8, 0.15, 16, 80]} />
       <meshBasicMaterial 
-        color={PURPLE}
+        color={BURGUNDY}
         transparent
         opacity={0.6}
       />
@@ -369,8 +371,8 @@ function Scene() {
   return (
     <>
       <ambientLight intensity={0.2} />
-      <pointLight position={[10, 10, 10]} intensity={0.5} color={CYAN} />
-      <pointLight position={[-10, -10, -10]} intensity={0.3} color={PURPLE} />
+      <pointLight position={[10, 10, 10]} intensity={0.5} color={WINE} />
+      <pointLight position={[-10, -10, -10]} intensity={0.3} color={BURGUNDY} />
       
       <ScrollCamera />
       <CyberGrid />

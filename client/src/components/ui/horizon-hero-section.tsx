@@ -216,9 +216,9 @@ export function HorizonHeroSection() {
       const material = new THREE.ShaderMaterial({
         uniforms: {
           time: { value: 0 },
-          color1: { value: new THREE.Color(0x00d4ff) },
-          color2: { value: new THREE.Color(0x9333ea) },
-          color3: { value: new THREE.Color(0x1e40af) },
+          color1: { value: new THREE.Color(0x8B2252) },
+          color2: { value: new THREE.Color(0x722F37) },
+          color3: { value: new THREE.Color(0x6B1C32) },
           opacity: { value: 0.35 },
           scrollProgress: { value: 0 }
         },
@@ -658,7 +658,7 @@ export function HorizonHeroSection() {
         
         <button 
           onClick={handleEnterExperience}
-          className="mt-8 inline-flex items-center gap-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold px-8 py-4 rounded-full hover:opacity-90 transition-all hover:scale-105 shadow-lg shadow-cyan-500/25 cursor-pointer pointer-events-auto"
+          className="mt-8 inline-flex items-center gap-3 bg-gradient-to-r from-[#8B2252] to-[#6B1C32] text-white font-semibold px-8 py-4 rounded-full hover:opacity-90 transition-all hover:scale-105 shadow-lg shadow-[#8B2252]/25 cursor-pointer pointer-events-auto"
           data-testid="button-enter-experience"
         >
           <Rocket className="w-5 h-5" />
