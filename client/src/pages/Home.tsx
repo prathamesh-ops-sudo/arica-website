@@ -11,7 +11,7 @@ import { CTA } from "@/components/CTA";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#121212] relative">
+    <div className="min-h-screen bg-[#050505] relative">
       <WebGLShader colorScheme="neutral" intensity={0.6} />
       <R3FCyberHero />
       <div className="relative z-10">

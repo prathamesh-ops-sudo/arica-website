@@ -448,7 +448,7 @@ export function ContactForm() {
         type="submit"
         data-testid="button-submit-contact"
         disabled={submitting}
-        className="w-full relative overflow-hidden rounded-lg py-3 px-6 font-semibold text-white bg-gradient-to-r from-[#3a3a3c] to-[#1c1c1e] transition-all duration-300 disabled:opacity-50"
+        className="w-full relative overflow-hidden rounded-lg py-3 px-6 font-semibold text-white bg-gradient-to-r from-[#3a3a3c] to-[#0a0510] transition-all duration-300 disabled:opacity-50"
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >

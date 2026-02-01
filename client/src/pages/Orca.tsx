@@ -51,11 +51,11 @@ function OfficeDesk({ position, rotation = 0 }: { position: [number, number, num
       </mesh>
       <mesh position={[-0.6, 0.2, 0]}>
         <boxGeometry args={[0.05, 0.4, 0.6]} />
-        <meshStandardMaterial color="#1c1c1e" />
+        <meshStandardMaterial color="#0a0510" />
       </mesh>
       <mesh position={[0.6, 0.2, 0]}>
         <boxGeometry args={[0.05, 0.4, 0.6]} />
-        <meshStandardMaterial color="#1c1c1e" />
+        <meshStandardMaterial color="#0a0510" />
       </mesh>
     </group>
   );
@@ -100,7 +100,7 @@ function OfficeMonitor({
       <mesh ref={screenRef} position={[0, 0, 0.03]}>
         <planeGeometry args={[0.7, 0.4]} />
         <meshStandardMaterial 
-          color={showError ? "#2c1810" : "#1c1c1e"} 
+          color={showError ? "#2c1810" : "#0a0510"} 
           emissive={showError ? "#ff453a" : "#7B2FE0"}
           emissiveIntensity={0.1}
         />
@@ -254,7 +254,7 @@ function CyberGrid() {
       <gridHelper args={[50, 50, '#3a3a3c', '#3a3a3c']} />
       <mesh>
         <planeGeometry args={[50, 50]} />
-        <meshBasicMaterial color="#121212" transparent opacity={0.9} />
+        <meshBasicMaterial color="#050505" transparent opacity={0.9} />
       </mesh>
     </group>
   );
@@ -379,12 +379,12 @@ function MainScene({ scrollProgress }: SceneProps) {
           
           <mesh position={[0, -0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
             <planeGeometry args={[20, 20]} />
-            <meshStandardMaterial color="#121212" />
+            <meshStandardMaterial color="#050505" />
           </mesh>
           
           <mesh position={[0, 5, -5]}>
             <planeGeometry args={[20, 10]} />
-            <meshStandardMaterial color="#1c1c1e" />
+            <meshStandardMaterial color="#0a0510" />
           </mesh>
         </group>
       )}
@@ -479,7 +479,7 @@ function MainScene({ scrollProgress }: SceneProps) {
                 <mesh position={[0, 0, -3]}>
                   <boxGeometry args={[2.5, 3.5, 0.1]} />
                   <meshStandardMaterial 
-                    color="#1c1c1e" 
+                    color="#0a0510" 
                     emissive="#7B2FE0"
                     emissiveIntensity={0.1}
                   />
@@ -695,7 +695,7 @@ function SceneOverlay({ scrollProgress }: { scrollProgress: number }) {
         className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 text-center pointer-events-none"
       >
         <div 
-          className="bg-gradient-to-b from-[#1c1c1e]/90 to-[#121212]/95 backdrop-blur-2xl border border-white/10 rounded-3xl px-10 py-8 max-w-md shadow-2xl"
+          className="bg-gradient-to-b from-[#0a0510]/90 to-[#050505]/95 backdrop-blur-2xl border border-white/10 rounded-3xl px-10 py-8 max-w-md shadow-2xl"
           style={{ boxShadow: `0 8px 60px ${scene.color}30, 0 0 0 1px ${scene.color}10` }}
         >
           <div className="flex items-center justify-center gap-4 mb-4">
@@ -753,7 +753,7 @@ function ProgressBar({ progress }: { progress: number }) {
 
 function WebGLFallbackUI() {
   return (
-    <div className="min-h-screen bg-[#121212] flex items-center justify-center p-8">
+    <div className="min-h-screen bg-[#050505] flex items-center justify-center p-8">
       <div className="text-center max-w-lg">
         <div className="w-20 h-20 rounded-full bg-[#7B2FE0]/20 flex items-center justify-center mx-auto mb-6">
           <Monitor className="w-10 h-10 text-[#7B2FE0]" />
@@ -799,7 +799,7 @@ export default function Orca() {
   }
 
   return (
-    <div ref={containerRef} className="relative bg-[#121212]" style={{ height: '800vh' }}>
+    <div ref={containerRef} className="relative bg-[#050505]" style={{ height: '800vh' }}>
       <AnimeNavBar items={navItems} />
       <ProgressBar progress={scrollProgress} />
       

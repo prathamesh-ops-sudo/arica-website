@@ -68,7 +68,7 @@ function DefaultFallback({ showMessage }: { showMessage: boolean }) {
       {showMessage && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center p-8 backdrop-blur-sm bg-black/20 rounded-2xl border border-white/10">
-            <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#3a3a3c] to-[#1c1c1e] flex items-center justify-center">
+            <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#3a3a3c] to-[#0a0510] flex items-center justify-center">
               <svg 
                 className="w-6 h-6 text-white" 
                 fill="none" 

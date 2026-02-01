@@ -30,7 +30,7 @@ export default function Experience() {
             animate={{ opacity: fadeOut ? 0 : 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-[#121212]"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-[#050505]"
           >
             <div className="text-center">
               <motion.div
