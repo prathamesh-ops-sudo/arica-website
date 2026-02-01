@@ -2371,22 +2371,6 @@ export function RealisticSolarSystem() {
                 >
                   ARICA TECH
                 </motion.h1>
-                <motion.p 
-                  className="text-lg md:text-2xl text-muted-foreground max-w-lg mx-auto mb-4"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  Explore our security universe
-                </motion.p>
-                <motion.p 
-                  className="text-sm text-muted-foreground/60"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  Scroll to navigate through three galaxies of services
-                </motion.p>
                 <motion.div
                   animate={{ y: [0, 10, 0] }}
                   transition={{ duration: 2, repeat: Infinity }}
