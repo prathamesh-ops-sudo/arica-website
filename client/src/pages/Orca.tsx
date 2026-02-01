@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useMemo } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Text, Float, MeshTransmissionMaterial, Environment, Stars } from '@react-three/drei';
@@ -9,13 +9,8 @@ import {
   Shield, 
   AlertTriangle, 
   CheckCircle2, 
-  Search, 
   FileText, 
-  Lock,
-  Server,
   Monitor,
-  Cpu,
-  Database,
   Eye,
   Terminal,
   Bug,
@@ -33,6 +28,8 @@ import { useLocation } from 'wouter';
 import { AnimeNavBar } from '@/components/ui/anime-navbar';
 import { isWebGLAvailable } from '@/lib/webgl-utils';
 import { useHyperspaceTransition } from '@/components/ui/hyperspace-transition';
+
+const CHROMATIC_OFFSET = new THREE.Vector2(0.002, 0.002);
 
 const navItems = [
   { name: "Home", url: "/", icon: Home },
@@ -559,7 +556,7 @@ function MainScene({ scrollProgress }: SceneProps) {
         />
         {isZooming && (
           <ChromaticAberration 
-            offset={new THREE.Vector2(0.002, 0.002)}
+            offset={CHROMATIC_OFFSET}
             blendFunction={BlendFunction.NORMAL}
           />
         )}
