@@ -5,16 +5,16 @@ import * as THREE from "three"
 import { isWebGLAvailable } from "@/lib/webgl-utils"
 
 interface WebGLShaderProps {
-  colorScheme?: 'wine' | 'cyan' | 'purple';
+  colorScheme?: 'wine' | 'cyan' | 'purple' | 'neutral';
   intensity?: number;
 }
 
 function CSSFallback() {
   return (
-    <div className="fixed inset-0 -z-10 bg-gradient-to-br from-[#0a0508] via-[#1a0a18] to-[#0a0508] animate-gradient-shift" style={{ backgroundSize: '400% 400%' }}>
-      <div className="absolute inset-0 opacity-30" style={{
-        background: `radial-gradient(circle at 20% 30%, rgba(139, 34, 82, 0.3) 0%, transparent 40%),
-                     radial-gradient(circle at 80% 70%, rgba(107, 28, 50, 0.2) 0%, transparent 40%)`
+    <div className="fixed inset-0 -z-10 bg-gradient-to-br from-[#121212] via-[#1c1c1e] to-[#121212] animate-gradient-shift" style={{ backgroundSize: '400% 400%' }}>
+      <div className="absolute inset-0 opacity-20" style={{
+        background: `radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 40%),
+                     radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.03) 0%, transparent 40%)`
       }} />
     </div>
   )
@@ -84,8 +84,10 @@ export function WebGLShader({ colorScheme = 'wine', intensity = 1.0 }: WebGLShad
           color = vec3(r * 0.85, g * 0.15, b * 0.25) * intensity;
         } else if (colorMode == 1) {
           color = vec3(r * 0.0, g * 0.83, b * 1.0) * intensity;
-        } else {
+        } else if (colorMode == 2) {
           color = vec3(r * 0.6, g * 0.27, b * 1.0) * intensity;
+        } else {
+          color = vec3(r * 0.4, g * 0.4, b * 0.42) * intensity;
         }
         
         gl_FragColor = vec4(color, 1.0);
@@ -100,7 +102,7 @@ export function WebGLShader({ colorScheme = 'wine', intensity = 1.0 }: WebGLShad
 
       refs.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, -1)
 
-      const colorMode = colorScheme === 'wine' ? 0 : colorScheme === 'cyan' ? 1 : 2;
+      const colorMode = colorScheme === 'wine' ? 0 : colorScheme === 'cyan' ? 1 : colorScheme === 'purple' ? 2 : 3;
 
       refs.uniforms = {
         resolution: { value: [window.innerWidth, window.innerHeight] },

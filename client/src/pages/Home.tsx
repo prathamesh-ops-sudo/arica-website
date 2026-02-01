@@ -10,8 +10,8 @@ import { CTA } from "@/components/CTA";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#0a0508] relative">
-      <WebGLShader colorScheme="wine" intensity={0.8} />
+    <div className="min-h-screen bg-[#121212] relative">
+      <WebGLShader colorScheme="neutral" intensity={0.6} />
       <R3FCyberHero />
       <div className="relative z-10">
         <Navbar />
