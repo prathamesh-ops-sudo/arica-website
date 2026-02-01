@@ -6,7 +6,7 @@ import { Float, RoundedBox, Environment, ContactShadows } from '@react-three/dre
 import * as THREE from 'three';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
-const CYAN = '#00D4FF';
+const CYAN = '#9D4EDD';
 const PURPLE = '#9944ff';
 const THREAT_RED = '#ff3344';
 

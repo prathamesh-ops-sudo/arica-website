@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
 const PURPLE = '#9944ff';
-const CYAN = '#00D4FF';
+const CYAN = '#9D4EDD';
 const PARTICLE_COUNT_DESKTOP = 2500;
 const PARTICLE_COUNT_MOBILE = 800;
 const MOBILE_BREAKPOINT = 768;

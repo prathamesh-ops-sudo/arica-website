@@ -14,7 +14,7 @@ import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background
 import { useGsapStagger } from '@/hooks/useGsapStagger';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
-const CYAN = '#00D4FF';
+const CYAN = '#9D4EDD';
 const PURPLE = '#9944ff';
 const NAVY = 'hsl(222, 47%, 5%)';
 
@@ -24,7 +24,7 @@ const pipelineStages = [
   { id: 'test', name: 'Test', position: [0, 0, 0], color: '#FFD700', icon: Activity },
   { id: 'security', name: 'Security Scan', position: [6, 0, 0], color: PURPLE, icon: Shield },
   { id: 'deploy', name: 'Deploy', position: [12, 0, 0], color: '#FF6B6B', icon: Server },
-  { id: 'monitor', name: 'Monitor', position: [18, 0, 0], color: '#00D4FF', icon: Eye },
+  { id: 'monitor', name: 'Monitor', position: [18, 0, 0], color: '#9D4EDD', icon: Eye },
 ];
 
 interface PackageData {
@@ -526,7 +526,7 @@ const securityIntegrations = [
     fullName: 'Static Analysis',
     icon: Code,
     description: 'Analyze source code for security vulnerabilities before compilation',
-    color: '#00D4FF',
+    color: '#9D4EDD',
     stats: { scansToday: 847, issuesFound: 23 }
   },
   { 
@@ -1085,7 +1085,7 @@ export default function DevSecOps() {
               value={metrics.buildsToday}
               label="Builds Today"
               icon={GitBranch}
-              color="#00D4FF"
+              color="#9D4EDD"
               trend="up"
               trendLabel="+12% from yesterday"
             />

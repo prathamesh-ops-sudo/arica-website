@@ -64,51 +64,56 @@
   --elevate-1: rgba(255,255,255, .02);
   --elevate-2: rgba(255,255,255, .05);
 
-  --background: 0 0% 7%;
+  --background: 260 3% 2%;
   --foreground: 0 0% 98%;
-  --border: 0 0% 18%;
-  --card: 0 0% 11%;
+  --border: 265 40% 12%;
+  --card: 265 30% 5%;
   --card-foreground: 0 0% 98%;
-  --card-border: 0 0% 20%;
-  --sidebar: 0 0% 9%;
+  --card-border: 265 50% 18%;
+  --sidebar: 260 20% 4%;
   --sidebar-foreground: 0 0% 98%;
-  --sidebar-border: 0 0% 16%;
+  --sidebar-border: 265 40% 15%;
   --sidebar-primary: 0 0% 98%;
-  --sidebar-primary-foreground: 0 0% 7%;
-  --sidebar-accent: 0 0% 14%;
+  --sidebar-primary-foreground: 260 3% 2%;
+  --sidebar-accent: 265 60% 20%;
   --sidebar-accent-foreground: 0 0% 98%;
-  --sidebar-ring: 0 0% 40%;
-  --popover: 0 0% 13%;
+  --sidebar-ring: 265 50% 35%;
+  --popover: 265 25% 6%;
   --popover-foreground: 0 0% 98%;
-  --popover-border: 0 0% 22%;
-  --primary: 0 0% 98%;
-  --primary-foreground: 0 0% 7%;
-  --secondary: 0 0% 16%;
+  --popover-border: 265 40% 18%;
+  --primary: 265 90% 60%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 265 40% 15%;
   --secondary-foreground: 0 0% 98%;
-  --muted: 0 0% 20%;
-  --muted-foreground: 0 0% 60%;
-  --accent: 210 100% 52%;
+  --muted: 265 30% 18%;
+  --muted-foreground: 265 10% 55%;
+  --accent: 265 100% 65%;
   --accent-foreground: 0 0% 98%;
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 98%;
-  --input: 0 0% 14%;
-  --ring: 0 0% 40%;
-  --chart-1: 210 100% 52%;
-  --chart-2: 280 60% 55%;
-  --chart-3: 160 50% 45%;
+  --input: 265 30% 10%;
+  --ring: 265 80% 50%;
+  --chart-1: 265 90% 60%;
+  --chart-2: 280 70% 60%;
+  --chart-3: 200 60% 50%;
   --chart-4: 45 80% 55%;
   --chart-5: 0 65% 50%;
   
-  --cyber-cyan: 210 100% 52%;
-  --cyber-purple: 280 60% 55%;
-  --cyber-dark: 0 0% 7%;
+  --cyber-cyan: 265 90% 60%;
+  --cyber-purple: 280 70% 55%;
+  --cyber-dark: 260 3% 2%;
   --halo-white: 0 0% 98%;
-  --bulgarian-rose: 0 0% 15%;
+  --bulgarian-rose: 265 40% 12%;
 
-  --apple-glass-bg: rgba(255, 255, 255, 0.05);
-  --apple-glass-border: rgba(255, 255, 255, 0.1);
+  --apple-glass-bg: rgba(58, 12, 163, 0.08);
+  --apple-glass-border: rgba(138, 43, 226, 0.15);
   --apple-blur: 20px;
-  --apple-matte: rgba(28, 28, 30, 0.95);
+  --apple-matte: rgba(5, 5, 5, 0.95);
+  
+  --obsidian-dark: #050505;
+  --obsidian-purple: #3A0CA3;
+  --obsidian-light: #7B2FE0;
+  --obsidian-glow: #9D4EDD;
 
   --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
   --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
@@ -189,22 +194,33 @@
   .z-modal { z-index: 9999; }
 
   .text-gradient {
-    background: linear-gradient(135deg, hsl(var(--cyber-cyan)) 0%, hsl(var(--cyber-purple)) 100%);
+    background: linear-gradient(135deg, var(--obsidian-purple) 0%, var(--obsidian-glow) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .text-gradient-obsidian {
+    background: linear-gradient(135deg, #3A0CA3 0%, #7B2FE0 50%, #9D4EDD 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   
   .glow-cyan {
-    box-shadow: 0 0 20px hsl(var(--cyber-cyan) / 0.3), 0 0 40px hsl(var(--cyber-cyan) / 0.1);
+    box-shadow: 0 0 20px rgba(58, 12, 163, 0.4), 0 0 40px rgba(58, 12, 163, 0.2);
   }
   
   .glow-purple {
-    box-shadow: 0 0 20px hsl(var(--cyber-purple) / 0.3), 0 0 40px hsl(var(--cyber-purple) / 0.1);
+    box-shadow: 0 0 20px rgba(123, 47, 224, 0.4), 0 0 40px rgba(123, 47, 224, 0.2);
+  }
+  
+  .glow-obsidian {
+    box-shadow: 0 0 30px rgba(58, 12, 163, 0.5), 0 0 60px rgba(123, 47, 224, 0.3), 0 0 90px rgba(157, 78, 221, 0.15);
   }
   
   .glow-text {
-    text-shadow: 0 0 20px hsl(var(--cyber-cyan) / 0.5), 0 0 40px hsl(var(--cyber-cyan) / 0.3);
+    text-shadow: 0 0 20px rgba(58, 12, 163, 0.6), 0 0 40px rgba(123, 47, 224, 0.4);
   }
 
   .text-halo-white {
@@ -246,31 +262,39 @@
   }
 
   .glass-card {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(58, 12, 163, 0.06);
     backdrop-filter: blur(40px) saturate(180%);
     -webkit-backdrop-filter: blur(40px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(138, 43, 226, 0.12);
     border-radius: 1.5rem;
   }
 
   .glass-nav {
-    background: rgba(28, 28, 30, 0.72);
+    background: rgba(5, 5, 5, 0.85);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(138, 43, 226, 0.15);
   }
 
   .glass-button {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(58, 12, 163, 0.15);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(138, 43, 226, 0.25);
     transition: all 0.2s ease;
   }
 
   .glass-button:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(58, 12, 163, 0.25);
+    border-color: rgba(157, 78, 221, 0.4);
+  }
+
+  .glass-obsidian {
+    background: rgba(58, 12, 163, 0.08);
+    backdrop-filter: blur(30px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    border: 1px solid rgba(123, 47, 224, 0.15);
+    border-radius: 1rem;
   }
 
   .apple-matte {
@@ -354,14 +378,20 @@
   .aurora-bg {
     background: linear-gradient(
       135deg,
-      hsl(var(--cyber-dark)) 0%,
-      hsl(222 40% 8%) 25%,
-      hsl(var(--cyber-cyan) / 0.1) 50%,
-      hsl(var(--cyber-purple) / 0.08) 75%,
-      hsl(var(--cyber-dark)) 100%
+      #050505 0%,
+      rgba(58, 12, 163, 0.15) 25%,
+      rgba(123, 47, 224, 0.1) 50%,
+      rgba(157, 78, 221, 0.08) 75%,
+      #050505 100%
     );
     background-size: 400% 400%;
     animation: aurora 20s ease infinite;
+  }
+  
+  .obsidian-gradient-bg {
+    background: radial-gradient(ellipse at 50% 0%, rgba(58, 12, 163, 0.2) 0%, transparent 50%),
+                radial-gradient(ellipse at 100% 100%, rgba(123, 47, 224, 0.1) 0%, transparent 40%),
+                #050505;
   }
 
   @keyframes shimmer {

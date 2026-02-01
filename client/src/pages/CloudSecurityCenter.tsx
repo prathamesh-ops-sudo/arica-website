@@ -120,7 +120,7 @@ const eventMessages = [
   { type: 'warning' as const, message: 'Public S3 bucket access detected', severity: 'high' as const, source: 'Access Analyzer' },
 ];
 
-function CircularProgress({ value, size = 80, strokeWidth = 6, color = '#00D4FF', label, sublabel }: {
+function CircularProgress({ value, size = 80, strokeWidth = 6, color = '#9D4EDD', label, sublabel }: {
   value: number;
   size?: number;
   strokeWidth?: number;
@@ -191,8 +191,8 @@ function AnimatedGridBackground({ eventCount }: { eventCount: number }) {
         style={{
           opacity: 0.02 + pulseIntensity * 0.03,
           backgroundImage: `
-            linear-gradient(rgba(0, 212, 255, 0.15) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 212, 255, 0.15) 1px, transparent 1px)
+            linear-gradient(rgba(157, 78, 221, 0.15) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(157, 78, 221, 0.15) 1px, transparent 1px)
           `,
           backgroundSize: '40px 40px',
           animation: 'gridMove 20s linear infinite',
@@ -226,7 +226,7 @@ function AnimatedGridBackground({ eventCount }: { eventCount: number }) {
           style={{
             left: `${Math.random() * 100}%`,
             top: `${100 + Math.random() * 20}%`,
-            backgroundColor: i % 3 === 0 ? '#9944ff' : '#00D4FF',
+            backgroundColor: i % 3 === 0 ? '#9944ff' : '#9D4EDD',
             animation: `particleFloat ${15 + Math.random() * 10}s linear infinite`,
             animationDelay: `${Math.random() * 10}s`,
             opacity: 0.4,
@@ -235,7 +235,7 @@ function AnimatedGridBackground({ eventCount }: { eventCount: number }) {
       ))}
       
       <div
-        className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00D4FF]/30 to-transparent"
+        className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#9D4EDD]/30 to-transparent"
         style={{
           animation: 'scanLine 8s linear infinite',
         }}
@@ -313,13 +313,13 @@ function InfrastructureNode({ region, isSelected, onClick }: {
               className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 z-50"
             >
               <div 
-                className="bg-[#000510]/95 border border-[#00D4FF]/50 rounded-xl p-3 whitespace-nowrap font-mono backdrop-blur-xl"
+                className="bg-[#000510]/95 border border-[#9D4EDD]/50 rounded-xl p-3 whitespace-nowrap font-mono backdrop-blur-xl"
                 style={{ 
-                  boxShadow: '0 0 20px rgba(0, 212, 255, 0.2)',
+                  boxShadow: '0 0 20px rgba(157, 78, 221, 0.2)',
                   minWidth: '180px'
                 }}
               >
-                <div className="text-[#00D4FF] font-bold text-sm mb-1">{region.name}</div>
+                <div className="text-[#9D4EDD] font-bold text-sm mb-1">{region.name}</div>
                 <div className="text-white/50 text-[10px] uppercase tracking-wider mb-2">{region.provider}</div>
                 <div className="flex items-center justify-between gap-4 text-xs">
                   <div className="flex items-center gap-1">
@@ -469,7 +469,7 @@ function SecurityEventItem({ event, index }: { event: SecurityEvent; index: numb
       className={`p-3 rounded-xl ${styles.bg} border ${styles.border} backdrop-blur-sm relative overflow-hidden`}
     >
       <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-transparent via-current to-transparent opacity-50" 
-        style={{ color: event.type === 'threat' ? '#ef4444' : event.type === 'warning' ? '#eab308' : '#00D4FF' }} 
+        style={{ color: event.type === 'threat' ? '#ef4444' : event.type === 'warning' ? '#eab308' : '#9D4EDD' }} 
       />
       
       <div className="flex items-start gap-3">
@@ -600,7 +600,7 @@ export default function CloudSecurityCenter() {
         fromRegion: filteredRegions[fromIdx].id,
         toRegion: filteredRegions[toIdx].id,
         progress: 0,
-        color: Math.random() > 0.7 ? '#9944ff' : '#00D4FF',
+        color: Math.random() > 0.7 ? '#9944ff' : '#9D4EDD',
       };
       
       setDataPackets(prev => [...prev, newPacket]);
@@ -665,9 +665,9 @@ export default function CloudSecurityCenter() {
         className="fixed inset-0 pointer-events-none z-0"
         style={{
           background: `
-            radial-gradient(ellipse at 50% 0%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 0%, rgba(157, 78, 221, 0.08) 0%, transparent 50%),
             radial-gradient(ellipse at 80% 80%, rgba(153, 68, 255, 0.05) 0%, transparent 40%),
-            radial-gradient(ellipse at 20% 60%, rgba(0, 212, 255, 0.03) 0%, transparent 30%)
+            radial-gradient(ellipse at 20% 60%, rgba(157, 78, 221, 0.03) 0%, transparent 30%)
           `,
         }}
       />
@@ -679,11 +679,11 @@ export default function CloudSecurityCenter() {
       </AnimatePresence>
 
       <div className="relative z-10">
-        <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#000510]/90 border-b border-[#00D4FF]/20">
+        <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#000510]/90 border-b border-[#9D4EDD]/20">
           <div className="container mx-auto px-6 py-3 flex items-center justify-between">
             <Link
               href="/experience"
-              className="flex items-center gap-2 text-[#00D4FF] hover:text-[#00D4FF]/80 transition-colors font-mono text-sm"
+              className="flex items-center gap-2 text-[#9D4EDD] hover:text-[#9D4EDD]/80 transition-colors font-mono text-sm"
               data-testid="link-back-experience"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -693,13 +693,13 @@ export default function CloudSecurityCenter() {
             <div className="flex items-center gap-4">
               <div className="hidden md:flex items-center gap-4 font-mono text-xs">
                 <motion.div 
-                  className="flex items-center gap-2 text-[#00D4FF]"
+                  className="flex items-center gap-2 text-[#9D4EDD]"
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
                   <Server className="w-3 h-3" />
                   <span className="text-white">{animatedMetrics.resources}</span>
-                  <span className="text-[#00D4FF]/70">resources</span>
+                  <span className="text-[#9D4EDD]/70">resources</span>
                 </motion.div>
                 <motion.div 
                   className="flex items-center gap-2 text-yellow-400"
@@ -708,16 +708,16 @@ export default function CloudSecurityCenter() {
                 >
                   <AlertTriangle className="w-3 h-3" />
                   <span>{animatedMetrics.threats}</span>
-                  <span className="text-[#00D4FF]/70">threats</span>
+                  <span className="text-[#9D4EDD]/70">threats</span>
                 </motion.div>
               </div>
-              <div className="flex items-center gap-2 bg-[#00D4FF]/10 px-3 py-1.5 rounded border border-[#00D4FF]/30">
+              <div className="flex items-center gap-2 bg-[#9D4EDD]/10 px-3 py-1.5 rounded border border-[#9D4EDD]/30">
                 <motion.div 
-                  className="w-2 h-2 rounded-full bg-[#00D4FF]"
+                  className="w-2 h-2 rounded-full bg-[#9D4EDD]"
                   animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
-                <span className="text-xs text-[#00D4FF] font-mono font-bold">MONITORING ACTIVE</span>
+                <span className="text-xs text-[#9D4EDD] font-mono font-bold">MONITORING ACTIVE</span>
               </div>
             </div>
           </div>
@@ -730,21 +730,21 @@ export default function CloudSecurityCenter() {
             className="text-center px-6 mb-6"
           >
             <motion.div 
-              className="inline-flex items-center gap-2 bg-[#00D4FF]/10 border border-[#00D4FF]/30 rounded px-4 py-2 mb-4 font-mono text-xs"
-              animate={{ borderColor: ['rgba(0,212,255,0.3)', 'rgba(153,68,255,0.3)', 'rgba(0,212,255,0.3)'] }}
+              className="inline-flex items-center gap-2 bg-[#9D4EDD]/10 border border-[#9D4EDD]/30 rounded px-4 py-2 mb-4 font-mono text-xs"
+              animate={{ borderColor: ['rgba(157, 78, 221,0.3)', 'rgba(153,68,255,0.3)', 'rgba(157, 78, 221,0.3)'] }}
               transition={{ duration: 4, repeat: Infinity }}
             >
-              <Cloud className="w-4 h-4 text-[#00D4FF]" />
-              <span className="text-[#00D4FF]">CLOUD SECURITY COMMAND CENTER</span>
+              <Cloud className="w-4 h-4 text-[#9D4EDD]" />
+              <span className="text-[#9D4EDD]">CLOUD SECURITY COMMAND CENTER</span>
             </motion.div>
 
             <h1 className="font-mono text-3xl md:text-5xl font-bold mb-3">
-              <span className="text-[#00D4FF]">Cloud </span>
+              <span className="text-[#9D4EDD]">Cloud </span>
               <span className="text-white">Infrastructure</span>
               <span className="text-[#9944ff]"> Security</span>
             </h1>
 
-            <p className="text-[#00D4FF]/60 font-mono text-sm max-w-2xl mx-auto">
+            <p className="text-[#9D4EDD]/60 font-mono text-sm max-w-2xl mx-auto">
               Real-time monitoring and threat detection across AWS, Azure, and GCP environments
             </p>
           </motion.div>
@@ -757,19 +757,19 @@ export default function CloudSecurityCenter() {
           >
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Interactive3DCard 
-                className="bg-gradient-to-br from-[#00D4FF]/20 to-[#00D4FF]/5 backdrop-blur-sm border border-[#00D4FF]/40 rounded-2xl p-4 relative overflow-hidden group hover:border-[#00D4FF] cursor-pointer" 
+                className="bg-gradient-to-br from-[#9D4EDD]/20 to-[#9D4EDD]/5 backdrop-blur-sm border border-[#9D4EDD]/40 rounded-2xl p-4 relative overflow-hidden group hover:border-[#9D4EDD] cursor-pointer" 
                 dataTestId="metric-card-resources"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#00D4FF]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#9D4EDD]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                 <div className="relative">
                   <div className="flex items-center gap-2 mb-2">
                     <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}>
-                      <Server className="w-5 h-5 text-[#00D4FF]" />
+                      <Server className="w-5 h-5 text-[#9D4EDD]" />
                     </motion.div>
-                    <span className="font-mono text-xs text-[#00D4FF]/70 uppercase">Total Resources</span>
+                    <span className="font-mono text-xs text-[#9D4EDD]/70 uppercase">Total Resources</span>
                   </div>
                   <div className="text-3xl font-bold font-mono text-white">{animatedMetrics.resources}</div>
-                  <div className="text-xs text-[#00D4FF]/50 mt-1 flex items-center gap-1">
+                  <div className="text-xs text-[#9D4EDD]/50 mt-1 flex items-center gap-1">
                     <TrendingUp className="w-3 h-3" />
                     +12% this month
                   </div>
@@ -838,7 +838,7 @@ export default function CloudSecurityCenter() {
               {(['all', 'aws', 'azure', 'gcp'] as const).map((provider) => {
                 const isSelected = selectedProvider === provider;
                 const colors = {
-                  all: { active: 'bg-[#00D4FF] text-[#000510]', inactive: 'bg-[#00D4FF]/10 text-[#00D4FF] border-[#00D4FF]/30 hover:bg-[#00D4FF]/20' },
+                  all: { active: 'bg-[#9D4EDD] text-[#000510]', inactive: 'bg-[#9D4EDD]/10 text-[#9D4EDD] border-[#9D4EDD]/30 hover:bg-[#9D4EDD]/20' },
                   aws: { active: 'bg-[#FF9900] text-black', inactive: 'bg-[#FF9900]/10 text-[#FF9900] border-[#FF9900]/30 hover:bg-[#FF9900]/20' },
                   azure: { active: 'bg-[#0078D4] text-white', inactive: 'bg-[#0078D4]/10 text-[#0078D4] border-[#0078D4]/30 hover:bg-[#0078D4]/20' },
                   gcp: { active: 'bg-[#4285F4] text-white', inactive: 'bg-[#4285F4]/10 text-[#4285F4] border-[#4285F4]/30 hover:bg-[#4285F4]/20' },
@@ -870,7 +870,7 @@ export default function CloudSecurityCenter() {
             className="mx-4 md:mx-8 mb-6"
           >
             <div 
-              className="relative rounded-2xl overflow-hidden border border-[#00D4FF]/30 bg-[#000510]/80 backdrop-blur-sm"
+              className="relative rounded-2xl overflow-hidden border border-[#9D4EDD]/30 bg-[#000510]/80 backdrop-blur-sm"
               style={{ height: '350px' }}
               data-testid="cloud-infrastructure-map"
             >
@@ -885,9 +885,9 @@ export default function CloudSecurityCenter() {
                       </feMerge>
                     </filter>
                     <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#00D4FF" stopOpacity="0" />
-                      <stop offset="50%" stopColor="#00D4FF" stopOpacity="0.5" />
-                      <stop offset="100%" stopColor="#00D4FF" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#9D4EDD" stopOpacity="0" />
+                      <stop offset="50%" stopColor="#9D4EDD" stopOpacity="0.5" />
+                      <stop offset="100%" stopColor="#9D4EDD" stopOpacity="0" />
                     </linearGradient>
                   </defs>
                   <path d="M10,40 Q30,20 50,35 T90,40" fill="none" stroke="url(#lineGrad)" strokeWidth="0.3" />
@@ -906,7 +906,7 @@ export default function CloudSecurityCenter() {
                           y1={region.y}
                           x2={target.x}
                           y2={target.y}
-                          stroke={isSelected ? '#9944ff' : '#00D4FF'}
+                          stroke={isSelected ? '#9944ff' : '#9D4EDD'}
                           strokeWidth={isSelected ? 0.3 : 0.15}
                           opacity={isSelected ? 0.5 : 0.2}
                         />
@@ -991,12 +991,12 @@ export default function CloudSecurityCenter() {
               </div>
 
               <div className="absolute top-3 right-3 flex items-center gap-2">
-                <div className="bg-black/50 backdrop-blur-sm rounded-lg px-3 py-2 border border-[#00D4FF]/20">
+                <div className="bg-black/50 backdrop-blur-sm rounded-lg px-3 py-2 border border-[#9D4EDD]/20">
                   <div className="flex items-center gap-2">
-                    <Activity className="w-3 h-3 text-[#00D4FF]" />
+                    <Activity className="w-3 h-3 text-[#9D4EDD]" />
                     <span className="text-[10px] text-white/60 font-mono">DATA FLOW</span>
                     <motion.div 
-                      className="w-1.5 h-1.5 rounded-full bg-[#00D4FF]"
+                      className="w-1.5 h-1.5 rounded-full bg-[#9D4EDD]"
                       animate={{ opacity: [1, 0.3, 1] }}
                       transition={{ duration: 0.5, repeat: Infinity }}
                     />
@@ -1004,7 +1004,7 @@ export default function CloudSecurityCenter() {
                 </div>
               </div>
 
-              <div className="absolute bottom-3 right-3 font-mono text-[10px] text-[#00D4FF]/50">
+              <div className="absolute bottom-3 right-3 font-mono text-[10px] text-[#9D4EDD]/50">
                 <div className="flex items-center gap-2">
                   <Globe2 className="w-3 h-3" />
                   <span>{filteredRegions.length} active regions</span>
@@ -1019,15 +1019,15 @@ export default function CloudSecurityCenter() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4 }}
-                className="bg-[#000510]/80 backdrop-blur-sm border border-[#00D4FF]/30 rounded-2xl p-5"
+                className="bg-[#000510]/80 backdrop-blur-sm border border-[#9D4EDD]/30 rounded-2xl p-5"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-lg bg-[#00D4FF]/10">
-                    <Key className="w-5 h-5 text-[#00D4FF]" />
+                  <div className="p-2 rounded-lg bg-[#9D4EDD]/10">
+                    <Key className="w-5 h-5 text-[#9D4EDD]" />
                   </div>
                   <div>
                     <h3 className="font-mono font-bold text-white">IAM Policy Assessment</h3>
-                    <p className="text-xs text-[#00D4FF]/60">Risk score analysis</p>
+                    <p className="text-xs text-[#9D4EDD]/60">Risk score analysis</p>
                   </div>
                 </div>
 
@@ -1041,7 +1041,7 @@ export default function CloudSecurityCenter() {
                       className="cursor-pointer"
                     >
                       <motion.div
-                        className="p-3 rounded-lg bg-white/5 border border-white/10 hover:border-[#00D4FF]/30 transition-all"
+                        className="p-3 rounded-lg bg-white/5 border border-white/10 hover:border-[#9D4EDD]/30 transition-all"
                         layout
                       >
                         <div className="flex items-center justify-between mb-2">
@@ -1089,7 +1089,7 @@ export default function CloudSecurityCenter() {
                               <p className="text-xs text-white/60 mb-2">{policy.description}</p>
                               <div className="flex justify-between text-[10px]">
                                 <span className="text-white/40">Last Audit: {policy.lastAudit}</span>
-                                <button className="text-[#00D4FF] hover:text-[#00D4FF]/80">View Details →</button>
+                                <button className="text-[#9D4EDD] hover:text-[#9D4EDD]/80">View Details →</button>
                               </div>
                             </motion.div>
                           )}
@@ -1104,15 +1104,15 @@ export default function CloudSecurityCenter() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="bg-[#000510]/80 backdrop-blur-sm border border-[#00D4FF]/30 rounded-2xl p-5"
+                className="bg-[#000510]/80 backdrop-blur-sm border border-[#9D4EDD]/30 rounded-2xl p-5"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-lg bg-[#00D4FF]/10">
-                    <Container className="w-5 h-5 text-[#00D4FF]" />
+                  <div className="p-2 rounded-lg bg-[#9D4EDD]/10">
+                    <Container className="w-5 h-5 text-[#9D4EDD]" />
                   </div>
                   <div>
                     <h3 className="font-mono font-bold text-white">Container Security</h3>
-                    <p className="text-xs text-[#00D4FF]/60">{animatedMetrics.containers} running</p>
+                    <p className="text-xs text-[#9D4EDD]/60">{animatedMetrics.containers} running</p>
                   </div>
                 </div>
 
@@ -1125,7 +1125,7 @@ export default function CloudSecurityCenter() {
                       className="cursor-pointer"
                     >
                       <motion.div
-                        className="p-3 rounded-lg bg-white/5 border border-white/10 hover:border-[#00D4FF]/30 transition-all"
+                        className="p-3 rounded-lg bg-white/5 border border-white/10 hover:border-[#9D4EDD]/30 transition-all"
                         layout
                       >
                         <div className="flex items-center justify-between mb-1">
@@ -1147,7 +1147,7 @@ export default function CloudSecurityCenter() {
                             </motion.span>
                           )}
                         </div>
-                        <div className="text-[10px] text-[#00D4FF]/50 font-mono">{container.image}</div>
+                        <div className="text-[10px] text-[#9D4EDD]/50 font-mono">{container.image}</div>
                         
                         <AnimatePresence>
                           {expandedCard === container.id && (
@@ -1164,10 +1164,10 @@ export default function CloudSecurityCenter() {
                                     <motion.div
                                       initial={{ width: 0 }}
                                       animate={{ width: `${container.cpu}%` }}
-                                      className="h-full bg-[#00D4FF] rounded-full"
+                                      className="h-full bg-[#9D4EDD] rounded-full"
                                     />
                                   </div>
-                                  <div className="text-[10px] text-[#00D4FF] mt-0.5">{container.cpu}%</div>
+                                  <div className="text-[10px] text-[#9D4EDD] mt-0.5">{container.cpu}%</div>
                                 </div>
                                 <div>
                                   <div className="text-[10px] text-white/40 mb-1">Memory</div>
@@ -1194,26 +1194,26 @@ export default function CloudSecurityCenter() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.6 }}
-                className="bg-[#000510]/80 backdrop-blur-sm border border-[#00D4FF]/30 rounded-2xl p-5"
+                className="bg-[#000510]/80 backdrop-blur-sm border border-[#9D4EDD]/30 rounded-2xl p-5"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-lg bg-[#00D4FF]/10">
-                    <FileCheck className="w-5 h-5 text-[#00D4FF]" />
+                  <div className="p-2 rounded-lg bg-[#9D4EDD]/10">
+                    <FileCheck className="w-5 h-5 text-[#9D4EDD]" />
                   </div>
                   <div>
                     <h3 className="font-mono font-bold text-white">Configuration Checklist</h3>
-                    <p className="text-xs text-[#00D4FF]/60">Cloud hardening status</p>
+                    <p className="text-xs text-[#9D4EDD]/60">Cloud hardening status</p>
                   </div>
                 </div>
 
-                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-[#00D4FF]/20 scrollbar-track-transparent">
+                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-[#9D4EDD]/20 scrollbar-track-transparent">
                   {configChecks.map((check, index) => (
                     <motion.div
                       key={check.id}
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.1 * index }}
-                      className="flex items-center justify-between p-2 rounded-lg bg-white/5 border border-white/10 hover:border-[#00D4FF]/30 transition-all"
+                      className="flex items-center justify-between p-2 rounded-lg bg-white/5 border border-white/10 hover:border-[#9D4EDD]/30 transition-all"
                       data-testid={`config-check-${check.id}`}
                     >
                       <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -1232,7 +1232,7 @@ export default function CloudSecurityCenter() {
                       <button
                         onClick={() => toggleConfig(check.id)}
                         className={`w-10 h-5 rounded-full transition-all flex-shrink-0 ml-2 relative ${
-                          check.enabled ? 'bg-[#00D4FF]' : 'bg-white/20'
+                          check.enabled ? 'bg-[#9D4EDD]' : 'bg-white/20'
                         }`}
                         data-testid={`toggle-${check.id}`}
                       >
@@ -1253,7 +1253,7 @@ export default function CloudSecurityCenter() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7 }}
-                className="bg-[#000510]/80 backdrop-blur-sm border border-[#00D4FF]/30 rounded-2xl p-5"
+                className="bg-[#000510]/80 backdrop-blur-sm border border-[#9D4EDD]/30 rounded-2xl p-5"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-2 rounded-lg bg-red-500/10">
@@ -1261,7 +1261,7 @@ export default function CloudSecurityCenter() {
                   </div>
                   <div>
                     <h3 className="font-mono font-bold text-white">Live Security Events</h3>
-                    <p className="text-xs text-[#00D4FF]/60">Real-time threat detection</p>
+                    <p className="text-xs text-[#9D4EDD]/60">Real-time threat detection</p>
                   </div>
                   <div className="ml-auto flex items-center gap-1">
                     <motion.div 
@@ -1292,12 +1292,12 @@ export default function CloudSecurityCenter() {
                 className="grid grid-cols-2 gap-4"
               >
                 <Interactive3DCard 
-                  className="bg-[#000510]/80 backdrop-blur-sm border border-[#00D4FF]/30 rounded-2xl p-5"
+                  className="bg-[#000510]/80 backdrop-blur-sm border border-[#9D4EDD]/30 rounded-2xl p-5"
                   dataTestId="metric-risk-score"
                 >
                   <div className="flex items-center gap-2 mb-3">
-                    <Shield className="w-5 h-5 text-[#00D4FF]" />
-                    <span className="font-mono text-sm text-[#00D4FF]/70">Risk Score</span>
+                    <Shield className="w-5 h-5 text-[#9D4EDD]" />
+                    <span className="font-mono text-sm text-[#9D4EDD]/70">Risk Score</span>
                   </div>
                   <div className="flex items-center justify-center">
                     <CircularProgress 
@@ -1367,13 +1367,13 @@ export default function CloudSecurityCenter() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9 }}
-              className="bg-gradient-to-r from-[#00D4FF]/5 via-[#9944ff]/10 to-[#00D4FF]/5 border border-[#00D4FF]/30 rounded-2xl p-8 relative overflow-hidden"
+              className="bg-gradient-to-r from-[#9D4EDD]/5 via-[#9944ff]/10 to-[#9D4EDD]/5 border border-[#9D4EDD]/30 rounded-2xl p-8 relative overflow-hidden"
             >
               <div className="absolute inset-0 overflow-hidden">
                 <div 
                   className="absolute inset-0 opacity-30"
                   style={{
-                    backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(153, 68, 255, 0.1) 0%, transparent 50%)',
+                    backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(157, 78, 221, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(153, 68, 255, 0.1) 0%, transparent 50%)',
                   }}
                 />
               </div>
@@ -1384,49 +1384,49 @@ export default function CloudSecurityCenter() {
                     animate={{ rotate: 360 }}
                     transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
                   >
-                    <Shield className="w-8 h-8 text-[#00D4FF]" />
+                    <Shield className="w-8 h-8 text-[#9D4EDD]" />
                   </motion.div>
                   <h2 className="font-mono text-2xl font-bold text-white">
                     Secure Your Cloud Infrastructure
                   </h2>
                 </div>
 
-                <p className="text-[#00D4FF]/70 font-mono text-sm mb-6">
+                <p className="text-[#9D4EDD]/70 font-mono text-sm mb-6">
                   Get a comprehensive cloud security assessment from our expert team.
                   We'll identify vulnerabilities, misconfigurations, and compliance gaps.
                 </p>
 
                 <div className="grid grid-cols-3 gap-4 mb-6 font-mono text-center">
-                  <Interactive3DCard className="bg-[#000510]/60 rounded-lg p-3 border border-[#00D4FF]/20">
+                  <Interactive3DCard className="bg-[#000510]/60 rounded-lg p-3 border border-[#9D4EDD]/20">
                     <motion.div 
-                      className="text-2xl font-bold text-[#00D4FF]"
+                      className="text-2xl font-bold text-[#9D4EDD]"
                       animate={{ scale: [1, 1.05, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     >
                       200+
                     </motion.div>
-                    <div className="text-[10px] text-[#00D4FF]/50">SECURITY CHECKS</div>
+                    <div className="text-[10px] text-[#9D4EDD]/50">SECURITY CHECKS</div>
                   </Interactive3DCard>
-                  <Interactive3DCard className="bg-[#000510]/60 rounded-lg p-3 border border-[#00D4FF]/20">
+                  <Interactive3DCard className="bg-[#000510]/60 rounded-lg p-3 border border-[#9D4EDD]/20">
                     <motion.div 
-                      className="text-2xl font-bold text-[#00D4FF]"
+                      className="text-2xl font-bold text-[#9D4EDD]"
                       animate={{ opacity: [1, 0.7, 1] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
                     >
                       24/7
                     </motion.div>
-                    <div className="text-[10px] text-[#00D4FF]/50">MONITORING</div>
+                    <div className="text-[10px] text-[#9D4EDD]/50">MONITORING</div>
                   </Interactive3DCard>
-                  <Interactive3DCard className="bg-[#000510]/60 rounded-lg p-3 border border-[#00D4FF]/20">
-                    <div className="text-2xl font-bold text-[#00D4FF]">48h</div>
-                    <div className="text-[10px] text-[#00D4FF]/50">RESPONSE TIME</div>
+                  <Interactive3DCard className="bg-[#000510]/60 rounded-lg p-3 border border-[#9D4EDD]/20">
+                    <div className="text-2xl font-bold text-[#9D4EDD]">48h</div>
+                    <div className="text-[10px] text-[#9D4EDD]/50">RESPONSE TIME</div>
                   </Interactive3DCard>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link
                     href="/contact"
-                    className="inline-flex items-center justify-center gap-2 bg-[#00D4FF] text-[#000510] font-mono font-bold px-6 py-3 rounded-lg hover:bg-[#00D4FF]/90 transition-all hover:scale-105"
+                    className="inline-flex items-center justify-center gap-2 bg-[#9D4EDD] text-[#000510] font-mono font-bold px-6 py-3 rounded-lg hover:bg-[#9D4EDD]/90 transition-all hover:scale-105"
                     data-testid="cta-get-assessment"
                   >
                     <Shield className="w-4 h-4" />
@@ -1434,7 +1434,7 @@ export default function CloudSecurityCenter() {
                   </Link>
                   <Link
                     href="/services"
-                    className="inline-flex items-center justify-center gap-2 bg-transparent border border-[#00D4FF]/50 text-[#00D4FF] font-mono px-6 py-3 rounded-lg hover:bg-[#00D4FF]/10 transition-all hover:scale-105"
+                    className="inline-flex items-center justify-center gap-2 bg-transparent border border-[#9D4EDD]/50 text-[#9D4EDD] font-mono px-6 py-3 rounded-lg hover:bg-[#9D4EDD]/10 transition-all hover:scale-105"
                     data-testid="cta-learn-more"
                   >
                     Learn More

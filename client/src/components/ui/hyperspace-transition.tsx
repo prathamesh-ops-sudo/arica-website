@@ -5,8 +5,8 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { isWebGLAvailable } from '@/lib/webgl-utils';
 
-const BLUE_ACCENT = '#0a84ff';
-const PURPLE_ACCENT = '#5e5ce6';
+const BLUE_ACCENT = '#3A0CA3';
+const PURPLE_ACCENT = '#9D4EDD';
 const STAR_COUNT = 800;
 const TRANSITION_DURATION = 800;
 

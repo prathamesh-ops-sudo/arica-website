@@ -37,8 +37,8 @@ export default function Experience() {
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ type: "spring", damping: 12, duration: 1 }}
-                className="w-24 h-24 rounded-full bg-gradient-to-br from-[#0a84ff] to-[#5e5ce6] flex items-center justify-center mx-auto mb-6"
-                style={{ boxShadow: '0 0 60px rgba(10,132,255,0.5)' }}
+                className="w-24 h-24 rounded-full bg-gradient-to-br from-[#3A0CA3] to-[#9D4EDD] flex items-center justify-center mx-auto mb-6"
+                style={{ boxShadow: '0 0 60px rgba(58,12,163,0.5)' }}
               >
                 <Sparkles className="w-12 h-12 text-white" />
               </motion.div>

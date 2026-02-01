@@ -47,7 +47,7 @@ export function ForensicsSection() {
             <div className="relative">
               <NanobotParticles 
                 particleCount={35} 
-                color="10, 132, 255" 
+                color="123, 47, 224" 
                 maxDistance={100}
                 className="opacity-40"
               />
@@ -71,7 +71,7 @@ export function ForensicsSection() {
               Our security experts follow{" "}
               <LinkPreview
                 url="https://owasp.org/www-project-web-security-testing-guide/"
-                className="font-bold bg-clip-text text-transparent bg-gradient-to-br from-[#0a84ff] to-[#5ac8fa]"
+                className="font-bold bg-clip-text text-transparent bg-gradient-to-br from-[#7B2FE0] to-[#9D4EDD]"
               >
                 OWASP Testing Guidelines
               </LinkPreview>{" "}

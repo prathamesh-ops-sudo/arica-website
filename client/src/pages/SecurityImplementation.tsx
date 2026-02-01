@@ -14,7 +14,7 @@ import {
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
-const CYAN = '#00D4FF';
+const CYAN = '#9D4EDD';
 const PURPLE = '#9944ff';
 const NAVY = 'hsl(222, 47%, 5%)';
 
@@ -48,7 +48,7 @@ const securityControls = [
   { name: 'WAF Config', phase: 3, color: PURPLE },
   { name: 'MFA System', phase: 4, color: '#FF6B6B' },
   { name: 'Security Training', phase: 4, color: '#FF6B6B' },
-  { name: 'Monitoring Dashboard', phase: 5, color: '#00D4FF' },
+  { name: 'Monitoring Dashboard', phase: 5, color: '#9D4EDD' },
 ];
 
 function BuildingBlock3D({ block, isActive }: { block: BuildingBlock; isActive: boolean }) {
@@ -478,7 +478,7 @@ const implementationPhases = [
     deliverables: ['Monitoring Dashboard', 'Incident Playbooks', 'Metrics Reports', 'Optimization Plan'],
     dependencies: ['Full Deployment', 'Baseline Metrics'],
     tasks: ['24/7 monitoring', 'Incident response', 'Quarterly reviews', 'Threat intelligence'],
-    color: '#00D4FF',
+    color: '#9D4EDD',
   },
 ];
 

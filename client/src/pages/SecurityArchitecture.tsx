@@ -601,7 +601,7 @@ export default function SecurityArchitecture() {
         className="fixed inset-0 pointer-events-none z-[1]"
         style={{
           background:
-            'radial-gradient(ellipse at 50% 0%, rgba(0, 212, 255, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(170, 68, 255, 0.05) 0%, transparent 40%)',
+            'radial-gradient(ellipse at 50% 0%, rgba(157, 78, 221, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(170, 68, 255, 0.05) 0%, transparent 40%)',
         }}
       />
 
@@ -609,17 +609,17 @@ export default function SecurityArchitecture() {
         className="fixed inset-0 pointer-events-none z-0 opacity-[0.02]"
         style={{
           backgroundImage:
-            'linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px)',
+            'linear-gradient(rgba(157, 78, 221, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(157, 78, 221, 0.1) 1px, transparent 1px)',
           backgroundSize: '50px 50px',
         }}
       />
 
       <div className="relative z-10">
-        <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#000510]/90 border-b border-[#00D4FF]/20">
+        <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#000510]/90 border-b border-[#9D4EDD]/20">
           <div className="container mx-auto px-6 py-3 flex items-center justify-between">
             <Link
               href="/experience"
-              className="flex items-center gap-2 text-[#00D4FF] hover:text-[#00D4FF]/80 transition-colors font-mono text-sm"
+              className="flex items-center gap-2 text-[#9D4EDD] hover:text-[#9D4EDD]/80 transition-colors font-mono text-sm"
               data-testid="link-back-experience"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -631,17 +631,17 @@ export default function SecurityArchitecture() {
                 <div className="flex items-center gap-2 text-green-400">
                   <Shield className="w-3 h-3" />
                   <span>{sceneRef.current.nodes.size}</span>
-                  <span className="text-[#00D4FF]/70">nodes</span>
+                  <span className="text-[#9D4EDD]/70">nodes</span>
                 </div>
-                <div className="flex items-center gap-2 text-[#00D4FF]">
+                <div className="flex items-center gap-2 text-[#9D4EDD]">
                   <Activity className="w-3 h-3" />
                   <span>{sceneRef.current.packets.length}</span>
-                  <span className="text-[#00D4FF]/70">packets</span>
+                  <span className="text-[#9D4EDD]/70">packets</span>
                 </div>
               </div>
-              <div className="flex items-center gap-2 bg-[#00D4FF]/10 px-3 py-1.5 rounded border border-[#00D4FF]/30">
-                <div className="w-2 h-2 rounded-full bg-[#00D4FF] animate-pulse" />
-                <span className="text-xs text-[#00D4FF] font-mono font-bold">LIVE TOPOLOGY</span>
+              <div className="flex items-center gap-2 bg-[#9D4EDD]/10 px-3 py-1.5 rounded border border-[#9D4EDD]/30">
+                <div className="w-2 h-2 rounded-full bg-[#9D4EDD] animate-pulse" />
+                <span className="text-xs text-[#9D4EDD] font-mono font-bold">LIVE TOPOLOGY</span>
               </div>
             </div>
           </div>
@@ -653,18 +653,18 @@ export default function SecurityArchitecture() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center px-6 mb-6"
           >
-            <div className="inline-flex items-center gap-2 bg-[#00D4FF]/10 border border-[#00D4FF]/30 rounded px-4 py-2 mb-4 font-mono text-xs gsap-fade-in">
-              <Network className="w-4 h-4 text-[#00D4FF]" />
-              <span className="text-[#00D4FF]">SECURITY ARCHITECTURE VISUALIZATION</span>
+            <div className="inline-flex items-center gap-2 bg-[#9D4EDD]/10 border border-[#9D4EDD]/30 rounded px-4 py-2 mb-4 font-mono text-xs gsap-fade-in">
+              <Network className="w-4 h-4 text-[#9D4EDD]" />
+              <span className="text-[#9D4EDD]">SECURITY ARCHITECTURE VISUALIZATION</span>
             </div>
 
             <h1 className="font-mono text-3xl md:text-5xl font-bold mb-3 gsap-fade-in">
-              <span className="text-[#00D4FF]">Network </span>
+              <span className="text-[#9D4EDD]">Network </span>
               <span className="text-white">Security</span>
               <span className="text-[#aa44ff]"> Architecture</span>
             </h1>
 
-            <p className="text-[#00D4FF]/60 font-mono text-sm max-w-2xl mx-auto gsap-fade-in">
+            <p className="text-[#9D4EDD]/60 font-mono text-sm max-w-2xl mx-auto gsap-fade-in">
               Interactive 3D visualization of defense-in-depth security layers and network topology
             </p>
           </motion.div>
@@ -677,8 +677,8 @@ export default function SecurityArchitecture() {
                 transition={{ delay: 0.2 }}
                 className="lg:col-span-1 space-y-4"
               >
-                <div className="bg-[#000510]/80 backdrop-blur-sm border border-[#00D4FF]/30 rounded-xl p-4 gsap-fade-in">
-                  <h3 className="font-mono text-sm text-[#00D4FF] mb-4 flex items-center gap-2">
+                <div className="bg-[#000510]/80 backdrop-blur-sm border border-[#9D4EDD]/30 rounded-xl p-4 gsap-fade-in">
+                  <h3 className="font-mono text-sm text-[#9D4EDD] mb-4 flex items-center gap-2">
                     <Activity className="w-4 h-4" />
                     Architecture Health
                   </h3>
@@ -690,7 +690,7 @@ export default function SecurityArchitecture() {
                         cy="64"
                         r="56"
                         fill="none"
-                        stroke="rgba(0, 212, 255, 0.1)"
+                        stroke="rgba(157, 78, 221, 0.1)"
                         strokeWidth="8"
                       />
                       <circle
@@ -707,28 +707,28 @@ export default function SecurityArchitecture() {
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                       <span className="text-3xl font-bold text-white">{healthScore}</span>
-                      <span className="text-xs text-[#00D4FF]/60">Score</span>
+                      <span className="text-xs text-[#9D4EDD]/60">Score</span>
                     </div>
                   </div>
 
                   <div className="space-y-2 text-xs font-mono">
                     <div className="flex justify-between">
-                      <span className="text-[#00D4FF]/60">Secure Nodes</span>
+                      <span className="text-[#9D4EDD]/60">Secure Nodes</span>
                       <span className="text-green-400">8/10</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#00D4FF]/60">Warnings</span>
+                      <span className="text-[#9D4EDD]/60">Warnings</span>
                       <span className="text-yellow-400">2</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#00D4FF]/60">Critical</span>
+                      <span className="text-[#9D4EDD]/60">Critical</span>
                       <span className="text-red-400">0</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-[#000510]/80 backdrop-blur-sm border border-[#00D4FF]/30 rounded-xl p-4 gsap-fade-in">
-                  <h3 className="font-mono text-sm text-[#00D4FF] mb-3 flex items-center gap-2">
+                <div className="bg-[#000510]/80 backdrop-blur-sm border border-[#9D4EDD]/30 rounded-xl p-4 gsap-fade-in">
+                  <h3 className="font-mono text-sm text-[#9D4EDD] mb-3 flex items-center gap-2">
                     <Shield className="w-4 h-4" />
                     Defense Simulation
                   </h3>
@@ -739,7 +739,7 @@ export default function SecurityArchitecture() {
                     className={`w-full py-2 px-4 rounded font-mono text-sm transition-all ${
                       attackSimulation
                         ? 'bg-red-500/20 border border-red-500/50 text-red-400 cursor-not-allowed'
-                        : 'bg-[#00D4FF]/10 border border-[#00D4FF]/30 text-[#00D4FF] hover:bg-[#00D4FF]/20'
+                        : 'bg-[#9D4EDD]/10 border border-[#9D4EDD]/30 text-[#9D4EDD] hover:bg-[#9D4EDD]/20'
                     }`}
                     data-testid="btn-attack-simulation"
                   >
@@ -770,8 +770,8 @@ export default function SecurityArchitecture() {
                   )}
                 </div>
 
-                <div className="bg-[#000510]/80 backdrop-blur-sm border border-[#00D4FF]/30 rounded-xl p-4 gsap-fade-in">
-                  <h3 className="font-mono text-sm text-[#00D4FF] mb-3 flex items-center gap-2">
+                <div className="bg-[#000510]/80 backdrop-blur-sm border border-[#9D4EDD]/30 rounded-xl p-4 gsap-fade-in">
+                  <h3 className="font-mono text-sm text-[#9D4EDD] mb-3 flex items-center gap-2">
                     <Eye className="w-4 h-4" />
                     Node Types
                   </h3>
@@ -797,7 +797,7 @@ export default function SecurityArchitecture() {
               >
                 <div
                   ref={containerRef}
-                  className="relative rounded-2xl overflow-hidden border border-[#00D4FF]/30 bg-[#000510]/80 backdrop-blur-sm"
+                  className="relative rounded-2xl overflow-hidden border border-[#9D4EDD]/30 bg-[#000510]/80 backdrop-blur-sm"
                   style={{ height: '500px' }}
                   data-testid="network-topology-canvas"
                   onWheel={(e) => {
@@ -837,7 +837,7 @@ export default function SecurityArchitecture() {
                           sceneRef.current.camera.position.z = 18 / Math.min(2, zoomLevel + 0.2);
                         }
                       }}
-                      className="w-8 h-8 rounded-lg bg-[#00D4FF]/20 border border-[#00D4FF]/30 flex items-center justify-center text-[#00D4FF] hover:bg-[#00D4FF]/30 font-bold"
+                      className="w-8 h-8 rounded-lg bg-[#9D4EDD]/20 border border-[#9D4EDD]/30 flex items-center justify-center text-[#9D4EDD] hover:bg-[#9D4EDD]/30 font-bold"
                       data-testid="btn-zoom-in"
                     >
                       +
@@ -851,7 +851,7 @@ export default function SecurityArchitecture() {
                           sceneRef.current.camera.position.z = 18 / Math.max(0.5, zoomLevel - 0.2);
                         }
                       }}
-                      className="w-8 h-8 rounded-lg bg-[#00D4FF]/20 border border-[#00D4FF]/30 flex items-center justify-center text-[#00D4FF] hover:bg-[#00D4FF]/30 font-bold"
+                      className="w-8 h-8 rounded-lg bg-[#9D4EDD]/20 border border-[#9D4EDD]/30 flex items-center justify-center text-[#9D4EDD] hover:bg-[#9D4EDD]/30 font-bold"
                       data-testid="btn-zoom-out"
                     >
                       −
@@ -866,13 +866,13 @@ export default function SecurityArchitecture() {
                           sceneRef.current.camera.position.set(0, 0, 18);
                         }
                       }}
-                      className="w-8 h-8 rounded-lg bg-[#00D4FF]/20 border border-[#00D4FF]/30 flex items-center justify-center text-[#00D4FF] hover:bg-[#00D4FF]/30 text-xs"
+                      className="w-8 h-8 rounded-lg bg-[#9D4EDD]/20 border border-[#9D4EDD]/30 flex items-center justify-center text-[#9D4EDD] hover:bg-[#9D4EDD]/30 text-xs"
                       data-testid="btn-reset-view"
                     >
                       ⌂
                     </motion.button>
                   </div>
-                  <div className="absolute bottom-4 right-4 z-20 text-xs text-[#00D4FF]/50 font-mono">
+                  <div className="absolute bottom-4 right-4 z-20 text-xs text-[#9D4EDD]/50 font-mono">
                     {Math.round(zoomLevel * 100)}% | Shift+Drag to pan
                   </div>
                   {!webglError && <canvas ref={canvasRef} className="w-full h-full" />}
@@ -880,8 +880,8 @@ export default function SecurityArchitecture() {
                   {!isLoaded && !webglError && (
                     <div className="absolute inset-0 flex items-center justify-center bg-[#000510]">
                       <div className="flex flex-col items-center gap-4">
-                        <div className="w-12 h-12 border-2 border-[#00D4FF]/30 border-t-[#00D4FF] rounded-full animate-spin" />
-                        <span className="text-[#00D4FF] font-mono text-sm">Loading 3D Scene...</span>
+                        <div className="w-12 h-12 border-2 border-[#9D4EDD]/30 border-t-[#9D4EDD] rounded-full animate-spin" />
+                        <span className="text-[#9D4EDD] font-mono text-sm">Loading 3D Scene...</span>
                       </div>
                     </div>
                   )}
@@ -890,14 +890,14 @@ export default function SecurityArchitecture() {
                     <div className="absolute inset-0 flex items-center justify-center bg-[#000510]">
                       <div className="flex flex-col items-center gap-6 text-center p-8">
                         <div className="relative">
-                          <Network className="w-20 h-20 text-[#00D4FF]/30" />
+                          <Network className="w-20 h-20 text-[#9D4EDD]/30" />
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <Shield className="w-10 h-10 text-[#00D4FF] animate-pulse" />
+                            <Shield className="w-10 h-10 text-[#9D4EDD] animate-pulse" />
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <h3 className="text-xl font-mono text-[#00D4FF]">3D Visualization Unavailable</h3>
-                          <p className="text-sm text-[#00D4FF]/60 font-mono max-w-md">
+                          <h3 className="text-xl font-mono text-[#9D4EDD]">3D Visualization Unavailable</h3>
+                          <p className="text-sm text-[#9D4EDD]/60 font-mono max-w-md">
                             WebGL is not available in this browser. The network topology visualization requires hardware-accelerated graphics.
                           </p>
                         </div>
@@ -905,7 +905,7 @@ export default function SecurityArchitecture() {
                           {initialNodes.slice(0, 6).map((node) => (
                             <div
                               key={node.id}
-                              className="p-3 bg-[#00D4FF]/5 border border-[#00D4FF]/20 rounded-lg text-center cursor-pointer hover:bg-[#00D4FF]/10 transition-all"
+                              className="p-3 bg-[#9D4EDD]/5 border border-[#9D4EDD]/20 rounded-lg text-center cursor-pointer hover:bg-[#9D4EDD]/10 transition-all"
                               onClick={() => {
                                 const fullNode: NetworkNode = { ...node, mesh: undefined };
                                 setSelectedNode(fullNode);
@@ -927,9 +927,9 @@ export default function SecurityArchitecture() {
                     <motion.div
                       initial={{ opacity: 0, y: 5 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="absolute bottom-4 left-4 bg-[#000510]/90 backdrop-blur-sm border border-[#00D4FF]/30 rounded-lg px-3 py-2"
+                      className="absolute bottom-4 left-4 bg-[#000510]/90 backdrop-blur-sm border border-[#9D4EDD]/30 rounded-lg px-3 py-2"
                     >
-                      <span className="text-xs font-mono text-[#00D4FF]">
+                      <span className="text-xs font-mono text-[#9D4EDD]">
                         Click to view: {sceneRef.current.nodes.get(hoveredNode)?.label}
                       </span>
                     </motion.div>
@@ -943,7 +943,7 @@ export default function SecurityArchitecture() {
                 transition={{ delay: 0.4 }}
                 className="lg:col-span-1 space-y-3"
               >
-                <h3 className="font-mono text-sm text-[#00D4FF] flex items-center gap-2">
+                <h3 className="font-mono text-sm text-[#9D4EDD] flex items-center gap-2">
                   <Layers className="w-4 h-4" />
                   Security Layers
                 </h3>
@@ -957,8 +957,8 @@ export default function SecurityArchitecture() {
                     onClick={() => setActiveLayer(activeLayer === layer.id ? null : layer.id)}
                     className={`p-3 rounded-xl border cursor-pointer transition-all ${
                       activeLayer === layer.id
-                        ? 'bg-[#00D4FF]/20 border-[#00D4FF]'
-                        : 'bg-[#000510]/80 border-[#00D4FF]/20 hover:border-[#00D4FF]/50'
+                        ? 'bg-[#9D4EDD]/20 border-[#9D4EDD]'
+                        : 'bg-[#000510]/80 border-[#9D4EDD]/20 hover:border-[#9D4EDD]/50'
                     }`}
                     data-testid={`layer-card-${layer.id}`}
                   >
@@ -980,7 +980,7 @@ export default function SecurityArchitecture() {
                             {layer.status.toUpperCase()}
                           </span>
                         </div>
-                        <p className="text-[10px] text-[#00D4FF]/50 mt-1 line-clamp-2">
+                        <p className="text-[10px] text-[#9D4EDD]/50 mt-1 line-clamp-2">
                           {layer.description}
                         </p>
                       </div>
@@ -996,8 +996,8 @@ export default function SecurityArchitecture() {
               transition={{ delay: 0.6 }}
               className="mt-6"
             >
-              <div className="bg-[#000510]/80 backdrop-blur-sm border border-[#00D4FF]/30 rounded-xl p-6">
-                <h3 className="font-mono text-sm text-[#00D4FF] mb-4 flex items-center gap-2">
+              <div className="bg-[#000510]/80 backdrop-blur-sm border border-[#9D4EDD]/30 rounded-xl p-6">
+                <h3 className="font-mono text-sm text-[#9D4EDD] mb-4 flex items-center gap-2">
                   <Shield className="w-4 h-4" />
                   Defense-in-Depth Visualization
                 </h3>
@@ -1074,7 +1074,7 @@ export default function SecurityArchitecture() {
                         className="w-3 h-3 rounded-full"
                         style={{ backgroundColor: layer.color }}
                       />
-                      <span className="text-[#00D4FF]/70">{layer.name}</span>
+                      <span className="text-[#9D4EDD]/70">{layer.name}</span>
                     </div>
                   ))}
                 </div>
@@ -1098,7 +1098,7 @@ export default function SecurityArchitecture() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-[#000510] border border-[#00D4FF]/30 rounded-2xl p-6 max-w-md w-full"
+              className="bg-[#000510] border border-[#9D4EDD]/30 rounded-2xl p-6 max-w-md w-full"
               data-testid="node-details-modal"
             >
               <div className="flex items-start justify-between mb-4">
@@ -1117,12 +1117,12 @@ export default function SecurityArchitecture() {
                   </div>
                   <div>
                     <h3 className="font-mono text-lg text-white font-bold">{selectedNode.label}</h3>
-                    <span className="text-xs text-[#00D4FF]/60 font-mono capitalize">{selectedNode.type}</span>
+                    <span className="text-xs text-[#9D4EDD]/60 font-mono capitalize">{selectedNode.type}</span>
                   </div>
                 </div>
                 <button
                   onClick={() => setSelectedNode(null)}
-                  className="p-1 text-[#00D4FF]/50 hover:text-[#00D4FF] transition-colors"
+                  className="p-1 text-[#9D4EDD]/50 hover:text-[#9D4EDD] transition-colors"
                   data-testid="btn-close-modal"
                 >
                   <X className="w-5 h-5" />
@@ -1130,10 +1130,10 @@ export default function SecurityArchitecture() {
               </div>
 
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-[#00D4FF]/5 rounded-lg border border-[#00D4FF]/20">
-                  <span className="text-sm text-[#00D4FF]/70 font-mono">Security Level</span>
+                <div className="flex items-center justify-between p-3 bg-[#9D4EDD]/5 rounded-lg border border-[#9D4EDD]/20">
+                  <span className="text-sm text-[#9D4EDD]/70 font-mono">Security Level</span>
                   <div className="flex items-center gap-2">
-                    <div className="w-24 h-2 bg-[#00D4FF]/20 rounded-full overflow-hidden">
+                    <div className="w-24 h-2 bg-[#9D4EDD]/20 rounded-full overflow-hidden">
                       <motion.div
                         className={`h-full ${
                           selectedNode.securityLevel >= 90
@@ -1152,16 +1152,16 @@ export default function SecurityArchitecture() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3 bg-[#00D4FF]/5 rounded-lg border border-[#00D4FF]/20">
-                    <span className="text-xs text-[#00D4FF]/50 font-mono">IP Address</span>
+                  <div className="p-3 bg-[#9D4EDD]/5 rounded-lg border border-[#9D4EDD]/20">
+                    <span className="text-xs text-[#9D4EDD]/50 font-mono">IP Address</span>
                     <p className="text-sm text-white font-mono mt-1">{selectedNode.details.ip}</p>
                   </div>
-                  <div className="p-3 bg-[#00D4FF]/5 rounded-lg border border-[#00D4FF]/20">
-                    <span className="text-xs text-[#00D4FF]/50 font-mono">Last Scan</span>
+                  <div className="p-3 bg-[#9D4EDD]/5 rounded-lg border border-[#9D4EDD]/20">
+                    <span className="text-xs text-[#9D4EDD]/50 font-mono">Last Scan</span>
                     <p className="text-sm text-white font-mono mt-1">{selectedNode.details.lastScan}</p>
                   </div>
-                  <div className="p-3 bg-[#00D4FF]/5 rounded-lg border border-[#00D4FF]/20">
-                    <span className="text-xs text-[#00D4FF]/50 font-mono">Vulnerabilities</span>
+                  <div className="p-3 bg-[#9D4EDD]/5 rounded-lg border border-[#9D4EDD]/20">
+                    <span className="text-xs text-[#9D4EDD]/50 font-mono">Vulnerabilities</span>
                     <p className={`text-sm font-mono mt-1 ${
                       selectedNode.details.vulnerabilities === 0
                         ? 'text-green-400'
@@ -1172,8 +1172,8 @@ export default function SecurityArchitecture() {
                       {selectedNode.details.vulnerabilities}
                     </p>
                   </div>
-                  <div className="p-3 bg-[#00D4FF]/5 rounded-lg border border-[#00D4FF]/20">
-                    <span className="text-xs text-[#00D4FF]/50 font-mono">Uptime</span>
+                  <div className="p-3 bg-[#9D4EDD]/5 rounded-lg border border-[#9D4EDD]/20">
+                    <span className="text-xs text-[#9D4EDD]/50 font-mono">Uptime</span>
                     <p className="text-sm text-white font-mono mt-1">{selectedNode.details.uptime}</p>
                   </div>
                 </div>

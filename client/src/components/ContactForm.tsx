@@ -67,7 +67,7 @@ function AnimatedInput({
           disabled={disabled}
           className={`bg-background/50 border-border pt-4 transition-all duration-300 ${
             isFocused 
-              ? 'border-[#0a84ff] shadow-[0_0_15px_rgba(10,132,255,0.3)] ring-1 ring-[#0a84ff]/30' 
+              ? 'border-[#7B2FE0] shadow-[0_0_15px_rgba(123,47,224,0.3)] ring-1 ring-[#7B2FE0]/30' 
               : 'hover:border-primary/50'
           }`}
         />
@@ -147,7 +147,7 @@ function AnimatedTextarea({
           rows={rows}
           className={`bg-background/50 border-border pt-5 resize-none transition-all duration-300 ${
             isFocused 
-              ? 'border-[#0a84ff] shadow-[0_0_15px_rgba(10,132,255,0.3)] ring-1 ring-[#0a84ff]/30' 
+              ? 'border-[#7B2FE0] shadow-[0_0_15px_rgba(123,47,224,0.3)] ring-1 ring-[#7B2FE0]/30' 
               : 'hover:border-primary/50'
           }`}
         />
@@ -352,9 +352,9 @@ export function ContactForm() {
         className="absolute inset-0 pointer-events-none"
         animate={{
           background: [
-            'radial-gradient(circle at 0% 0%, rgba(10, 132, 255, 0.03) 0%, transparent 50%)',
-            'radial-gradient(circle at 100% 100%, rgba(10, 132, 255, 0.03) 0%, transparent 50%)',
-            'radial-gradient(circle at 0% 0%, rgba(10, 132, 255, 0.03) 0%, transparent 50%)',
+            'radial-gradient(circle at 0% 0%, rgba(123, 47, 224, 0.03) 0%, transparent 50%)',
+            'radial-gradient(circle at 100% 100%, rgba(123, 47, 224, 0.03) 0%, transparent 50%)',
+            'radial-gradient(circle at 0% 0%, rgba(123, 47, 224, 0.03) 0%, transparent 50%)',
           ],
         }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
@@ -417,7 +417,7 @@ export function ContactForm() {
           >
             <SelectTrigger
               data-testid="select-service"
-              className="bg-background/50 border-border transition-all duration-300 hover:border-primary/50 focus:border-primary focus:shadow-[0_0_15px_rgba(10,132,255,0.3)] focus:ring-1 focus:ring-[#0a84ff]/30"
+              className="bg-background/50 border-border transition-all duration-300 hover:border-primary/50 focus:border-primary focus:shadow-[0_0_15px_rgba(123,47,224,0.3)] focus:ring-1 focus:ring-[#7B2FE0]/30"
             >
               <SelectValue placeholder="Select a service" />
             </SelectTrigger>
@@ -499,9 +499,9 @@ export function ContactForm() {
           className="absolute inset-0 pointer-events-none"
           animate={{
             boxShadow: [
-              '0 0 20px rgba(10, 132, 255, 0.3)',
-              '0 0 40px rgba(10, 132, 255, 0.5)',
-              '0 0 20px rgba(10, 132, 255, 0.3)',
+              '0 0 20px rgba(123, 47, 224, 0.3)',
+              '0 0 40px rgba(123, 47, 224, 0.5)',
+              '0 0 20px rgba(123, 47, 224, 0.3)',
             ],
           }}
           transition={{ duration: 2, repeat: Infinity }}

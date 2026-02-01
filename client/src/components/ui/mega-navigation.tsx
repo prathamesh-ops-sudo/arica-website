@@ -67,7 +67,7 @@ function DropdownPanel({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[400px] p-4 rounded-lg border border-[#00D4FF]/30 bg-[rgba(10,10,30,0.95)] backdrop-blur-xl shadow-[0_0_40px_rgba(0,212,255,0.2)]"
+          className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[400px] p-4 rounded-lg border border-[#9D4EDD]/30 bg-[rgba(10,10,30,0.95)] backdrop-blur-xl shadow-[0_0_40px_rgba(157,78,221,0.2)]"
           initial={{ opacity: 0, y: -10, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -80,15 +80,15 @@ function DropdownPanel({
                 <motion.button
                   key={link.url}
                   onClick={() => onNavigate(link.url)}
-                  className="flex items-start gap-3 p-3 rounded-md text-left transition-all duration-200 hover:bg-[#00D4FF]/10 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00D4FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,10,30,0.95)]"
+                  className="flex items-start gap-3 p-3 rounded-md text-left transition-all duration-200 hover:bg-[#9D4EDD]/10 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9D4EDD] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,10,30,0.95)]"
                   whileHover={{ x: 4 }}
                   data-testid={`dropdown-link-${link.url.replace('/', '')}`}
                 >
-                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-[#00D4FF]/20 to-[#9944ff]/20 flex items-center justify-center group-hover:from-[#00D4FF]/30 group-hover:to-[#9944ff]/30 group-hover:shadow-[0_0_15px_rgba(0,212,255,0.3)] transition-all duration-200">
-                    <Icon size={20} className="text-[#00D4FF] group-hover:drop-shadow-[0_0_8px_#00D4FF]" />
+                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-[#7B2FE0]/20 to-[#9D4EDD]/20 flex items-center justify-center group-hover:from-[#7B2FE0]/30 group-hover:to-[#9D4EDD]/30 group-hover:shadow-[0_0_15px_rgba(157,78,221,0.3)] transition-all duration-200">
+                    <Icon size={20} className="text-[#9D4EDD] group-hover:drop-shadow-[0_0_8px_#9D4EDD]" />
                   </div>
                   <div>
-                    <span className="block text-sm font-medium text-white group-hover:text-[#00D4FF] transition-colors">
+                    <span className="block text-sm font-medium text-white group-hover:text-[#9D4EDD] transition-colors">
                       {link.name}
                     </span>
                     {link.description && (
@@ -179,7 +179,7 @@ export function MegaNavigation() {
     <>
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[10000] focus:px-4 focus:py-2 focus:bg-[#00D4FF] focus:text-black focus:rounded-md focus:outline-none"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[10000] focus:px-4 focus:py-2 focus:bg-[#9D4EDD] focus:text-black focus:rounded-md focus:outline-none"
         data-testid="skip-to-content"
       >
         Skip to content
@@ -187,7 +187,7 @@ export function MegaNavigation() {
 
       <motion.nav
         ref={navRef}
-        className="fixed top-0 left-0 right-0 z-[9999] bg-[rgba(10,10,30,0.85)] backdrop-blur-xl border-b border-[#00D4FF]/20 shadow-[0_4px_30px_rgba(0,212,255,0.1)]"
+        className="fixed top-0 left-0 right-0 z-[9999] bg-[rgba(10,10,30,0.85)] backdrop-blur-xl border-b border-[#9D4EDD]/20 shadow-[0_4px_30px_rgba(157,78,221,0.1)]"
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
@@ -198,7 +198,7 @@ export function MegaNavigation() {
           <div className="flex items-center justify-between h-16 md:h-20">
             <Link 
               href="/" 
-              className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00D4FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,10,30,0.85)] rounded-md"
+              className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9D4EDD] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,10,30,0.85)] rounded-md"
               data-testid="nav-logo"
             >
               <motion.div
@@ -206,11 +206,11 @@ export function MegaNavigation() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#00D4FF] to-[#9944ff] rounded-lg opacity-20 group-hover:opacity-40 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#7B2FE0] to-[#9D4EDD] rounded-lg opacity-20 group-hover:opacity-40 transition-opacity" />
                 <div className="absolute inset-[2px] bg-[rgba(10,10,30,0.9)] rounded-md" />
-                <Shield className="w-5 h-5 relative z-10 text-[#00D4FF] drop-shadow-[0_0_8px_#00D4FF]" />
+                <Shield className="w-5 h-5 relative z-10 text-[#9D4EDD] drop-shadow-[0_0_8px_#9D4EDD]" />
               </motion.div>
-              <span className="hidden sm:block text-lg font-bold bg-gradient-to-r from-[#00D4FF] to-[#9944ff] bg-clip-text text-transparent">
+              <span className="hidden sm:block text-lg font-bold bg-gradient-to-r from-[#7B2FE0] to-[#9D4EDD] bg-clip-text text-transparent">
                 Arica Tech Security
               </span>
             </Link>
@@ -225,9 +225,9 @@ export function MegaNavigation() {
                 >
                   <button
                     className={cn(
-                      "flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00D4FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,10,30,0.85)]",
+                      "flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9D4EDD] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,10,30,0.85)]",
                       openDropdown === dropdown.name
-                        ? "text-[#00D4FF] bg-[#00D4FF]/10"
+                        ? "text-[#9D4EDD] bg-[#9D4EDD]/10"
                         : "text-white/70 hover:text-white hover:bg-white/5"
                     )}
                     aria-haspopup="true"
@@ -258,9 +258,9 @@ export function MegaNavigation() {
               <motion.button
                 onClick={() => handleNavigate("/case-studies")}
                 className={cn(
-                  "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00D4FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,10,30,0.85)]",
+                  "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9D4EDD] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,10,30,0.85)]",
                   location === "/case-studies"
-                    ? "text-[#00D4FF] bg-[#00D4FF]/10"
+                    ? "text-[#9D4EDD] bg-[#9D4EDD]/10"
                     : "text-white/70 hover:text-white hover:bg-white/5"
                 )}
                 whileHover={{ scale: 1.02 }}
@@ -271,7 +271,7 @@ export function MegaNavigation() {
               </motion.button>
               <motion.button
                 onClick={() => handleNavigate("/contact")}
-                className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-gradient-to-r from-[#00D4FF]/20 to-[#9944ff]/20 border border-[#00D4FF]/40 text-[#00D4FF] hover:from-[#00D4FF]/30 hover:to-[#9944ff]/30 hover:border-[#00D4FF]/60 hover:shadow-[0_0_20px_rgba(0,212,255,0.3)] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00D4FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,10,30,0.85)]"
+                className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-gradient-to-r from-[#7B2FE0]/20 to-[#9D4EDD]/20 border border-[#9D4EDD]/40 text-[#9D4EDD] hover:from-[#7B2FE0]/30 hover:to-[#9D4EDD]/30 hover:border-[#9D4EDD]/60 hover:shadow-[0_0_20px_rgba(157,78,221,0.3)] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9D4EDD] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,10,30,0.85)]"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 data-testid="nav-contact"
@@ -282,9 +282,9 @@ export function MegaNavigation() {
             </div>
 
             <motion.button
-              className="lg:hidden relative w-10 h-10 flex items-center justify-center rounded-md border border-[#00D4FF]/30 bg-[rgba(0,212,255,0.1)] text-[#00D4FF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00D4FF]"
+              className="lg:hidden relative w-10 h-10 flex items-center justify-center rounded-md border border-[#9D4EDD]/30 bg-[rgba(157,78,221,0.1)] text-[#9D4EDD] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9D4EDD]"
               onClick={() => setMobileOpen(!mobileOpen)}
-              whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(0, 212, 255, 0.4)" }}
+              whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(157, 78, 221, 0.4)" }}
               whileTap={{ scale: 0.95 }}
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
@@ -330,7 +330,7 @@ export function MegaNavigation() {
             />
 
             <motion.div
-              className="fixed top-0 right-0 bottom-0 z-[9998] w-80 max-w-[85vw] bg-[rgba(10,10,30,0.98)] backdrop-blur-xl border-l border-[#00D4FF]/20 shadow-[-10px_0_40px_rgba(0,212,255,0.15)] lg:hidden overflow-y-auto"
+              className="fixed top-0 right-0 bottom-0 z-[9998] w-80 max-w-[85vw] bg-[rgba(10,10,30,0.98)] backdrop-blur-xl border-l border-[#9D4EDD]/20 shadow-[-10px_0_40px_rgba(157,78,221,0.15)] lg:hidden overflow-y-auto"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
@@ -345,7 +345,7 @@ export function MegaNavigation() {
                       animate={{ x: 0, opacity: 1 }}
                       transition={{ delay: index * 0.1 }}
                     >
-                      <h3 className="text-xs font-semibold text-[#00D4FF]/60 uppercase tracking-wider mb-3">
+                      <h3 className="text-xs font-semibold text-[#9D4EDD]/60 uppercase tracking-wider mb-3">
                         {dropdown.name}
                       </h3>
                       <div className="space-y-1">
@@ -357,15 +357,15 @@ export function MegaNavigation() {
                               key={link.url}
                               onClick={() => handleNavigate(link.url)}
                               className={cn(
-                                "w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-left transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00D4FF]",
+                                "w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-left transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9D4EDD]",
                                 isActive
-                                  ? "bg-[#00D4FF]/15 text-[#00D4FF]"
+                                  ? "bg-[#9D4EDD]/15 text-[#9D4EDD]"
                                   : "text-white/70 hover:text-white hover:bg-white/5"
                               )}
                               whileTap={{ scale: 0.98 }}
                               data-testid={`mobile-link-${link.url.replace('/', '')}`}
                             >
-                              <Icon size={18} className={cn(isActive && "drop-shadow-[0_0_6px_#00D4FF]")} />
+                              <Icon size={18} className={cn(isActive && "drop-shadow-[0_0_6px_#9D4EDD]")} />
                               <span className="text-sm font-medium">{link.name}</span>
                             </motion.button>
                           )
@@ -378,15 +378,15 @@ export function MegaNavigation() {
                     initial={{ x: 20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.3 }}
-                    className="pt-4 border-t border-[#00D4FF]/20"
+                    className="pt-4 border-t border-[#9D4EDD]/20"
                   >
                     <div className="space-y-1">
                       <motion.button
                         onClick={() => handleNavigate("/case-studies")}
                         className={cn(
-                          "w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-left transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00D4FF]",
+                          "w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-left transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9D4EDD]",
                           location === "/case-studies"
-                            ? "bg-[#00D4FF]/15 text-[#00D4FF]"
+                            ? "bg-[#9D4EDD]/15 text-[#9D4EDD]"
                             : "text-white/70 hover:text-white hover:bg-white/5"
                         )}
                         whileTap={{ scale: 0.98 }}
@@ -398,9 +398,9 @@ export function MegaNavigation() {
                       <motion.button
                         onClick={() => handleNavigate("/contact")}
                         className={cn(
-                          "w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-left transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00D4FF]",
+                          "w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-left transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9D4EDD]",
                           location === "/contact"
-                            ? "bg-[#00D4FF]/15 text-[#00D4FF]"
+                            ? "bg-[#9D4EDD]/15 text-[#9D4EDD]"
                             : "text-white/70 hover:text-white hover:bg-white/5"
                         )}
                         whileTap={{ scale: 0.98 }}
@@ -414,7 +414,7 @@ export function MegaNavigation() {
                 </div>
               </div>
 
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#00D4FF]/50 via-[#9944ff]/50 to-[#00D4FF]/50" />
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#7B2FE0]/50 via-[#9D4EDD]/50 to-[#7B2FE0]/50" />
             </motion.div>
           </>
         )}

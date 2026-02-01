@@ -38,7 +38,7 @@ const policyCategories: PolicyCategory[] = [
     description: 'Comprehensive framework for protecting organizational information assets',
     compliance: 92,
     requirements: ['Data encryption standards', 'Access controls', 'Security monitoring', 'Incident response'],
-    color: '#00D4FF'
+    color: '#9D4EDD'
   },
   {
     id: 'access-control',
@@ -56,7 +56,7 @@ const policyCategories: PolicyCategory[] = [
     description: 'Standards for categorizing and handling sensitive data',
     compliance: 78,
     requirements: ['Classification levels', 'Handling procedures', 'Labeling requirements', 'Storage guidelines'],
-    color: '#00D4FF'
+    color: '#9D4EDD'
   },
   {
     id: 'incident-response',
@@ -599,9 +599,9 @@ function ComplianceMeter({ value }: { value: number }) {
       const endAngle = startAngle + (animatedValue / 100) * Math.PI * 2;
       
       const gradient = ctx.createLinearGradient(0, 0, width, height);
-      gradient.addColorStop(0, '#00D4FF');
+      gradient.addColorStop(0, '#9D4EDD');
       gradient.addColorStop(0.5, '#8B5CF6');
-      gradient.addColorStop(1, '#00D4FF');
+      gradient.addColorStop(1, '#9D4EDD');
       
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, startAngle, endAngle);
@@ -618,7 +618,7 @@ function ComplianceMeter({ value }: { value: number }) {
 
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 212, 255, ${particle.alpha * (0.5 + Math.sin(time * 3 + particle.angle) * 0.5)})`;
+        ctx.fillStyle = `rgba(157, 78, 221, ${particle.alpha * (0.5 + Math.sin(time * 3 + particle.angle) * 0.5)})`;
         ctx.fill();
       });
 
@@ -626,7 +626,7 @@ function ComplianceMeter({ value }: { value: number }) {
         const glowRadius = radius + Math.sin(time * 2 + i) * 3;
         ctx.beginPath();
         ctx.arc(centerX, centerY, glowRadius, startAngle, endAngle);
-        ctx.strokeStyle = `rgba(0, 212, 255, ${0.1 - i * 0.03})`;
+        ctx.strokeStyle = `rgba(157, 78, 221, ${0.1 - i * 0.03})`;
         ctx.lineWidth = 20 + i * 5;
         ctx.stroke();
       }
@@ -652,7 +652,7 @@ function ComplianceMeter({ value }: { value: number }) {
         className="mx-auto"
       />
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-4xl font-bold text-[#00D4FF]" data-testid="text-compliance-value">
+        <span className="text-4xl font-bold text-[#9D4EDD]" data-testid="text-compliance-value">
           {animatedValue}%
         </span>
         <span className="text-sm text-muted-foreground">Compliance</span>
@@ -694,14 +694,14 @@ function PolicyBuilder() {
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-      foundation: '#00D4FF',
+      foundation: '#9D4EDD',
       protection: '#8B5CF6',
       detection: '#F59E0B',
       response: '#EF4444',
       recovery: '#10B981',
       awareness: '#EC4899'
     };
-    return colors[category] || '#00D4FF';
+    return colors[category] || '#9D4EDD';
   };
 
   const isConnected = (id: string) => {
@@ -711,8 +711,8 @@ function PolicyBuilder() {
   return (
     <div className="p-6 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10" data-testid="policy-builder">
       <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 rounded-lg bg-[#00D4FF]/20">
-          <Sparkles className="w-5 h-5 text-[#00D4FF]" />
+        <div className="p-2 rounded-lg bg-[#9D4EDD]/20">
+          <Sparkles className="w-5 h-5 text-[#9D4EDD]" />
         </div>
         <div>
           <h3 className="text-xl font-bold">Policy Framework Builder</h3>
@@ -730,7 +730,7 @@ function PolicyBuilder() {
             className={`
               relative p-4 rounded-xl cursor-pointer transition-all duration-300
               ${selectedBlock === block.id 
-                ? 'ring-2 ring-[#00D4FF] bg-[#00D4FF]/20' 
+                ? 'ring-2 ring-[#9D4EDD] bg-[#9D4EDD]/20' 
                 : 'bg-white/5 hover:bg-white/10'}
               ${isConnected(block.id) ? 'border-2' : 'border border-white/10'}
             `}
@@ -748,7 +748,7 @@ function PolicyBuilder() {
             <p className="text-xs text-muted-foreground capitalize">{block.category}</p>
             
             {block.connected.length > 0 && (
-              <div className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-[#00D4FF] flex items-center justify-center">
+              <div className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-[#9D4EDD] flex items-center justify-center">
                 <LinkIcon className="w-3 h-3 text-black" />
               </div>
             )}
@@ -759,7 +759,7 @@ function PolicyBuilder() {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
-                  className="absolute -top-1 -left-1 w-3 h-3 rounded-full bg-[#00D4FF]"
+                  className="absolute -top-1 -left-1 w-3 h-3 rounded-full bg-[#9D4EDD]"
                 />
               )}
             </AnimatePresence>
@@ -771,10 +771,10 @@ function PolicyBuilder() {
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-6 p-4 rounded-xl bg-[#00D4FF]/10 border border-[#00D4FF]/30"
+          className="mt-6 p-4 rounded-xl bg-[#9D4EDD]/10 border border-[#9D4EDD]/30"
         >
           <div className="flex items-center gap-2 mb-2">
-            <CheckCircle className="w-4 h-4 text-[#00D4FF]" />
+            <CheckCircle className="w-4 h-4 text-[#9D4EDD]" />
             <span className="text-sm font-medium">Framework Connections</span>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -819,9 +819,9 @@ export default function SecurityPolicies() {
           transition: 'transform 0.1s ease-out',
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-[#00D4FF]/5 via-transparent to-purple-500/5" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#9D4EDD]/5 via-transparent to-purple-500/5" />
       </div>
-      <AmbientParticles variant="network" count={isMobile ? 12 : 30} color="#00D4FF" opacity={0.15} />
+      <AmbientParticles variant="network" count={isMobile ? 12 : 30} color="#9D4EDD" opacity={0.15} />
 
       <div className="relative z-content">
         <div className="fixed top-6 left-6 z-50">
@@ -841,13 +841,13 @@ export default function SecurityPolicies() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00D4FF]/10 border border-[#00D4FF]/30 mb-6">
-              <Shield className="w-4 h-4 text-[#00D4FF]" />
-              <span className="text-[#00D4FF] text-sm font-medium">Security Framework</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#9D4EDD]/10 border border-[#9D4EDD]/30 mb-6">
+              <Shield className="w-4 h-4 text-[#9D4EDD]" />
+              <span className="text-[#9D4EDD] text-sm font-medium">Security Framework</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
               Security
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] to-purple-500">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#9D4EDD] to-purple-500">
                 Policies
               </span>
             </h1>
@@ -861,7 +861,7 @@ export default function SecurityPolicies() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="mb-12 p-6 rounded-3xl bg-black/40 backdrop-blur-xl border border-[#00D4FF]/30"
+            className="mb-12 p-6 rounded-3xl bg-black/40 backdrop-blur-xl border border-[#9D4EDD]/30"
           >
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
@@ -872,7 +872,7 @@ export default function SecurityPolicies() {
                       <HelpCircle className="w-5 h-5 text-muted-foreground" />
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent className="max-w-xs bg-[rgba(10,10,30,0.95)] border-[#00D4FF]/30">
+                  <TooltipContent className="max-w-xs bg-[rgba(10,10,30,0.95)] border-[#9D4EDD]/30">
                     <div className="space-y-2">
                       <p className="text-sm font-medium">How to interact:</p>
                       <ul className="text-xs space-y-1 text-muted-foreground">
@@ -905,10 +905,10 @@ export default function SecurityPolicies() {
               <motion.div 
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-4 p-3 rounded-xl bg-[#00D4FF]/10 border border-[#00D4FF]/30 text-sm"
+                className="mb-4 p-3 rounded-xl bg-[#9D4EDD]/10 border border-[#9D4EDD]/30 text-sm"
               >
                 <div className="flex items-center gap-2">
-                  <Info className="w-4 h-4 text-[#00D4FF]" />
+                  <Info className="w-4 h-4 text-[#9D4EDD]" />
                   <span>Tap and drag to rotate view. Tap any document to see details.</span>
                 </div>
               </motion.div>
@@ -932,7 +932,7 @@ export default function SecurityPolicies() {
               <h3 className="text-xl font-bold mb-4">Overall Compliance</h3>
               <ComplianceMeter value={overallCompliance} />
               <div className="mt-4 flex items-center gap-2 text-sm">
-                <Zap className="w-4 h-4 text-[#00D4FF]" />
+                <Zap className="w-4 h-4 text-[#9D4EDD]" />
                 <span className="text-muted-foreground">Continuously monitored</span>
               </div>
             </motion.div>
@@ -975,7 +975,7 @@ export default function SecurityPolicies() {
                     bg-gradient-to-br from-black/60 to-black/40 backdrop-blur-xl
                     border overflow-hidden group
                     ${selectedPolicy === category.id 
-                      ? 'border-[#00D4FF] ring-2 ring-[#00D4FF]/50' 
+                      ? 'border-[#9D4EDD] ring-2 ring-[#9D4EDD]/50' 
                       : 'border-white/10 hover:border-white/30'}
                   `}
                   style={{
@@ -1048,7 +1048,7 @@ export default function SecurityPolicies() {
                           <ul className="space-y-1">
                             {category.requirements.map((req, i) => (
                               <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                                <CheckCircle className="w-3 h-3 text-[#00D4FF]" />
+                                <CheckCircle className="w-3 h-3 text-[#9D4EDD]" />
                                 {req}
                               </li>
                             ))}
@@ -1074,7 +1074,7 @@ export default function SecurityPolicies() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className="p-6 rounded-3xl bg-gradient-to-r from-[#00D4FF]/10 to-purple-500/10 border border-[#00D4FF]/30"
+            className="p-6 rounded-3xl bg-gradient-to-r from-[#9D4EDD]/10 to-purple-500/10 border border-[#9D4EDD]/30"
           >
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
               <div>
@@ -1085,7 +1085,7 @@ export default function SecurityPolicies() {
               </div>
               <Link
                 href="/contact"
-                className="px-6 py-3 rounded-full bg-[#00D4FF] text-black font-medium hover:bg-[#00D4FF]/90 transition-colors flex items-center gap-2"
+                className="px-6 py-3 rounded-full bg-[#9D4EDD] text-black font-medium hover:bg-[#9D4EDD]/90 transition-colors flex items-center gap-2"
                 data-testid="link-contact-policies"
               >
                 <span>Get Started</span>

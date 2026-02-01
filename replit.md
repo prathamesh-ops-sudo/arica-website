@@ -14,12 +14,12 @@ Preferred communication style: Simple, everyday language.
 - **Database**: PostgreSQL managed with Drizzle ORM, with schema defined in `shared/schema.ts` and migrations handled by Drizzle Kit.
 
 ### Visual and Interactive Design
-The website employs an Apple-inspired design system featuring:
-- **Color Palette**: Matte neutral grays (#121212 background, #1c1c1e cards), subtle white/gray text, and blue accent (#0a84ff) for interactive elements
+The website employs an Apple-inspired design system featuring the "Obsidian Glow" theme:
+- **Color Palette**: Deep black (#050505) background, vibrant purple accents (#3A0CA3 primary, #7B2FE0 light, #9D4EDD glow), subtle white/gray text
 - **Typography**: SF Pro Display/Inter font stack with Apple system fonts as fallback
-- **Glassmorphism**: Frosted glass effects with backdrop-blur (20-40px), subtle borders (rgba white 8-15%), and saturated overlays
-- **Buttons**: Rounded corners (1rem), subtle hover states with scale animations, glass variant for floating elements
-- **Shadows**: Soft Apple-style shadows (apple-shadow-sm/md/lg) with minimal intensity
+- **Glassmorphism**: Frosted glass effects with purple-tinted backdrop-blur (20-40px), subtle purple borders (rgba 138,43,226 8-15%), and saturated overlays
+- **Buttons**: Rounded corners (1rem), purple gradient hover states with scale animations, glass variant for floating elements
+- **Shadows**: Soft Apple-style shadows with purple glow effects for interactive elements
 Key visual elements include WebGL shader backgrounds with neutral-colored fluid effects, subtle dot grid patterns, and smooth scrolling.
 
 The site heavily utilizes advanced 3D and animation components to create a dynamic and immersive user experience:

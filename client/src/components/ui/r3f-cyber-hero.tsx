@@ -9,7 +9,7 @@ import { WebGLFallback } from '@/components/ui/webgl-fallback';
 const NEUTRAL_LIGHT = '#e5e5e5';
 const NEUTRAL_MID = '#8e8e93';
 const NEUTRAL_DARK = '#3a3a3c';
-const ACCENT_BLUE = '#0a84ff';
+const ACCENT_BLUE = '#7B2FE0';
 
 function CyberGrid() {
   const gridRef = useRef<THREE.Group>(null);
