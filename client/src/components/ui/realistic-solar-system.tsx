@@ -52,7 +52,7 @@ const galaxies: GalaxyConfig[] = [
     description: 'Vulnerability Assessment & Penetration Testing',
     scrollStart: 0.0,
     scrollEnd: 0.33,
-    colorTheme: { primary: '#ff4444', secondary: '#ff8800', accent: '#00ffff' },
+    colorTheme: { primary: '#ff4444', secondary: '#ff8800', accent: '#9D4EDD' },
     nebulaColors: {
       color1: [0.8, 0.2, 0.1],
       color2: [1.0, 0.4, 0.0],
@@ -1015,7 +1015,7 @@ export function RealisticSolarSystem() {
             (shockwaveRef.current.material as THREE.Material).dispose();
           }
           
-          const warpColor = new THREE.Color('#00ffff');
+          const warpColor = new THREE.Color('#9D4EDD');
           const ringGeom = new THREE.RingGeometry(0.1, 100, 64);
           const ringMat = new THREE.ShaderMaterial({
             uniforms: {
@@ -2442,11 +2442,11 @@ export function RealisticSolarSystem() {
                 )}
                 {modalPlanet.modalContent?.type === 'tester' && (
                   <div className="space-y-2">
-                    <div className="text-cyan-400">GET /api/v1/users</div>
+                    <div className="text-[#9D4EDD]">GET /api/v1/users</div>
                     <div className="text-green-400">→ 200 OK (42ms)</div>
-                    <div className="text-cyan-400 mt-2">POST /api/v1/auth</div>
+                    <div className="text-[#9D4EDD] mt-2">POST /api/v1/auth</div>
                     <div className="text-green-400">→ 200 OK (128ms)</div>
-                    <div className="text-cyan-400 mt-2">GET /api/v1/admin</div>
+                    <div className="text-[#9D4EDD] mt-2">GET /api/v1/admin</div>
                     <div className="text-red-400">→ 401 Unauthorized (15ms)</div>
                   </div>
                 )}
@@ -2470,7 +2470,7 @@ export function RealisticSolarSystem() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2"><span className="text-green-400">✓</span> Build → <span className="text-white/50">2.3s</span></div>
                     <div className="flex items-center gap-2"><span className="text-green-400">✓</span> SAST Scan → <span className="text-white/50">12.1s</span></div>
-                    <div className="flex items-center gap-2"><span className="text-cyan-400 animate-pulse">●</span> Container Scan → <span className="text-white/50">running...</span></div>
+                    <div className="flex items-center gap-2"><span className="text-[#9D4EDD] animate-pulse">●</span> Container Scan → <span className="text-white/50">running...</span></div>
                     <div className="flex items-center gap-2 text-white/30">○ Deploy to Staging</div>
                   </div>
                 )}

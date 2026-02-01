@@ -811,12 +811,12 @@ function BuildStatusIndicator({ isRunning, passedCount, blockedCount }: {
           transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
         >
           {isRunning ? (
-            <Loader2 className="w-5 h-5 text-cyan-400" />
+            <Loader2 className="w-5 h-5 text-[#9D4EDD]" />
           ) : (
             <Activity className="w-5 h-5 text-white/60" />
           )}
         </motion.div>
-        <span className={isRunning ? 'text-cyan-400' : 'text-white/60'}>
+        <span className={isRunning ? 'text-[#9D4EDD]' : 'text-white/60'}>
           {isRunning ? 'Pipeline Active' : 'Pipeline Idle'}
         </span>
       </div>
@@ -920,7 +920,7 @@ export default function DevSecOps() {
     <div className="min-h-screen text-white relative overflow-hidden" style={{ backgroundColor: '#0a0a1e' }}>
       <PurpleGalaxyBackground />
       <FlowingCodeBackground />
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-cyan-900/10 z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-[#3A0CA3]/10 z-[1]" />
 
       <div className="fixed top-6 left-6 z-50">
         <Link
@@ -939,14 +939,14 @@ export default function DevSecOps() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-6 gsap-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#7B2FE0]/10 border border-[#7B2FE0]/30 mb-6 gsap-fade-in">
             <motion.div
               animate={{ rotate: isRunning ? 360 : 0 }}
               transition={{ duration: 2, repeat: isRunning ? Infinity : 0, ease: 'linear' }}
             >
-              <Shield className="w-4 h-4 text-cyan-400" />
+              <Shield className="w-4 h-4 text-[#9D4EDD]" />
             </motion.div>
-            <span className="text-cyan-400 text-sm font-medium">DevSecOps Pipeline</span>
+            <span className="text-[#9D4EDD] text-sm font-medium">DevSecOps Pipeline</span>
             {isRunning && (
               <motion.span
                 initial={{ opacity: 0 }}
@@ -959,7 +959,7 @@ export default function DevSecOps() {
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-4 gsap-fade-in">
             Security-Integrated
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#9D4EDD] to-purple-400">
               CI/CD Pipeline
             </span>
           </h1>
@@ -1006,7 +1006,7 @@ export default function DevSecOps() {
               className={`flex items-center gap-2 px-8 py-3 rounded-xl font-semibold transition-all ${
                 isRunning 
                   ? 'bg-red-500/20 border border-red-500/50 text-red-400 hover:bg-red-500/30' 
-                  : 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:opacity-90'
+                  : 'bg-gradient-to-r from-[#7B2FE0] to-purple-500 hover:opacity-90'
               }`}
               data-testid="button-run-pipeline"
             >
@@ -1182,7 +1182,7 @@ export default function DevSecOps() {
           <div className="inline-flex flex-col sm:flex-row items-center gap-4">
             <Link
               href="/contact"
-              className="px-8 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-500 font-semibold hover:opacity-90 transition-all"
+              className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#7B2FE0] to-purple-500 font-semibold hover:opacity-90 transition-all"
               data-testid="link-implement-devsecops"
             >
               Implement DevSecOps

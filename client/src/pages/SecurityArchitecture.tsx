@@ -51,7 +51,7 @@ const nodeColors = {
   firewall: 0xff4444,
   server: 0x4488ff,
   database: 0x44ff88,
-  user: 0x00D4FF,
+  user: 0x9D4EDD,
   cloud: 0xaa44ff,
 };
 
@@ -228,10 +228,10 @@ export default function SecurityArchitecture() {
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-      const ambientLight = new THREE.AmbientLight(0x00D4FF, 0.3);
+      const ambientLight = new THREE.AmbientLight(0x9D4EDD, 0.3);
       scene.add(ambientLight);
 
-      const pointLight1 = new THREE.PointLight(0x00D4FF, 1, 30);
+      const pointLight1 = new THREE.PointLight(0x9D4EDD, 1, 30);
       pointLight1.position.set(10, 10, 10);
       scene.add(pointLight1);
 
@@ -299,7 +299,7 @@ export default function SecurityArchitecture() {
         const points = [node.position, targetNode.position];
         const geometry = new THREE.BufferGeometry().setFromPoints(points);
         const material = new THREE.LineBasicMaterial({
-          color: 0x00D4FF,
+          color: 0x9D4EDD,
           transparent: true,
           opacity: 0.3,
         });
@@ -320,7 +320,7 @@ export default function SecurityArchitecture() {
 
     const geometry = new THREE.SphereGeometry(0.08, 8, 8);
     const material = new THREE.MeshBasicMaterial({
-      color: 0x00D4FF,
+      color: 0x9D4EDD,
       transparent: true,
       opacity: 0.9,
     });
@@ -380,7 +380,7 @@ export default function SecurityArchitecture() {
       positions[i * 3 + 1] = (Math.random() - 0.5) * 40;
       positions[i * 3 + 2] = (Math.random() - 0.5) * 40;
 
-      const color = new THREE.Color(0x00D4FF);
+      const color = new THREE.Color(0x9D4EDD);
       colors[i * 3] = color.r;
       colors[i * 3 + 1] = color.g;
       colors[i * 3 + 2] = color.b;
@@ -1112,7 +1112,7 @@ export default function SecurityArchitecture() {
                     {selectedNode.type === 'firewall' && <Flame className="w-5 h-5 text-red-400" />}
                     {selectedNode.type === 'server' && <Server className="w-5 h-5 text-blue-400" />}
                     {selectedNode.type === 'database' && <Database className="w-5 h-5 text-green-400" />}
-                    {selectedNode.type === 'user' && <Users className="w-5 h-5 text-cyan-400" />}
+                    {selectedNode.type === 'user' && <Users className="w-5 h-5 text-[#9D4EDD]" />}
                     {selectedNode.type === 'cloud' && <Cloud className="w-5 h-5 text-purple-400" />}
                   </div>
                   <div>

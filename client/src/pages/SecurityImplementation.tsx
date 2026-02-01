@@ -623,7 +623,7 @@ function PhaseProgressIndicator({ phases, currentPhase, buildProgress }: {
                 isComplete
                   ? 'bg-green-500 text-white'
                   : isActive
-                  ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white'
+                  ? 'bg-gradient-to-r from-[#7B2FE0] to-purple-500 text-white'
                   : 'bg-white/10 text-white/40'
               }`}
               animate={isActive ? { scale: [1, 1.1, 1] } : {}}
@@ -635,7 +635,7 @@ function PhaseProgressIndicator({ phases, currentPhase, buildProgress }: {
             {index < phases.length - 1 && (
               <div className="w-8 h-1 bg-white/10 rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-cyan-500 to-green-500"
+                  className="h-full bg-gradient-to-r from-[#7B2FE0] to-green-500"
                   initial={{ width: 0 }}
                   animate={{ width: `${isComplete ? 100 : isActive ? phaseProgress : 0}%` }}
                   transition={{ duration: 0.5 }}
@@ -724,7 +724,7 @@ export default function SecurityImplementation() {
 
   return (
     <div className="min-h-screen text-white relative overflow-hidden" style={{ backgroundColor: NAVY }}>
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-cyan-900/10" />
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-[#3A0CA3]/10" />
 
       <div className="fixed top-6 left-6 z-50">
         <Link
@@ -743,13 +743,13 @@ export default function SecurityImplementation() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-6">
-            <HardHat className="w-4 h-4 text-cyan-400" />
-            <span className="text-cyan-400 text-sm font-medium">Security Implementation</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#7B2FE0]/10 border border-[#7B2FE0]/30 mb-6">
+            <HardHat className="w-4 h-4 text-[#9D4EDD]" />
+            <span className="text-[#9D4EDD] text-sm font-medium">Security Implementation</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
             Building Your
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#9D4EDD] to-purple-400">
               Security Fortress
             </span>
           </h1>
@@ -765,7 +765,7 @@ export default function SecurityImplementation() {
           className="mb-8"
         >
           <h2 className="text-xl font-bold mb-4 flex items-center gap-3">
-            <Activity className="w-5 h-5 text-cyan-400" />
+            <Activity className="w-5 h-5 text-[#9D4EDD]" />
             Live Metrics Dashboard
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -823,7 +823,7 @@ export default function SecurityImplementation() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={isBuilding ? () => setIsBuilding(false) : startBuild}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 transition-all shadow-lg shadow-cyan-500/25"
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-[#7B2FE0] to-purple-500 hover:from-[#9D4EDD] hover:to-purple-400 transition-all shadow-lg shadow-[#7B2FE0]/25"
                   data-testid="button-build"
                 >
                   {isBuilding ? (
@@ -854,13 +854,13 @@ export default function SecurityImplementation() {
                 <span className="text-sm text-white/60">Build Progress</span>
                 <div className="w-32 sm:w-48 h-2 bg-white/10 rounded-full overflow-hidden">
                   <motion.div
-                    className="h-full bg-gradient-to-r from-cyan-500 to-purple-500"
+                    className="h-full bg-gradient-to-r from-[#7B2FE0] to-purple-500"
                     initial={{ width: 0 }}
                     animate={{ width: `${buildProgress * 100}%` }}
                     transition={{ duration: 0.3 }}
                   />
                 </div>
-                <span className="text-sm font-semibold text-cyan-400">
+                <span className="text-sm font-semibold text-[#9D4EDD]">
                   {Math.round(buildProgress * 100)}%
                 </span>
               </div>
@@ -878,9 +878,9 @@ export default function SecurityImplementation() {
                     initial={{ scale: 0.5, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 1.5, opacity: 0 }}
-                    className="flex items-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/50"
+                    className="flex items-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-[#7B2FE0]/20 to-purple-500/20 border border-[#7B2FE0]/50"
                   >
-                    <Sparkles className="w-6 h-6 text-cyan-400 animate-pulse" />
+                    <Sparkles className="w-6 h-6 text-[#9D4EDD] animate-pulse" />
                     <span className="text-xl font-bold text-white">Phase Complete!</span>
                   </motion.div>
                 </motion.div>
@@ -896,7 +896,7 @@ export default function SecurityImplementation() {
           className="mb-12"
         >
           <h2 className="text-2xl font-bold mb-4 flex items-center gap-3">
-            <Layers className="w-6 h-6 text-cyan-400" />
+            <Layers className="w-6 h-6 text-[#9D4EDD]" />
             Implementation Phases
           </h2>
           
@@ -924,7 +924,7 @@ export default function SecurityImplementation() {
                   onClick={() => setSelectedPhase(isExpanded ? null : index)}
                   className={`p-6 rounded-2xl border cursor-pointer transition-all duration-300 ${
                     isActive
-                      ? 'bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border-cyan-500/50 shadow-lg shadow-cyan-500/10'
+                      ? 'bg-gradient-to-br from-[#7B2FE0]/20 to-purple-500/20 border-[#7B2FE0]/50 shadow-lg shadow-[#7B2FE0]/10'
                       : isComplete
                       ? 'bg-green-500/10 border-green-500/30'
                       : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
@@ -950,8 +950,8 @@ export default function SecurityImplementation() {
                         </motion.div>
                       ) : isActive ? (
                         <div className="flex items-center gap-2">
-                          <Sparkles className="w-5 h-5 text-cyan-400 animate-pulse" />
-                          <span className="text-xs font-semibold text-cyan-400 animate-pulse">ACTIVE</span>
+                          <Sparkles className="w-5 h-5 text-[#9D4EDD] animate-pulse" />
+                          <span className="text-xs font-semibold text-[#9D4EDD] animate-pulse">ACTIVE</span>
                         </div>
                       ) : (
                         <Circle className="w-6 h-6 text-white/30" />
@@ -974,7 +974,7 @@ export default function SecurityImplementation() {
                     <span>{phase.duration}</span>
                     {isActive && (
                       <motion.span
-                        className="ml-2 text-xs text-cyan-400 font-medium"
+                        className="ml-2 text-xs text-[#9D4EDD] font-medium"
                         animate={{ opacity: [1, 0.5, 1] }}
                         transition={{ repeat: Infinity, duration: 1.5 }}
                       >
@@ -1026,7 +1026,7 @@ export default function SecurityImplementation() {
                           
                           <div>
                             <h4 className="text-sm font-semibold text-white/80 mb-2 flex items-center gap-2">
-                              <Database className="w-4 h-4 text-cyan-400" />
+                              <Database className="w-4 h-4 text-[#9D4EDD]" />
                               Deliverables
                             </h4>
                             <ul className="space-y-1.5">
@@ -1038,7 +1038,7 @@ export default function SecurityImplementation() {
                                   transition={{ delay: i * 0.05 }}
                                   className="flex items-center gap-2 text-sm text-white/60"
                                 >
-                                  <ChevronRight className="w-3 h-3 text-cyan-400" />
+                                  <ChevronRight className="w-3 h-3 text-[#9D4EDD]" />
                                   {d}
                                 </motion.li>
                               ))}
@@ -1082,7 +1082,7 @@ export default function SecurityImplementation() {
           className="mb-12"
         >
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-            <TrendingUp className="w-6 h-6 text-cyan-400" />
+            <TrendingUp className="w-6 h-6 text-[#9D4EDD]" />
             Implementation Timeline
           </h2>
 
@@ -1102,7 +1102,7 @@ export default function SecurityImplementation() {
                     transition={{ delay: 0.05 * index }}
                     className={`p-4 rounded-xl border ${
                       isActive
-                        ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border-cyan-500/50'
+                        ? 'bg-gradient-to-r from-[#7B2FE0]/20 to-purple-500/20 border-[#7B2FE0]/50'
                         : isComplete
                         ? 'bg-green-500/10 border-green-500/30'
                         : 'bg-white/5 border-white/10'
@@ -1120,7 +1120,7 @@ export default function SecurityImplementation() {
                       {isComplete ? (
                         <CheckCircle2 className="w-5 h-5 text-green-400" />
                       ) : isActive ? (
-                        <Sparkles className="w-5 h-5 text-cyan-400 animate-pulse" />
+                        <Sparkles className="w-5 h-5 text-[#9D4EDD] animate-pulse" />
                       ) : (
                         <Circle className="w-5 h-5 text-white/30" />
                       )}
@@ -1162,7 +1162,7 @@ export default function SecurityImplementation() {
                         {isComplete ? (
                           <CheckCircle2 className="w-4 h-4 text-green-400" />
                         ) : isActive ? (
-                          <Sparkles className="w-4 h-4 text-cyan-400" />
+                          <Sparkles className="w-4 h-4 text-[#9D4EDD]" />
                         ) : (
                           <Circle className="w-4 h-4 text-white/30" />
                         )}
@@ -1213,17 +1213,17 @@ export default function SecurityImplementation() {
         >
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
             <h2 className="text-2xl font-bold flex items-center gap-3">
-              <CheckCircle2 className="w-6 h-6 text-cyan-400" />
+              <CheckCircle2 className="w-6 h-6 text-[#9D4EDD]" />
               Deliverables Checklist
             </h2>
             <div className="flex flex-wrap items-center gap-3 bg-white/5 backdrop-blur-xl rounded-xl px-4 py-2 border border-white/10">
               <span className="text-white/60">Progress:</span>
-              <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
+              <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#9D4EDD] to-purple-400">
                 {progressPercentage}%
               </span>
               <div className="w-24 h-2 bg-white/10 rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-cyan-500 to-purple-500"
+                  className="h-full bg-gradient-to-r from-[#7B2FE0] to-purple-500"
                   animate={{ width: `${progressPercentage}%` }}
                   transition={{ duration: 0.5, ease: 'easeOut' }}
                 />
