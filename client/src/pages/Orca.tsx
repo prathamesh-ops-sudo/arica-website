@@ -44,15 +44,15 @@ function OfficeDesk({ position, rotation = 0 }: { position: [number, number, num
     <group position={position} rotation={[0, rotation, 0]}>
       <mesh position={[0, 0.4, 0]}>
         <boxGeometry args={[1.5, 0.05, 0.8]} />
-        <meshStandardMaterial color="#2a2a3a" metalness={0.3} roughness={0.7} />
+        <meshStandardMaterial color="#2c2c2e" metalness={0.3} roughness={0.7} />
       </mesh>
       <mesh position={[-0.6, 0.2, 0]}>
         <boxGeometry args={[0.05, 0.4, 0.6]} />
-        <meshStandardMaterial color="#1a1a2a" />
+        <meshStandardMaterial color="#1c1c1e" />
       </mesh>
       <mesh position={[0.6, 0.2, 0]}>
         <boxGeometry args={[0.05, 0.4, 0.6]} />
-        <meshStandardMaterial color="#1a1a2a" />
+        <meshStandardMaterial color="#1c1c1e" />
       </mesh>
     </group>
   );
@@ -76,13 +76,13 @@ function OfficeMonitor({
     if (screenRef.current) {
       const material = screenRef.current.material as THREE.MeshStandardMaterial;
       if (showError) {
-        material.emissive = new THREE.Color('#ff0000');
+        material.emissive = new THREE.Color('#ff453a');
         material.emissiveIntensity = 0.3 + Math.sin(state.clock.elapsedTime * 5) * 0.2;
       } else if (isTarget) {
-        material.emissive = new THREE.Color('#00D4FF');
+        material.emissive = new THREE.Color('#0a84ff');
         material.emissiveIntensity = glowIntensity;
       } else {
-        material.emissive = new THREE.Color('#00D4FF');
+        material.emissive = new THREE.Color('#0a84ff');
         material.emissiveIntensity = 0.1;
       }
     }
@@ -92,29 +92,29 @@ function OfficeMonitor({
     <group position={position}>
       <mesh ref={frameRef}>
         <boxGeometry args={[0.8, 0.5, 0.05]} />
-        <meshStandardMaterial color="#111122" metalness={0.8} roughness={0.2} />
+        <meshStandardMaterial color="#2c2c2e" metalness={0.8} roughness={0.2} />
       </mesh>
       <mesh ref={screenRef} position={[0, 0, 0.03]}>
         <planeGeometry args={[0.7, 0.4]} />
         <meshStandardMaterial 
-          color={showError ? "#220000" : "#001122"} 
-          emissive={showError ? "#ff0000" : "#00D4FF"}
+          color={showError ? "#2c1810" : "#1c1c1e"} 
+          emissive={showError ? "#ff453a" : "#0a84ff"}
           emissiveIntensity={0.1}
         />
       </mesh>
       <mesh position={[0, -0.3, 0]}>
         <cylinderGeometry args={[0.02, 0.04, 0.1]} />
-        <meshStandardMaterial color="#222233" metalness={0.5} />
+        <meshStandardMaterial color="#3a3a3c" metalness={0.5} />
       </mesh>
       <mesh position={[0, -0.35, 0]}>
         <boxGeometry args={[0.15, 0.02, 0.1]} />
-        <meshStandardMaterial color="#222233" metalness={0.5} />
+        <meshStandardMaterial color="#3a3a3c" metalness={0.5} />
       </mesh>
     </group>
   );
 }
 
-function DataStream({ startPos, endPos, color = "#00D4FF", speed = 1 }: {
+function DataStream({ startPos, endPos, color = "#8e8e93", speed = 1 }: {
   startPos: [number, number, number];
   endPos: [number, number, number];
   color?: string;
@@ -142,7 +142,7 @@ function DataStream({ startPos, endPos, color = "#00D4FF", speed = 1 }: {
   );
 }
 
-function SecurityShield({ position, scale = 1, color = "#00D4FF" }: {
+function SecurityShield({ position, scale = 1, color = "#8e8e93" }: {
   position: [number, number, number];
   scale?: number;
   color?: string;
@@ -188,7 +188,7 @@ function ScanningBeam({ active }: { active: boolean }) {
   return (
     <mesh ref={ref} rotation={[Math.PI / 2, 0, 0]}>
       <planeGeometry args={[10, 0.05]} />
-      <meshBasicMaterial color="#00D4FF" transparent opacity={0.5} />
+      <meshBasicMaterial color="#0a84ff" transparent opacity={0.5} />
     </mesh>
   );
 }
@@ -239,10 +239,10 @@ function BinaryChar({ initialPos, speed, char }: {
     <group ref={ref} position={initialPos}>
       <Text
         fontSize={0.1}
-        color="#00D4FF"
+        color="#e5e5e5"
         anchorX="center"
         anchorY="middle"
-        fillOpacity={0.6}
+        fillOpacity={0.4}
       >
         {char}
       </Text>
@@ -253,10 +253,10 @@ function BinaryChar({ initialPos, speed, char }: {
 function CyberGrid() {
   return (
     <group rotation={[Math.PI / 2, 0, 0]} position={[0, -3, 0]}>
-      <gridHelper args={[50, 50, '#00D4FF', '#00D4FF']} />
+      <gridHelper args={[50, 50, '#3a3a3c', '#3a3a3c']} />
       <mesh>
         <planeGeometry args={[50, 50]} />
-        <meshBasicMaterial color="#000510" transparent opacity={0.9} />
+        <meshBasicMaterial color="#121212" transparent opacity={0.9} />
       </mesh>
     </group>
   );
@@ -275,15 +275,15 @@ function ForensicsScene({ progress }: { progress: number }) {
     <group ref={groupRef}>
       <mesh position={[0, 0, 0]}>
         <torusGeometry args={[2, 0.02, 16, 100]} />
-        <meshBasicMaterial color="#00D4FF" />
+        <meshBasicMaterial color="#8e8e93" />
       </mesh>
       <mesh position={[0, 0, 0]} rotation={[Math.PI / 4, 0, 0]}>
         <torusGeometry args={[1.5, 0.02, 16, 100]} />
-        <meshBasicMaterial color="#9944ff" />
+        <meshBasicMaterial color="#0a84ff" />
       </mesh>
       <mesh position={[0, 0, 0]} rotation={[0, Math.PI / 4, Math.PI / 4]}>
         <torusGeometry args={[1, 0.02, 16, 100]} />
-        <meshBasicMaterial color="#00ff88" />
+        <meshBasicMaterial color="#30d158" />
       </mesh>
       {Array.from({ length: 8 }).map((_, i) => {
         const angle = (i / 8) * Math.PI * 2;
@@ -292,8 +292,8 @@ function ForensicsScene({ progress }: { progress: number }) {
             <mesh position={[Math.cos(angle) * 2.5, Math.sin(angle) * 0.5, Math.sin(angle) * 2.5]}>
               <boxGeometry args={[0.2, 0.2, 0.2]} />
               <meshStandardMaterial 
-                color={i % 2 === 0 ? "#00D4FF" : "#9944ff"} 
-                emissive={i % 2 === 0 ? "#00D4FF" : "#9944ff"}
+                color={i % 2 === 0 ? "#8e8e93" : "#0a84ff"} 
+                emissive={i % 2 === 0 ? "#8e8e93" : "#0a84ff"}
                 emissiveIntensity={0.5}
               />
             </mesh>
@@ -364,8 +364,8 @@ function MainScene({ scrollProgress }: SceneProps) {
   return (
     <>
       <ambientLight intensity={0.3} />
-      <pointLight position={[10, 10, 10]} intensity={1} color="#00D4FF" />
-      <pointLight position={[-10, 5, -10]} intensity={0.5} color="#9944ff" />
+      <pointLight position={[10, 10, 10]} intensity={1} color="#e5e5e5" />
+      <pointLight position={[-10, 5, -10]} intensity={0.5} color="#0a84ff" />
       
       <Stars radius={100} depth={50} count={insideSystem ? 2000 : 500} factor={4} saturation={0} fade speed={1} />
       
@@ -381,12 +381,12 @@ function MainScene({ scrollProgress }: SceneProps) {
           
           <mesh position={[0, -0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
             <planeGeometry args={[20, 20]} />
-            <meshStandardMaterial color="#0a0a15" />
+            <meshStandardMaterial color="#121212" />
           </mesh>
           
           <mesh position={[0, 5, -5]}>
             <planeGeometry args={[20, 10]} />
-            <meshStandardMaterial color="#050510" />
+            <meshStandardMaterial color="#1c1c1e" />
           </mesh>
         </group>
       )}
@@ -398,15 +398,15 @@ function MainScene({ scrollProgress }: SceneProps) {
           
           {scene === 'iso' && (
             <>
-              <SecurityShield position={[-3, 1, -3]} scale={1.5} color="#00D4FF" />
-              <SecurityShield position={[3, 1.5, -4]} scale={1.2} color="#9944ff" />
-              <SecurityShield position={[0, 2, -5]} scale={1.8} color="#00ff88" />
+              <SecurityShield position={[-3, 1, -3]} scale={1.5} color="#8e8e93" />
+              <SecurityShield position={[3, 1.5, -4]} scale={1.2} color="#0a84ff" />
+              <SecurityShield position={[0, 2, -5]} scale={1.8} color="#30d158" />
               {Array.from({ length: 5 }).map((_, i) => (
                 <DataStream 
                   key={i}
                   startPos={[-5 + i * 2.5, 3, -3]}
                   endPos={[-5 + i * 2.5, -2, -3]}
-                  color={i % 2 === 0 ? "#00D4FF" : "#9944ff"}
+                  color={i % 2 === 0 ? "#8e8e93" : "#0a84ff"}
                   speed={1 + i * 0.3}
                 />
               ))}
@@ -424,8 +424,8 @@ function MainScene({ scrollProgress }: SceneProps) {
                     <mesh position={[Math.cos(angle) * radius, 0, Math.sin(angle) * radius - 5]}>
                       <octahedronGeometry args={[0.2]} />
                       <meshStandardMaterial 
-                        color={i < 4 ? "#ff4444" : i < 8 ? "#ffaa00" : "#00ff88"}
-                        emissive={i < 4 ? "#ff4444" : i < 8 ? "#ffaa00" : "#00ff88"}
+                        color={i < 4 ? "#ff453a" : i < 8 ? "#ff9f0a" : "#30d158"}
+                        emissive={i < 4 ? "#ff453a" : i < 8 ? "#ff9f0a" : "#30d158"}
                         emissiveIntensity={0.5}
                       />
                     </mesh>
@@ -434,11 +434,11 @@ function MainScene({ scrollProgress }: SceneProps) {
               })}
               <mesh position={[0, 0, -5]}>
                 <torusGeometry args={[3, 0.02, 16, 100]} />
-                <meshBasicMaterial color="#00D4FF" transparent opacity={0.5} />
+                <meshBasicMaterial color="#8e8e93" transparent opacity={0.5} />
               </mesh>
               <mesh position={[0, 0, -5]} rotation={[Math.PI / 2, 0, 0]}>
                 <torusGeometry args={[3, 0.02, 16, 100]} />
-                <meshBasicMaterial color="#9944ff" transparent opacity={0.5} />
+                <meshBasicMaterial color="#0a84ff" transparent opacity={0.5} />
               </mesh>
             </>
           )}
@@ -449,8 +449,8 @@ function MainScene({ scrollProgress }: SceneProps) {
                 <mesh position={[0, 0, -5]}>
                   <boxGeometry args={[2, 2, 2]} />
                   <meshStandardMaterial 
-                    color="#ff4444" 
-                    emissive="#ff0000"
+                    color="#ff453a" 
+                    emissive="#ff453a"
                     emissiveIntensity={0.3}
                     wireframe
                   />
@@ -461,13 +461,13 @@ function MainScene({ scrollProgress }: SceneProps) {
                   key={i}
                   startPos={stream.startPos}
                   endPos={[0, 0, -5]}
-                  color="#ff4444"
+                  color="#ff453a"
                   speed={stream.speed}
                 />
               ))}
-              <SecurityShield position={[-2, 1, -4]} scale={1} color="#00D4FF" />
-              <SecurityShield position={[2, 1, -4]} scale={1} color="#00D4FF" />
-              <SecurityShield position={[0, -1, -4]} scale={1} color="#9944ff" />
+              <SecurityShield position={[-2, 1, -4]} scale={1} color="#8e8e93" />
+              <SecurityShield position={[2, 1, -4]} scale={1} color="#8e8e93" />
+              <SecurityShield position={[0, -1, -4]} scale={1} color="#0a84ff" />
             </>
           )}
           
@@ -481,8 +481,8 @@ function MainScene({ scrollProgress }: SceneProps) {
                 <mesh position={[0, 0, -3]}>
                   <boxGeometry args={[2.5, 3.5, 0.1]} />
                   <meshStandardMaterial 
-                    color="#112233" 
-                    emissive="#00D4FF"
+                    color="#1c1c1e" 
+                    emissive="#0a84ff"
                     emissiveIntensity={0.1}
                   />
                 </mesh>
@@ -490,7 +490,7 @@ function MainScene({ scrollProgress }: SceneProps) {
               <Text
                 position={[0, 1, -2.9]}
                 fontSize={0.2}
-                color="#00D4FF"
+                color="#e5e5e5"
                 anchorX="center"
               >
                 SECURITY REPORT
@@ -498,7 +498,7 @@ function MainScene({ scrollProgress }: SceneProps) {
               <Text
                 position={[0, 0.5, -2.9]}
                 fontSize={0.1}
-                color="#00ff88"
+                color="#30d158"
                 anchorX="center"
               >
                 ✓ ISO 27001 COMPLIANT
@@ -506,7 +506,7 @@ function MainScene({ scrollProgress }: SceneProps) {
               <Text
                 position={[0, 0.2, -2.9]}
                 fontSize={0.1}
-                color="#00ff88"
+                color="#30d158"
                 anchorX="center"
               >
                 ✓ VAPT COMPLETED
@@ -514,7 +514,7 @@ function MainScene({ scrollProgress }: SceneProps) {
               <Text
                 position={[0, -0.1, -2.9]}
                 fontSize={0.1}
-                color="#00ff88"
+                color="#30d158"
                 anchorX="center"
               >
                 ✓ INCIDENT RESOLVED
@@ -522,12 +522,12 @@ function MainScene({ scrollProgress }: SceneProps) {
               <Text
                 position={[0, -0.4, -2.9]}
                 fontSize={0.1}
-                color="#00ff88"
+                color="#30d158"
                 anchorX="center"
               >
                 ✓ FORENSICS COMPLETE
               </Text>
-              <SecurityShield position={[0, -1.2, -2.5]} scale={1.5} color="#00D4FF" />
+              <SecurityShield position={[0, -1.2, -2.5]} scale={1.5} color="#0a84ff" />
             </>
           )}
         </group>
@@ -571,9 +571,9 @@ function ScrollIndicator({ progress }: { progress: number }) {
             >
               <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
                 isCompleted 
-                  ? 'bg-[#00ff88]/20 border-[#00ff88] text-[#00ff88]'
+                  ? 'bg-[#30d158]/20 border-[#30d158] text-[#30d158]'
                   : isActive 
-                    ? 'bg-[#00D4FF]/20 border-[#00D4FF] text-[#00D4FF] shadow-[0_0_20px_rgba(0,212,255,0.5)]'
+                    ? 'bg-[#0a84ff]/20 border-[#0a84ff] text-[#0a84ff] shadow-[0_0_20px_rgba(10,132,255,0.5)]'
                     : 'bg-transparent border-white/20 text-white/40'
               }`}>
                 {isCompleted ? (
@@ -583,7 +583,7 @@ function ScrollIndicator({ progress }: { progress: number }) {
                 )}
               </div>
               <span className={`text-sm font-medium transition-all duration-300 ${
-                isActive ? 'text-[#00D4FF]' : isCompleted ? 'text-[#00ff88]' : 'text-white/40'
+                isActive ? 'text-[#0a84ff]' : isCompleted ? 'text-[#30d158]' : 'text-white/40'
               }`}>
                 {stage.label}
               </span>
@@ -602,7 +602,7 @@ function SceneOverlay({ scrollProgress }: { scrollProgress: number }) {
         title: "A Normal Day at the Office",
         subtitle: "Business as usual...",
         icon: Monitor,
-        color: "#00D4FF"
+        color: "#8e8e93"
       };
     }
     if (scrollProgress < 0.25) {
@@ -610,7 +610,7 @@ function SceneOverlay({ scrollProgress }: { scrollProgress: number }) {
         title: "⚠️ SECURITY ALERT DETECTED",
         subtitle: "Something's wrong. A system has been compromised.",
         icon: AlertTriangle,
-        color: "#ff4444"
+        color: "#ff453a"
       };
     }
     if (scrollProgress < 0.35) {
@@ -618,7 +618,7 @@ function SceneOverlay({ scrollProgress }: { scrollProgress: number }) {
         title: "Entering the System",
         subtitle: "ARICA Security Team deploying...",
         icon: Terminal,
-        color: "#9944ff"
+        color: "#0a84ff"
       };
     }
     if (scrollProgress < 0.50) {
@@ -626,7 +626,7 @@ function SceneOverlay({ scrollProgress }: { scrollProgress: number }) {
         title: "ISO 27001 Compliance Check",
         subtitle: "Auditing security controls and policies",
         icon: ClipboardCheck,
-        color: "#00D4FF"
+        color: "#8e8e93"
       };
     }
     if (scrollProgress < 0.65) {
@@ -634,7 +634,7 @@ function SceneOverlay({ scrollProgress }: { scrollProgress: number }) {
         title: "VAPT in Progress",
         subtitle: "Scanning for vulnerabilities and threats",
         icon: Bug,
-        color: "#ffaa00"
+        color: "#ff9f0a"
       };
     }
     if (scrollProgress < 0.80) {
@@ -642,7 +642,7 @@ function SceneOverlay({ scrollProgress }: { scrollProgress: number }) {
         title: "Incident Response",
         subtitle: "Containing and neutralizing the threat",
         icon: Shield,
-        color: "#ff4444"
+        color: "#ff453a"
       };
     }
     if (scrollProgress < 0.90) {
@@ -650,14 +650,14 @@ function SceneOverlay({ scrollProgress }: { scrollProgress: number }) {
         title: "Digital Forensics",
         subtitle: "Analyzing evidence and tracing the attack",
         icon: FileSearch,
-        color: "#9944ff"
+        color: "#0a84ff"
       };
     }
     return {
       title: "Mission Complete",
       subtitle: "Security restored. Full report delivered.",
       icon: ShieldCheck,
-      color: "#00ff88"
+      color: "#30d158"
     };
   };
 
@@ -674,7 +674,7 @@ function SceneOverlay({ scrollProgress }: { scrollProgress: number }) {
         transition={{ duration: 0.5 }}
         className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 text-center pointer-events-none"
       >
-        <div className="bg-[#000a15]/80 backdrop-blur-xl border border-white/10 rounded-2xl px-8 py-6 max-w-lg">
+        <div className="bg-[#1c1c1e]/80 backdrop-blur-xl border border-white/10 rounded-2xl px-8 py-6 max-w-lg">
           <motion.div 
             className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center"
             style={{ 
@@ -705,7 +705,7 @@ function ProgressBar({ progress }: { progress: number }) {
   return (
     <div className="fixed top-0 left-0 right-0 h-1 z-50 bg-white/10">
       <motion.div 
-        className="h-full bg-gradient-to-r from-[#00D4FF] via-[#9944ff] to-[#00ff88]"
+        className="h-full bg-gradient-to-r from-[#3a3a3c] via-[#8e8e93] to-[#e5e5e5]"
         style={{ width: `${progress * 100}%` }}
       />
     </div>
@@ -714,10 +714,10 @@ function ProgressBar({ progress }: { progress: number }) {
 
 function WebGLFallbackUI() {
   return (
-    <div className="min-h-screen bg-[#000510] flex items-center justify-center p-8">
+    <div className="min-h-screen bg-[#121212] flex items-center justify-center p-8">
       <div className="text-center max-w-lg">
-        <div className="w-20 h-20 rounded-full bg-[#00D4FF]/20 flex items-center justify-center mx-auto mb-6">
-          <Monitor className="w-10 h-10 text-[#00D4FF]" />
+        <div className="w-20 h-20 rounded-full bg-[#0a84ff]/20 flex items-center justify-center mx-auto mb-6">
+          <Monitor className="w-10 h-10 text-[#0a84ff]" />
         </div>
         <h2 className="text-2xl font-bold text-white mb-4">WebGL Required</h2>
         <p className="text-white/70 mb-6">
@@ -725,7 +725,7 @@ function WebGLFallbackUI() {
         </p>
         <a 
           href="/"
-          className="inline-block px-6 py-3 bg-[#00D4FF] text-black font-semibold rounded-lg hover:bg-[#00D4FF]/80 transition-colors"
+          className="inline-block px-6 py-3 bg-[#0a84ff] text-white font-semibold rounded-lg hover:bg-[#0a84ff]/80 transition-colors"
         >
           Return Home
         </a>
@@ -760,7 +760,7 @@ export default function Orca() {
   }
 
   return (
-    <div ref={containerRef} className="relative bg-[#000510]" style={{ height: '800vh' }}>
+    <div ref={containerRef} className="relative bg-[#121212]" style={{ height: '800vh' }}>
       <AnimeNavBar items={navItems} />
       <ProgressBar progress={scrollProgress} />
       
@@ -786,7 +786,7 @@ export default function Orca() {
           <span>Scroll to explore</span>
           <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
             <motion.div 
-              className="w-1.5 h-1.5 bg-[#00D4FF] rounded-full"
+              className="w-1.5 h-1.5 bg-[#8e8e93] rounded-full"
               animate={{ y: [0, 12, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
             />
@@ -805,10 +805,10 @@ export default function Orca() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", damping: 10 }}
-              className="w-32 h-32 rounded-full bg-[#00ff88]/20 border-2 border-[#00ff88] flex items-center justify-center mx-auto mb-8"
-              style={{ boxShadow: '0 0 60px rgba(0,255,136,0.3)' }}
+              className="w-32 h-32 rounded-full bg-[#30d158]/20 border-2 border-[#30d158] flex items-center justify-center mx-auto mb-8"
+              style={{ boxShadow: '0 0 60px rgba(48,209,88,0.3)' }}
             >
-              <ShieldCheck className="w-16 h-16 text-[#00ff88]" />
+              <ShieldCheck className="w-16 h-16 text-[#30d158]" />
             </motion.div>
             <motion.h1
               initial={{ y: 20, opacity: 0 }}
@@ -822,7 +822,7 @@ export default function Orca() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="text-xl text-[#00D4FF] mb-8"
+              className="text-xl text-[#8e8e93] mb-8"
             >
               Protected by ARICA Security
             </motion.p>
@@ -831,7 +831,7 @@ export default function Orca() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.7 }}
-              className="inline-block px-8 py-4 bg-[#00D4FF] text-black font-bold rounded-lg hover:bg-[#00D4FF]/80 transition-colors pointer-events-auto"
+              className="inline-block px-8 py-4 bg-[#0a84ff] text-white font-bold rounded-lg hover:bg-[#0a84ff]/80 transition-colors pointer-events-auto"
             >
               Protect Your Business
             </motion.a>
