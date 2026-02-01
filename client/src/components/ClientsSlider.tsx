@@ -26,18 +26,16 @@ const industries = [
 ];
 
 const clientLogos = [
-  { name: "Google" },
-  { name: "Microsoft" },
-  { name: "Amazon" },
-  { name: "Apple" },
-  { name: "Meta" },
-  { name: "Target" },
-  { name: "Walmart" },
-  { name: "IBM" },
-  { name: "Oracle" },
-  { name: "Cisco" },
-  { name: "Intel" },
-  { name: "Dell" },
+  { name: "Google", logo: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_272x92dp.png" },
+  { name: "Microsoft", logo: "https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE1Mu3b?ver=5c31" },
+  { name: "Amazon", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1200px-Amazon_logo.svg.png" },
+  { name: "IBM", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/1200px-IBM_logo.svg.png" },
+  { name: "Oracle", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Oracle_logo.svg/1200px-Oracle_logo.svg.png" },
+  { name: "Cisco", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Cisco_logo_blue_2016.svg/1200px-Cisco_logo_blue_2016.svg.png" },
+  { name: "Intel", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Intel_logo_%282006-2020%29.svg/1200px-Intel_logo_%282006-2020%29.svg.png" },
+  { name: "Dell", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Dell_Logo.svg/1200px-Dell_Logo.svg.png" },
+  { name: "SAP", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/SAP_2011_logo.svg/1200px-SAP_2011_logo.svg.png" },
+  { name: "Salesforce", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Salesforce.com_logo.svg/1200px-Salesforce.com_logo.svg.png" },
 ];
 
 export function ClientsSlider() {
@@ -73,12 +71,14 @@ export function ClientsSlider() {
         {clientLogos.map((client, index) => (
           <div
             key={index}
-            className="flex items-center justify-center px-8 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full hover:bg-white/10 hover:border-[#0a84ff]/30 transition-all duration-300 group"
+            className="flex items-center justify-center px-6 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full hover:bg-white/10 hover:border-[#0a84ff]/30 transition-all duration-300 group"
             data-testid={`client-logo-${index}`}
           >
-            <span className="text-white/50 text-lg font-semibold tracking-wide whitespace-nowrap group-hover:text-white transition-colors">
-              {client.name}
-            </span>
+            <img 
+              src={client.logo} 
+              alt={`${client.name} logo`}
+              className="h-6 w-auto object-contain opacity-60 group-hover:opacity-100 transition-opacity brightness-0 invert"
+            />
           </div>
         ))}
       </InfiniteSlider>
