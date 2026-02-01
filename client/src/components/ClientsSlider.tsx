@@ -12,7 +12,7 @@ import {
   Banknote
 } from "lucide-react";
 
-const clients = [
+const industries = [
   { name: "Fortune 500 Banks", icon: Banknote },
   { name: "Healthcare Systems", icon: Heart },
   { name: "Government Agencies", icon: Landmark },
@@ -23,6 +23,21 @@ const clients = [
   { name: "Educational Institutions", icon: GraduationCap },
   { name: "Financial Services", icon: Briefcase },
   { name: "Security Firms", icon: Shield },
+];
+
+const clientLogos = [
+  { name: "Google" },
+  { name: "Microsoft" },
+  { name: "Amazon" },
+  { name: "Apple" },
+  { name: "Meta" },
+  { name: "Target" },
+  { name: "Walmart" },
+  { name: "IBM" },
+  { name: "Oracle" },
+  { name: "Cisco" },
+  { name: "Intel" },
+  { name: "Dell" },
 ];
 
 export function ClientsSlider() {
@@ -40,29 +55,28 @@ export function ClientsSlider() {
       </div>
       
       <InfiniteSlider gap={48} duration={30} className="py-4">
-        {clients.map((client, index) => (
+        {industries.map((industry, index) => (
           <div
             key={index}
             className="flex items-center gap-3 px-6 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full hover:bg-white/10 hover:border-[#0a84ff]/30 transition-all duration-300 group"
-            data-testid={`client-badge-${index}`}
+            data-testid={`industry-badge-${index}`}
           >
-            <client.icon className="w-5 h-5 text-[#8e8e93] group-hover:text-[#0a84ff] transition-colors" />
+            <industry.icon className="w-5 h-5 text-[#8e8e93] group-hover:text-[#0a84ff] transition-colors" />
             <span className="text-white/70 text-sm font-medium whitespace-nowrap group-hover:text-white transition-colors">
-              {client.name}
+              {industry.name}
             </span>
           </div>
         ))}
       </InfiniteSlider>
       
       <InfiniteSlider gap={48} duration={35} reverse className="py-4 mt-4">
-        {clients.slice().reverse().map((client, index) => (
+        {clientLogos.map((client, index) => (
           <div
             key={index}
-            className="flex items-center gap-3 px-6 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full hover:bg-white/10 hover:border-[#0a84ff]/30 transition-all duration-300 group"
-            data-testid={`client-badge-reverse-${index}`}
+            className="flex items-center justify-center px-8 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full hover:bg-white/10 hover:border-[#0a84ff]/30 transition-all duration-300 group"
+            data-testid={`client-logo-${index}`}
           >
-            <client.icon className="w-5 h-5 text-[#8e8e93] group-hover:text-[#0a84ff] transition-colors" />
-            <span className="text-white/70 text-sm font-medium whitespace-nowrap group-hover:text-white transition-colors">
+            <span className="text-white/50 text-lg font-semibold tracking-wide whitespace-nowrap group-hover:text-white transition-colors">
               {client.name}
             </span>
           </div>
