@@ -3,6 +3,8 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import * as THREE from 'three';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Text, Float, MeshTransmissionMaterial, Environment, Stars } from '@react-three/drei';
+import { EffectComposer, Bloom, Vignette, ChromaticAberration, Noise } from '@react-three/postprocessing';
+import { BlendFunction } from 'postprocessing';
 import { 
   Shield, 
   AlertTriangle, 
@@ -23,10 +25,14 @@ import {
   Home,
   Info,
   Briefcase,
-  Mail
+  Mail,
+  Rocket,
+  Sparkles
 } from 'lucide-react';
+import { useLocation } from 'wouter';
 import { AnimeNavBar } from '@/components/ui/anime-navbar';
 import { isWebGLAvailable } from '@/lib/webgl-utils';
+import { useHyperspaceTransition } from '@/components/ui/hyperspace-transition';
 
 const navItems = [
   { name: "Home", url: "/", icon: Home },
@@ -534,6 +540,30 @@ function MainScene({ scrollProgress }: SceneProps) {
       )}
       
       <Environment preset="night" />
+      
+      <EffectComposer>
+        <Bloom 
+          intensity={insideSystem ? 1.5 : 0.8}
+          luminanceThreshold={0.2}
+          luminanceSmoothing={0.9}
+          mipmapBlur
+        />
+        <Vignette 
+          offset={0.3}
+          darkness={insideSystem ? 0.7 : 0.5}
+          blendFunction={BlendFunction.NORMAL}
+        />
+        <Noise 
+          opacity={0.03}
+          blendFunction={BlendFunction.OVERLAY}
+        />
+        {isZooming && (
+          <ChromaticAberration 
+            offset={new THREE.Vector2(0.002, 0.002)}
+            blendFunction={BlendFunction.NORMAL}
+          />
+        )}
+      </EffectComposer>
     </>
   );
 }
@@ -795,49 +825,91 @@ export default function Orca() {
       </div>
       
       {scrollProgress > 0.95 && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none"
-        >
-          <div className="text-center">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", damping: 10 }}
-              className="w-32 h-32 rounded-full bg-[#30d158]/20 border-2 border-[#30d158] flex items-center justify-center mx-auto mb-8"
-              style={{ boxShadow: '0 0 60px rgba(48,209,88,0.3)' }}
-            >
-              <ShieldCheck className="w-16 h-16 text-[#30d158]" />
-            </motion.div>
-            <motion.h1
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="text-4xl md:text-5xl font-bold text-white mb-4"
-            >
-              System Secured
-            </motion.h1>
-            <motion.p
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="text-xl text-[#8e8e93] mb-8"
-            >
-              Protected by ARICA Security
-            </motion.p>
-            <motion.a
-              href="/contact"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.7 }}
-              className="inline-block px-8 py-4 bg-[#0a84ff] text-white font-bold rounded-lg hover:bg-[#0a84ff]/80 transition-colors pointer-events-auto"
-            >
-              Protect Your Business
-            </motion.a>
-          </div>
-        </motion.div>
+        <CompletionOverlay />
       )}
     </div>
+  );
+}
+
+function CompletionOverlay() {
+  const [, setLocation] = useLocation();
+  const { triggerTransition } = useHyperspaceTransition();
+  
+  const handleExploreServices = () => {
+    triggerTransition(() => {
+      setLocation('/experience');
+    });
+  };
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none"
+    >
+      <div className="text-center">
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", damping: 10 }}
+          className="w-32 h-32 rounded-full bg-[#30d158]/20 border-2 border-[#30d158] flex items-center justify-center mx-auto mb-8"
+          style={{ boxShadow: '0 0 60px rgba(48,209,88,0.3)' }}
+        >
+          <ShieldCheck className="w-16 h-16 text-[#30d158]" />
+        </motion.div>
+        <motion.h1
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="text-4xl md:text-5xl font-bold text-white mb-4"
+        >
+          System Secured
+        </motion.h1>
+        <motion.p
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="text-xl text-[#8e8e93] mb-8"
+        >
+          Protected by Cyber Guardian Security
+        </motion.p>
+        
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center pointer-events-auto"
+        >
+          <button
+            onClick={handleExploreServices}
+            data-testid="button-explore-galaxy"
+            className="group px-8 py-4 bg-gradient-to-r from-[#0a84ff] to-[#5e5ce6] text-white font-bold rounded-xl hover:scale-105 transition-all duration-300 flex items-center gap-3 justify-center"
+            style={{ boxShadow: '0 0 30px rgba(10,132,255,0.4)' }}
+          >
+            <Rocket className="w-5 h-5 group-hover:animate-bounce" />
+            Explore Our Galaxy
+            <Sparkles className="w-5 h-5" />
+          </button>
+          
+          <a
+            href="/contact"
+            data-testid="button-protect-business"
+            className="px-8 py-4 bg-white/10 backdrop-blur-xl border border-white/20 text-white font-bold rounded-xl hover:bg-white/20 transition-all duration-300 flex items-center gap-2 justify-center"
+          >
+            <Shield className="w-5 h-5" />
+            Protect Your Business
+          </a>
+        </motion.div>
+        
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="text-sm text-white/40 mt-6"
+        >
+          Click "Explore Our Galaxy" to discover all our security services
+        </motion.p>
+      </div>
+    </motion.div>
   );
 }

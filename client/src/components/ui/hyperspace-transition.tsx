@@ -5,8 +5,8 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { isWebGLAvailable } from '@/lib/webgl-utils';
 
-const CYAN = '#00D4FF';
-const PURPLE = '#9944ff';
+const BLUE_ACCENT = '#0a84ff';
+const PURPLE_ACCENT = '#5e5ce6';
 const STAR_COUNT = 800;
 const TRANSITION_DURATION = 800;
 
@@ -39,8 +39,8 @@ function StarField({ progress, opacity }: StarFieldProps) {
     const sizes = new Float32Array(STAR_COUNT);
     const velocities = new Float32Array(STAR_COUNT);
     
-    const cyanColor = new THREE.Color(CYAN);
-    const purpleColor = new THREE.Color(PURPLE);
+    const blueColor = new THREE.Color(BLUE_ACCENT);
+    const purpleColor = new THREE.Color(PURPLE_ACCENT);
     
     for (let i = 0; i < STAR_COUNT; i++) {
       const i3 = i * 3;
@@ -53,7 +53,7 @@ function StarField({ progress, opacity }: StarFieldProps) {
       positions[i3 + 2] = Math.random() * 100 - 150;
       
       const colorMix = Math.random();
-      const mixedColor = cyanColor.clone().lerp(purpleColor, colorMix);
+      const mixedColor = blueColor.clone().lerp(purpleColor, colorMix);
       colors[i3] = mixedColor.r;
       colors[i3 + 1] = mixedColor.g;
       colors[i3 + 2] = mixedColor.b;
