@@ -1,15 +1,28 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import * as THREE from "three"
+import { isWebGLAvailable } from "@/lib/webgl-utils"
 
 interface WebGLShaderProps {
   colorScheme?: 'wine' | 'cyan' | 'purple';
   intensity?: number;
 }
 
+function CSSFallback() {
+  return (
+    <div className="fixed inset-0 -z-10 bg-gradient-to-br from-[#0a0508] via-[#1a0a18] to-[#0a0508] animate-gradient-shift" style={{ backgroundSize: '400% 400%' }}>
+      <div className="absolute inset-0 opacity-30" style={{
+        background: `radial-gradient(circle at 20% 30%, rgba(139, 34, 82, 0.3) 0%, transparent 40%),
+                     radial-gradient(circle at 80% 70%, rgba(107, 28, 50, 0.2) 0%, transparent 40%)`
+      }} />
+    </div>
+  )
+}
+
 export function WebGLShader({ colorScheme = 'wine', intensity = 1.0 }: WebGLShaderProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [webglSupported, setWebglSupported] = useState<boolean | null>(null)
   const sceneRef = useRef<{
     scene: THREE.Scene | null
     camera: THREE.OrthographicCamera | null
@@ -27,7 +40,11 @@ export function WebGLShader({ colorScheme = 'wine', intensity = 1.0 }: WebGLShad
   })
 
   useEffect(() => {
-    if (!canvasRef.current) return
+    setWebglSupported(isWebGLAvailable())
+  }, [])
+
+  useEffect(() => {
+    if (!canvasRef.current || webglSupported !== true) return
 
     const canvas = canvasRef.current
     const { current: refs } = sceneRef
@@ -153,7 +170,15 @@ export function WebGLShader({ colorScheme = 'wine', intensity = 1.0 }: WebGLShad
       }
       refs.renderer?.dispose()
     }
-  }, [colorScheme, intensity])
+  }, [colorScheme, intensity, webglSupported])
+
+  if (webglSupported === null) {
+    return <CSSFallback />
+  }
+
+  if (!webglSupported) {
+    return <CSSFallback />
+  }
 
   return (
     <canvas

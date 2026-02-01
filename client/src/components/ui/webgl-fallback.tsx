@@ -44,9 +44,9 @@ function DefaultFallback({ showMessage }: { showMessage: boolean }) {
           className="absolute inset-0"
           style={{
             background: `
-              radial-gradient(circle at 20% 30%, rgba(153, 68, 255, 0.3) 0%, transparent 40%),
-              radial-gradient(circle at 80% 70%, rgba(0, 212, 255, 0.2) 0%, transparent 40%),
-              radial-gradient(circle at 50% 50%, rgba(153, 68, 255, 0.1) 0%, transparent 60%)
+              radial-gradient(circle at 20% 30%, rgba(139, 34, 82, 0.3) 0%, transparent 40%),
+              radial-gradient(circle at 80% 70%, rgba(107, 28, 50, 0.2) 0%, transparent 40%),
+              radial-gradient(circle at 50% 50%, rgba(192, 128, 129, 0.1) 0%, transparent 60%)
             `,
           }}
         />
@@ -58,8 +58,8 @@ function DefaultFallback({ showMessage }: { showMessage: boolean }) {
         className="absolute inset-0 opacity-5"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px)
+            linear-gradient(rgba(139, 34, 82, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(139, 34, 82, 0.1) 1px, transparent 1px)
           `,
           backgroundSize: '50px 50px',
         }}
@@ -68,7 +68,7 @@ function DefaultFallback({ showMessage }: { showMessage: boolean }) {
       {showMessage && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center p-8 backdrop-blur-sm bg-black/20 rounded-2xl border border-white/10">
-            <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#9944ff] to-[#00D4FF] flex items-center justify-center">
+            <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#8B2252] to-[#6B1C32] flex items-center justify-center">
               <svg 
                 className="w-6 h-6 text-white" 
                 fill="none" 
