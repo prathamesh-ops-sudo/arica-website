@@ -5,7 +5,7 @@ import * as THREE from "three"
 import { isWebGLAvailable } from "@/lib/webgl-utils"
 
 interface WebGLShaderProps {
-  colorScheme?: 'wine' | 'cyan' | 'purple' | 'neutral';
+  colorScheme?: 'neutral' | 'cyan' | 'purple' | 'blue';
   intensity?: number;
 }
 
@@ -20,7 +20,7 @@ function CSSFallback() {
   )
 }
 
-export function WebGLShader({ colorScheme = 'wine', intensity = 1.0 }: WebGLShaderProps) {
+export function WebGLShader({ colorScheme = 'neutral', intensity = 1.0 }: WebGLShaderProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [webglSupported, setWebglSupported] = useState<boolean | null>(null)
   const sceneRef = useRef<{
@@ -81,13 +81,13 @@ export function WebGLShader({ colorScheme = 'wine', intensity = 1.0 }: WebGLShad
         
         vec3 color;
         if (colorMode == 0) {
-          color = vec3(r * 0.85, g * 0.15, b * 0.25) * intensity;
+          color = vec3(r * 0.04, g * 0.52, b * 1.0) * intensity;
         } else if (colorMode == 1) {
           color = vec3(r * 0.0, g * 0.83, b * 1.0) * intensity;
         } else if (colorMode == 2) {
           color = vec3(r * 0.6, g * 0.27, b * 1.0) * intensity;
         } else {
-          color = vec3(r * 0.4, g * 0.4, b * 0.42) * intensity;
+          color = vec3(r * 0.35, g * 0.35, b * 0.37) * intensity;
         }
         
         gl_FragColor = vec4(color, 1.0);
@@ -102,7 +102,7 @@ export function WebGLShader({ colorScheme = 'wine', intensity = 1.0 }: WebGLShad
 
       refs.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, -1)
 
-      const colorMode = colorScheme === 'wine' ? 0 : colorScheme === 'cyan' ? 1 : colorScheme === 'purple' ? 2 : 3;
+      const colorMode = colorScheme === 'blue' ? 0 : colorScheme === 'cyan' ? 1 : colorScheme === 'purple' ? 2 : 3;
 
       refs.uniforms = {
         resolution: { value: [window.innerWidth, window.innerHeight] },

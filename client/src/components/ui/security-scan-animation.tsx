@@ -203,8 +203,8 @@ export function SecurityScanAnimation() {
         <div className="flex items-center justify-between text-xs font-mono">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-bulgarian-rose" />
-              <span className="text-bulgarian-rose">{vulnerabilities.critical} Critical</span>
+              <span className="w-2 h-2 rounded-full bg-red-500" />
+              <span className="text-red-400">{vulnerabilities.critical} Critical</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-yellow-500" />

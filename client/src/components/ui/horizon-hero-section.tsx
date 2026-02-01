@@ -216,9 +216,9 @@ export function HorizonHeroSection() {
       const material = new THREE.ShaderMaterial({
         uniforms: {
           time: { value: 0 },
-          color1: { value: new THREE.Color(0x8B2252) },
-          color2: { value: new THREE.Color(0x722F37) },
-          color3: { value: new THREE.Color(0x6B1C32) },
+          color1: { value: new THREE.Color(0x0a84ff) },
+          color2: { value: new THREE.Color(0x3a3a3c) },
+          color3: { value: new THREE.Color(0x8e8e93) },
           opacity: { value: 0.35 },
           scrollProgress: { value: 0 }
         },
@@ -365,7 +365,7 @@ export function HorizonHeroSection() {
           
           void main() {
             float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
-            vec3 atmosphere = vec3(0.55, 0.14, 0.32) * intensity;
+            vec3 atmosphere = vec3(0.04, 0.52, 1.0) * intensity;
             
             float pulse = sin(time * 2.0) * 0.1 + 0.9;
             atmosphere *= pulse;
@@ -658,7 +658,7 @@ export function HorizonHeroSection() {
         
         <button 
           onClick={handleEnterExperience}
-          className="mt-8 inline-flex items-center gap-3 bg-gradient-to-r from-[#8B2252] to-[#6B1C32] text-white font-semibold px-8 py-4 rounded-full hover:opacity-90 transition-all hover:scale-105 shadow-lg shadow-[#8B2252]/25 cursor-pointer pointer-events-auto"
+          className="mt-8 inline-flex items-center gap-3 bg-white/10 backdrop-blur-xl border border-white/20 text-white font-semibold px-8 py-4 rounded-full hover:bg-white/15 transition-all hover:scale-105 shadow-lg shadow-black/25 cursor-pointer pointer-events-auto"
           data-testid="button-enter-experience"
         >
           <Rocket className="w-5 h-5" />

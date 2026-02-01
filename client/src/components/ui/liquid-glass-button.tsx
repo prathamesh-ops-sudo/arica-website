@@ -11,7 +11,7 @@ const liquidbuttonVariants = cva(
     variants: {
       variant: {
         default: "bg-transparent hover:scale-105 duration-300 transition text-primary",
-        wine: "bg-transparent hover:scale-105 duration-300 transition text-[#8B2252]",
+        neutral: "bg-transparent hover:scale-105 duration-300 transition text-[#3a3a3c]",
         destructive: "bg-destructive text-white hover:bg-destructive/90",
         outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
@@ -95,7 +95,7 @@ const LiquidButton = React.forwardRef<HTMLButtonElement, LiquidButtonProps>(
           {...props}
         >
           <div className="absolute top-0 left-0 z-0 h-full w-full rounded-full 
-              shadow-[0_0_6px_rgba(139,34,82,0.15),0_2px_6px_rgba(139,34,82,0.2),inset_3px_3px_0.5px_-3px_rgba(139,34,82,0.9),inset_-3px_-3px_0.5px_-3px_rgba(139,34,82,0.85),inset_1px_1px_1px_-0.5px_rgba(139,34,82,0.6),inset_-1px_-1px_1px_-0.5px_rgba(139,34,82,0.6),inset_0_0_6px_6px_rgba(139,34,82,0.12),inset_0_0_2px_2px_rgba(139,34,82,0.06),0_0_12px_rgba(139,34,82,0.15)] 
+              shadow-[0_0_6px_rgba(0,0,0,0.1),0_2px_6px_rgba(0,0,0,0.15),inset_3px_3px_0.5px_-3px_rgba(255,255,255,0.4),inset_-3px_-3px_0.5px_-3px_rgba(0,0,0,0.2),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.3),inset_-1px_-1px_1px_-0.5px_rgba(0,0,0,0.15),inset_0_0_6px_6px_rgba(142,142,147,0.08),inset_0_0_2px_2px_rgba(142,142,147,0.04),0_0_12px_rgba(10,132,255,0.1)] 
           transition-all" />
           <div
             className="absolute top-0 left-0 isolate -z-10 h-full w-full overflow-hidden rounded-md"

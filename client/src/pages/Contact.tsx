@@ -234,7 +234,7 @@ function GlowingIcon({ Icon, isEmergency = false }: { Icon: any; isEmergency?: b
     <motion.div
       className={`p-2.5 rounded-lg relative ${
         isEmergency 
-          ? 'bg-bulgarian-rose/20 text-red-400' 
+          ? 'bg-red-500/20 text-red-400' 
           : 'bg-primary/10 text-primary'
       }`}
       whileHover={{ scale: 1.1 }}
@@ -335,7 +335,7 @@ export default function Contact() {
                   isEmergency={info.isEmergency}
                   className={`rounded-xl p-5 border cursor-pointer ${
                     info.isEmergency 
-                      ? 'border-bulgarian-rose/30 bg-bulgarian-rose/10' 
+                      ? 'border-red-500/30 bg-red-500/10' 
                       : 'border-white/10 bg-card/50 hover:border-primary/30'
                   }`}
                 >

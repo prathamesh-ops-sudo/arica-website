@@ -29,7 +29,7 @@ export function ForensicsSection() {
     <section className="py-32 relative overflow-hidden bg-card/30">
       <div className="absolute inset-0 opacity-30">
         <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(139, 34, 82, 0.15) 1px, transparent 0)`,
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(142, 142, 147, 0.15) 1px, transparent 0)`,
           backgroundSize: '40px 40px'
         }} />
       </div>
@@ -47,7 +47,7 @@ export function ForensicsSection() {
             <div className="relative">
               <NanobotParticles 
                 particleCount={35} 
-                color="139, 34, 82" 
+                color="10, 132, 255" 
                 maxDistance={100}
                 className="opacity-40"
               />
@@ -71,7 +71,7 @@ export function ForensicsSection() {
               Our security experts follow{" "}
               <LinkPreview
                 url="https://owasp.org/www-project-web-security-testing-guide/"
-                className="font-bold bg-clip-text text-transparent bg-gradient-to-br from-[#8B2252] to-[#C08081]"
+                className="font-bold bg-clip-text text-transparent bg-gradient-to-br from-[#0a84ff] to-[#5ac8fa]"
               >
                 OWASP Testing Guidelines
               </LinkPreview>{" "}

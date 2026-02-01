@@ -6,10 +6,10 @@ import { Float, Stars, Trail } from '@react-three/drei';
 import * as THREE from 'three';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
-const WINE = '#8B2252';
-const MAROON = '#722F37';
-const ROSE = '#C08081';
-const BURGUNDY = '#6B1C32';
+const NEUTRAL_LIGHT = '#e5e5e5';
+const NEUTRAL_MID = '#8e8e93';
+const NEUTRAL_DARK = '#3a3a3c';
+const ACCENT_BLUE = '#0a84ff';
 
 function CyberGrid() {
   const gridRef = useRef<THREE.Group>(null);
@@ -18,7 +18,7 @@ function CyberGrid() {
   const gridShader = useMemo(() => ({
     uniforms: {
       time: { value: 0 },
-      color: { value: new THREE.Color(WINE) },
+      color: { value: new THREE.Color(NEUTRAL_MID) },
     },
     vertexShader: `
       varying vec2 vUv;
@@ -82,8 +82,8 @@ function SecurityShield({ position, rotation, scale = 1 }: { position: [number, 
   const shieldShader = useMemo(() => ({
     uniforms: {
       time: { value: 0 },
-      color1: { value: new THREE.Color(WINE) },
-      color2: { value: new THREE.Color(BURGUNDY) },
+      color1: { value: new THREE.Color(NEUTRAL_LIGHT) },
+      color2: { value: new THREE.Color(NEUTRAL_DARK) },
     },
     vertexShader: `
       varying vec3 vNormal;
@@ -167,12 +167,12 @@ function DataParticles({ count = 500 }: { count?: number }) {
 
   const colors = useMemo(() => {
     const cols = new Float32Array(count * 3);
-    const wine = new THREE.Color(WINE);
-    const rose = new THREE.Color(ROSE);
+    const neutralLight = new THREE.Color(NEUTRAL_LIGHT);
+    const accentBlue = new THREE.Color(ACCENT_BLUE);
     
     for (let i = 0; i < count; i++) {
       const mix = Math.random();
-      const color = wine.clone().lerp(rose, mix);
+      const color = neutralLight.clone().lerp(accentBlue, mix);
       cols[i * 3] = color.r;
       cols[i * 3 + 1] = color.g;
       cols[i * 3 + 2] = color.b;
@@ -243,8 +243,8 @@ function SecurityRing() {
   const ringShader = useMemo(() => ({
     uniforms: {
       time: { value: 0 },
-      color1: { value: new THREE.Color(WINE) },
-      color2: { value: new THREE.Color(BURGUNDY) },
+      color1: { value: new THREE.Color(NEUTRAL_LIGHT) },
+      color2: { value: new THREE.Color(NEUTRAL_DARK) },
     },
     vertexShader: `
       varying vec2 vUv;
@@ -317,7 +317,7 @@ function InnerRing() {
     <mesh ref={ringRef} position={[0, 0, -10]}>
       <torusGeometry args={[8, 0.15, 16, 80]} />
       <meshBasicMaterial 
-        color={BURGUNDY}
+        color={NEUTRAL_DARK}
         transparent
         opacity={0.6}
       />
@@ -371,8 +371,8 @@ function Scene() {
   return (
     <>
       <ambientLight intensity={0.2} />
-      <pointLight position={[10, 10, 10]} intensity={0.5} color={WINE} />
-      <pointLight position={[-10, -10, -10]} intensity={0.3} color={BURGUNDY} />
+      <pointLight position={[10, 10, 10]} intensity={0.5} color={NEUTRAL_LIGHT} />
+      <pointLight position={[-10, -10, -10]} intensity={0.3} color={NEUTRAL_DARK} />
       
       <ScrollCamera />
       <CyberGrid />
@@ -412,7 +412,7 @@ export function R3FCyberHero() {
     return (
       <div className="fixed inset-0 pointer-events-none z-0 bg-transparent">
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-12 h-12 border-2 border-[#8B2252]/30 border-t-[#8B2252] rounded-full animate-spin" />
+          <div className="w-12 h-12 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
         </div>
       </div>
     );

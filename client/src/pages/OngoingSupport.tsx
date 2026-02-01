@@ -13,7 +13,10 @@ import {
 } from 'lucide-react';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
-const WINE = '#8B2252';
+const NEUTRAL_LIGHT = '#e5e5e5';
+const NEUTRAL_MID = '#8e8e93';
+const NEUTRAL_DARK = '#3a3a3c';
+const ACCENT_BLUE = '#0a84ff';
 const NAVY = 'hsl(222, 47%, 5%)';
 const GREEN = '#00FF88';
 const RED = '#FF4444';
@@ -134,7 +137,7 @@ const securityEventTypes = [
     'Unusual file access pattern from',
     'Port scanning detected from'
   ]},
-  { type: 'MITIGATED', icon: Shield, color: WINE, messages: [
+  { type: 'MITIGATED', icon: Shield, color: ACCENT_BLUE, messages: [
     'Zero-day vulnerability patched on',
     'Ransomware attempt neutralized on',
     'Data exfiltration blocked on',
@@ -329,17 +332,17 @@ function CentralGlobe() {
     <group>
       <mesh ref={globeRef}>
         <sphereGeometry args={[1, 32, 32]} />
-        <meshBasicMaterial color={WINE} wireframe transparent opacity={0.3} />
+        <meshBasicMaterial color={NEUTRAL_MID} wireframe transparent opacity={0.3} />
       </mesh>
       
       <mesh ref={pulseRef}>
         <sphereGeometry args={[1.2, 32, 32]} />
-        <meshBasicMaterial color={WINE} transparent opacity={0.2} />
+        <meshBasicMaterial color={ACCENT_BLUE} transparent opacity={0.2} />
       </mesh>
       
       <mesh ref={ringRef} rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[1.5, 0.02, 16, 100]} />
-        <meshBasicMaterial color={WINE} transparent opacity={0.6} />
+        <meshBasicMaterial color={ACCENT_BLUE} transparent opacity={0.6} />
       </mesh>
       
       <mesh rotation={[Math.PI / 3, Math.PI / 4, 0]}>
@@ -413,17 +416,17 @@ function CommandCenterScene() {
         <CentralGlobe />
       </Float>
       
-      <HolographicScreen position={[-4, 2, -2]} rotation={[0, 0.3, 0]} size={[2, 1.5]} color={WINE} />
-      <HolographicScreen position={[4, 2, -2]} rotation={[0, -0.3, 0]} size={[2, 1.5]} color={WINE} />
+      <HolographicScreen position={[-4, 2, -2]} rotation={[0, 0.3, 0]} size={[2, 1.5]} color={ACCENT_BLUE} />
+      <HolographicScreen position={[4, 2, -2]} rotation={[0, -0.3, 0]} size={[2, 1.5]} color={ACCENT_BLUE} />
       <HolographicScreen position={[-3, -1, -1]} rotation={[0.2, 0.2, 0]} size={[1.5, 1]} color={GREEN} pulseSpeed={1.5} />
       <HolographicScreen position={[3, -1, -1]} rotation={[0.2, -0.2, 0]} size={[1.5, 1]} color={GREEN} pulseSpeed={1.5} />
-      <HolographicScreen position={[0, 3, -3]} rotation={[-0.2, 0, 0]} size={[3, 1.5]} color={WINE} pulseSpeed={0.8} />
+      <HolographicScreen position={[0, 3, -3]} rotation={[-0.2, 0, 0]} size={[3, 1.5]} color={ACCENT_BLUE} pulseSpeed={0.8} />
       <HolographicScreen position={[-5, 0, 0]} rotation={[0, 0.5, 0]} size={[1.2, 2]} color="#9944ff" pulseSpeed={1.2} />
       <HolographicScreen position={[5, 0, 0]} rotation={[0, -0.5, 0]} size={[1.2, 2]} color="#9944ff" pulseSpeed={1.2} />
       
-      <DataStream start={[-4, 2, -2]} end={[0, 0, 0]} color={WINE} speed={1.5} />
-      <DataStream start={[4, 2, -2]} end={[0, 0, 0]} color={WINE} speed={1.5} />
-      <DataStream start={[0, 3, -3]} end={[0, 0, 0]} color={WINE} speed={1.2} />
+      <DataStream start={[-4, 2, -2]} end={[0, 0, 0]} color={ACCENT_BLUE} speed={1.5} />
+      <DataStream start={[4, 2, -2]} end={[0, 0, 0]} color={ACCENT_BLUE} speed={1.5} />
+      <DataStream start={[0, 3, -3]} end={[0, 0, 0]} color={ACCENT_BLUE} speed={1.2} />
       <DataStream start={[-5, 0, 0]} end={[-3, -1, -1]} color="#9944ff" speed={1} />
       <DataStream start={[5, 0, 0]} end={[3, -1, -1]} color="#9944ff" speed={1} />
       <DataStream start={[-3, -1, -1]} end={[0, 0, 0]} color={GREEN} speed={0.8} />
@@ -578,7 +581,7 @@ function PulsingLiveTicker({ baseValue, maxVariation, unit = 'min' }: { baseValu
   return (
     <motion.span 
       className="tabular-nums inline-flex items-center gap-1"
-      animate={flash ? { scale: [1, 1.1, 1], color: [WINE, GREEN, WINE] } : {}}
+      animate={flash ? { scale: [1, 1.1, 1], color: [ACCENT_BLUE, GREEN, ACCENT_BLUE] } : {}}
       transition={{ duration: 0.3 }}
     >
       {value.toFixed(1)} 
@@ -636,7 +639,7 @@ function ExplosiveIncrementCounter({ baseValue, incrementRate }: { baseValue: nu
       <motion.span 
         key={value}
         initial={{ scale: 1.3, color: GREEN }}
-        animate={{ scale: 1, color: WINE }}
+        animate={{ scale: 1, color: ACCENT_BLUE }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
         className="tabular-nums"
       >
@@ -654,7 +657,7 @@ function ServiceCard({ service, index }: { service: typeof supportServices[0]; i
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active': return GREEN;
-      case 'scheduled': return WINE;
+      case 'scheduled': return ACCENT_BLUE;
       case 'standby': return YELLOW;
       default: return '#666';
     }
@@ -688,7 +691,7 @@ function ServiceCard({ service, index }: { service: typeof supportServices[0]; i
       <motion.div
         className="absolute -inset-0.5 rounded-xl opacity-0"
         style={{
-          background: `linear-gradient(135deg, ${statusColor}40, transparent 50%, ${WINE}40)`,
+          background: `linear-gradient(135deg, ${statusColor}40, transparent 50%, ${ACCENT_BLUE}40)`,
         }}
         animate={isHovered ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 0.3 }}
@@ -714,7 +717,7 @@ function ServiceCard({ service, index }: { service: typeof supportServices[0]; i
             className="p-3 rounded-lg bg-[#00D4FF]/10 border border-[#00D4FF]/30"
             animate={isHovered ? { 
               scale: [1, 1.1, 1],
-              borderColor: [statusColor, WINE, statusColor]
+              borderColor: [statusColor, ACCENT_BLUE, statusColor]
             } : {}}
             transition={{ duration: 2, repeat: Infinity }}
           >
@@ -1336,8 +1339,8 @@ export default function OngoingSupport() {
                   icon={Clock} 
                   value="" 
                   label="AVG RESPONSE" 
-                  color={WINE}
-                  glowColor={WINE}
+                  color={ACCENT_BLUE}
+                  glowColor={ACCENT_BLUE}
                   data-testid="metric-response"
                 >
                   <PulsingLiveTicker baseValue={metrics.responseTime} maxVariation={5} />
@@ -1347,8 +1350,8 @@ export default function OngoingSupport() {
                   icon={Shield} 
                   value="" 
                   label="THREATS BLOCKED TODAY" 
-                  color={WINE}
-                  glowColor={WINE}
+                  color={ACCENT_BLUE}
+                  glowColor={ACCENT_BLUE}
                   data-testid="metric-threats"
                 >
                   <ExplosiveIncrementCounter baseValue={metrics.threatsBlocked} incrementRate={5} />
@@ -1358,8 +1361,8 @@ export default function OngoingSupport() {
                   icon={Server} 
                   value="" 
                   label="ACTIVE SESSIONS" 
-                  color={WINE}
-                  glowColor={WINE}
+                  color={ACCENT_BLUE}
+                  glowColor={ACCENT_BLUE}
                   data-testid="metric-sessions"
                 >
                   <DramaticCounter value={metrics.activeSessions} />
