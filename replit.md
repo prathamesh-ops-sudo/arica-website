@@ -1,7 +1,7 @@
 # Cyber Guardian Security Website
 
 ## Overview
-This project is a modern, full-stack TypeScript cybersecurity company website for Cyber Guardian. It showcases enterprise security services including VAPT, ISO 27001 Audit & Certification, and Secure Custom Software Development. The application features an animated React frontend, an Express backend API, and a PostgreSQL database for contact inquiries. The site is designed with a premium wine/maroon aesthetic, using deep dark backgrounds with wine (#8B2252), burgundy (#6B1C32), and rose (#C08081) accents, and incorporates various advanced visual effects and interactive 3D components to enhance user engagement and convey a high-tech security image. The project aims to provide an immersive and informative experience for potential clients seeking cybersecurity solutions.
+This project is a modern, full-stack TypeScript cybersecurity company website for Cyber Guardian. It showcases enterprise security services including VAPT, ISO 27001 Audit & Certification, and Secure Custom Software Development. The application features an animated React frontend, an Express backend API, and a PostgreSQL database for contact inquiries. The site is designed with an Apple-inspired aesthetic featuring transparent glassmorphic effects, premium SF Pro/Inter fonts, matte neutral colors, and subtle blue accents. The design incorporates advanced visual effects and interactive 3D components to enhance user engagement and convey a high-tech security image. The project aims to provide an immersive and informative experience for potential clients seeking cybersecurity solutions.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
@@ -14,7 +14,13 @@ Preferred communication style: Simple, everyday language.
 - **Database**: PostgreSQL managed with Drizzle ORM, with schema defined in `shared/schema.ts` and migrations handled by Drizzle Kit.
 
 ### Visual and Interactive Design
-The website employs a sophisticated design system with a premium wine/maroon palette, featuring a deep dark background (`#0a0508`) with wine (`#8B2252`, HSL 338 60% 34%), burgundy (`#6B1C32`), and rose (`#C08081`) accents. Key visual elements include WebGL shader backgrounds with wine-colored fluid effects, subtle dot grid patterns, and smooth scrolling.
+The website employs an Apple-inspired design system featuring:
+- **Color Palette**: Matte neutral grays (#121212 background, #1c1c1e cards), subtle white/gray text, and blue accent (#0a84ff) for interactive elements
+- **Typography**: SF Pro Display/Inter font stack with Apple system fonts as fallback
+- **Glassmorphism**: Frosted glass effects with backdrop-blur (20-40px), subtle borders (rgba white 8-15%), and saturated overlays
+- **Buttons**: Rounded corners (1rem), subtle hover states with scale animations, glass variant for floating elements
+- **Shadows**: Soft Apple-style shadows (apple-shadow-sm/md/lg) with minimal intensity
+Key visual elements include WebGL shader backgrounds with neutral-colored fluid effects, subtle dot grid patterns, and smooth scrolling.
 
 The site heavily utilizes advanced 3D and animation components to create a dynamic and immersive user experience:
 - **R3FCyberHero**: A React Three Fiber powered 3D hero section with scroll-driven camera movements, animated cyber grid, floating security shields, dynamic data particles, and mouse parallax effects.
