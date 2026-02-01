@@ -28,7 +28,7 @@ The site heavily utilizes advanced 3D and animation components to create a dynam
 - **HorizonHeroSection**: A Three.js 3D space hero with star fields, animated nebulae, and GSAP scroll-triggered camera movement.
 - **RealisticSolarSystem**: A "Galaxy Journey" featuring service-themed galaxies with physics-based interactive planets.
 - **CyberAttackGlobe**: A WebGL globe visualizing cyber attacks with impact flashes, arc trails, and atmospheric pulsing.
-- **Orca**: An immersive parallax scroll-driven 3D animation experience narrating Arica's security response journey.
+- **Orca**: An immersive parallax scroll-driven 3D animation experience narrating the security response journey, featuring post-processing effects (bloom, vignette, chromatic aberration), Apple-neutral color palette, and hyperspace transition to the Experience page.
 - **AmbientParticles**: Reusable CSS-animated particles for visual polish.
 - **MegaNavigation**: A fixed glassmorphism navigation bar with dropdown menus and mobile responsiveness.
 - **WebGL Fallback System**: Utilizes `webgl-utils.ts` to detect WebGL capabilities and provides graceful fallback for unsupported environments.
