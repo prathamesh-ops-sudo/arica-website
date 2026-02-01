@@ -412,7 +412,7 @@ export function R3FCyberHero() {
     return (
       <div className="fixed inset-0 pointer-events-none z-0 bg-transparent">
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-12 h-12 border-2 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin" />
+          <div className="w-12 h-12 border-2 border-[#8B2252]/30 border-t-[#8B2252] rounded-full animate-spin" />
         </div>
       </div>
     );

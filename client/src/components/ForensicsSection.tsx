@@ -71,7 +71,7 @@ export function ForensicsSection() {
               Our security experts follow{" "}
               <LinkPreview
                 url="https://owasp.org/www-project-web-security-testing-guide/"
-                className="font-bold bg-clip-text text-transparent bg-gradient-to-br from-primary to-cyan-400"
+                className="font-bold bg-clip-text text-transparent bg-gradient-to-br from-[#8B2252] to-[#C08081]"
               >
                 OWASP Testing Guidelines
               </LinkPreview>{" "}

@@ -147,7 +147,7 @@ export function HorizonHeroSection() {
           } else if (colorChoice < 0.9) {
             color.setHSL(0.08, 0.5, 0.8);
           } else {
-            color.setHSL(0.6, 0.5, 0.8);
+            color.setHSL(0.95, 0.5, 0.7);
           }
           
           colors[j * 3] = color.r;
@@ -365,7 +365,7 @@ export function HorizonHeroSection() {
           
           void main() {
             float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
-            vec3 atmosphere = vec3(0.0, 0.83, 1.0) * intensity;
+            vec3 atmosphere = vec3(0.55, 0.14, 0.32) * intensity;
             
             float pulse = sin(time * 2.0) * 0.1 + 0.9;
             atmosphere *= pulse;

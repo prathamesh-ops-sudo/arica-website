@@ -39,7 +39,7 @@ const services = [
       { label: "Vulnerabilities Found", value: 12500, suffix: "+" },
       { label: "Client Satisfaction", value: 99, suffix: "%" },
     ],
-    color: "cyan" as const,
+    color: "wine" as const,
   },
   {
     id: "iso-audit",
@@ -81,7 +81,7 @@ const services = [
       { label: "Lines of Secure Code", value: 2, suffix: "M+" },
       { label: "On-Time Delivery", value: 95, suffix: "%" },
     ],
-    color: "cyan" as const,
+    color: "wine" as const,
   },
 ];
 
@@ -160,11 +160,11 @@ function FloatingIcon({
 function Card3D({ 
   children, 
   className = "",
-  glowColor = "cyan"
+  glowColor = "wine"
 }: { 
   children: React.ReactNode; 
   className?: string;
-  glowColor?: "cyan" | "purple";
+  glowColor?: "wine" | "purple";
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [rotateX, setRotateX] = useState(0);
@@ -200,7 +200,7 @@ function Card3D({
     setGlowPosition({ x: 50, y: 50 });
   }, []);
 
-  const glowColorValue = glowColor === "cyan" ? "0, 212, 255" : "153, 68, 255";
+  const glowColorValue = glowColor === "wine" ? "139, 34, 82" : "153, 68, 255";
 
   return (
     <motion.div
@@ -248,16 +248,16 @@ function Card3D({
 
 function AnimatedIcon({ 
   Icon, 
-  color = "cyan" 
+  color = "wine" 
 }: { 
   Icon: LucideIcon; 
-  color?: "cyan" | "purple";
+  color?: "wine" | "purple";
 }) {
   const [isHovered, setIsHovered] = useState(false);
   
-  const glowColor = color === "cyan" ? "rgba(0, 212, 255, 0.6)" : "rgba(153, 68, 255, 0.6)";
-  const bgColor = color === "cyan" ? "bg-primary/10" : "bg-purple-500/10";
-  const textColor = color === "cyan" ? "text-primary" : "text-purple-400";
+  const glowColor = color === "wine" ? "rgba(139, 34, 82, 0.6)" : "rgba(153, 68, 255, 0.6)";
+  const bgColor = color === "wine" ? "bg-[#8B2252]/10" : "bg-purple-500/10";
+  const textColor = color === "wine" ? "text-[#8B2252]" : "text-purple-400";
 
   return (
     <motion.div
@@ -296,12 +296,12 @@ function CountUpStat({
   value, 
   suffix = "", 
   label,
-  color = "cyan"
+  color = "wine"
 }: { 
   value: number; 
   suffix?: string; 
   label: string;
-  color?: "cyan" | "purple";
+  color?: "wine" | "purple";
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -325,8 +325,8 @@ function CountUpStat({
     return unsubscribe;
   }, [springValue]);
 
-  const textColor = color === "cyan" ? "text-primary" : "text-purple-400";
-  const glowColor = color === "cyan" ? "drop-shadow-[0_0_8px_rgba(0,212,255,0.5)]" : "drop-shadow-[0_0_8px_rgba(153,68,255,0.5)]";
+  const textColor = color === "wine" ? "text-[#8B2252]" : "text-purple-400";
+  const glowColor = color === "wine" ? "drop-shadow-[0_0_8px_rgba(139,34,82,0.5)]" : "drop-shadow-[0_0_8px_rgba(153,68,255,0.5)]";
 
   return (
     <div ref={ref} className="text-center">
@@ -352,10 +352,10 @@ function CountUpStat({
 
 function StaggeredFeatures({ 
   features, 
-  color = "cyan" 
+  color = "wine" 
 }: { 
   features: string[]; 
-  color?: "cyan" | "purple";
+  color?: "wine" | "purple";
 }) {
   const ref = useRef<HTMLUListElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
@@ -384,7 +384,7 @@ function StaggeredFeatures({
               delay: index * 0.1 + 0.2,
             }}
           >
-            <CheckCircle className={`w-5 h-5 mt-0.5 flex-shrink-0 ${color === "cyan" ? "text-primary" : "text-purple-400"}`} />
+            <CheckCircle className={`w-5 h-5 mt-0.5 flex-shrink-0 ${color === "wine" ? "text-[#8B2252]" : "text-purple-400"}`} />
           </motion.div>
           <span className="text-muted-foreground">{feature}</span>
         </motion.li>
@@ -396,11 +396,11 @@ function StaggeredFeatures({
 function AnimatedProgressBar({
   value,
   label,
-  color = "cyan"
+  color = "wine"
 }: {
   value: number;
   label: string;
-  color?: "cyan" | "purple";
+  color?: "wine" | "purple";
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
@@ -423,18 +423,18 @@ function AnimatedProgressBar({
 
   const animatedWidth = useTransform(springValue, (val) => `${val}%`);
   
-  const barColor = color === "cyan" 
-    ? "bg-gradient-to-r from-primary to-cyan-400" 
+  const barColor = color === "wine" 
+    ? "bg-gradient-to-r from-[#8B2252] to-[#C08081]" 
     : "bg-gradient-to-r from-purple-500 to-purple-400";
-  const glowColor = color === "cyan"
-    ? "shadow-[0_0_20px_rgba(0,212,255,0.6)]"
+  const glowColor = color === "wine"
+    ? "shadow-[0_0_20px_rgba(139,34,82,0.6)]"
     : "shadow-[0_0_20px_rgba(153,68,255,0.6)]";
 
   return (
     <div ref={ref} className="mb-4">
       <div className="flex justify-between mb-2">
         <span className="text-sm text-muted-foreground">{label}</span>
-        <span className={`text-sm font-bold ${color === "cyan" ? "text-primary" : "text-purple-400"}`}>
+        <span className={`text-sm font-bold ${color === "wine" ? "text-[#8B2252]" : "text-purple-400"}`}>
           {displayValue}%
         </span>
       </div>
@@ -551,7 +551,7 @@ export default function ServicesPage() {
                 <div className="p-8 relative z-10">
                   <h3 className="font-display text-xl font-bold mb-6 flex items-center gap-2">
                     <motion.div
-                      className={`w-2 h-2 rounded-full ${service.color === "cyan" ? "bg-primary" : "bg-purple-500"}`}
+                      className={`w-2 h-2 rounded-full ${service.color === "wine" ? "bg-[#8B2252]" : "bg-purple-500"}`}
                       animate={{ scale: [1, 1.3, 1] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
                     />
