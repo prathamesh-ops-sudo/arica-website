@@ -208,19 +208,19 @@
   }
   
   .glow-cyan {
-    box-shadow: 0 0 20px rgba(58, 12, 163, 0.4), 0 0 40px rgba(58, 12, 163, 0.2);
+    box-shadow: 0 0 12px rgba(58, 12, 163, 0.2), 0 0 24px rgba(58, 12, 163, 0.08);
   }
   
   .glow-purple {
-    box-shadow: 0 0 20px rgba(123, 47, 224, 0.4), 0 0 40px rgba(123, 47, 224, 0.2);
+    box-shadow: 0 0 12px rgba(123, 47, 224, 0.2), 0 0 24px rgba(123, 47, 224, 0.08);
   }
   
   .glow-obsidian {
-    box-shadow: 0 0 30px rgba(58, 12, 163, 0.5), 0 0 60px rgba(123, 47, 224, 0.3), 0 0 90px rgba(157, 78, 221, 0.15);
+    box-shadow: 0 0 16px rgba(58, 12, 163, 0.25), 0 0 32px rgba(123, 47, 224, 0.12);
   }
   
   .glow-text {
-    text-shadow: 0 0 20px rgba(58, 12, 163, 0.6), 0 0 40px rgba(123, 47, 224, 0.4);
+    text-shadow: 0 0 12px rgba(58, 12, 163, 0.3), 0 0 24px rgba(123, 47, 224, 0.15);
   }
 
   .text-halo-white {
