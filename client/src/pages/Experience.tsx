@@ -75,6 +75,15 @@ export default function Experience() {
                   <ChevronDown className="w-6 h-6" />
                 </motion.div>
               </motion.div>
+              
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.2 }}
+                className="text-xs text-[#8e8e93]/50 mt-6 max-w-xs text-center"
+              >
+                * This is a simulated interactive experience for demonstration purposes
+              </motion.p>
             </div>
           </motion.div>
         )}
