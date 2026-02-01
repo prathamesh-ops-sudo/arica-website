@@ -215,9 +215,9 @@ export function HorizonHeroSection() {
       const material = new THREE.ShaderMaterial({
         uniforms: {
           time: { value: 0 },
-          color1: { value: new THREE.Color(0x0a84ff) },
-          color2: { value: new THREE.Color(0x3a3a3c) },
-          color3: { value: new THREE.Color(0x8e8e93) },
+          color1: { value: new THREE.Color(0x3A0CA3) },
+          color2: { value: new THREE.Color(0x7B2FE0) },
+          color3: { value: new THREE.Color(0x9D4EDD) },
           opacity: { value: 0.35 },
           scrollProgress: { value: 0 }
         },
@@ -364,7 +364,7 @@ export function HorizonHeroSection() {
           
           void main() {
             float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
-            vec3 atmosphere = vec3(0.04, 0.52, 1.0) * intensity;
+            vec3 atmosphere = vec3(0.48, 0.18, 0.87) * intensity;
             
             float pulse = sin(time * 2.0) * 0.1 + 0.9;
             atmosphere *= pulse;
@@ -589,9 +589,9 @@ export function HorizonHeroSection() {
   return (
     <div ref={containerRef} className="horizon-hero-container">
       {webglFailed ? (
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-slate-900 to-black">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-[#0a0510] to-black">
           <div className="absolute inset-0 opacity-30" style={{
-            backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.15), transparent 50%), radial-gradient(circle at 80% 30%, rgba(147, 51, 234, 0.15), transparent 50%)'
+            backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(58, 12, 163, 0.2), transparent 50%), radial-gradient(circle at 80% 30%, rgba(157, 78, 221, 0.2), transparent 50%)'
           }} />
         </div>
       ) : (
