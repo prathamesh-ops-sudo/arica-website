@@ -574,9 +574,9 @@ export function HorizonHeroSection() {
   }, [totalSections]);
 
   const titles: Record<number, string> = {
-    0: 'ARICA TECH',
-    1: 'SECURITY',
-    2: 'SOLUTIONS'
+    0: 'ARICA',
+    1: 'TECH',
+    2: 'SECURITY'
   };
 
   const handleEnterExperience = useCallback((e: React.MouseEvent) => {
