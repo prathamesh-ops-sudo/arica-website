@@ -196,60 +196,55 @@ function ScanningBeam({ active }: { active: boolean }) {
   );
 }
 
-function BinaryRain({ count = 100 }: { count?: number }) {
+function DataParticles({ count = 80 }: { count?: number }) {
+  const meshRef = useRef<THREE.Points>(null);
+  
   const particles = useMemo(() => {
-    const temp = [];
+    const positions = new Float32Array(count * 3);
+    const velocities = new Float32Array(count);
+    const colors = new Float32Array(count * 3);
+    
     for (let i = 0; i < count; i++) {
-      temp.push({
-        position: [
-          (Math.random() - 0.5) * 10,
-          Math.random() * 10,
-          (Math.random() - 0.5) * 10
-        ] as [number, number, number],
-        speed: 0.5 + Math.random() * 1.5,
-        char: Math.random() > 0.5 ? '1' : '0'
-      });
-    }
-    return temp;
-  }, [count]);
-
-  return (
-    <group>
-      {particles.map((p, i) => (
-        <BinaryChar key={i} initialPos={p.position} speed={p.speed} char={p.char} />
-      ))}
-    </group>
-  );
-}
-
-function BinaryChar({ initialPos, speed, char }: {
-  initialPos: [number, number, number];
-  speed: number;
-  char: string;
-}) {
-  const ref = useRef<THREE.Group>(null);
-
-  useFrame((state, delta) => {
-    if (ref.current) {
-      ref.current.position.y -= delta * speed;
-      if (ref.current.position.y < -5) {
-        ref.current.position.y = 5;
+      positions[i * 3] = (Math.random() - 0.5) * 15;
+      positions[i * 3 + 1] = Math.random() * 12 - 6;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 15;
+      velocities[i] = 0.3 + Math.random() * 0.8;
+      
+      const colorChoice = Math.random();
+      if (colorChoice < 0.4) {
+        colors[i * 3] = 0.04; colors[i * 3 + 1] = 0.52; colors[i * 3 + 2] = 1.0;
+      } else if (colorChoice < 0.7) {
+        colors[i * 3] = 0.56; colors[i * 3 + 1] = 0.56; colors[i * 3 + 2] = 0.58;
+      } else {
+        colors[i * 3] = 0.9; colors[i * 3 + 1] = 0.9; colors[i * 3 + 2] = 0.9;
       }
     }
+    return { positions, velocities, colors };
+  }, [count]);
+
+  useFrame((state, delta) => {
+    if (!meshRef.current) return;
+    const positions = meshRef.current.geometry.attributes.position.array as Float32Array;
+    for (let i = 0; i < count; i++) {
+      positions[i * 3 + 1] -= delta * particles.velocities[i];
+      if (positions[i * 3 + 1] < -6) {
+        positions[i * 3 + 1] = 6;
+      }
+    }
+    meshRef.current.geometry.attributes.position.needsUpdate = true;
   });
 
+  const positionAttr = useMemo(() => new THREE.BufferAttribute(particles.positions, 3), [particles.positions]);
+  const colorAttr = useMemo(() => new THREE.BufferAttribute(particles.colors, 3), [particles.colors]);
+
   return (
-    <group ref={ref} position={initialPos}>
-      <Text
-        fontSize={0.1}
-        color="#e5e5e5"
-        anchorX="center"
-        anchorY="middle"
-        fillOpacity={0.4}
-      >
-        {char}
-      </Text>
-    </group>
+    <points ref={meshRef}>
+      <bufferGeometry>
+        <primitive attach="attributes-position" object={positionAttr} />
+        <primitive attach="attributes-color" object={colorAttr} />
+      </bufferGeometry>
+      <pointsMaterial size={0.08} vertexColors transparent opacity={0.6} sizeAttenuation />
+    </points>
   );
 }
 
@@ -397,7 +392,7 @@ function MainScene({ scrollProgress }: SceneProps) {
       {insideSystem && (
         <group>
           <CyberGrid />
-          <BinaryRain count={scrollProgress > 0.5 ? 150 : 50} />
+          <DataParticles count={scrollProgress > 0.5 ? 100 : 60} />
           
           {scene === 'iso' && (
             <>
@@ -554,12 +549,10 @@ function MainScene({ scrollProgress }: SceneProps) {
           opacity={0.03}
           blendFunction={BlendFunction.OVERLAY}
         />
-        {isZooming && (
-          <ChromaticAberration 
-            offset={CHROMATIC_OFFSET}
-            blendFunction={BlendFunction.NORMAL}
-          />
-        )}
+        <ChromaticAberration 
+          offset={isZooming ? CHROMATIC_OFFSET : new THREE.Vector2(0, 0)}
+          blendFunction={BlendFunction.NORMAL}
+        />
       </EffectComposer>
     </>
   );
@@ -695,33 +688,42 @@ function SceneOverlay({ scrollProgress }: { scrollProgress: number }) {
     <AnimatePresence mode="wait">
       <motion.div
         key={scene.title}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.5 }}
-        className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 text-center pointer-events-none"
+        initial={{ opacity: 0, y: 30, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -30, scale: 0.95 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 text-center pointer-events-none"
       >
-        <div className="bg-[#1c1c1e]/80 backdrop-blur-xl border border-white/10 rounded-2xl px-8 py-6 max-w-lg">
-          <motion.div 
-            className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center"
-            style={{ 
-              backgroundColor: `${scene.color}20`,
-              boxShadow: `0 0 30px ${scene.color}40`
-            }}
-            animate={{
-              scale: [1, 1.1, 1],
-            }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            <Icon className="w-8 h-8" style={{ color: scene.color }} />
-          </motion.div>
+        <div 
+          className="bg-gradient-to-b from-[#1c1c1e]/90 to-[#121212]/95 backdrop-blur-2xl border border-white/10 rounded-3xl px-10 py-8 max-w-md shadow-2xl"
+          style={{ boxShadow: `0 8px 60px ${scene.color}30, 0 0 0 1px ${scene.color}10` }}
+        >
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <motion.div 
+              className="w-14 h-14 rounded-2xl flex items-center justify-center"
+              style={{ 
+                background: `linear-gradient(135deg, ${scene.color}30, ${scene.color}10)`,
+                border: `1px solid ${scene.color}40`
+              }}
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <Icon className="w-7 h-7" style={{ color: scene.color }} />
+            </motion.div>
+          </div>
           <h2 
-            className="text-2xl font-bold mb-2"
-            style={{ color: scene.color }}
+            className="text-xl md:text-2xl font-bold mb-2 tracking-tight"
+            style={{ color: scene.color, textShadow: `0 0 40px ${scene.color}60` }}
           >
             {scene.title}
           </h2>
-          <p className="text-white/70">{scene.subtitle}</p>
+          <p className="text-white/60 text-sm md:text-base">{scene.subtitle}</p>
+          <motion.div 
+            className="mt-4 h-1 rounded-full mx-auto"
+            style={{ backgroundColor: `${scene.color}40`, width: 60 }}
+            animate={{ width: [60, 100, 60] }}
+            transition={{ duration: 3, repeat: Infinity }}
+          />
         </div>
       </motion.div>
     </AnimatePresence>
@@ -729,11 +731,21 @@ function SceneOverlay({ scrollProgress }: { scrollProgress: number }) {
 }
 
 function ProgressBar({ progress }: { progress: number }) {
+  const getProgressColor = () => {
+    if (progress < 0.33) return 'from-[#ff453a] via-[#ff6b3d] to-[#ff9500]';
+    if (progress < 0.66) return 'from-[#ff9500] via-[#ffcc00] to-[#30d158]';
+    return 'from-[#30d158] via-[#0a84ff] to-[#5e5ce6]';
+  };
+  
   return (
-    <div className="fixed top-0 left-0 right-0 h-1 z-50 bg-white/10">
+    <div className="fixed top-0 left-0 right-0 h-1 z-50 bg-black/40 backdrop-blur-sm">
       <motion.div 
-        className="h-full bg-gradient-to-r from-[#3a3a3c] via-[#8e8e93] to-[#e5e5e5]"
+        className={`h-full bg-gradient-to-r ${getProgressColor()}`}
         style={{ width: `${progress * 100}%` }}
+        animate={{ 
+          boxShadow: ['0 0 10px rgba(10,132,255,0.5)', '0 0 20px rgba(10,132,255,0.8)', '0 0 10px rgba(10,132,255,0.5)']
+        }}
+        transition={{ duration: 2, repeat: Infinity }}
       />
     </div>
   );
@@ -844,54 +856,68 @@ function CompletionOverlay() {
       animate={{ opacity: 1 }}
       className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none"
     >
-      <div className="text-center">
+      <div className="absolute inset-0 bg-gradient-radial from-[#30d158]/10 via-transparent to-transparent" />
+      
+      <div className="text-center relative z-10 px-6">
         <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", damping: 10 }}
-          className="w-32 h-32 rounded-full bg-[#30d158]/20 border-2 border-[#30d158] flex items-center justify-center mx-auto mb-8"
-          style={{ boxShadow: '0 0 60px rgba(48,209,88,0.3)' }}
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: "spring", damping: 12, duration: 0.8 }}
+          className="relative w-36 h-36 mx-auto mb-10"
         >
-          <ShieldCheck className="w-16 h-16 text-[#30d158]" />
+          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#30d158]/30 to-[#30d158]/10 animate-pulse" />
+          <div className="absolute inset-2 rounded-full bg-gradient-to-br from-[#30d158]/20 to-transparent backdrop-blur-xl border border-[#30d158]/50" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <ShieldCheck className="w-16 h-16 text-[#30d158]" />
+          </div>
+          <motion.div 
+            className="absolute -inset-4 rounded-full border border-[#30d158]/30"
+            animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.2, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
         </motion.div>
+        
         <motion.h1
-          initial={{ y: 20, opacity: 0 }}
+          initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-4xl md:text-5xl font-bold text-white mb-4"
+          transition={{ delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="text-4xl md:text-6xl font-bold text-white mb-3 tracking-tight"
+          style={{ textShadow: '0 0 60px rgba(48,209,88,0.4)' }}
         >
           System Secured
         </motion.h1>
+        
         <motion.p
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="text-xl text-[#8e8e93] mb-8"
+          transition={{ delay: 0.6 }}
+          className="text-lg md:text-xl text-[#8e8e93] mb-10 max-w-md mx-auto"
         >
-          Protected by Cyber Guardian Security
+          Protected by ARICA Security
         </motion.p>
         
         <motion.div
-          initial={{ y: 20, opacity: 0 }}
+          initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.7 }}
+          transition={{ delay: 0.8 }}
           className="flex flex-col sm:flex-row gap-4 justify-center pointer-events-auto"
         >
           <button
             onClick={handleExploreServices}
             data-testid="button-explore-galaxy"
-            className="group px-8 py-4 bg-gradient-to-r from-[#0a84ff] to-[#5e5ce6] text-white font-bold rounded-xl hover:scale-105 transition-all duration-300 flex items-center gap-3 justify-center"
-            style={{ boxShadow: '0 0 30px rgba(10,132,255,0.4)' }}
+            className="group relative px-10 py-5 bg-gradient-to-r from-[#0a84ff] to-[#5e5ce6] text-white font-bold rounded-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 justify-center overflow-hidden"
+            style={{ boxShadow: '0 0 40px rgba(10,132,255,0.5)' }}
           >
-            <Rocket className="w-5 h-5 group-hover:animate-bounce" />
-            Explore Our Galaxy
+            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+            <Rocket className="w-5 h-5" />
+            <span className="relative">Explore Our Galaxy</span>
             <Sparkles className="w-5 h-5" />
           </button>
           
           <a
             href="/contact"
             data-testid="button-protect-business"
-            className="px-8 py-4 bg-white/10 backdrop-blur-xl border border-white/20 text-white font-bold rounded-xl hover:bg-white/20 transition-all duration-300 flex items-center gap-2 justify-center"
+            className="px-10 py-5 bg-white/5 backdrop-blur-xl border border-white/20 text-white font-bold rounded-2xl hover:bg-white/10 hover:border-white/30 transition-all duration-300 flex items-center gap-3 justify-center"
           >
             <Shield className="w-5 h-5" />
             Protect Your Business
@@ -902,9 +928,9 @@ function CompletionOverlay() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
-          className="text-sm text-white/40 mt-6"
+          className="text-sm text-white/30 mt-8"
         >
-          Click "Explore Our Galaxy" to discover all our security services
+          Discover our comprehensive security services in the Galaxy Experience
         </motion.p>
       </div>
     </motion.div>

@@ -1070,6 +1070,7 @@ export function RealisticSolarSystem() {
             progress = 0;
             lastGalaxyRef.current = 'vapt';
             sessionStorage.setItem('galaxyScrollProgress', '0');
+            setActivePlanet(null);
             setTimeout(() => {
               transitionCooldownRef.current = false;
               setTransitionText(null);
