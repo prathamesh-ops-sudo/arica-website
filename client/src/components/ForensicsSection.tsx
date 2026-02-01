@@ -29,7 +29,7 @@ export function ForensicsSection() {
     <section className="py-32 relative overflow-hidden bg-card/30">
       <div className="absolute inset-0 opacity-30">
         <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0, 212, 255, 0.15) 1px, transparent 0)`,
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(139, 34, 82, 0.15) 1px, transparent 0)`,
           backgroundSize: '40px 40px'
         }} />
       </div>
@@ -47,7 +47,7 @@ export function ForensicsSection() {
             <div className="relative">
               <NanobotParticles 
                 particleCount={35} 
-                color="0, 212, 255" 
+                color="139, 34, 82" 
                 maxDistance={100}
                 className="opacity-40"
               />
