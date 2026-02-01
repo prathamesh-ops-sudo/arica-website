@@ -28,7 +28,6 @@ export function HorizonHeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const subtitleRef = useRef<HTMLDivElement>(null);
   const scrollProgressRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -474,7 +473,7 @@ export function HorizonHeroSection() {
   useEffect(() => {
     if (!isReady) return;
     
-    gsap.set([menuRef.current, titleRef.current, subtitleRef.current, scrollProgressRef.current], {
+    gsap.set([menuRef.current, titleRef.current, scrollProgressRef.current], {
       visibility: 'visible'
     });
 
@@ -498,17 +497,6 @@ export function HorizonHeroSection() {
         stagger: 0.05,
         ease: "power4.out"
       }, "-=0.5");
-    }
-
-    if (subtitleRef.current) {
-      const subtitleLines = subtitleRef.current.querySelectorAll('.subtitle-line');
-      tl.from(subtitleLines, {
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.2,
-        ease: "power3.out"
-      }, "-=0.8");
     }
 
     if (scrollProgressRef.current) {
@@ -586,24 +574,9 @@ export function HorizonHeroSection() {
   }, [totalSections]);
 
   const titles: Record<number, string> = {
-    0: 'ARICA',
+    0: 'ARICA TECH',
     1: 'SECURITY',
-    2: 'PROTECT'
-  };
-  
-  const subtitles: Record<number, { line1: string; line2: string }> = {
-    0: {
-      line1: 'Enterprise cybersecurity solutions',
-      line2: 'protecting your digital future'
-    },
-    1: {
-      line1: 'Advanced threat detection,',
-      line2: 'penetration testing & compliance'
-    },
-    2: {
-      line1: 'Building secure systems,',
-      line2: 'from code to certification'
-    }
+    2: 'SOLUTIONS'
   };
 
   const handleEnterExperience = useCallback((e: React.MouseEvent) => {
@@ -646,15 +619,6 @@ export function HorizonHeroSection() {
         <h1 ref={titleRef} className="horizon-hero-title text-halo-white">
           {titles[currentSection] || titles[0]}
         </h1>
-        
-        <div ref={subtitleRef} className="horizon-hero-subtitle">
-          <p className="subtitle-line">
-            {(subtitles[currentSection] || subtitles[0]).line1}
-          </p>
-          <p className="subtitle-line">
-            {(subtitles[currentSection] || subtitles[0]).line2}
-          </p>
-        </div>
         
         <button 
           onClick={handleEnterExperience}
