@@ -304,6 +304,15 @@ function ForensicsScene({ progress }: { progress: number }) {
   );
 }
 
+const incidentStreamPositions = Array.from({ length: 20 }).map((_, i) => ({
+  startPos: [
+    (Math.sin(i * 1.7) * 0.5) * 10,
+    (Math.cos(i * 2.3) * 0.5) * 6,
+    -8
+  ] as [number, number, number],
+  speed: 1 + (i % 5) * 0.4
+}));
+
 function MainScene({ scrollProgress }: SceneProps) {
   const { camera } = useThree();
   const groupRef = useRef<THREE.Group>(null);
@@ -447,17 +456,13 @@ function MainScene({ scrollProgress }: SceneProps) {
                   />
                 </mesh>
               </Float>
-              {Array.from({ length: 20 }).map((_, i) => (
+              {incidentStreamPositions.map((stream, i) => (
                 <DataStream 
                   key={i}
-                  startPos={[
-                    (Math.random() - 0.5) * 10,
-                    (Math.random() - 0.5) * 6,
-                    -8
-                  ]}
+                  startPos={stream.startPos}
                   endPos={[0, 0, -5]}
                   color="#ff4444"
-                  speed={1 + Math.random() * 2}
+                  speed={stream.speed}
                 />
               ))}
               <SecurityShield position={[-2, 1, -4]} scale={1} color="#00D4FF" />
