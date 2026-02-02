@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "wouter";
 import { RealisticSolarSystem } from "@/components/ui/realistic-solar-system";
-import { Sparkles, ChevronDown } from "lucide-react";
+import { Sparkles, ChevronDown, Home } from "lucide-react";
 
 export default function Experience() {
+  const [, setLocation] = useLocation();
   const [showIntro, setShowIntro] = useState(true);
   const [fadeOut, setFadeOut] = useState(false);
   const fadeTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -23,6 +25,19 @@ export default function Experience() {
 
   return (
     <div className="fixed inset-0 bg-background overflow-hidden">
+      {/* Home Button */}
+      <motion.button
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+        onClick={() => setLocation('/')}
+        className="fixed top-6 left-6 z-[100] flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 transition-all duration-300 hover:scale-105 shadow-lg"
+        data-testid="button-home"
+      >
+        <Home className="w-4 h-4" />
+        <span className="text-sm font-medium">Home</span>
+      </motion.button>
+
       <AnimatePresence>
         {showIntro && (
           <motion.div
