@@ -1044,7 +1044,7 @@ export function RealisticSolarSystem() {
       refs.composer.addPass(outlinePass);
       refs.outlinePass = outlinePass;
 
-      const ambientLight = new THREE.AmbientLight(0x111122, 0.2);
+      const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
       refs.scene.add(ambientLight);
 
       raycasterRef.current = new THREE.Raycaster();
@@ -1557,7 +1557,6 @@ export function RealisticSolarSystem() {
       );
       const sunMaterial = new THREE.MeshBasicMaterial({
         map: sunTexture,
-        color: sunColor1,
       });
 
       galaxyGroup.sun = new THREE.Mesh(sunGeometry, sunMaterial);
@@ -1565,21 +1564,17 @@ export function RealisticSolarSystem() {
       refs.disposables.push(sunGeometry);
       refs.materials.push(sunMaterial);
 
-      galaxyGroup.sunLight = new THREE.PointLight(
-        new THREE.Color(galaxy.colorTheme.primary).getHex(),
-        4,
-        300
-      );
+      galaxyGroup.sunLight = new THREE.PointLight(0xffffff, 3, 400);
       galaxyGroup.sunLight.position.set(0, 0, 0);
       refs.scene!.add(galaxyGroup.sunLight);
 
       const coronaLayers = [
-        { size: 5.5, intensity: 0.25, offset: 0 },
-        { size: 7, intensity: 0.18, offset: 1.5 },
-        { size: 9, intensity: 0.12, offset: 3.0 },
+        { size: 5.2, intensity: 0.35, offset: 0 },
+        { size: 6.5, intensity: 0.25, offset: 1.0 },
+        { size: 8, intensity: 0.15, offset: 2.0 },
       ];
 
-      const coronaColor = new THREE.Color(galaxy.colorTheme.accent);
+      const coronaColor = new THREE.Color(0xffaa33);
       coronaLayers.forEach((layer) => {
         const coronaGeom = new THREE.SphereGeometry(layer.size, 32, 32);
         const coronaMat = new THREE.ShaderMaterial({
@@ -1649,9 +1644,8 @@ export function RealisticSolarSystem() {
           );
           material = new THREE.MeshStandardMaterial({
             map: planetTexture,
-            roughness: 0.8,
-            metalness: 0.1,
-            color: primaryColor,
+            roughness: 0.7,
+            metalness: 0.0,
           });
         } else {
           material = new THREE.ShaderMaterial({
@@ -1748,8 +1742,8 @@ export function RealisticSolarSystem() {
                 
                 vec3 finalColor = mix(coreColor, glowColor, fresnel);
                 
-                float alpha = totalGlow * 0.8;
-                alpha = clamp(alpha, 0.0, 0.9);
+                float alpha = totalGlow * 0.4;
+                alpha = clamp(alpha, 0.0, 0.5);
                 
                 gl_FragColor = vec4(finalColor, alpha);
               }
