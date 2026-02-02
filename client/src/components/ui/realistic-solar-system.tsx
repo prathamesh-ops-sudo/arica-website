@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'wouter';
 import { ChevronRight, Shield, FileCheck, Code, X } from 'lucide-react';
@@ -902,6 +903,7 @@ export function RealisticSolarSystem() {
     camera: THREE.PerspectiveCamera | null;
     renderer: THREE.WebGLRenderer | null;
     composer: EffectComposer | null;
+    outlinePass: OutlinePass | null;
     galaxyGroups: GalaxyGroup[];
     starLayers: THREE.Points[];
     nebula: THREE.Mesh | null;
@@ -914,6 +916,7 @@ export function RealisticSolarSystem() {
     camera: null,
     renderer: null,
     composer: null,
+    outlinePass: null,
     galaxyGroups: [],
     starLayers: [],
     nebula: null,
@@ -994,6 +997,19 @@ export function RealisticSolarSystem() {
         0.85
       );
       refs.composer.addPass(bloomPass);
+
+      const outlinePass = new OutlinePass(
+        new THREE.Vector2(window.innerWidth, window.innerHeight),
+        refs.scene,
+        refs.camera
+      );
+      outlinePass.visibleEdgeColor.set(0x9D4EDD);
+      outlinePass.hiddenEdgeColor.set(0x3A0CA3);
+      outlinePass.edgeStrength = 3;
+      outlinePass.edgeGlow = 0.5;
+      outlinePass.edgeThickness = 2;
+      refs.composer.addPass(outlinePass);
+      refs.outlinePass = outlinePass;
 
       const ambientLight = new THREE.AmbientLight(0x111122, 0.2);
       refs.scene.add(ambientLight);
@@ -1915,10 +1931,12 @@ export function RealisticSolarSystem() {
     const intersects = raycasterRef.current.intersectObjects(allVisiblePlanets, false);
     
     let hoveredId: string | null = null;
+    let hoveredMesh: PlanetMesh | null = null;
     if (intersects.length > 0) {
       const hitMesh = intersects[0].object as PlanetMesh;
       if (hitMesh.userData?.planet) {
         hoveredId = hitMesh.userData.planet.id;
+        hoveredMesh = hitMesh;
         
         if (physicsStateRef.current.hoveredPlanetId !== hoveredId) {
           const burstColor = new THREE.Color(hitMesh.userData.planet.color.primary);
@@ -1931,6 +1949,15 @@ export function RealisticSolarSystem() {
     }
     
     physicsStateRef.current.hoveredPlanetId = hoveredId;
+    
+    if (refs.outlinePass) {
+      const isInTransition = transitionCooldownRef.current || physicsStateRef.current.planetScatter.active;
+      if (hoveredMesh && !isInTransition) {
+        refs.outlinePass.selectedObjects = [hoveredMesh];
+      } else {
+        refs.outlinePass.selectedObjects = [];
+      }
+    }
   }, [createParticleBurst]);
 
   const animate = useCallback(() => {
