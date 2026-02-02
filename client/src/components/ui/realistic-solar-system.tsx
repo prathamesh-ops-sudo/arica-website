@@ -818,16 +818,16 @@ const trailParticleShader = {
 };
 
 const PLANET_TEXTURES: Record<string, string> = {
-  sun: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/sun.jpg',
-  mercury: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/mercurymap.jpg',
-  earth: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/earth_daymap.jpg',
-  mars: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/marsmap.jpg',
-  jupiter: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/jupiter.jpg',
-  saturn: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/saturnmap.jpg',
-  neptune: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/neptune.jpg',
-  uranus: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/uranus.jpg',
-  moon: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/moonmap.jpg',
-  pluto: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/plutomap.jpg',
+  sun: '/textures/sun.jpg',
+  mercury: '/textures/mercury.jpg',
+  earth: '/textures/earth.jpg',
+  mars: '/textures/mars.jpg',
+  jupiter: '/textures/jupiter.jpg',
+  saturn: '/textures/saturn.jpg',
+  neptune: '/textures/neptune.jpg',
+  uranus: '/textures/uranus.jpg',
+  moon: '/textures/moon.jpg',
+  pluto: '/textures/mercury.jpg',
 };
 
 const PLANET_ID_TO_TEXTURE: Record<string, string> = {
@@ -849,6 +849,7 @@ const PLANET_ID_TO_TEXTURE: Record<string, string> = {
 };
 
 const textureLoader = new THREE.TextureLoader();
+textureLoader.crossOrigin = 'anonymous';
 
 interface PlanetMesh extends THREE.Mesh {
   userData: {
@@ -1044,14 +1045,17 @@ export function RealisticSolarSystem() {
       refs.composer.addPass(outlinePass);
       refs.outlinePass = outlinePass;
 
-      const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+      const ambientLight = new THREE.AmbientLight(0x606080, 2);
       refs.scene.add(ambientLight);
 
       raycasterRef.current = new THREE.Raycaster();
+      console.log('RealisticSolarSystem: Initializing scene...');
 
       createNebula();
       createParallaxStarfield();
+      console.log('RealisticSolarSystem: Creating galaxies...');
       createGalaxies();
+      console.log('RealisticSolarSystem: Galaxies created');
 
       animate();
     } catch (error) {
@@ -1564,7 +1568,7 @@ export function RealisticSolarSystem() {
       refs.disposables.push(sunGeometry);
       refs.materials.push(sunMaterial);
 
-      galaxyGroup.sunLight = new THREE.PointLight(0xffffff, 3, 400);
+      galaxyGroup.sunLight = new THREE.PointLight(0xffffee, 50, 500, 1);
       galaxyGroup.sunLight.position.set(0, 0, 0);
       refs.scene!.add(galaxyGroup.sunLight);
 
@@ -1633,19 +1637,20 @@ export function RealisticSolarSystem() {
 
         const textureKey = PLANET_ID_TO_TEXTURE[planet.id];
         const textureUrl = textureKey ? PLANET_TEXTURES[textureKey] : null;
+        console.log(`Planet ${planet.id}: textureKey=${textureKey}, hasUrl=${!!textureUrl}`);
         
         let material: THREE.Material;
         if (textureUrl) {
+          console.log(`Loading texture for ${planet.id}: ${textureUrl}`);
           const planetTexture = textureLoader.load(
             textureUrl,
+            (tex) => console.log(`Texture loaded successfully for ${planet.id}`, tex.image?.width),
             undefined,
-            undefined,
-            (error) => console.warn(`Failed to load texture for ${planet.id}:`, error)
+            (error) => console.error(`Failed to load texture for ${planet.id}:`, error)
           );
-          material = new THREE.MeshStandardMaterial({
+          material = new THREE.MeshBasicMaterial({
             map: planetTexture,
-            roughness: 0.7,
-            metalness: 0.0,
+            color: 0xffffff,
           });
         } else {
           material = new THREE.ShaderMaterial({
