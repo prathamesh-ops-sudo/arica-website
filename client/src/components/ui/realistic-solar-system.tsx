@@ -2,6 +2,9 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'wouter';
 import { ChevronRight, Shield, FileCheck, Code, X } from 'lucide-react';
@@ -844,6 +847,7 @@ interface GalaxyGroup {
   sunLight: THREE.PointLight;
   corona: THREE.Mesh[];
   planets: PlanetMesh[];
+  orbitLines: THREE.LineLoop[];
   centerOffset: THREE.Vector3;
 }
 
@@ -897,6 +901,7 @@ export function RealisticSolarSystem() {
     scene: THREE.Scene | null;
     camera: THREE.PerspectiveCamera | null;
     renderer: THREE.WebGLRenderer | null;
+    composer: EffectComposer | null;
     galaxyGroups: GalaxyGroup[];
     starLayers: THREE.Points[];
     nebula: THREE.Mesh | null;
@@ -908,6 +913,7 @@ export function RealisticSolarSystem() {
     scene: null,
     camera: null,
     renderer: null,
+    composer: null,
     galaxyGroups: [],
     starLayers: [],
     nebula: null,
@@ -977,6 +983,17 @@ export function RealisticSolarSystem() {
       refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       refs.renderer.toneMapping = THREE.ACESFilmicToneMapping;
       refs.renderer.toneMappingExposure = 1.4;
+
+      refs.composer = new EffectComposer(refs.renderer);
+      const renderPass = new RenderPass(refs.scene, refs.camera);
+      refs.composer.addPass(renderPass);
+      const bloomPass = new UnrealBloomPass(
+        new THREE.Vector2(window.innerWidth, window.innerHeight),
+        1.5,
+        0.4,
+        0.85
+      );
+      refs.composer.addPass(bloomPass);
 
       const ambientLight = new THREE.AmbientLight(0x111122, 0.2);
       refs.scene.add(ambientLight);
@@ -1222,6 +1239,9 @@ export function RealisticSolarSystem() {
         refs.camera.aspect = window.innerWidth / window.innerHeight;
         refs.camera.updateProjectionMatrix();
         refs.renderer.setSize(window.innerWidth, window.innerHeight);
+        if (refs.composer) {
+          refs.composer.setSize(window.innerWidth, window.innerHeight);
+        }
       }
     };
 
@@ -1323,6 +1343,12 @@ export function RealisticSolarSystem() {
       refs.galaxyGroups.length = 0;
       refs.starLayers.length = 0;
       refs.nebula = null;
+      
+      // Dispose composer
+      if (refs.composer) {
+        refs.composer.dispose();
+        refs.composer = null;
+      }
       
       // Dispose renderer
       refs.renderer?.dispose();
@@ -1466,6 +1492,7 @@ export function RealisticSolarSystem() {
         sunLight: null!,
         corona: [],
         planets: [],
+        orbitLines: [],
         centerOffset: new THREE.Vector3(0, 0, 0),
       };
 
@@ -1524,6 +1551,34 @@ export function RealisticSolarSystem() {
         refs.scene!.add(coronaMesh);
         refs.disposables.push(coronaGeom);
         refs.materials.push(coronaMat);
+      });
+
+      const accentColor = new THREE.Color(galaxy.colorTheme.accent);
+      galaxy.planets.forEach((planet) => {
+        const orbitSegments = 128;
+        const orbitPoints: THREE.Vector3[] = [];
+        for (let i = 0; i <= orbitSegments; i++) {
+          const theta = (i / orbitSegments) * Math.PI * 2;
+          orbitPoints.push(new THREE.Vector3(
+            Math.cos(theta) * planet.distance,
+            0,
+            Math.sin(theta) * planet.distance
+          ));
+        }
+        const orbitGeometry = new THREE.BufferGeometry().setFromPoints(orbitPoints);
+        const orbitMaterial = new THREE.LineDashedMaterial({
+          color: accentColor,
+          opacity: 0.3,
+          transparent: true,
+          dashSize: 1,
+          gapSize: 0.5,
+        });
+        const orbitLine = new THREE.LineLoop(orbitGeometry, orbitMaterial);
+        orbitLine.computeLineDistances();
+        refs.scene!.add(orbitLine);
+        galaxyGroup.orbitLines.push(orbitLine);
+        refs.disposables.push(orbitGeometry);
+        refs.materials.push(orbitMaterial);
       });
 
       galaxy.planets.forEach((planet, index) => {
@@ -1988,6 +2043,7 @@ export function RealisticSolarSystem() {
       group.sun.visible = visibility > 0;
       group.sunLight.visible = visibility > 0;
       group.corona.forEach(c => { c.visible = visibility > 0; });
+      group.orbitLines.forEach(line => { line.visible = visibility > 0; });
       
       if (group.sun.visible) {
         const sunMat = group.sun.material as THREE.ShaderMaterial;
@@ -2099,8 +2155,8 @@ export function RealisticSolarSystem() {
       });
     });
 
-    if (refs.renderer && refs.scene && refs.camera) {
-      refs.renderer.render(refs.scene, refs.camera);
+    if (refs.composer && refs.scene && refs.camera) {
+      refs.composer.render();
     }
   }, [scrollProgress, warpEffect, getGalaxyForProgress, checkPlanetHover]);
 
