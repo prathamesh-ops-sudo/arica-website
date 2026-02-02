@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { cn } from "@/lib/utils";
+import { isWebGLAvailable } from '@/lib/webgl-utils';
 
 const randomColors = (count: number) => {
   return new Array(count)
@@ -20,10 +21,16 @@ export function TubesBackground({
 }: TubesBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [hasFailed, setHasFailed] = useState(false);
   const tubesRef = useRef<any>(null);
   const mountedRef = useRef(true);
 
   useEffect(() => {
+    if (!isWebGLAvailable()) {
+      setHasFailed(true);
+      return;
+    }
+    
     mountedRef.current = true;
     let cleanup: (() => void) | undefined;
 
@@ -69,6 +76,7 @@ export function TubesBackground({
 
       } catch (error) {
         console.warn("Failed to load TubesCursor:", error);
+        setHasFailed(true);
       }
     };
 
@@ -93,6 +101,21 @@ export function TubesBackground({
       tubesRef.current.tubes.setLightsColors(lightsColors);
     }
   };
+
+  if (hasFailed) {
+    return (
+      <div 
+        className={cn("relative w-full h-full overflow-hidden", className)}
+        data-testid="container-neon-flow-fallback"
+      >
+        {children && (
+          <div className="relative z-10 w-full h-full pointer-events-none">
+            {children}
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div 
