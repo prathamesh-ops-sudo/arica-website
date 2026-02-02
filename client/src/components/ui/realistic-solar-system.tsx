@@ -7,6 +7,7 @@ import { useLocation } from 'wouter';
 import { ChevronRight, Shield, FileCheck, Code, X } from 'lucide-react';
 import { isWebGLAvailable } from '@/lib/webgl-utils';
 import { useHyperspaceTransition } from '@/components/ui/hyperspace-transition';
+import EnergyBeam from '@/components/ui/energy-beam';
 
 interface ModalContent {
   title: string;
@@ -858,6 +859,8 @@ export function RealisticSolarSystem() {
   const [transitionText, setTransitionText] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalPlanet, setModalPlanet] = useState<PlanetConfig | null>(null);
+  const [showBlackHole, setShowBlackHole] = useState(false);
+  const [showQuote, setShowQuote] = useState(false);
   const mouseRef = useRef({ x: 0, y: 0 });
   const [, setLocation] = useLocation();
   const { triggerTransition } = useHyperspaceTransition();
@@ -872,6 +875,7 @@ export function RealisticSolarSystem() {
   const initialScrollRestoredRef = useRef(false);
   const lastScrollTimeRef = useRef(0);
   const scrollVelocityRef = useRef(0);
+  const blackHoleTimersRef = useRef<NodeJS.Timeout[]>([]);
   
   const physicsStateRef = useRef<PhysicsState>({
     scrollVelocity: 0,
@@ -1003,46 +1007,35 @@ export function RealisticSolarSystem() {
       if (progress >= 0.98 && scrollRef.current && !transitionCooldownRef.current) {
         transitionCooldownRef.current = true;
         setWarpEffect(1);
-        setTransitionText('Warping to VAPT Services...');
+        
+        // Clear any existing timers
+        blackHoleTimersRef.current.forEach(timer => clearTimeout(timer));
+        blackHoleTimersRef.current = [];
+        
+        // Lock scrolling during black hole sequence
+        if (scrollRef.current) {
+          scrollRef.current.style.overflow = 'hidden';
+          scrollRef.current.style.pointerEvents = 'none';
+        }
         
         physicsStateRef.current.cameraShake.intensity = 1.2;
         physicsStateRef.current.planetScatter = { active: true, progress: 0 };
         
-        if (sceneRef.current.scene) {
-          if (shockwaveRef.current) {
-            sceneRef.current.scene.remove(shockwaveRef.current);
-            shockwaveRef.current.geometry.dispose();
-            (shockwaveRef.current.material as THREE.Material).dispose();
-          }
-          
-          const warpColor = new THREE.Color('#9D4EDD');
-          const ringGeom = new THREE.RingGeometry(0.1, 100, 64);
-          const ringMat = new THREE.ShaderMaterial({
-            uniforms: {
-              progress: { value: 0 },
-              shockwaveColor: { value: new THREE.Vector3(warpColor.r, warpColor.g, warpColor.b) },
-              ringWidth: { value: 0.2 },
-            },
-            vertexShader: shockwaveShader.vertexShader,
-            fragmentShader: shockwaveShader.fragmentShader,
-            transparent: true,
-            side: THREE.DoubleSide,
-            depthWrite: false,
-            blending: THREE.AdditiveBlending,
-          });
-          
-          const ringMesh = new THREE.Mesh(ringGeom, ringMat);
-          ringMesh.rotation.x = -Math.PI / 2;
-          ringMesh.position.y = 0;
-          sceneRef.current.scene.add(ringMesh);
-          shockwaveRef.current = ringMesh;
-          
-          physicsStateRef.current.transitionShockwave = {
-            active: true,
-            progress: 0,
-            center: new THREE.Vector3(0, 0, 0),
-          };
-          
+        // Show black hole effect
+        setShowBlackHole(true);
+        
+        // Show quote after a moment
+        const quoteTimer = setTimeout(() => {
+          setShowQuote(true);
+        }, 1500);
+        blackHoleTimersRef.current.push(quoteTimer);
+        
+        // Clean up shockwave if exists
+        if (sceneRef.current.scene && shockwaveRef.current) {
+          sceneRef.current.scene.remove(shockwaveRef.current);
+          shockwaveRef.current.geometry.dispose();
+          (shockwaveRef.current.material as THREE.Material).dispose();
+          shockwaveRef.current = null;
         }
         
         sceneRef.current.galaxyGroups.forEach((group) => {
@@ -1056,29 +1049,32 @@ export function RealisticSolarSystem() {
           });
         });
         
-        const animateToStart = () => {
-          if (!scrollRef.current) return;
-          const currentScroll = scrollRef.current.scrollTop;
-          const targetScroll = 0;
-          const diff = currentScroll - targetScroll;
+        // Wait for black hole effect, then restart
+        const restartTimer = setTimeout(() => {
+          setShowQuote(false);
+          setShowBlackHole(false);
           
-          if (diff > 10) {
-            scrollRef.current.scrollTop = currentScroll - diff * 0.15;
-            requestAnimationFrame(animateToStart);
-          } else {
+          if (scrollRef.current) {
             scrollRef.current.scrollTop = 0;
-            progress = 0;
-            lastGalaxyRef.current = 'vapt';
-            sessionStorage.setItem('galaxyScrollProgress', '0');
-            setActivePlanet(null);
-            setTimeout(() => {
-              transitionCooldownRef.current = false;
-              setTransitionText(null);
-            }, 1500);
+            // Unlock scrolling
+            scrollRef.current.style.overflow = 'auto';
+            scrollRef.current.style.pointerEvents = 'auto';
           }
-        };
+          lastGalaxyRef.current = 'vapt';
+          sessionStorage.setItem('galaxyScrollProgress', '0');
+          setActivePlanet(null);
+          setScrollProgress(0);
+          setActiveGalaxy(galaxies[0]);
+          setWarpEffect(0);
+          
+          const cooldownTimer = setTimeout(() => {
+            transitionCooldownRef.current = false;
+            setTransitionText(null);
+          }, 500);
+          blackHoleTimersRef.current.push(cooldownTimer);
+        }, 4500);
+        blackHoleTimersRef.current.push(restartTimer);
         
-        requestAnimationFrame(animateToStart);
         return;
       }
       
@@ -1249,6 +1245,10 @@ export function RealisticSolarSystem() {
       // Cancel all animation frames
       if (scrollRafRef.current) cancelAnimationFrame(scrollRafRef.current);
       if (refs.animationId) cancelAnimationFrame(refs.animationId);
+      
+      // Clear all black hole timers
+      blackHoleTimersRef.current.forEach(timer => clearTimeout(timer));
+      blackHoleTimersRef.current = [];
       
       // Dispose shockwave mesh if exists
       if (shockwaveRef.current) {
@@ -2171,7 +2171,7 @@ export function RealisticSolarSystem() {
       
       <div 
         ref={scrollRef} 
-        className="fixed inset-0 z-10 overflow-y-auto overflow-x-hidden scroll-smooth"
+        className="fixed inset-0 z-10 overflow-y-auto overflow-x-hidden"
         style={{ 
           scrollbarWidth: 'none', 
           msOverflowStyle: 'none',
@@ -2514,6 +2514,60 @@ export function RealisticSolarSystem() {
                 </button>
               </div>
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
+      {/* Black Hole Effect Overlay */}
+      <AnimatePresence>
+        {showBlackHole && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5 }}
+            className="fixed inset-0 z-[200]"
+            data-testid="overlay-blackhole"
+          >
+            <EnergyBeam className="absolute inset-0" data-testid="effect-energy-beam" />
+            
+            {/* Quote Overlay */}
+            <AnimatePresence>
+              {showQuote && (
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -30 }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                  className="absolute inset-0 flex items-center justify-center z-10"
+                  data-testid="overlay-blackhole-quote"
+                >
+                  <div className="text-center px-8">
+                    <motion.p
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.3, duration: 0.8 }}
+                      className="text-4xl md:text-6xl font-bold text-white mb-4"
+                      style={{
+                        textShadow: '0 0 40px rgba(157, 78, 221, 0.8), 0 0 80px rgba(58, 12, 163, 0.6)',
+                      }}
+                      data-testid="text-quote-main"
+                    >
+                      Every End is a New Beginning
+                    </motion.p>
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.8, duration: 0.5 }}
+                      className="text-lg md:text-xl text-white/60"
+                      data-testid="text-quote-subtitle"
+                    >
+                      Restarting your journey...
+                    </motion.p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
