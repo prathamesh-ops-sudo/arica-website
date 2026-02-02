@@ -817,6 +817,39 @@ const trailParticleShader = {
   `,
 };
 
+const PLANET_TEXTURES: Record<string, string> = {
+  sun: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/sun.jpg',
+  mercury: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/mercurymap.jpg',
+  earth: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/earth_daymap.jpg',
+  mars: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/marsmap.jpg',
+  jupiter: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/jupiter.jpg',
+  saturn: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/saturnmap.jpg',
+  neptune: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/neptune.jpg',
+  uranus: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/uranus.jpg',
+  moon: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/moonmap.jpg',
+  pluto: 'https://raw.githubusercontent.com/N3rson/Solar-System-3D/main/src/images/plutomap.jpg',
+};
+
+const PLANET_ID_TO_TEXTURE: Record<string, string> = {
+  'network-security': 'mars',
+  'web-application': 'earth',
+  'api-security': 'neptune',
+  'mobile-security': 'mercury',
+  'cloud-security': 'moon',
+  'gap-analysis': 'jupiter',
+  'risk-assessment': 'mars',
+  'policy-development': 'saturn',
+  'implementation': 'uranus',
+  'certification': 'jupiter',
+  'secure-architecture': 'moon',
+  'devsecops': 'mars',
+  'code-review': 'earth',
+  'security-training': 'neptune',
+  'ongoing-support': 'uranus',
+};
+
+const textureLoader = new THREE.TextureLoader();
+
 interface PlanetMesh extends THREE.Mesh {
   userData: {
     planet: PlanetConfig;
@@ -1516,14 +1549,15 @@ export function RealisticSolarSystem() {
       const sunColor1 = new THREE.Color(galaxy.colorTheme.primary);
       const sunColor2 = new THREE.Color(galaxy.colorTheme.secondary);
       
-      const sunMaterial = new THREE.ShaderMaterial({
-        uniforms: {
-          time: { value: 0 },
-          sunColor1: { value: new THREE.Vector3(sunColor1.r, sunColor1.g, sunColor1.b) },
-          sunColor2: { value: new THREE.Vector3(sunColor2.r, sunColor2.g, sunColor2.b) },
-        },
-        vertexShader: sunShader.vertexShader,
-        fragmentShader: sunShader.fragmentShader,
+      const sunTexture = textureLoader.load(
+        PLANET_TEXTURES.sun,
+        undefined,
+        undefined,
+        (error) => console.warn('Failed to load sun texture:', error)
+      );
+      const sunMaterial = new THREE.MeshBasicMaterial({
+        map: sunTexture,
+        color: sunColor1,
       });
 
       galaxyGroup.sun = new THREE.Mesh(sunGeometry, sunMaterial);
@@ -1602,16 +1636,35 @@ export function RealisticSolarSystem() {
         const primaryColor = new THREE.Color(planet.color.primary);
         const secondaryColor = new THREE.Color(planet.color.secondary);
 
-        const material = new THREE.ShaderMaterial({
-          uniforms: {
-            time: { value: 0 },
-            lightPosition: { value: new THREE.Vector3(0, 0, 0) },
-            primaryColor: { value: new THREE.Vector3(primaryColor.r, primaryColor.g, primaryColor.b) },
-            secondaryColor: { value: new THREE.Vector3(secondaryColor.r, secondaryColor.g, secondaryColor.b) },
-          },
-          vertexShader: servicePlanetShader.vertexShader,
-          fragmentShader: servicePlanetShader.fragmentShader,
-        });
+        const textureKey = PLANET_ID_TO_TEXTURE[planet.id];
+        const textureUrl = textureKey ? PLANET_TEXTURES[textureKey] : null;
+        
+        let material: THREE.Material;
+        if (textureUrl) {
+          const planetTexture = textureLoader.load(
+            textureUrl,
+            undefined,
+            undefined,
+            (error) => console.warn(`Failed to load texture for ${planet.id}:`, error)
+          );
+          material = new THREE.MeshStandardMaterial({
+            map: planetTexture,
+            roughness: 0.8,
+            metalness: 0.1,
+            color: primaryColor,
+          });
+        } else {
+          material = new THREE.ShaderMaterial({
+            uniforms: {
+              time: { value: 0 },
+              lightPosition: { value: new THREE.Vector3(0, 0, 0) },
+              primaryColor: { value: new THREE.Vector3(primaryColor.r, primaryColor.g, primaryColor.b) },
+              secondaryColor: { value: new THREE.Vector3(secondaryColor.r, secondaryColor.g, secondaryColor.b) },
+            },
+            vertexShader: servicePlanetShader.vertexShader,
+            fragmentShader: servicePlanetShader.fragmentShader,
+          });
+        }
 
         const mesh = new THREE.Mesh(geometry, material) as unknown as PlanetMesh;
         const angle = (index / galaxy.planets.length) * Math.PI * 2;
@@ -2073,13 +2126,13 @@ export function RealisticSolarSystem() {
       group.orbitLines.forEach(line => { line.visible = visibility > 0; });
       
       if (group.sun.visible) {
-        const sunMat = group.sun.material as THREE.ShaderMaterial;
-        sunMat.uniforms.time.value = time;
         group.sun.rotation.y += 0.0005;
         
         group.corona.forEach((corona) => {
           const coronaMat = corona.material as THREE.ShaderMaterial;
-          coronaMat.uniforms.time.value = time;
+          if (coronaMat.uniforms?.time) {
+            coronaMat.uniforms.time.value = time;
+          }
         });
       }
       
