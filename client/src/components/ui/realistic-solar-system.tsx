@@ -1049,13 +1049,10 @@ export function RealisticSolarSystem() {
       refs.scene.add(ambientLight);
 
       raycasterRef.current = new THREE.Raycaster();
-      console.log('RealisticSolarSystem: Initializing scene...');
 
       createNebula();
       createParallaxStarfield();
-      console.log('RealisticSolarSystem: Creating galaxies...');
       createGalaxies();
-      console.log('RealisticSolarSystem: Galaxies created');
 
       animate();
     } catch (error) {
@@ -1637,17 +1634,10 @@ export function RealisticSolarSystem() {
 
         const textureKey = PLANET_ID_TO_TEXTURE[planet.id];
         const textureUrl = textureKey ? PLANET_TEXTURES[textureKey] : null;
-        console.log(`Planet ${planet.id}: textureKey=${textureKey}, hasUrl=${!!textureUrl}`);
         
         let material: THREE.Material;
         if (textureUrl) {
-          console.log(`Loading texture for ${planet.id}: ${textureUrl}`);
-          const planetTexture = textureLoader.load(
-            textureUrl,
-            (tex) => console.log(`Texture loaded successfully for ${planet.id}`, tex.image?.width),
-            undefined,
-            (error) => console.error(`Failed to load texture for ${planet.id}:`, error)
-          );
+          const planetTexture = textureLoader.load(textureUrl);
           material = new THREE.MeshBasicMaterial({
             map: planetTexture,
             color: 0xffffff,

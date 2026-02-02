@@ -27,7 +27,7 @@ The site heavily utilizes advanced 3D and animation components to create a dynam
 - **FluidSimulation**: WebGL 2D fluid dynamics simulation for subtle background effects.
 - **HorizonHeroSection**: A Three.js 3D space hero with star fields, animated nebulae, and GSAP scroll-triggered camera movement. Enhanced with layered EnergyBeam and TubesBackground (NeonFlow) effects using screen blend modes for a dynamic, interactive visual experience.
 - **TubesBackground (NeonFlow)**: An interactive 3D tubes/neon effect using threejs-components, responding to mouse movement and clicks for color randomization.
-- **RealisticSolarSystem**: A "Galaxy Journey" featuring service-themed galaxies with physics-based interactive planets.
+- **RealisticSolarSystem**: A "Galaxy Journey" featuring service-themed galaxies with physics-based interactive planets, realistic NASA planet textures (stored locally in `/client/public/textures/`), bloom postprocessing effects, orbit lines, and hover outline highlighting. Each service category is represented by a galaxy with themed planets: VAPT (Mars, Mercury), ISO 27001 (Jupiter, Saturn), and Custom Software (Earth, Neptune, Uranus).
 - **CyberAttackGlobe**: A WebGL globe visualizing cyber attacks with impact flashes, arc trails, and atmospheric pulsing.
 - **Orca**: An immersive parallax scroll-driven 3D animation experience narrating the security response journey, featuring post-processing effects (bloom, vignette, chromatic aberration), Apple-neutral color palette, and hyperspace transition to the Experience page.
 - **AmbientParticles**: Reusable CSS-animated particles for visual polish.
