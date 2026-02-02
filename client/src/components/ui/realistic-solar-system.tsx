@@ -1888,10 +1888,19 @@ export function RealisticSolarSystem() {
     
     checkPlanetHover();
     
-    physics.scrollMomentum *= 0.95;
+    physics.scrollMomentum *= 0.92;
     const momentumBoost = physics.scrollMomentum * 0.5;
     
-    const smoothing = 0.025;
+    // Adaptive smoothing - faster when camera is far, slower when close for precision
+    const distX = Math.abs(cam.targetX - cam.x);
+    const distY = Math.abs(cam.targetY - cam.y);
+    const distZ = Math.abs(cam.targetZ - cam.z);
+    const totalDist = distX + distY + distZ;
+    
+    // Base smoothing with adaptive adjustment
+    const baseSmoothing = 0.04;
+    const smoothing = totalDist > 20 ? baseSmoothing * 1.5 : baseSmoothing;
+    
     cam.x += (cam.targetX - cam.x) * smoothing;
     cam.y += (cam.targetY - cam.y) * smoothing;
     cam.z += (cam.targetZ - cam.z) * smoothing;
@@ -2162,8 +2171,12 @@ export function RealisticSolarSystem() {
       
       <div 
         ref={scrollRef} 
-        className="fixed inset-0 z-10 overflow-y-auto overflow-x-hidden"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        className="fixed inset-0 z-10 overflow-y-auto overflow-x-hidden scroll-smooth"
+        style={{ 
+          scrollbarWidth: 'none', 
+          msOverflowStyle: 'none',
+          WebkitOverflowScrolling: 'touch',
+        }}
       >
         <div 
           ref={spacerRef} 
