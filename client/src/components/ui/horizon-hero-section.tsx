@@ -8,6 +8,8 @@ import { useLocation } from 'wouter';
 import { Rocket } from 'lucide-react';
 import { useHyperspaceTransition } from './hyperspace-transition';
 import { isWebGLAvailable } from '@/lib/webgl-utils';
+import EnergyBeam from './energy-beam';
+import { TubesBackground } from './neon-flow';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -601,8 +603,34 @@ export function HorizonHeroSection() {
 
   return (
     <div ref={containerRef} className="horizon-hero-container">
+      {/* Energy Beam Background Layer */}
+      <div 
+        className="absolute inset-0 z-[1]" 
+        style={{ 
+          opacity: isPastHero ? 0 : 0.4,
+          mixBlendMode: 'screen',
+          transition: 'opacity 0.5s ease'
+        }}
+        data-testid="hero-energy-beam-layer"
+      >
+        <EnergyBeam className="w-full h-full" />
+      </div>
+      
+      {/* Neon Flow Interactive Layer */}
+      <div 
+        className="absolute inset-0 z-[2]" 
+        style={{ 
+          opacity: isPastHero ? 0 : 0.35,
+          mixBlendMode: 'screen',
+          transition: 'opacity 0.5s ease'
+        }}
+        data-testid="hero-neon-flow-layer"
+      >
+        <TubesBackground className="w-full h-full" enableClickInteraction={true} />
+      </div>
+      
       {webglFailed ? (
-        <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-[#0a0510] to-black">
+        <div className="absolute inset-0 z-[3] bg-gradient-to-b from-[#050505] via-[#0a0510] to-black">
           <div className="absolute inset-0 opacity-30" style={{
             backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(58, 12, 163, 0.2), transparent 50%), radial-gradient(circle at 80% 30%, rgba(157, 78, 221, 0.2), transparent 50%)'
           }} />
@@ -610,7 +638,7 @@ export function HorizonHeroSection() {
       ) : (
         <canvas 
           ref={canvasRef} 
-          className="horizon-hero-canvas" 
+          className="horizon-hero-canvas z-[3]" 
           style={{ opacity: isPastHero ? 0 : 1, transition: 'opacity 0.5s ease' }}
         />
       )}
@@ -628,7 +656,7 @@ export function HorizonHeroSection() {
         <div className="horizon-vertical-text">SECURITY</div>
       </div>
 
-      <div className="horizon-hero-content" style={{ opacity: isPastHero ? 0 : 1, transition: 'opacity 0.3s ease' }}>
+      <div className="horizon-hero-content z-[10]" style={{ opacity: isPastHero ? 0 : 1, transition: 'opacity 0.3s ease' }}>
         <h1 ref={titleRef} className="horizon-hero-title text-halo-white">
           {titles[currentSection] || titles[0]}
         </h1>
