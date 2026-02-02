@@ -2296,11 +2296,12 @@ export function RealisticSolarSystem() {
       
       <div 
         ref={scrollRef} 
-        className="fixed inset-0 z-10 overflow-y-auto overflow-x-hidden"
+        className="fixed inset-0 overflow-y-auto overflow-x-hidden"
         style={{ 
           scrollbarWidth: 'none', 
           msOverflowStyle: 'none',
           WebkitOverflowScrolling: 'touch',
+          zIndex: 5,
         }}
       >
         <div 
