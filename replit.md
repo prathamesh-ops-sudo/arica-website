@@ -25,7 +25,8 @@ Key visual elements include WebGL shader backgrounds with neutral-colored fluid 
 The site heavily utilizes advanced 3D and animation components to create a dynamic and immersive user experience:
 - **R3FCyberHero**: A React Three Fiber powered 3D hero section with scroll-driven camera movements, animated cyber grid, floating security shields, dynamic data particles, and mouse parallax effects.
 - **FluidSimulation**: WebGL 2D fluid dynamics simulation for subtle background effects.
-- **HorizonHeroSection**: A Three.js 3D space hero with star fields, animated nebulae, and GSAP scroll-triggered camera movement.
+- **HorizonHeroSection**: A Three.js 3D space hero with star fields, animated nebulae, and GSAP scroll-triggered camera movement. Enhanced with layered EnergyBeam and TubesBackground (NeonFlow) effects using screen blend modes for a dynamic, interactive visual experience.
+- **TubesBackground (NeonFlow)**: An interactive 3D tubes/neon effect using threejs-components, responding to mouse movement and clicks for color randomization.
 - **RealisticSolarSystem**: A "Galaxy Journey" featuring service-themed galaxies with physics-based interactive planets.
 - **CyberAttackGlobe**: A WebGL globe visualizing cyber attacks with impact flashes, arc trails, and atmospheric pulsing.
 - **Orca**: An immersive parallax scroll-driven 3D animation experience narrating the security response journey, featuring post-processing effects (bloom, vignette, chromatic aberration), Apple-neutral color palette, and hyperspace transition to the Experience page.
