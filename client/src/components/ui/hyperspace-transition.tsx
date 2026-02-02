@@ -7,8 +7,8 @@ import { isWebGLAvailable } from '@/lib/webgl-utils';
 
 const BLUE_ACCENT = '#3A0CA3';
 const PURPLE_ACCENT = '#9D4EDD';
-const STAR_COUNT = 800;
-const TRANSITION_DURATION = 800;
+const STAR_COUNT = 1200;
+const TRANSITION_DURATION = 1200;
 
 interface HyperspaceContextType {
   triggerTransition: (callback?: () => void) => void;
@@ -78,6 +78,7 @@ function StarField({ progress, opacity }: StarFieldProps) {
         attribute vec3 customColor;
         varying vec3 vColor;
         varying float vProgress;
+        varying float vDepth;
         uniform float uProgress;
         uniform float uTime;
         
@@ -86,34 +87,58 @@ function StarField({ progress, opacity }: StarFieldProps) {
           vProgress = uProgress;
           
           vec3 pos = position;
-          float stretchFactor = 1.0 + uProgress * 50.0;
-          pos.z += uProgress * 200.0 * (1.0 + sin(uTime + position.x) * 0.2);
+          
+          // More dramatic warp effect - stars stretch toward center
+          float warpIntensity = uProgress * uProgress * 300.0;
+          pos.z += warpIntensity * (1.0 + sin(uTime * 2.0 + position.x * 0.1) * 0.3);
+          
+          // Pull stars toward center as they warp
+          float pullFactor = uProgress * uProgress * 0.3;
+          pos.x *= (1.0 - pullFactor);
+          pos.y *= (1.0 - pullFactor);
           
           vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-          gl_PointSize = size * (300.0 / -mvPosition.z) * (1.0 + uProgress * 3.0);
+          vDepth = -mvPosition.z;
+          
+          // Stars get larger as they pass by
+          float sizeMult = 1.0 + uProgress * 5.0;
+          gl_PointSize = size * (400.0 / -mvPosition.z) * sizeMult;
           gl_Position = projectionMatrix * mvPosition;
         }
       `,
       fragmentShader: `
         varying vec3 vColor;
         varying float vProgress;
+        varying float vDepth;
         uniform float uOpacity;
         
         void main() {
-          float dist = length(gl_PointCoord - vec2(0.5));
+          vec2 center = gl_PointCoord - vec2(0.5);
+          float dist = length(center);
           
-          float stretchY = abs(gl_PointCoord.y - 0.5);
-          float stretchX = abs(gl_PointCoord.x - 0.5);
-          float streak = smoothstep(0.5, 0.0, stretchX) * smoothstep(0.5 * (1.0 - vProgress * 0.8), 0.0, stretchY);
+          // Create dramatic streak effect
+          float stretchAmount = vProgress * vProgress;
+          float streakLength = 0.5 - stretchAmount * 0.4;
+          float stretchY = abs(center.y);
+          float stretchX = abs(center.x);
+          
+          // Elongated star streak toward center of screen
+          float streak = smoothstep(0.5, 0.0, stretchX * (1.0 - stretchAmount * 0.7)) * 
+                         smoothstep(streakLength, 0.0, stretchY);
           
           float circle = 1.0 - smoothstep(0.0, 0.5, dist);
-          float shape = mix(circle, streak, vProgress);
+          float shape = mix(circle, streak, stretchAmount);
           
-          vec3 glowColor = vColor * (1.0 + vProgress * 2.0);
-          float alpha = shape * uOpacity;
+          // Intensify glow during warp
+          vec3 glowColor = vColor * (1.0 + vProgress * 4.0);
+          
+          // Add white core during peak
+          vec3 coreColor = mix(glowColor, vec3(1.0), vProgress * vProgress * 0.5);
+          
+          float alpha = shape * uOpacity * (1.0 + vProgress);
           
           if (alpha < 0.01) discard;
-          gl_FragColor = vec4(glowColor, alpha);
+          gl_FragColor = vec4(coreColor, min(alpha, 1.0));
         }
       `,
       transparent: true,
@@ -185,6 +210,7 @@ export function HyperspaceTransitionProvider({ children }: HyperspaceTransitionP
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [progress, setProgress] = useState(0);
   const [opacity, setOpacity] = useState(0);
+  const [flashOpacity, setFlashOpacity] = useState(0);
   const callbackRef = useRef<(() => void) | undefined>(undefined);
   const animationRef = useRef<number | undefined>(undefined);
 
@@ -195,26 +221,38 @@ export function HyperspaceTransitionProvider({ children }: HyperspaceTransitionP
     setIsTransitioning(true);
     
     const startTime = performance.now();
-    const halfDuration = TRANSITION_DURATION / 2;
+    const rampUp = TRANSITION_DURATION * 0.4;
+    const peak = TRANSITION_DURATION * 0.2;
+    const rampDown = TRANSITION_DURATION * 0.4;
     
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
       const normalizedTime = Math.min(elapsed / TRANSITION_DURATION, 1);
       
+      // Smoother easing with more dramatic acceleration
       const easedProgress = normalizedTime < 0.5
-        ? 4 * normalizedTime * normalizedTime * normalizedTime
-        : 1 - Math.pow(-2 * normalizedTime + 2, 3) / 2;
+        ? 8 * normalizedTime * normalizedTime * normalizedTime * normalizedTime
+        : 1 - Math.pow(-2 * normalizedTime + 2, 4) / 2;
       
       setProgress(easedProgress);
       
-      if (elapsed < halfDuration) {
-        setOpacity(Math.min(elapsed / (halfDuration * 0.3), 1));
+      // Opacity ramp up, hold, then fade out
+      if (elapsed < rampUp) {
+        setOpacity(Math.min(elapsed / (rampUp * 0.5), 1));
+        setFlashOpacity(0);
+      } else if (elapsed < rampUp + peak) {
+        setOpacity(1);
+        // Flash at peak
+        const peakProgress = (elapsed - rampUp) / peak;
+        setFlashOpacity(Math.sin(peakProgress * Math.PI) * 0.7);
       } else {
-        const fadeOutProgress = (elapsed - halfDuration) / halfDuration;
+        const fadeOutProgress = (elapsed - rampUp - peak) / rampDown;
         setOpacity(1 - fadeOutProgress);
+        setFlashOpacity(Math.max(0, 0.7 - fadeOutProgress * 2));
       }
       
-      if (elapsed >= halfDuration && elapsed < halfDuration + 50 && callbackRef.current) {
+      // Trigger callback at peak
+      if (elapsed >= rampUp + peak * 0.5 && elapsed < rampUp + peak * 0.5 + 50 && callbackRef.current) {
         callbackRef.current();
         callbackRef.current = undefined;
       }
@@ -225,6 +263,7 @@ export function HyperspaceTransitionProvider({ children }: HyperspaceTransitionP
         setIsTransitioning(false);
         setProgress(0);
         setOpacity(0);
+        setFlashOpacity(0);
       }
     };
     
@@ -248,19 +287,30 @@ export function HyperspaceTransitionProvider({ children }: HyperspaceTransitionP
     <HyperspaceContext.Provider value={contextValue}>
       {children}
       {isTransitioning && isWebGLAvailable() && (
-        <div
-          className="fixed inset-0 pointer-events-none"
-          style={{ zIndex: 9999 }}
-          data-testid="hyperspace-overlay"
-        >
-          <Canvas
-            camera={{ position: [0, 0, 30], fov: 75 }}
-            style={{ background: 'transparent' }}
-            gl={{ alpha: true, antialias: true }}
+        <>
+          <div
+            className="fixed inset-0 pointer-events-none"
+            style={{ zIndex: 9999 }}
+            data-testid="hyperspace-overlay"
           >
-            <HyperspaceScene progress={progress} opacity={opacity} />
-          </Canvas>
-        </div>
+            <Canvas
+              camera={{ position: [0, 0, 30], fov: 75 }}
+              style={{ background: 'transparent' }}
+              gl={{ alpha: true, antialias: true }}
+            >
+              <HyperspaceScene progress={progress} opacity={opacity} />
+            </Canvas>
+          </div>
+          {/* Flash overlay at peak */}
+          <div
+            className="fixed inset-0 pointer-events-none"
+            style={{
+              zIndex: 10000,
+              background: `radial-gradient(ellipse at center, rgba(157, 78, 221, ${flashOpacity}) 0%, rgba(58, 12, 163, ${flashOpacity * 0.5}) 50%, transparent 100%)`,
+              mixBlendMode: 'screen',
+            }}
+          />
+        </>
       )}
     </HyperspaceContext.Provider>
   );
