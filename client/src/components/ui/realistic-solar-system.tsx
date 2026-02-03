@@ -2679,7 +2679,7 @@ export function RealisticSolarSystem() {
                       }}
                       data-testid="text-quote-main"
                     >
-                      Every End is a New Beginning
+                      अंतः अस्ति प्रारंभः
                     </motion.p>
                     <motion.p
                       initial={{ opacity: 0 }}
