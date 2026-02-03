@@ -12,6 +12,7 @@ import { ChevronRight, Shield, FileCheck, Code, X } from 'lucide-react';
 import { isWebGLAvailable } from '@/lib/webgl-utils';
 import { useHyperspaceTransition } from '@/components/ui/hyperspace-transition';
 import EnergyBeam from '@/components/ui/energy-beam';
+import TetrisLoading from '@/components/ui/tetris-loader';
 
 interface ModalContent {
   title: string;
@@ -2314,10 +2315,12 @@ export function RealisticSolarSystem() {
       <div className="fixed inset-0 z-20 pointer-events-none">
         {!isLoaded && (
           <div className="absolute inset-0 flex items-center justify-center bg-background z-50 pointer-events-auto">
-            <div className="text-center">
-              <div className="w-20 h-20 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-muted-foreground">Initializing Galaxy Experience...</p>
-            </div>
+            <TetrisLoading 
+              size="md" 
+              speed="fast" 
+              showLoadingText={true}
+              loadingText="Initializing Galaxy Experience..."
+            />
           </div>
         )}
         
@@ -2336,20 +2339,15 @@ export function RealisticSolarSystem() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.2 }}
-              className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none"
+              className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none bg-black/60 backdrop-blur-sm"
             >
-              <div className="text-center">
-                <motion.div
-                  animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                  className="text-4xl md:text-6xl font-bold"
-                  style={{ 
-                    color: activeGalaxy.colorTheme.accent,
-                    textShadow: `0 0 40px ${activeGalaxy.colorTheme.accent}`,
-                  }}
-                >
-                  {transitionText}
-                </motion.div>
+              <div className="flex flex-col items-center">
+                <TetrisLoading 
+                  size="sm" 
+                  speed="fast" 
+                  showLoadingText={true}
+                  loadingText={transitionText}
+                />
               </div>
             </motion.div>
           )}
