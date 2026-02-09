@@ -164,7 +164,7 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
         data-testid="section-cinematic-overlay"
         className="fixed inset-0 z-50 overflow-hidden"
         style={{
-          pointerEvents: isAmbient ? "none" : "auto",
+          pointerEvents: isPastHero || isAmbient ? "none" : "auto",
           opacity: isPastHero ? 0 : 1,
           transition: "opacity 0.5s ease",
           animation: phase === "breach" ? "screen-shake 0.3s ease infinite" : "none",
@@ -530,7 +530,7 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
             ))}
 
             {/* CTA Button */}
-            <div className="absolute inset-0 flex items-center justify-center" style={{ pointerEvents: "auto" }}>
+            <div className="absolute inset-0 flex items-center justify-center" style={{ pointerEvents: isPastHero ? "none" : "auto" }}>
               <motion.button
                 data-testid="button-enter-experience"
                 onClick={onEnterExperience}
