@@ -426,7 +426,7 @@ export function ThreatVortex() {
               );
             })}
 
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex items-center justify-center">
               <motion.div
                 className="absolute rounded-full"
                 style={{
@@ -484,8 +484,10 @@ export function ThreatVortex() {
               )}
 
               <motion.div
-                className="relative w-24 h-24 rounded-full flex items-center justify-center"
+                className="absolute w-24 h-24 rounded-full flex items-center justify-center"
                 style={{
+                  left: '-48px',
+                  top: '-48px',
                   background: phase === "fighting" || phase === "shockwave"
                     ? 'radial-gradient(circle at 35% 35%, #c77dff, #9D4EDD, #7B2FE0, #3A0CA3)'
                     : 'radial-gradient(circle at 35% 35%, #9D4EDD, #7B2FE0, #3A0CA3, #1a0550)',
