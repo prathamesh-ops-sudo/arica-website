@@ -660,6 +660,13 @@ export function HorizonHeroSection() {
       
       <CinematicHeroOverlay onEnterExperience={handleEnterExperience} isPastHero={isPastHero} />
 
+      {/* Parallax scroll-driven title */}
+      <div className="horizon-hero-content z-[10]" style={{ opacity: isPastHero ? 0 : 1, transition: 'opacity 0.3s ease' }}>
+        <h1 className="horizon-hero-title text-halo-white">
+          {currentSection === 0 ? 'ARICA' : currentSection === 1 ? 'TECH' : 'SECURITY'}
+        </h1>
+      </div>
+
       <div ref={scrollProgressRef} className="horizon-scroll-progress" style={{ visibility: 'hidden', opacity: isPastHero ? 0 : 1, pointerEvents: isPastHero ? 'none' : 'auto', transition: 'opacity 0.5s ease' }}>
         <div className="horizon-scroll-text" style={{ opacity: scrollStarted ? 0 : 1, transition: 'opacity 0.5s ease-out' }}>SCROLL</div>
         <div className="horizon-progress-track">

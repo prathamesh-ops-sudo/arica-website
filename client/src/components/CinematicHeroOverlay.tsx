@@ -18,7 +18,7 @@ const bootLines = [
   "> SYSTEM STATUS: ALL MODULES ONLINE         [OK]",
 ];
 
-const companyName = "CYBER GUARDIAN";
+const companyName = "ARICA TECH";
 
 const shieldPath =
   "M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z";
