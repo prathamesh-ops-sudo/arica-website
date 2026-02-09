@@ -937,7 +937,7 @@ export default function Certifications() {
             className="mb-16"
           >
             <h2 className="text-3xl font-bold text-white text-center mb-8">
-              Certification Journey
+              Certification Roadmap
             </h2>
             <div className="relative">
               {/* Animated path line */}

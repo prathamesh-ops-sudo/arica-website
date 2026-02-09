@@ -106,7 +106,7 @@ export default function ComplianceDashboard() {
               </span>
             </h1>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Track your organization's journey to ISO 27001 certification with our comprehensive compliance monitoring system.
+              Track your organization's path to ISO 27001 certification with our comprehensive compliance monitoring system.
             </p>
           </motion.div>
 
@@ -363,7 +363,7 @@ export default function ComplianceDashboard() {
               data-testid="link-get-certified"
             >
               <TrendingUp className="w-5 h-5" />
-              Start Your Certification Journey
+              Start Your Certification Process
             </Link>
             <p className="text-sm text-muted-foreground mt-4">
               Our ISO 27001 experts will guide you through every step of the certification process.

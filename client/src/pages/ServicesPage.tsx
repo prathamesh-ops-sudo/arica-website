@@ -46,7 +46,7 @@ const services = [
     icon: Scale,
     title: "ISO Audit",
     description:
-      "Complete ISO 27001 compliance services to help your organization achieve and maintain information security certification. We guide you through every step of the compliance journey.",
+      "Complete ISO 27001 compliance services to help your organization achieve and maintain information security certification. We guide you through every step of the certification process.",
     features: [
       "ISO 27001 Gap Analysis",
       "Compliance Roadmap",

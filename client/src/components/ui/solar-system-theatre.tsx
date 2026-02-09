@@ -775,7 +775,7 @@ export function SolarSystemTheatre() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
                 >
-                  Navigate the Universe of Security
+                  Securing Your Digital Frontier
                 </motion.p>
               </div>
             </motion.div>

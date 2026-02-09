@@ -21,7 +21,6 @@ import {
   Info,
   Briefcase,
   Mail,
-  Rocket,
   Sparkles
 } from 'lucide-react';
 import { useLocation } from 'wouter';
@@ -909,7 +908,7 @@ function CompletionOverlay() {
             style={{ boxShadow: '0 0 40px rgba(58,12,163,0.5)' }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-            <Rocket className="w-5 h-5" />
+            <ShieldCheck className="w-5 h-5" />
             <span className="relative">Explore Our Cyber Network</span>
             <Sparkles className="w-5 h-5" />
           </button>

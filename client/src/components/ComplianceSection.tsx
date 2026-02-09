@@ -42,7 +42,7 @@ export function ComplianceSection() {
 
             <p className="text-muted-foreground mb-8 leading-relaxed max-w-lg">
               Achieve ISO 27001 certification with our expert audit services. We guide
-              your organization through the entire certification journey, from initial
+              your organization through the entire certification process, from initial
               gap analysis to successful certification and ongoing compliance.
             </p>
 
@@ -79,7 +79,7 @@ export function ComplianceSection() {
                 data-testid="button-get-compliant"
                 className="bg-primary text-primary-foreground hover:bg-primary/90 group"
               >
-                Start ISO 27001 Journey
+                Start ISO 27001 Certification
                 <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
