@@ -38,7 +38,7 @@ const battleLogSequence: { text: string; type: BattleLogEntry["type"]; delay: nu
   { text: "[ALERT] 16 hostile payloads inbound", type: "danger", delay: 400 },
   { text: "[ALERT] RANSOMWARE signature matched :: Threat Level CRITICAL", type: "danger", delay: 800 },
   { text: "[SYS] Activating Cyber Guardian Defense Protocol", type: "action", delay: 1500 },
-  { text: "[SHIELD] Energy barrier raised :: Power at 100%", type: "action", delay: 2200 },
+  { text: "[WEAPON] Targeting systems online :: Lock at 100%", type: "action", delay: 2200 },
   { text: "[WEAPON] Deploying countermeasure beams", type: "action", delay: 3000 },
   { text: "[HIT] MALWARE neutralized ████████ 100%", type: "success", delay: 3800 },
   { text: "[HIT] RANSOMWARE payload destroyed", type: "success", delay: 4200 },
@@ -427,101 +427,182 @@ export function ThreatVortex() {
             })}
 
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex items-center justify-center">
+              {/* Outer energy field */}
               <motion.div
                 className="absolute rounded-full"
                 style={{
-                  width: '200px',
-                  height: '200px',
-                  left: '-100px',
-                  top: '-100px',
-                  background: 'radial-gradient(circle, rgba(123,47,224,0.15) 0%, transparent 70%)',
+                  width: '220px',
+                  height: '220px',
+                  left: '-110px',
+                  top: '-110px',
+                  background: 'radial-gradient(circle, rgba(123,47,224,0.12) 0%, transparent 70%)',
                 }}
                 animate={{
-                  scale: phase === "fighting" ? [1, 1.5, 1] : phase === "shockwave" ? [1, 3, 1] : [1, 1.1, 1],
-                  opacity: phase === "fighting" ? [0.3, 0.8, 0.3] : 0.5,
+                  scale: phase === "fighting" ? [1, 1.6, 1] : phase === "shockwave" ? [1, 4, 1] : [1, 1.1, 1],
+                  opacity: phase === "fighting" ? [0.2, 0.7, 0.2] : 0.4,
                 }}
                 transition={{ duration: phase === "shockwave" ? 0.5 : 1.5, repeat: phase === "fighting" ? Infinity : 0 }}
               />
 
-              <motion.div
-                className="absolute rounded-full"
-                style={{
-                  width: '160px',
-                  height: '160px',
-                  left: '-80px',
-                  top: '-80px',
-                  background: 'conic-gradient(from 0deg, transparent 0%, rgba(157,78,221,0.6) 25%, transparent 50%, rgba(123,47,224,0.5) 75%, transparent 100%)',
-                }}
-                animate={{ rotate: 360 }}
-                transition={{ duration: phase === "fighting" ? 1.5 : 6, repeat: Infinity, ease: "linear" }}
-              />
-              <motion.div
-                className="absolute rounded-full"
-                style={{
-                  width: '130px',
-                  height: '130px',
-                  left: '-65px',
-                  top: '-65px',
-                  background: 'conic-gradient(from 120deg, transparent 0%, rgba(157,78,221,0.5) 20%, transparent 40%, rgba(123,47,224,0.4) 60%, transparent 80%)',
-                }}
-                animate={{ rotate: -360 }}
-                transition={{ duration: phase === "fighting" ? 1 : 4, repeat: Infinity, ease: "linear" }}
-              />
+              {/* SVG Targeting Reticle System */}
+              <motion.svg
+                className="absolute"
+                style={{ width: '200px', height: '200px', left: '-100px', top: '-100px' }}
+                viewBox="0 0 200 200"
+                animate={{ rotate: phase === "fighting" ? 360 : 0 }}
+                transition={{ duration: phase === "fighting" ? 2 : 8, repeat: Infinity, ease: "linear" }}
+              >
+                {/* Outer targeting ring with tick marks */}
+                <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(123,47,224,0.3)" strokeWidth="1" strokeDasharray="4 8" />
+                <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(157,78,221,0.2)" strokeWidth="0.5" />
+                {/* Tick marks around outer ring */}
+                {Array.from({ length: 36 }).map((_, i) => {
+                  const angle = (i * 10 * Math.PI) / 180;
+                  const inner = i % 3 === 0 ? 78 : 82;
+                  const outer = 88;
+                  return (
+                    <line
+                      key={`tick-${i}`}
+                      x1={100 + Math.cos(angle) * inner}
+                      y1={100 + Math.sin(angle) * inner}
+                      x2={100 + Math.cos(angle) * outer}
+                      y2={100 + Math.sin(angle) * outer}
+                      stroke={i % 3 === 0 ? "rgba(157,78,221,0.6)" : "rgba(123,47,224,0.3)"}
+                      strokeWidth={i % 3 === 0 ? "1.5" : "0.5"}
+                    />
+                  );
+                })}
+              </motion.svg>
 
+              {/* Counter-rotating inner reticle */}
+              <motion.svg
+                className="absolute"
+                style={{ width: '140px', height: '140px', left: '-70px', top: '-70px' }}
+                viewBox="0 0 140 140"
+                animate={{ rotate: phase === "fighting" ? -360 : 0 }}
+                transition={{ duration: phase === "fighting" ? 1.5 : 6, repeat: Infinity, ease: "linear" }}
+              >
+                {/* Crosshair lines with gaps */}
+                <line x1="70" y1="10" x2="70" y2="35" stroke="rgba(157,78,221,0.7)" strokeWidth="1.5" />
+                <line x1="70" y1="105" x2="70" y2="130" stroke="rgba(157,78,221,0.7)" strokeWidth="1.5" />
+                <line x1="10" y1="70" x2="35" y2="70" stroke="rgba(157,78,221,0.7)" strokeWidth="1.5" />
+                <line x1="105" y1="70" x2="130" y2="70" stroke="rgba(157,78,221,0.7)" strokeWidth="1.5" />
+                {/* Corner brackets */}
+                <path d="M30,30 L30,45 M30,30 L45,30" fill="none" stroke="rgba(157,78,221,0.5)" strokeWidth="1" />
+                <path d="M110,30 L110,45 M110,30 L95,30" fill="none" stroke="rgba(157,78,221,0.5)" strokeWidth="1" />
+                <path d="M30,110 L30,95 M30,110 L45,110" fill="none" stroke="rgba(157,78,221,0.5)" strokeWidth="1" />
+                <path d="M110,110 L110,95 M110,110 L95,110" fill="none" stroke="rgba(157,78,221,0.5)" strokeWidth="1" />
+                {/* Inner diamond */}
+                <path d="M70,45 L95,70 L70,95 L45,70 Z" fill="none" stroke="rgba(123,47,224,0.4)" strokeWidth="0.8" strokeDasharray="3 3" />
+              </motion.svg>
+
+              {/* Scanning sweep line (during fighting) */}
+              {phase === "fighting" && (
+                <motion.svg
+                  className="absolute"
+                  style={{ width: '180px', height: '180px', left: '-90px', top: '-90px' }}
+                  viewBox="0 0 180 180"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                >
+                  <defs>
+                    <linearGradient id="sweepGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="rgba(157,78,221,0)" />
+                      <stop offset="100%" stopColor="rgba(157,78,221,0.6)" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M90,90 L90,5 A85,85 0 0,1 160,50 Z" fill="url(#sweepGrad)" opacity="0.4" />
+                </motion.svg>
+              )}
+
+              {/* Pulsing lock-on rings during fighting */}
               {phase === "fighting" && (
                 <motion.div
-                  className="absolute rounded-full"
+                  className="absolute rounded-full border"
                   style={{
-                    width: '180px',
-                    height: '180px',
-                    left: '-90px',
-                    top: '-90px',
-                    border: '1px solid rgba(157,78,221,0.4)',
+                    width: '160px',
+                    height: '160px',
+                    left: '-80px',
+                    top: '-80px',
+                    borderColor: 'rgba(157,78,221,0.5)',
                   }}
-                  animate={{ scale: [1, 1.3, 1], opacity: [0.8, 0.2, 0.8] }}
-                  transition={{ duration: 0.8, repeat: Infinity }}
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.6, 0.15, 0.6] }}
+                  transition={{ duration: 0.6, repeat: Infinity }}
                 />
               )}
 
+              {/* Central energy core */}
               <motion.div
-                className="absolute w-24 h-24 rounded-full flex items-center justify-center"
+                className="absolute flex items-center justify-center"
                 style={{
-                  left: '-48px',
-                  top: '-48px',
+                  width: '64px',
+                  height: '64px',
+                  left: '-32px',
+                  top: '-32px',
+                  borderRadius: '50%',
                   background: phase === "fighting" || phase === "shockwave"
-                    ? 'radial-gradient(circle at 35% 35%, #c77dff, #9D4EDD, #7B2FE0, #3A0CA3)'
-                    : 'radial-gradient(circle at 35% 35%, #9D4EDD, #7B2FE0, #3A0CA3, #1a0550)',
-                  boxShadow: phase === "fighting"
-                    ? '0 0 40px rgba(157,78,221,0.8), 0 0 80px rgba(123,47,224,0.5), 0 0 120px rgba(58,12,163,0.3)'
+                    ? 'radial-gradient(circle, #c77dff 0%, #9D4EDD 30%, #7B2FE0 60%, #3A0CA3 100%)'
                     : phase === "victory"
-                    ? '0 0 50px rgba(157,78,221,0.6), 0 0 100px rgba(123,47,224,0.3)'
-                    : '0 0 25px rgba(123,47,224,0.4), 0 0 50px rgba(157,78,221,0.2)',
+                    ? 'radial-gradient(circle, #00ff41 0%, #00cc33 30%, #009926 60%, #006619 100%)'
+                    : 'radial-gradient(circle, #9D4EDD 0%, #7B2FE0 40%, #3A0CA3 70%, #1a0550 100%)',
+                  boxShadow: phase === "fighting"
+                    ? '0 0 30px rgba(157,78,221,0.9), 0 0 60px rgba(123,47,224,0.6), 0 0 90px rgba(58,12,163,0.4)'
+                    : phase === "victory"
+                    ? '0 0 30px rgba(0,255,65,0.6), 0 0 60px rgba(0,204,51,0.3)'
+                    : '0 0 20px rgba(123,47,224,0.5), 0 0 40px rgba(157,78,221,0.2)',
                 }}
                 animate={{
-                  scale: phase === "shockwave" ? [1, 1.5, 1] :
-                    phase === "fighting" ? [1, 1.1, 1] :
-                    phase === "victory" ? [1, 1.05, 1] : 1,
+                  scale: phase === "shockwave" ? [1, 2, 1] :
+                    phase === "fighting" ? [1, 1.15, 1] :
+                    phase === "victory" ? [1, 1.08, 1] : [1, 1.03, 1],
                 }}
                 transition={{
-                  duration: phase === "fighting" ? 0.3 : 2,
-                  repeat: phase === "fighting" || phase === "victory" ? Infinity : 0,
+                  duration: phase === "fighting" ? 0.25 : 2,
+                  repeat: Infinity,
                   ease: "easeInOut",
                 }}
               >
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="1.5">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  {phase === "victory" && <path d="M9 12l2 2 4-4" />}
+                {/* Inner targeting dot */}
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  {phase === "victory" ? (
+                    <>
+                      <circle cx="12" cy="12" r="8" stroke="rgba(255,255,255,0.9)" strokeWidth="1.5" fill="none" />
+                      <path d="M8 12l3 3 5-5" stroke="rgba(255,255,255,0.95)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </>
+                  ) : (
+                    <>
+                      {/* Crosshair center */}
+                      <circle cx="12" cy="12" r="2" fill="rgba(255,255,255,0.9)" />
+                      <circle cx="12" cy="12" r="5" stroke="rgba(255,255,255,0.6)" strokeWidth="0.8" fill="none" />
+                      <line x1="12" y1="2" x2="12" y2="7" stroke="rgba(255,255,255,0.7)" strokeWidth="1" />
+                      <line x1="12" y1="17" x2="12" y2="22" stroke="rgba(255,255,255,0.7)" strokeWidth="1" />
+                      <line x1="2" y1="12" x2="7" y2="12" stroke="rgba(255,255,255,0.7)" strokeWidth="1" />
+                      <line x1="17" y1="12" x2="22" y2="12" stroke="rgba(255,255,255,0.7)" strokeWidth="1" />
+                    </>
+                  )}
                 </svg>
               </motion.div>
 
+              {/* Status text below core */}
               {phase === "fighting" && (
                 <motion.div
-                  className="absolute font-mono text-[8px] text-[#9D4EDD] tracking-widest whitespace-nowrap"
-                  style={{ top: '50px', left: '50%', x: '-50%' }}
+                  className="absolute font-mono text-[8px] tracking-widest whitespace-nowrap"
+                  style={{ top: '45px', left: '50%', x: '-50%', color: '#9D4EDD' }}
                   animate={{ opacity: [0.4, 1, 0.4] }}
-                  transition={{ duration: 0.5, repeat: Infinity }}
+                  transition={{ duration: 0.4, repeat: Infinity }}
                 >
-                  SHIELD {shieldPower}%
+                  TARGET LOCK {shieldPower}%
+                </motion.div>
+              )}
+              {phase === "victory" && (
+                <motion.div
+                  className="absolute font-mono text-[8px] tracking-widest whitespace-nowrap"
+                  style={{ top: '45px', left: '50%', x: '-50%', color: '#00ff41' }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.6, 1, 0.6] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                  ALL CLEAR
                 </motion.div>
               )}
             </div>
@@ -632,7 +713,7 @@ export function ThreatVortex() {
                 <p className="text-[8px] font-mono text-[#8e8e93]">REMAINING</p>
               </div>
               <div className="rounded-lg border border-[#7B2FE0]/20 bg-[#050505]/90 p-3 text-center">
-                <p className="text-[9px] font-mono text-[#8e8e93] tracking-wider mb-1">SHIELD</p>
+                <p className="text-[9px] font-mono text-[#8e8e93] tracking-wider mb-1">TARGET LOCK</p>
                 <motion.p
                   className="text-2xl font-bold font-mono text-[#9D4EDD]"
                   animate={phase === "fighting" ? { opacity: [0.7, 1, 0.7] } : {}}
