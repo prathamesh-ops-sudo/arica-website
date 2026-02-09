@@ -160,12 +160,12 @@ export function HorizonHeroSection() {
 
           const color = new THREE.Color();
           const colorChoice = Math.random();
-          if (colorChoice < 0.7) {
-            color.setHSL(0, 0, 0.8 + Math.random() * 0.2);
-          } else if (colorChoice < 0.9) {
-            color.setHSL(0.08, 0.5, 0.8);
+          if (colorChoice < 0.5) {
+            color.setHSL(0.45, 0.8, 0.6 + Math.random() * 0.3); // cyan
+          } else if (colorChoice < 0.8) {
+            color.setHSL(0.38, 0.9, 0.5 + Math.random() * 0.2); // green
           } else {
-            color.setHSL(0.95, 0.5, 0.7);
+            color.setHSL(0.75, 0.7, 0.5 + Math.random() * 0.3); // purple
           }
           
           colors[j * 3] = color.r;
@@ -194,6 +194,8 @@ export function HorizonHeroSection() {
             void main() {
               vColor = color;
               vec3 pos = position;
+              // Matrix rain falling effect
+              pos.y = mod(pos.y - time * (30.0 + depth * 20.0), 1600.0) - 800.0;
               
               vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
               gl_PointSize = size * (200.0 / -mvPosition.z);
@@ -230,9 +232,9 @@ export function HorizonHeroSection() {
       const material = new THREE.ShaderMaterial({
         uniforms: {
           time: { value: 0 },
-          color1: { value: new THREE.Color(0x2A0873) },
-          color2: { value: new THREE.Color(0x5B1FB0) },
-          color3: { value: new THREE.Color(0x7D3EBD) },
+          color1: { value: new THREE.Color(0x00ff88) },  // matrix green
+          color2: { value: new THREE.Color(0x00ccff) },  // cyan
+          color3: { value: new THREE.Color(0x7B2FE0) },  // purple
           opacity: { value: 0.18 },
           scrollProgress: { value: 0 }
         },
@@ -269,14 +271,25 @@ export function HorizonHeroSection() {
           
           void main() {
             float n = noise(vUv * 5.0 + time * 0.1);
-            float mixFactor1 = sin(vUv.x * 8.0 + time * 0.5) * cos(vUv.y * 6.0 + time * 0.3);
-            float mixFactor2 = cos(vUv.x * 4.0 - time * 0.2) * sin(vUv.y * 8.0 + time * 0.4);
             
-            vec3 color = mix(color1, color2, mixFactor1 * 0.5 + 0.5);
-            color = mix(color, color3, mixFactor2 * 0.3 + n * 0.2);
+            // Digital grid lines
+            float gridX = smoothstep(0.48, 0.5, fract(vUv.x * 40.0));
+            float gridY = smoothstep(0.48, 0.5, fract(vUv.y * 30.0));
+            float grid = max(gridX, gridY) * 0.15;
             
-            float alpha = opacity * (1.0 - length(vUv - 0.5) * 1.5);
-            alpha *= 1.0 + vElevation * 0.01;
+            // Scan line effect
+            float scanLine = smoothstep(0.48, 0.5, fract(vUv.y * 200.0 + time * 0.5)) * 0.08;
+            
+            // Data flow pulse
+            float pulse = sin(vUv.y * 20.0 - time * 2.0) * 0.5 + 0.5;
+            float flowLine = smoothstep(0.49, 0.5, fract(vUv.x * 15.0)) * pulse * 0.2;
+            
+            vec3 gridColor = mix(color1, color2, n);
+            vec3 color = gridColor * (grid + scanLine + flowLine);
+            color += color3 * flowLine * 0.5;
+            
+            float alpha = opacity * (grid + scanLine + flowLine) * 2.0;
+            alpha *= 1.0 - length(vUv - 0.5) * 1.2;
             alpha = max(alpha, 0.0);
             
             gl_FragColor = vec4(color, alpha);
@@ -300,10 +313,10 @@ export function HorizonHeroSection() {
       if (!refs.scene) return;
       
       const bodies = [
-        { x: -400, y: 100, z: -800, radius: 30, color: 0x2d3748, glowColor: 0x4a5568 },
-        { x: 350, y: -50, z: -900, radius: 20, color: 0x1a202c, glowColor: 0x2d3748 },
-        { x: -200, y: -80, z: -700, radius: 15, color: 0x2d3748, glowColor: 0x718096 },
-        { x: 500, y: 150, z: -1000, radius: 40, color: 0x1a1a2e, glowColor: 0x16213e }
+        { x: -400, y: 100, z: -800, radius: 30, color: 0x0a1628, glowColor: 0x00ff88 },
+        { x: 350, y: -50, z: -900, radius: 20, color: 0x0a1628, glowColor: 0x00ccff },
+        { x: -200, y: -80, z: -700, radius: 15, color: 0x0a1628, glowColor: 0x7B2FE0 },
+        { x: 500, y: 150, z: -1000, radius: 40, color: 0x0a1628, glowColor: 0x00ff88 }
       ];
 
       bodies.forEach((body) => {
@@ -329,14 +342,18 @@ export function HorizonHeroSection() {
             
             void main() {
               float dist = length(vUv - vec2(0.5)) * 2.0;
-              float glow = 1.0 - smoothstep(0.0, 1.0, dist);
-              float edge = smoothstep(0.7, 0.9, dist);
+              float ring = smoothstep(0.6, 0.65, dist) * (1.0 - smoothstep(0.75, 0.8, dist));
+              float innerGlow = 1.0 - smoothstep(0.0, 0.6, dist);
+              float outerGlow = 1.0 - smoothstep(0.0, 1.0, dist);
               
-              vec3 color = mix(baseColor, glowColor, edge * 0.5);
-              float pulse = sin(time * 0.5) * 0.1 + 0.9;
+              vec3 color = baseColor * innerGlow * 0.3;
+              color += glowColor * ring * 1.5;
+              color += glowColor * outerGlow * 0.2;
+              
+              float pulse = sin(time * 2.0 + dist * 10.0) * 0.15 + 0.85;
               color *= pulse;
               
-              float alpha = glow * 0.8;
+              float alpha = max(ring * 1.2, outerGlow * 0.4);
               gl_FragColor = vec4(color, alpha);
             }
           `,
@@ -379,12 +396,12 @@ export function HorizonHeroSection() {
           
           void main() {
             float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
-            vec3 atmosphere = vec3(0.35, 0.12, 0.55) * intensity;
+            vec3 atmosphere = vec3(0.0, 0.8, 0.5) * intensity; // green-cyan glow
             
             float pulse = sin(time * 2.0) * 0.05 + 0.95;
             atmosphere *= pulse;
             
-            gl_FragColor = vec4(atmosphere, intensity * 0.12);
+            gl_FragColor = vec4(atmosphere, intensity * 0.08);
           }
         `,
         side: THREE.BackSide,

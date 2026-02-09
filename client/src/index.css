@@ -881,3 +881,77 @@
 .animate-monitoring-pulse {
   animation: monitoring-pulse 2s ease-in-out infinite;
 }
+
+/* Cyber scan line overlay for hero sections */
+.cyber-scanline::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 136, 0.03) 2px,
+    rgba(0, 255, 136, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Glitch text animation */
+@keyframes glitch {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(1px, -1px); }
+  60% { transform: translate(-1px, 2px); }
+  80% { transform: translate(2px, -2px); }
+}
+
+@keyframes cyber-flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.8; }
+  94% { opacity: 1; }
+  96% { opacity: 0.9; }
+  97% { opacity: 1; }
+}
+
+.cyber-glitch:hover {
+  animation: glitch 0.3s ease-in-out;
+}
+
+.cyber-flicker {
+  animation: cyber-flicker 4s infinite;
+}
+
+/* Terminal cursor blink */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.terminal-cursor::after {
+  content: '█';
+  color: #00ff88;
+  animation: cursor-blink 1s step-end infinite;
+  margin-left: 2px;
+}
+
+/* Data stream glow effect */
+.data-glow {
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5), 0 0 20px rgba(0, 204, 255, 0.3);
+}
+
+/* Hex grid background pattern */
+.hex-grid-bg {
+  background-image: 
+    linear-gradient(30deg, rgba(0, 255, 136, 0.03) 12%, transparent 12.5%, transparent 87%, rgba(0, 255, 136, 0.03) 87.5%, rgba(0, 255, 136, 0.03)),
+    linear-gradient(150deg, rgba(0, 255, 136, 0.03) 12%, transparent 12.5%, transparent 87%, rgba(0, 255, 136, 0.03) 87.5%, rgba(0, 255, 136, 0.03)),
+    linear-gradient(30deg, rgba(0, 255, 136, 0.03) 12%, transparent 12.5%, transparent 87%, rgba(0, 255, 136, 0.03) 87.5%, rgba(0, 255, 136, 0.03)),
+    linear-gradient(150deg, rgba(0, 255, 136, 0.03) 12%, transparent 12.5%, transparent 87%, rgba(0, 255, 136, 0.03) 87.5%, rgba(0, 255, 136, 0.03));
+  background-size: 80px 140px;
+  background-position: 0 0, 0 0, 40px 70px, 40px 70px;
+}

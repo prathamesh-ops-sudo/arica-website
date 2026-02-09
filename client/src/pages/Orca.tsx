@@ -2,7 +2,7 @@ import { useRef, useEffect, useState, useMemo } from 'react';
 import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Text, Float, MeshTransmissionMaterial, Environment, Stars } from '@react-three/drei';
+import { Text, Float, MeshTransmissionMaterial, Environment } from '@react-three/drei';
 import { EffectComposer, Bloom, Vignette, ChromaticAberration, Noise } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 import { 
@@ -310,6 +310,51 @@ const incidentStreamPositions = Array.from({ length: 20 }).map((_, i) => ({
   speed: 1 + (i % 5) * 0.4
 }));
 
+function CyberParticles({ count = 500 }: { count?: number }) {
+  const ref = useRef<THREE.Points>(null);
+  const positions = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * 200;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 200;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 100;
+    }
+    return pos;
+  }, [count]);
+  
+  const colors = useMemo(() => {
+    const cols = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      const r = Math.random();
+      if (r < 0.4) { cols[i*3] = 0; cols[i*3+1] = 0.8 + Math.random()*0.2; cols[i*3+2] = 0.5 + Math.random()*0.3; }
+      else if (r < 0.7) { cols[i*3] = 0; cols[i*3+1] = 0.6 + Math.random()*0.2; cols[i*3+2] = 0.9 + Math.random()*0.1; }
+      else { cols[i*3] = 0.4 + Math.random()*0.2; cols[i*3+1] = 0.1 + Math.random()*0.1; cols[i*3+2] = 0.8 + Math.random()*0.2; }
+    }
+    return cols;
+  }, [count]);
+
+  useFrame((_, delta) => {
+    if (!ref.current) return;
+    const posAttr = ref.current.geometry.attributes.position;
+    const arr = posAttr.array as Float32Array;
+    for (let i = 0; i < count; i++) {
+      arr[i * 3 + 1] -= delta * (5 + (i % 10));
+      if (arr[i * 3 + 1] < -100) arr[i * 3 + 1] = 100;
+    }
+    posAttr.needsUpdate = true;
+  });
+
+  return (
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
+        <bufferAttribute attach="attributes-color" count={count} array={colors} itemSize={3} />
+      </bufferGeometry>
+      <pointsMaterial size={0.15} vertexColors transparent opacity={0.6} sizeAttenuation />
+    </points>
+  );
+}
+
 function MainScene({ scrollProgress }: SceneProps) {
   const { camera } = useThree();
   const groupRef = useRef<THREE.Group>(null);
@@ -364,7 +409,7 @@ function MainScene({ scrollProgress }: SceneProps) {
       <pointLight position={[10, 10, 10]} intensity={1} color="#e5e5e5" />
       <pointLight position={[-10, 5, -10]} intensity={0.5} color="#7B2FE0" />
       
-      <Stars radius={100} depth={50} count={insideSystem ? 2000 : 500} factor={4} saturation={0} fade speed={1} />
+      <CyberParticles count={insideSystem ? 2000 : 500} />
       
       {!insideSystem && (
         <group ref={groupRef}>

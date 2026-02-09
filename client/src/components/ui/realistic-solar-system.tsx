@@ -591,25 +591,30 @@ const sunShader = {
     void main() {
       vec2 uv = vec2(atan(vPosition.x, vPosition.z) / 6.28318 + 0.5, asin(vPosition.y / length(vPosition)) / 3.14159 + 0.5);
       
-      float granulation = fbm(uv * 40.0 + time * 0.3);
-      float convection = fbm(uv * 20.0 + time * 0.15);
-      float largeStructure = fbm(uv * 8.0 + time * 0.05);
+      // Hex grid pattern
+      float hexGrid = fbm(uv * 30.0 + time * 0.1);
+      float gridLines = smoothstep(0.48, 0.5, fract(uv.x * 20.0)) + smoothstep(0.48, 0.5, fract(uv.y * 20.0));
+      gridLines = min(gridLines, 1.0);
       
-      vec3 core = vec3(1.0, 1.0, 0.95);
+      // Digital pulse
+      float pulse = sin(uv.y * 40.0 - time * 3.0) * 0.5 + 0.5;
+      float dataPulse = smoothstep(0.4, 0.5, pulse) * 0.3;
+      
+      // Core glow
+      vec3 core = sunColor1 * 0.8;
       vec3 color = core;
-      color = mix(color, sunColor1, granulation * 0.4);
-      color = mix(color, sunColor2, convection * 0.3);
-      color = mix(color, sunColor2 * 0.8, (1.0 - largeStructure) * 0.2);
+      color = mix(color, sunColor2, gridLines * 0.4);
+      color += sunColor2 * dataPulse * 0.5;
+      color += sunColor1 * hexGrid * 0.2;
       
       float fresnel = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 1.5);
-      color = mix(color, sunColor2, fresnel * 0.3);
+      color += sunColor2 * fresnel * 0.4;
       
-      float flare = fbm(uv * 15.0 + time * 2.0) * fbm(uv * 25.0 - time * 1.5);
-      float flarePulse = sin(time * 3.0) * 0.5 + 0.5;
-      color += vec3(1.0, 0.9, 0.7) * flare * flarePulse * 0.3;
+      // Subtle scan line
+      float scan = smoothstep(0.48, 0.5, fract(uv.y * 100.0 + time * 0.5)) * 0.1;
+      color += vec3(scan);
       
-      color *= 1.3;
-      
+      color *= 1.2;
       gl_FragColor = vec4(color, 1.0);
     }
   `,
@@ -716,17 +721,28 @@ const nebulaShader = {
     }
     
     void main() {
-      vec2 uv = vUv + vec2(parallax * 0.1, 0.0);
+      vec2 uv = vUv;
+      uv += parallax * 0.1;
       
-      float nebula1 = fbm(uv * 2.0 + time * 0.01);
-      float nebula2 = fbm(uv * 3.0 - time * 0.008 + 1.0);
-      float nebula3 = fbm(uv * 4.0 + time * 0.005 + 2.0);
+      // Digital grid
+      float gridX = smoothstep(0.47, 0.5, fract(uv.x * 30.0));
+      float gridY = smoothstep(0.47, 0.5, fract(uv.y * 20.0));
+      float grid = max(gridX, gridY) * 0.3;
       
-      vec3 color = nebulaColor1 * nebula1 * 0.4;
-      color += nebulaColor2 * nebula2 * 0.3;
-      color += nebulaColor3 * nebula3 * 0.2;
+      // Data flow lines
+      float flow1 = smoothstep(0.48, 0.5, fract(uv.y * 8.0 - time * 0.3));
+      float flow2 = smoothstep(0.48, 0.5, fract(uv.x * 6.0 + time * 0.2));
       
-      float alpha = (nebula1 * 0.4 + nebula2 * 0.3 + nebula3 * 0.3) * 0.15;
+      // Noise for organic variation
+      float n1 = fbm(uv * 2.0 + time * 0.01);
+      float n2 = fbm(uv * 3.0 - time * 0.008 + 1.0);
+      
+      vec3 color = nebulaColor1 * grid * 0.4;
+      color += nebulaColor2 * flow1 * n1 * 0.3;
+      color += nebulaColor3 * flow2 * n2 * 0.2;
+      
+      float alpha = (grid * 0.3 + flow1 * 0.2 + flow2 * 0.1) * 0.2;
+      alpha *= 1.0 - length(uv - 0.5) * 0.5;
       
       gl_FragColor = vec4(color, alpha);
     }
@@ -1494,18 +1510,18 @@ export function RealisticSolarSystem() {
         positions[i * 3 + 2] = r * Math.cos(phi);
 
         const starType = Math.random();
-        if (starType < 0.7) {
-          colors[i * 3] = 0.9 + Math.random() * 0.1;
-          colors[i * 3 + 1] = 0.9 + Math.random() * 0.1;
-          colors[i * 3 + 2] = 1.0;
-        } else if (starType < 0.85) {
-          colors[i * 3] = 1.0;
-          colors[i * 3 + 1] = 0.85 + Math.random() * 0.1;
-          colors[i * 3 + 2] = 0.7 + Math.random() * 0.1;
+        if (starType < 0.5) {
+          colors[i * 3] = 0.0;
+          colors[i * 3 + 1] = 0.7 + Math.random() * 0.3;
+          colors[i * 3 + 2] = 0.8 + Math.random() * 0.2;
+        } else if (starType < 0.8) {
+          colors[i * 3] = 0.2 + Math.random() * 0.1;
+          colors[i * 3 + 1] = 0.8 + Math.random() * 0.2;
+          colors[i * 3 + 2] = 0.3 + Math.random() * 0.2;
         } else {
-          colors[i * 3] = 0.7 + Math.random() * 0.1;
-          colors[i * 3 + 1] = 0.8 + Math.random() * 0.1;
-          colors[i * 3 + 2] = 1.0;
+          colors[i * 3] = 0.5 + Math.random() * 0.2;
+          colors[i * 3 + 1] = 0.2 + Math.random() * 0.1;
+          colors[i * 3 + 2] = 0.7 + Math.random() * 0.3;
         }
 
         twinkle[i] = Math.random() * Math.PI * 2;
@@ -1548,8 +1564,8 @@ export function RealisticSolarSystem() {
       };
 
       const sunGeometry = new THREE.SphereGeometry(4, 64, 64);
-      const sunColor1 = new THREE.Color(galaxy.colorTheme.primary);
-      const sunColor2 = new THREE.Color(galaxy.colorTheme.secondary);
+      const sunColor1 = new THREE.Vector3(0.48, 0.18, 0.88);
+      const sunColor2 = new THREE.Vector3(0.0, 0.8, 1.0);
       
       const sunTexture = textureLoader.load(
         PLANET_TEXTURES.sun,
@@ -2645,7 +2661,7 @@ export function RealisticSolarSystem() {
         )}
       </AnimatePresence>
       
-      {/* Black Hole Effect Overlay */}
+      {/* System Breach Effect Overlay */}
       <AnimatePresence>
         {showBlackHole && (
           <motion.div
@@ -2654,7 +2670,7 @@ export function RealisticSolarSystem() {
             exit={{ opacity: 0 }}
             transition={{ duration: 1.5 }}
             className="fixed inset-0 z-[200]"
-            data-testid="overlay-blackhole"
+            data-testid="overlay-breach"
           >
             <EnergyBeam className="absolute inset-0" data-testid="effect-energy-beam" />
             
@@ -2667,7 +2683,7 @@ export function RealisticSolarSystem() {
                   exit={{ opacity: 0, y: -30 }}
                   transition={{ duration: 1, ease: "easeOut" }}
                   className="absolute inset-0 flex items-center justify-center z-10"
-                  data-testid="overlay-blackhole-quote"
+                  data-testid="overlay-breach-quote"
                 >
                   <div className="text-center px-8">
                     <motion.p
