@@ -2330,14 +2330,46 @@ export function RealisticSolarSystem() {
       
       <div className="fixed inset-0 z-20 pointer-events-none">
         {!isLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center bg-background z-50 pointer-events-auto">
+          <div className="absolute inset-0 flex items-center justify-center bg-[#050505] z-50 pointer-events-auto font-mono">
             <div className="text-center">
-              <div className="w-20 h-20 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-muted-foreground">Initializing Cyber Network...</p>
+              <div className="w-16 h-16 border-2 border-[#00ff41]/20 border-t-[#00ff41] rounded-full animate-spin mx-auto mb-4" />
+              <p className="text-[#00ff41]/60 text-xs uppercase tracking-widest">{'>'} Initializing neural map...</p>
             </div>
           </div>
         )}
         
+        {isLoaded && (
+          <>
+            <div className="absolute top-16 left-6 z-10 pointer-events-none font-mono text-[10px] text-[#00ff41]/30 space-y-1 hidden md:block">
+              <div>SECTOR: <span className="text-[#00ff41]/50">{activeGalaxy.id.toUpperCase()}</span></div>
+              <div>SCROLL: <span className="text-[#00ff41]/50">{(scrollProgress * 100).toFixed(1)}%</span></div>
+              <div>NODE: <span className="text-[#00ff41]/50">{activePlanet ? activePlanet.id.toUpperCase().replace(/-/g, '_') : 'SCANNING...'}</span></div>
+              <div className="mt-2 text-[#00ff41]/20">
+                ┌{'─'.repeat(16)}┐<br/>
+                │ SIG: {'█'.repeat(Math.floor(scrollProgress * 8))}{'░'.repeat(8 - Math.floor(scrollProgress * 8))} │<br/>
+                │ PWR: {'█'.repeat(6)}{'░'.repeat(2)} │<br/>
+                └{'─'.repeat(16)}┘
+              </div>
+            </div>
+            
+            <div className="absolute top-16 right-6 z-10 pointer-events-none font-mono text-[10px] text-[#00ff41]/30 text-right space-y-1 hidden md:block">
+              <div>ARICA TECH // CYBER NET</div>
+              <div>GALAXIES: <span className="text-[#00ff41]/50">3</span> | NODES: <span className="text-[#00ff41]/50">15</span></div>
+              <div>STATUS: <span className="text-[#00ff41]/50 animate-pulse">ONLINE</span></div>
+            </div>
+
+            <div className="absolute bottom-16 left-6 z-10 pointer-events-none font-mono text-[10px] text-[#00ff41]/20 hidden md:block">
+              <div>{'>'} {new Date().toISOString().split('T')[0]}</div>
+              <div>{'>'} THREAT_LVL: ELEVATED</div>
+            </div>
+
+            <div className="absolute bottom-16 right-6 z-10 pointer-events-none font-mono text-[10px] text-[#00ff41]/20 text-right hidden md:block">
+              <div>LAT: {(37.7749 + scrollProgress * 10).toFixed(4)}</div>
+              <div>LON: {(-122.4194 + scrollProgress * 20).toFixed(4)}</div>
+            </div>
+          </>
+        )}
+
         {warpEffect > 0.3 && (
           <div 
             className="absolute inset-0 pointer-events-none z-10"
@@ -2373,45 +2405,51 @@ export function RealisticSolarSystem() {
         </AnimatePresence>
         
         <div className="absolute top-6 left-1/2 -translate-x-1/2 z-20 pointer-events-auto">
-          <div className="flex items-center gap-4 backdrop-blur-xl bg-black/40 rounded-full px-6 py-3 border border-white/10">
+          <div className="flex items-center gap-1 backdrop-blur-xl bg-black/70 rounded-sm px-2 py-1.5 border border-[#00ff41]/20 font-mono text-xs"
+            style={{ boxShadow: '0 0 15px rgba(0,255,65,0.05), inset 0 0 30px rgba(0,0,0,0.5)' }}
+          >
+            <span className="text-[#00ff41]/40 mr-1 hidden md:inline">SECTOR://</span>
             {galaxies.map((galaxy, index) => (
               <div
                 key={galaxy.id}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-500 ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm transition-all duration-500 cursor-pointer ${
                   activeGalaxy.id === galaxy.id 
-                    ? 'bg-white/10' 
-                    : 'opacity-40 hover:opacity-70'
+                    ? 'bg-[#00ff41]/10 border border-[#00ff41]/30' 
+                    : 'opacity-40 hover:opacity-70 border border-transparent'
                 }`}
                 style={{ 
-                  color: activeGalaxy.id === galaxy.id ? galaxy.colorTheme.accent : 'white',
-                  boxShadow: activeGalaxy.id === galaxy.id 
-                    ? `0 0 20px ${galaxy.colorTheme.accent}40` 
+                  color: activeGalaxy.id === galaxy.id ? '#00ff41' : '#00ff41',
+                  textShadow: activeGalaxy.id === galaxy.id 
+                    ? '0 0 10px rgba(0,255,65,0.5)' 
                     : 'none'
                 }}
               >
+                {activeGalaxy.id === galaxy.id && <span className="animate-pulse">▸</span>}
                 {getGalaxyIcon(galaxy.id)}
-                <span className="text-sm font-medium hidden md:inline">{galaxy.name}</span>
+                <span className="text-xs font-mono hidden md:inline uppercase tracking-wider">{galaxy.name}</span>
               </div>
             ))}
           </div>
         </div>
         
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-auto">
-          <div className="flex items-center gap-2 backdrop-blur-xl bg-black/40 rounded-full px-4 py-2 border border-white/10">
-            {activeGalaxy.planets.map((planet) => (
+          <div className="flex items-center gap-1 backdrop-blur-xl bg-black/70 rounded-sm px-3 py-2 border border-[#00ff41]/20 font-mono text-[10px]"
+            style={{ boxShadow: '0 0 15px rgba(0,255,65,0.05)' }}
+          >
+            <span className="text-[#00ff41]/30 mr-1">NODES:</span>
+            {activeGalaxy.planets.map((planet, idx) => (
               <div
                 key={planet.id}
-                className={`w-2.5 h-2.5 rounded-full transition-all duration-500 cursor-pointer ${
-                  activePlanet?.id === planet.id ? 'scale-150' : 'opacity-40 hover:opacity-70'
+                className={`flex items-center gap-1 px-2 py-1 rounded-sm transition-all duration-500 cursor-pointer ${
+                  activePlanet?.id === planet.id ? 'bg-[#00ff41]/10 border border-[#00ff41]/30' : 'opacity-40 hover:opacity-70 border border-transparent'
                 }`}
-                style={{ 
-                  backgroundColor: getColorHex(planet),
-                  boxShadow: activePlanet?.id === planet.id 
-                    ? `0 0 12px ${getColorHex(planet)}` 
-                    : 'none'
-                }}
                 title={planet.name}
-              />
+              >
+                <span style={{ color: activePlanet?.id === planet.id ? '#00ff41' : '#00ff41' }}>
+                  {activePlanet?.id === planet.id ? '◉' : '○'}
+                </span>
+                <span className="hidden md:inline text-[#00ff41]/70">{String(idx + 1).padStart(2, '0')}</span>
+              </div>
             ))}
           </div>
         </div>
@@ -2420,92 +2458,92 @@ export function RealisticSolarSystem() {
           {activePlanet && (
             <motion.div
               key={activePlanet.id}
-              initial={{ opacity: 0, x: 80, scale: 0.9 }}
+              initial={{ opacity: 0, x: 80, scale: 0.95 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: -60, scale: 0.9 }}
+              exit={{ opacity: 0, x: -60, scale: 0.95 }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 max-w-sm md:max-w-md z-20 pointer-events-auto"
             >
               <motion.div 
-                className="backdrop-blur-2xl bg-black/60 border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl"
+                className="relative backdrop-blur-2xl bg-black/80 border border-[#00ff41]/20 rounded-sm p-0 shadow-2xl overflow-hidden font-mono"
                 animate={{
                   boxShadow: [
-                    `0 0 20px ${getColorHex(activePlanet)}20`,
-                    `0 0 40px ${getColorHex(activePlanet)}30`,
-                    `0 0 20px ${getColorHex(activePlanet)}20`,
+                    '0 0 20px rgba(0,255,65,0.05)',
+                    '0 0 40px rgba(0,255,65,0.1)',
+                    '0 0 20px rgba(0,255,65,0.05)',
                   ],
                 }}
-                transition={{ duration: 2, repeat: Infinity }}
+                transition={{ duration: 3, repeat: Infinity }}
               >
-                <motion.div 
-                  className="w-16 h-1.5 rounded-full mb-5"
-                  style={{ backgroundColor: getColorHex(activePlanet) }}
-                  initial={{ width: 0 }}
-                  animate={{ width: 64 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                />
-                <div className="flex items-center gap-2 mb-2">
-                  <span 
-                    className="text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded"
-                    style={{ 
-                      backgroundColor: `${activeGalaxy.colorTheme.primary}20`,
-                      color: activeGalaxy.colorTheme.accent,
-                    }}
-                  >
-                    {activeGalaxy.name}
+                <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{
+                  backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.1) 2px, rgba(0,255,65,0.1) 4px)',
+                }} />
+                
+                <div className="flex items-center gap-2 px-4 py-2 bg-[#00ff41]/5 border-b border-[#00ff41]/20">
+                  <span className="text-[10px] text-[#00ff41]/40">▪ ▪ ▪</span>
+                  <span className="text-[10px] text-[#00ff41]/60 uppercase tracking-widest flex-1 text-center">
+                    node_intel — {activePlanet.id}
                   </span>
                 </div>
-                <h2 
-                  className="font-display text-2xl md:text-3xl font-bold mb-3"
-                  style={{ 
-                    color: getColorHex(activePlanet),
-                    textShadow: `0 0 40px ${getColorHex(activePlanet)}60`
-                  }}
-                >
-                  {activePlanet.name}
-                </h2>
-                <p className="text-muted-foreground leading-relaxed text-sm md:text-base mb-4">
-                  {activePlanet.description}
-                </p>
-                <ul className="space-y-2 mb-5">
-                  {activePlanet.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm text-white/80">
-                      <div 
-                        className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0"
-                        style={{ backgroundColor: getColorHex(activePlanet) }}
-                      />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                {activePlanet.actionType === 'modal' ? (
-                  <button
-                    onClick={() => { setModalPlanet(activePlanet); setModalOpen(true); }}
-                    className="flex items-center gap-2 font-semibold px-5 py-3 rounded-full hover:opacity-90 transition-all group"
-                    style={{
-                      background: `linear-gradient(135deg, ${activeGalaxy.colorTheme.primary}, ${activeGalaxy.colorTheme.secondary})`,
+                
+                <div className="p-5 md:p-6 relative z-10">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-[10px] text-[#00ff41]/50 uppercase tracking-widest px-2 py-0.5 border border-[#00ff41]/20 rounded-sm">
+                      {activeGalaxy.name}
+                    </span>
+                    <span className="text-[10px] text-[#00ff41]/30">|</span>
+                    <span className="text-[10px] text-[#00ff41]/40 animate-pulse">● LIVE</span>
+                  </div>
+                  
+                  <h2 
+                    className="font-mono text-xl md:text-2xl font-bold mb-2 uppercase tracking-wider"
+                    style={{ 
+                      color: '#00ff41',
+                      textShadow: '0 0 20px rgba(0,255,65,0.3)'
                     }}
-                    data-testid={`button-learn-more-${activePlanet.id}`}
                   >
-                    <span>Learn More</span>
-                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => {
-                      const targetUrl = activePlanet.actionType === 'attack-globe' ? '/attack-globe' : activePlanet.link;
-                      triggerTransition(() => setLocation(targetUrl));
-                    }}
-                    className="flex items-center gap-2 font-semibold px-5 py-3 rounded-full hover:opacity-90 transition-all group"
-                    style={{
-                      background: `linear-gradient(135deg, ${activeGalaxy.colorTheme.primary}, ${activeGalaxy.colorTheme.secondary})`,
-                    }}
-                    data-testid={`link-learn-more-${activePlanet.id}`}
-                  >
-                    <span>{activePlanet.actionType === 'attack-globe' ? 'View Cyber Attacks' : 'Learn More'}</span>
-                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                )}
+                    {activePlanet.name}
+                  </h2>
+                  
+                  <p className="text-[#00ff41]/50 leading-relaxed text-xs md:text-sm mb-4">
+                    {activePlanet.description}
+                  </p>
+                  
+                  <div className="border border-[#00ff41]/10 rounded-sm p-3 mb-4 bg-[#00ff41]/[0.02]">
+                    <div className="text-[10px] text-[#00ff41]/40 uppercase tracking-widest mb-2">CAPABILITIES</div>
+                    <ul className="space-y-1.5">
+                      {activePlanet.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-xs text-[#00ff41]/70">
+                          <span className="text-[#00ff41]/40 mt-0.5">[{String(idx + 1).padStart(2, '0')}]</span>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  {activePlanet.actionType === 'modal' ? (
+                    <button
+                      onClick={() => { setModalPlanet(activePlanet); setModalOpen(true); }}
+                      className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest px-4 py-2.5 rounded-sm border border-[#00ff41]/30 bg-[#00ff41]/10 text-[#00ff41] hover:bg-[#00ff41]/20 hover:border-[#00ff41]/50 transition-all group"
+                      data-testid={`button-learn-more-${activePlanet.id}`}
+                    >
+                      <span>{'>'} ACCESS_NODE</span>
+                      <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        const targetUrl = activePlanet.actionType === 'attack-globe' ? '/attack-globe' : activePlanet.link;
+                        triggerTransition(() => setLocation(targetUrl));
+                      }}
+                      className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest px-4 py-2.5 rounded-sm border border-[#00ff41]/30 bg-[#00ff41]/10 text-[#00ff41] hover:bg-[#00ff41]/20 hover:border-[#00ff41]/50 transition-all group"
+                      data-testid={`link-learn-more-${activePlanet.id}`}
+                    >
+                      <span>{'>'} {activePlanet.actionType === 'attack-globe' ? 'LAUNCH_ATTACK_MAP' : 'ACCESS_NODE'}</span>
+                      <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  )}
+                </div>
               </motion.div>
             </motion.div>
           )}
@@ -2520,21 +2558,28 @@ export function RealisticSolarSystem() {
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
             >
-              <div className="text-center px-6">
+              <div className="text-center px-6 font-mono">
+                <div className="text-[10px] text-[#00ff41]/40 uppercase tracking-[0.5em] mb-3">
+                  {'>'} CYBER DEFENSE NETWORK ACTIVE
+                </div>
                 <motion.h1 
-                  className="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6"
-                  style={{ textShadow: '0 0 100px rgba(255, 100, 100, 0.4)' }}
+                  className="font-mono text-5xl md:text-7xl lg:text-8xl font-bold mb-4 uppercase tracking-wider"
+                  style={{ 
+                    color: '#00ff41',
+                    textShadow: '0 0 60px rgba(0,255,65,0.3), 0 0 120px rgba(0,255,65,0.1)'
+                  }}
                 >
                   ARICA TECH
                 </motion.h1>
+                <div className="text-xs text-[#00ff41]/30 tracking-[0.3em] uppercase mb-8">
+                  SCROLL TO EXPLORE // {activeGalaxy.planets.length} NODES DETECTED
+                </div>
                 <motion.div
-                  animate={{ y: [0, 10, 0] }}
+                  animate={{ y: [0, 8, 0] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="mt-8"
+                  className="mt-4"
                 >
-                  <div className="w-6 h-10 border-2 border-white/30 rounded-full mx-auto flex justify-center pt-2">
-                    <div className="w-1.5 h-3 bg-white/50 rounded-full" />
-                  </div>
+                  <div className="text-[#00ff41]/30 text-lg">▼</div>
                 </motion.div>
               </div>
             </motion.div>
@@ -2555,106 +2600,111 @@ export function RealisticSolarSystem() {
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="relative max-w-2xl w-full mx-4 p-8 rounded-3xl border border-white/10"
-              style={{
-                background: `linear-gradient(135deg, ${activeGalaxy.colorTheme.primary}20, ${activeGalaxy.colorTheme.secondary}10)`,
-              }}
+              className="relative max-w-2xl w-full mx-4 rounded-sm border border-[#00ff41]/20 bg-black/90 backdrop-blur-xl overflow-hidden font-mono"
               onClick={(e) => e.stopPropagation()}
             >
-              <button
-                onClick={() => setModalOpen(false)}
-                className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-                data-testid="button-modal-close"
-              >
-                <X className="w-5 h-5 text-white" />
-              </button>
+              <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{
+                backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.1) 2px, rgba(0,255,65,0.1) 4px)',
+              }} />
 
-              <h2
-                className="text-3xl font-bold mb-4"
-                style={{ color: getColorHex(modalPlanet) }}
-              >
-                {modalPlanet.modalContent?.title || modalPlanet.name}
-              </h2>
-
-              <div className="mb-6 p-4 rounded-2xl bg-black/40 border border-white/5 font-mono text-sm overflow-hidden">
-                {modalPlanet.modalContent?.type === 'scanner' && (
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-green-400">
-                      <span className="animate-pulse">●</span> Scanning target...
-                    </div>
-                    {['SQL Injection', 'XSS Vulnerabilities', 'CSRF Tokens', 'Auth Bypass'].map((item, i) => (
-                      <motion.div
-                        key={item}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.2 }}
-                        className="flex justify-between text-white/70"
-                      >
-                        <span>Checking {item}...</span>
-                        <span className="text-yellow-400">⬤</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
-                {modalPlanet.modalContent?.type === 'tester' && (
-                  <div className="space-y-2">
-                    <div className="text-[#9D4EDD]">GET /api/v1/users</div>
-                    <div className="text-green-400">→ 200 OK (42ms)</div>
-                    <div className="text-[#9D4EDD] mt-2">POST /api/v1/auth</div>
-                    <div className="text-green-400">→ 200 OK (128ms)</div>
-                    <div className="text-[#9D4EDD] mt-2">GET /api/v1/admin</div>
-                    <div className="text-red-400">→ 401 Unauthorized (15ms)</div>
-                  </div>
-                )}
-                {modalPlanet.modalContent?.type === 'checker' && (
-                  <div className="space-y-2">
-                    <div className="flex justify-between"><span>S3 Bucket Encryption</span><span className="text-green-400">✓</span></div>
-                    <div className="flex justify-between"><span>IAM MFA Enabled</span><span className="text-green-400">✓</span></div>
-                    <div className="flex justify-between"><span>Public Access Blocked</span><span className="text-red-400">✗</span></div>
-                    <div className="flex justify-between"><span>CloudTrail Logging</span><span className="text-yellow-400">⚠</span></div>
-                  </div>
-                )}
-                {modalPlanet.modalContent?.type === 'checklist' && (
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2"><span className="text-green-400">☑</span> Information Security Policy</div>
-                    <div className="flex items-center gap-2"><span className="text-green-400">☑</span> Risk Assessment Framework</div>
-                    <div className="flex items-center gap-2"><span className="text-yellow-400">☐</span> Access Control Policy</div>
-                    <div className="flex items-center gap-2"><span className="text-yellow-400">☐</span> Incident Response Plan</div>
-                  </div>
-                )}
-                {modalPlanet.modalContent?.type === 'pipeline' && (
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2"><span className="text-green-400">✓</span> Build → <span className="text-white/50">2.3s</span></div>
-                    <div className="flex items-center gap-2"><span className="text-green-400">✓</span> SAST Scan → <span className="text-white/50">12.1s</span></div>
-                    <div className="flex items-center gap-2"><span className="text-[#9D4EDD] animate-pulse">●</span> Container Scan → <span className="text-white/50">running...</span></div>
-                    <div className="flex items-center gap-2 text-white/30">○ Deploy to Staging</div>
-                  </div>
-                )}
-              </div>
-
-              <p className="text-muted-foreground mb-6">{modalPlanet.description}</p>
-
-              <div className="flex gap-3">
-                <button
-                  className="flex-1 text-center py-3 rounded-full font-semibold transition-all hover:opacity-90"
-                  style={{
-                    background: `linear-gradient(135deg, ${activeGalaxy.colorTheme.primary}, ${activeGalaxy.colorTheme.secondary})`,
-                  }}
-                  onClick={() => {
-                    setModalOpen(false);
-                    triggerTransition(() => setLocation('/contact'));
-                  }}
-                  data-testid="link-modal-contact"
-                >
-                  Get Started
-                </button>
+              <div className="flex items-center justify-between px-4 py-2 bg-[#00ff41]/5 border-b border-[#00ff41]/20">
+                <span className="text-[10px] text-[#00ff41]/60 uppercase tracking-widest">
+                  sys_module — {modalPlanet.modalContent?.title || modalPlanet.name}
+                </span>
                 <button
                   onClick={() => setModalOpen(false)}
-                  className="px-6 py-3 rounded-full font-semibold bg-white/10 hover:bg-white/20 transition-colors"
-                  data-testid="button-modal-close-secondary"
+                  className="text-[#00ff41]/40 hover:text-[#00ff41] transition-colors text-xs"
+                  data-testid="button-modal-close"
                 >
-                  Close
+                  [ESC]
                 </button>
+              </div>
+
+              <div className="p-6 md:p-8 relative z-10">
+                <h2
+                  className="text-2xl font-bold mb-4 uppercase tracking-wider"
+                  style={{ color: '#00ff41', textShadow: '0 0 20px rgba(0,255,65,0.3)' }}
+                >
+                  {modalPlanet.modalContent?.title || modalPlanet.name}
+                </h2>
+
+                <div className="mb-6 p-4 rounded-sm bg-[#00ff41]/[0.02] border border-[#00ff41]/10 text-sm overflow-hidden">
+                  {modalPlanet.modalContent?.type === 'scanner' && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-[#00ff41]">
+                        <span className="animate-pulse">●</span> Scanning target...
+                      </div>
+                      {['SQL Injection', 'XSS Vulnerabilities', 'CSRF Tokens', 'Auth Bypass'].map((item, i) => (
+                        <motion.div
+                          key={item}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.2 }}
+                          className="flex justify-between text-[#00ff41]/70"
+                        >
+                          <span>[*] Checking {item}...</span>
+                          <span className="text-yellow-400">⬤</span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                  {modalPlanet.modalContent?.type === 'tester' && (
+                    <div className="space-y-2">
+                      <div className="text-[#9D4EDD]">$ curl -X GET /api/v1/users</div>
+                      <div className="text-[#00ff41]">[+] 200 OK (42ms)</div>
+                      <div className="text-[#9D4EDD] mt-2">$ curl -X POST /api/v1/auth</div>
+                      <div className="text-[#00ff41]">[+] 200 OK (128ms)</div>
+                      <div className="text-[#9D4EDD] mt-2">$ curl -X GET /api/v1/admin</div>
+                      <div className="text-red-400">[-] 401 Unauthorized (15ms)</div>
+                    </div>
+                  )}
+                  {modalPlanet.modalContent?.type === 'checker' && (
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-[#00ff41]/70"><span>[01] S3 Bucket Encryption</span><span className="text-[#00ff41]">PASS</span></div>
+                      <div className="flex justify-between text-[#00ff41]/70"><span>[02] IAM MFA Enabled</span><span className="text-[#00ff41]">PASS</span></div>
+                      <div className="flex justify-between text-[#00ff41]/70"><span>[03] Public Access Blocked</span><span className="text-red-400">FAIL</span></div>
+                      <div className="flex justify-between text-[#00ff41]/70"><span>[04] CloudTrail Logging</span><span className="text-yellow-400">WARN</span></div>
+                    </div>
+                  )}
+                  {modalPlanet.modalContent?.type === 'checklist' && (
+                    <div className="space-y-2 text-[#00ff41]/70">
+                      <div className="flex items-center gap-2"><span className="text-[#00ff41]">[x]</span> Information Security Policy</div>
+                      <div className="flex items-center gap-2"><span className="text-[#00ff41]">[x]</span> Risk Assessment Framework</div>
+                      <div className="flex items-center gap-2"><span className="text-yellow-400">[ ]</span> Access Control Policy</div>
+                      <div className="flex items-center gap-2"><span className="text-yellow-400">[ ]</span> Incident Response Plan</div>
+                    </div>
+                  )}
+                  {modalPlanet.modalContent?.type === 'pipeline' && (
+                    <div className="space-y-2 text-[#00ff41]/70">
+                      <div className="flex items-center gap-2"><span className="text-[#00ff41]">[+]</span> Build → <span className="text-[#00ff41]/50">2.3s</span></div>
+                      <div className="flex items-center gap-2"><span className="text-[#00ff41]">[+]</span> SAST Scan → <span className="text-[#00ff41]/50">12.1s</span></div>
+                      <div className="flex items-center gap-2"><span className="text-[#9D4EDD] animate-pulse">●</span> Container Scan → <span className="text-[#00ff41]/50">running...</span></div>
+                      <div className="flex items-center gap-2 text-[#00ff41]/30">[ ] Deploy to Staging</div>
+                    </div>
+                  )}
+                </div>
+
+                <p className="text-[#00ff41]/50 mb-6 text-sm">{modalPlanet.description}</p>
+
+                <div className="flex gap-3">
+                  <button
+                    className="flex-1 text-center py-3 rounded-sm text-xs uppercase tracking-widest font-mono border border-[#00ff41]/30 bg-[#00ff41]/10 text-[#00ff41] hover:bg-[#00ff41]/20 transition-all"
+                    onClick={() => {
+                      setModalOpen(false);
+                      triggerTransition(() => setLocation('/contact'));
+                    }}
+                    data-testid="link-modal-contact"
+                  >
+                    {'>'} INITIATE_CONTACT
+                  </button>
+                  <button
+                    onClick={() => setModalOpen(false)}
+                    className="px-6 py-3 rounded-sm text-xs uppercase tracking-widest font-mono border border-[#00ff41]/10 text-[#00ff41]/40 hover:text-[#00ff41]/70 hover:border-[#00ff41]/20 transition-colors"
+                    data-testid="button-modal-close-secondary"
+                  >
+                    CLOSE
+                  </button>
+                </div>
               </div>
             </motion.div>
           </motion.div>
