@@ -160,19 +160,21 @@ export function HorizonHeroSection() {
 
           const color = new THREE.Color();
           const colorChoice = Math.random();
-          if (colorChoice < 0.5) {
-            color.setHSL(0.45, 0.8, 0.6 + Math.random() * 0.3); // cyan
-          } else if (colorChoice < 0.8) {
-            color.setHSL(0.38, 0.9, 0.5 + Math.random() * 0.2); // green
+          if (colorChoice < 0.4) {
+            color.setHSL(0.75, 0.8, 0.5 + Math.random() * 0.3); // purple
+          } else if (colorChoice < 0.7) {
+            color.setHSL(0.78, 0.6, 0.4 + Math.random() * 0.3); // deep violet
+          } else if (colorChoice < 0.9) {
+            color.setHSL(0.55, 0.7, 0.5 + Math.random() * 0.3); // cyan-blue
           } else {
-            color.setHSL(0.75, 0.7, 0.5 + Math.random() * 0.3); // purple
+            color.setHSL(0, 0, 0.7 + Math.random() * 0.3); // white accent
           }
           
           colors[j * 3] = color.r;
           colors[j * 3 + 1] = color.g;
           colors[j * 3 + 2] = color.b;
 
-          sizes[j] = Math.random() * 2 + 0.5;
+          sizes[j] = Math.random() * 3 + 1.0;
         }
 
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -194,11 +196,12 @@ export function HorizonHeroSection() {
             void main() {
               vColor = color;
               vec3 pos = position;
-              // Matrix rain falling effect
-              pos.y = mod(pos.y - time * (30.0 + depth * 20.0), 1600.0) - 800.0;
+              // Gentle drift with cyber pulse
+              pos.y = mod(pos.y - time * (8.0 + depth * 5.0), 1600.0) - 800.0;
+              pos.x += sin(pos.y * 0.01 + time * 0.5) * 15.0;
               
               vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-              gl_PointSize = size * (200.0 / -mvPosition.z);
+              gl_PointSize = size * (250.0 / -mvPosition.z);
               gl_Position = projectionMatrix * mvPosition;
             }
           `,
@@ -206,11 +209,20 @@ export function HorizonHeroSection() {
             varying vec3 vColor;
             
             void main() {
-              float dist = length(gl_PointCoord - vec2(0.5));
+              vec2 center = gl_PointCoord - vec2(0.5);
+              float dist = length(center);
               if (dist > 0.5) discard;
               
-              float opacity = 1.0 - smoothstep(0.0, 0.5, dist);
-              gl_FragColor = vec4(vColor, opacity);
+              // Glowing core with soft edge
+              float core = 1.0 - smoothstep(0.0, 0.15, dist);
+              float glow = 1.0 - smoothstep(0.0, 0.5, dist);
+              float opacity = core * 0.9 + glow * 0.4;
+              
+              // Vertical trail effect
+              float trail = smoothstep(0.5, 0.0, center.y + 0.3) * 0.3;
+              opacity += trail * glow;
+              
+              gl_FragColor = vec4(vColor * (1.0 + core * 0.5), opacity);
             }
           `,
           transparent: true,
@@ -232,10 +244,10 @@ export function HorizonHeroSection() {
       const material = new THREE.ShaderMaterial({
         uniforms: {
           time: { value: 0 },
-          color1: { value: new THREE.Color(0x00ff88) },  // matrix green
-          color2: { value: new THREE.Color(0x00ccff) },  // cyan
-          color3: { value: new THREE.Color(0x7B2FE0) },  // purple
-          opacity: { value: 0.18 },
+          color1: { value: new THREE.Color(0x3A0CA3) },  // deep purple
+          color2: { value: new THREE.Color(0x7B2FE0) },  // vivid purple
+          color3: { value: new THREE.Color(0x9D4EDD) },  // light purple glow
+          opacity: { value: 0.30 },
           scrollProgress: { value: 0 }
         },
         vertexShader: `
@@ -271,26 +283,41 @@ export function HorizonHeroSection() {
           
           void main() {
             float n = noise(vUv * 5.0 + time * 0.1);
+            float n2 = noise(vUv * 8.0 - time * 0.15);
             
-            // Digital grid lines
-            float gridX = smoothstep(0.48, 0.5, fract(vUv.x * 40.0));
-            float gridY = smoothstep(0.48, 0.5, fract(vUv.y * 30.0));
-            float grid = max(gridX, gridY) * 0.15;
+            // Flowing energy waves
+            float wave1 = sin(vUv.x * 12.0 + vUv.y * 8.0 + time * 1.5) * 0.5 + 0.5;
+            float wave2 = sin(vUv.x * 8.0 - vUv.y * 15.0 + time * 1.2) * 0.5 + 0.5;
+            float wave3 = cos(vUv.x * 20.0 + time * 2.0) * sin(vUv.y * 15.0 - time * 1.0) * 0.5 + 0.5;
             
-            // Scan line effect
-            float scanLine = smoothstep(0.48, 0.5, fract(vUv.y * 200.0 + time * 0.5)) * 0.08;
+            // Circuit-like grid with glow
+            float gridX = smoothstep(0.47, 0.5, fract(vUv.x * 25.0));
+            float gridY = smoothstep(0.47, 0.5, fract(vUv.y * 18.0));
+            float grid = max(gridX, gridY);
+            float gridGlow = grid * (wave1 * 0.4 + 0.1);
             
-            // Data flow pulse
-            float pulse = sin(vUv.y * 20.0 - time * 2.0) * 0.5 + 0.5;
-            float flowLine = smoothstep(0.49, 0.5, fract(vUv.x * 15.0)) * pulse * 0.2;
+            // Pulsing energy nodes at grid intersections
+            float nodeX = fract(vUv.x * 25.0);
+            float nodeY = fract(vUv.y * 18.0);
+            float node = 1.0 - smoothstep(0.0, 0.12, length(vec2(nodeX, nodeY) - 0.5));
+            float nodePulse = node * (sin(time * 3.0 + n * 10.0) * 0.3 + 0.7) * 0.4;
             
-            vec3 gridColor = mix(color1, color2, n);
-            vec3 color = gridColor * (grid + scanLine + flowLine);
-            color += color3 * flowLine * 0.5;
+            // Scan line sweep
+            float scanPos = fract(time * 0.15);
+            float scanLine = smoothstep(0.0, 0.02, abs(vUv.y - scanPos)) * 0.0 + 
+                            (1.0 - smoothstep(0.0, 0.02, abs(vUv.y - scanPos))) * 0.6;
             
-            float alpha = opacity * (grid + scanLine + flowLine) * 2.0;
-            alpha *= 1.0 - length(vUv - 0.5) * 1.2;
-            alpha = max(alpha, 0.0);
+            // Compose colors
+            vec3 baseColor = mix(color1, color2, wave1 * n);
+            vec3 color = baseColor * (wave2 * 0.15 + 0.05);
+            color += color2 * gridGlow * 0.6;
+            color += color3 * nodePulse;
+            color += color2 * scanLine * 0.3;
+            color += color3 * wave3 * n2 * 0.08;
+            
+            float alpha = opacity * (wave2 * 0.3 + gridGlow * 1.5 + nodePulse * 2.0 + scanLine * 0.5 + 0.05);
+            alpha *= 1.0 - length(vUv - 0.5) * 0.8;
+            alpha = clamp(alpha, 0.0, 0.5);
             
             gl_FragColor = vec4(color, alpha);
           }
@@ -313,10 +340,10 @@ export function HorizonHeroSection() {
       if (!refs.scene) return;
       
       const bodies = [
-        { x: -400, y: 100, z: -800, radius: 30, color: 0x0a1628, glowColor: 0x00ff88 },
-        { x: 350, y: -50, z: -900, radius: 20, color: 0x0a1628, glowColor: 0x00ccff },
-        { x: -200, y: -80, z: -700, radius: 15, color: 0x0a1628, glowColor: 0x7B2FE0 },
-        { x: 500, y: 150, z: -1000, radius: 40, color: 0x0a1628, glowColor: 0x00ff88 }
+        { x: -400, y: 100, z: -800, radius: 30, color: 0x0a0520, glowColor: 0x9D4EDD },
+        { x: 350, y: -50, z: -900, radius: 20, color: 0x0a0520, glowColor: 0x7B2FE0 },
+        { x: -200, y: -80, z: -700, radius: 15, color: 0x0a0520, glowColor: 0x3A0CA3 },
+        { x: 500, y: 150, z: -1000, radius: 40, color: 0x0a0520, glowColor: 0x9D4EDD }
       ];
 
       bodies.forEach((body) => {
@@ -396,12 +423,12 @@ export function HorizonHeroSection() {
           
           void main() {
             float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
-            vec3 atmosphere = vec3(0.0, 0.8, 0.5) * intensity; // green-cyan glow
+            vec3 atmosphere = vec3(0.48, 0.18, 0.88) * intensity; // purple glow
             
             float pulse = sin(time * 2.0) * 0.05 + 0.95;
             atmosphere *= pulse;
             
-            gl_FragColor = vec4(atmosphere, intensity * 0.08);
+            gl_FragColor = vec4(atmosphere, intensity * 0.15);
           }
         `,
         side: THREE.BackSide,

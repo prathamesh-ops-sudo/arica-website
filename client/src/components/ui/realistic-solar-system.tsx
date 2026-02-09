@@ -2661,52 +2661,134 @@ export function RealisticSolarSystem() {
         )}
       </AnimatePresence>
       
-      {/* System Breach Effect Overlay */}
+      {/* Firewall Breach Effect Overlay */}
       <AnimatePresence>
         {showBlackHole && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.5 }}
-            className="fixed inset-0 z-[200]"
+            transition={{ duration: 0.5 }}
+            className="fixed inset-0 z-[200] bg-black"
             data-testid="overlay-breach"
+            style={{
+              backgroundImage: `
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(123, 47, 224, 0.03) 2px, rgba(123, 47, 224, 0.03) 4px),
+                radial-gradient(ellipse at 50% 50%, rgba(58, 12, 163, 0.3) 0%, transparent 70%)
+              `,
+            }}
           >
-            <EnergyBeam className="absolute inset-0" data-testid="effect-energy-beam" />
-            
-            {/* Quote Overlay */}
+            {/* Scrolling hex code rain columns */}
+            <div className="absolute inset-0 overflow-hidden opacity-30" data-testid="effect-code-rain">
+              {Array.from({ length: 20 }).map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute text-xs font-mono leading-tight whitespace-pre"
+                  style={{
+                    left: `${i * 5 + Math.random() * 2}%`,
+                    color: i % 3 === 0 ? '#9D4EDD' : i % 3 === 1 ? '#7B2FE0' : '#3A0CA3',
+                    fontSize: '10px',
+                    textShadow: `0 0 8px ${i % 2 === 0 ? 'rgba(157,78,221,0.8)' : 'rgba(123,47,224,0.6)'}`,
+                    letterSpacing: '2px',
+                  }}
+                  initial={{ y: '-100%', opacity: 0 }}
+                  animate={{ 
+                    y: '200%', 
+                    opacity: [0, 0.8, 0.8, 0],
+                  }}
+                  transition={{
+                    duration: 3 + Math.random() * 4,
+                    delay: Math.random() * 2,
+                    repeat: Infinity,
+                    ease: 'linear',
+                  }}
+                >
+                  {Array.from({ length: 30 }).map(() => 
+                    Math.random().toString(16).substr(2, 2).toUpperCase()
+                  ).join('\n')}
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Glitch scan line sweep */}
+            <motion.div
+              className="absolute inset-x-0 h-1"
+              style={{
+                background: 'linear-gradient(90deg, transparent, #7B2FE0, #9D4EDD, #7B2FE0, transparent)',
+                boxShadow: '0 0 20px #7B2FE0, 0 0 60px rgba(123,47,224,0.5)',
+              }}
+              animate={{ top: ['0%', '100%'] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+              data-testid="effect-scanline"
+            />
+
+            {/* Central breach content */}
             <AnimatePresence>
               {showQuote && (
                 <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -30 }}
-                  transition={{ duration: 1, ease: "easeOut" }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
                   className="absolute inset-0 flex items-center justify-center z-10"
                   data-testid="overlay-breach-quote"
                 >
                   <div className="text-center px-8">
-                    <motion.p
-                      initial={{ opacity: 0, scale: 0.9 }}
+                    {/* Glitching BREACH DETECTED text */}
+                    <motion.div
+                      initial={{ opacity: 0, scale: 1.5 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.3, duration: 0.8 }}
-                      className="text-4xl md:text-6xl font-bold text-white mb-4"
-                      style={{
-                        textShadow: '0 0 40px rgba(157, 78, 221, 0.8), 0 0 80px rgba(58, 12, 163, 0.6)',
-                      }}
-                      data-testid="text-quote-main"
+                      transition={{ duration: 0.3, ease: 'easeOut' }}
+                      className="mb-8"
                     >
-                      अंतः अस्ति प्रारंभः
-                    </motion.p>
-                    <motion.p
+                      <p
+                        className="text-sm md:text-base font-mono tracking-[0.5em] text-[#9D4EDD] mb-2"
+                        style={{ textShadow: '0 0 20px rgba(157,78,221,0.8)' }}
+                      >
+                        &#x25B6; FIREWALL BREACH DETECTED
+                      </p>
+                      <div className="w-48 h-px mx-auto bg-gradient-to-r from-transparent via-[#7B2FE0] to-transparent" />
+                    </motion.div>
+
+                    {/* Sanskrit quote with hacker frame */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5, duration: 0.8 }}
+                      className="relative inline-block"
+                    >
+                      <div className="absolute -inset-4 border border-[#7B2FE0]/30 rounded-lg" 
+                        style={{ boxShadow: '0 0 30px rgba(123,47,224,0.15)' }} 
+                      />
+                      <div className="absolute -top-1 left-4 bg-black px-2">
+                        <span className="text-[10px] font-mono text-[#7B2FE0]/60 tracking-widest">SYSTEM.CORE</span>
+                      </div>
+                      <p
+                        className="text-4xl md:text-6xl font-bold text-white py-4 px-8"
+                        style={{
+                          textShadow: '0 0 40px rgba(157, 78, 221, 0.8), 0 0 80px rgba(58, 12, 163, 0.6)',
+                        }}
+                        data-testid="text-quote-main"
+                      >
+                        अंतः अस्ति प्रारंभः
+                      </p>
+                    </motion.div>
+
+                    {/* Terminal-style subtitle */}
+                    <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      transition={{ delay: 0.8, duration: 0.5 }}
-                      className="text-lg md:text-xl text-white/60"
-                      data-testid="text-quote-subtitle"
+                      transition={{ delay: 1.2, duration: 0.5 }}
+                      className="mt-6"
                     >
-                      Reinitializing security scan...
-                    </motion.p>
+                      <p
+                        className="text-sm md:text-base font-mono text-[#9D4EDD]/70"
+                        style={{ textShadow: '0 0 10px rgba(157,78,221,0.4)' }}
+                        data-testid="text-quote-subtitle"
+                      >
+                        <span className="text-[#7B2FE0]">$</span> reinitializing_security_protocols<span className="animate-pulse">█</span>
+                      </p>
+                    </motion.div>
                   </div>
                 </motion.div>
               )}
