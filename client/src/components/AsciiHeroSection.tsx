@@ -4,6 +4,7 @@ import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Shield, Eye, Lock, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { FloatingCyberThreats } from '@/components/FloatingCyberThreats';
 
 export function AsciiHeroSection() {
   const stats = [
@@ -27,6 +28,7 @@ export function AsciiHeroSection() {
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#3A0CA3]/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#9D4EDD]/10 rounded-full blur-3xl" />
       </div>
+      <FloatingCyberThreats variant="red" density="medium" />
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-6">

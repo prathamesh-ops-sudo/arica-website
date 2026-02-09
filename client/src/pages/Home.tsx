@@ -8,6 +8,7 @@ import { ForensicsSection } from "@/components/ForensicsSection";
 import { AsciiHeroSection } from "@/components/AsciiHeroSection";
 import { ComplianceSection } from "@/components/ComplianceSection";
 import { CTA } from "@/components/CTA";
+import { ThreatVortex } from "@/components/ThreatVortex";
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
         <HorizonHeroSection />
         <ClientsSlider />
         <ForensicsSection />
+        <ThreatVortex />
         <AsciiHeroSection />
         <ComplianceSection />
         <CTA />

@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { EtherealShadow } from "@/components/ui/ethereal-shadow";
+import { FloatingCyberThreats } from "@/components/FloatingCyberThreats";
 
 export function CTA() {
   return (
@@ -16,6 +17,7 @@ export function CTA() {
       </div>
       
       <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-transparent to-background/80" />
+      <FloatingCyberThreats variant="mixed" density="low" />
 
       <div className="max-w-3xl mx-auto px-6 relative z-10 text-center">
         <motion.div

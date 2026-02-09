@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { ClipboardCheck, Bot, ArrowRight, Search, FileCheck, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import shieldImage from "@assets/generated_images/3d_shield_compliance_icon.png";
+import { FloatingCyberThreats } from "@/components/FloatingCyberThreats";
 
 const complianceItems = [
   { text: "Risk Assessment & Gap Analysis", icon: Search },
@@ -25,6 +26,7 @@ export function ComplianceSection() {
           backgroundSize: '40px 40px'
         }} />
       </div>
+      <FloatingCyberThreats variant="purple" density="low" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 items-center">

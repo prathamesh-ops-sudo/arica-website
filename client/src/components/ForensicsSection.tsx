@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { LinkPreview } from "@/components/ui/link-preview";
 import { SecurityScanAnimation } from "@/components/ui/security-scan-animation";
 import { NanobotParticles } from "@/components/ui/nanobot-particles";
+import { FloatingCyberThreats } from "@/components/FloatingCyberThreats";
 
 const features = [
   {
@@ -33,6 +34,7 @@ export function ForensicsSection() {
           backgroundSize: '40px 40px'
         }} />
       </div>
+      <FloatingCyberThreats variant="mixed" density="low" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
