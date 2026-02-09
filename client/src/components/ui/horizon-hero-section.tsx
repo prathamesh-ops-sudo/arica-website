@@ -5,11 +5,11 @@ import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLocation } from 'wouter';
-import { ShieldCheck } from 'lucide-react';
 import { useHyperspaceTransition } from './hyperspace-transition';
 import { isWebGLAvailable } from '@/lib/webgl-utils';
 import EnergyBeam from './energy-beam';
 import { TubesBackground } from './neon-flow';
+import { CinematicHeroOverlay } from '@/components/CinematicHeroOverlay';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -29,9 +29,7 @@ interface ThreeRefs {
 export function HorizonHeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
   const scrollProgressRef = useRef<HTMLDivElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
 
   const smoothCameraPos = useRef({ x: 0, y: 30, z: 100 });
   const lastProgressRef = useRef(0);
@@ -532,31 +530,11 @@ export function HorizonHeroSection() {
   useEffect(() => {
     if (!isReady) return;
     
-    gsap.set([menuRef.current, titleRef.current, scrollProgressRef.current], {
+    gsap.set([scrollProgressRef.current], {
       visibility: 'visible'
     });
 
     const tl = gsap.timeline();
-
-    if (menuRef.current) {
-      tl.from(menuRef.current, {
-        x: -100,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out"
-      });
-    }
-
-    if (titleRef.current) {
-      const titleChars = titleRef.current.querySelectorAll('.title-char');
-      tl.from(titleChars, {
-        y: 200,
-        opacity: 0,
-        duration: 1.5,
-        stagger: 0.05,
-        ease: "power4.out"
-      }, "-=0.5");
-    }
 
     if (scrollProgressRef.current) {
       tl.from(scrollProgressRef.current, {
@@ -564,7 +542,7 @@ export function HorizonHeroSection() {
         y: 50,
         duration: 1,
         ease: "power2.out"
-      }, "-=0.5");
+      });
     }
 
     return () => {
@@ -632,14 +610,7 @@ export function HorizonHeroSection() {
     };
   }, [totalSections]);
 
-  const titles: Record<number, string> = {
-    0: 'ARICA',
-    1: 'TECH',
-    2: 'SECURITY'
-  };
-
-  const handleEnterExperience = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleEnterExperience = useCallback(() => {
     triggerTransition(() => {
       setLocation('/experience');
     });
@@ -687,33 +658,7 @@ export function HorizonHeroSection() {
         />
       )}
       
-      <div 
-        ref={menuRef} 
-        className="horizon-side-menu" 
-        style={{ visibility: 'hidden', opacity: isPastHero ? 0 : 1, pointerEvents: isPastHero ? 'none' : 'auto', transition: 'opacity 0.5s ease' }}
-      >
-        <div className="horizon-menu-icon">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        <div className="horizon-vertical-text">SECURITY</div>
-      </div>
-
-      <div className="horizon-hero-content z-[10]" style={{ opacity: isPastHero ? 0 : 1, transition: 'opacity 0.3s ease' }}>
-        <h1 ref={titleRef} className="horizon-hero-title text-halo-white">
-          {titles[currentSection] || titles[0]}
-        </h1>
-        
-        <button 
-          onClick={handleEnterExperience}
-          className="mt-8 inline-flex items-center gap-3 bg-white/10 backdrop-blur-xl border border-white/20 text-white font-semibold px-8 py-4 rounded-full hover:bg-white/15 transition-all hover:scale-105 shadow-lg shadow-black/25 cursor-pointer pointer-events-auto"
-          data-testid="button-enter-experience"
-        >
-          <ShieldCheck className="w-5 h-5" />
-          Enter the Cyber Network
-        </button>
-      </div>
+      <CinematicHeroOverlay onEnterExperience={handleEnterExperience} isPastHero={isPastHero} />
 
       <div ref={scrollProgressRef} className="horizon-scroll-progress" style={{ visibility: 'hidden', opacity: isPastHero ? 0 : 1, pointerEvents: isPastHero ? 'none' : 'auto', transition: 'opacity 0.5s ease' }}>
         <div className="horizon-scroll-text" style={{ opacity: scrollStarted ? 0 : 1, transition: 'opacity 0.5s ease-out' }}>SCROLL</div>
