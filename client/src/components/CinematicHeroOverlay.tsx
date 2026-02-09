@@ -529,8 +529,8 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
               />
             ))}
 
-            {/* CTA Button */}
-            <div className="absolute inset-0 flex items-center justify-center" style={{ pointerEvents: isPastHero ? "none" : "auto" }}>
+            {/* CTA Button - positioned above center to avoid parallax title overlap */}
+            <div className="absolute inset-x-0 top-[25%] flex justify-center" style={{ pointerEvents: isPastHero ? "none" : "auto" }}>
               <motion.button
                 data-testid="button-enter-experience"
                 onClick={onEnterExperience}
