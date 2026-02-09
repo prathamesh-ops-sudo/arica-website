@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLocation } from 'wouter';
-import { Rocket } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import { useHyperspaceTransition } from './hyperspace-transition';
 import { isWebGLAvailable } from '@/lib/webgl-utils';
 import EnergyBeam from './energy-beam';
@@ -666,8 +666,8 @@ export function HorizonHeroSection() {
           className="mt-8 inline-flex items-center gap-3 bg-white/10 backdrop-blur-xl border border-white/20 text-white font-semibold px-8 py-4 rounded-full hover:bg-white/15 transition-all hover:scale-105 shadow-lg shadow-black/25 cursor-pointer pointer-events-auto"
           data-testid="button-enter-experience"
         >
-          <Rocket className="w-5 h-5" />
-          Enter the Experience
+          <ShieldCheck className="w-5 h-5" />
+          Enter the Cyber Network
         </button>
       </div>
 

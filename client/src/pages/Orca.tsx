@@ -904,13 +904,13 @@ function CompletionOverlay() {
         >
           <button
             onClick={handleExploreServices}
-            data-testid="button-explore-galaxy"
+            data-testid="button-explore-network"
             className="group relative px-10 py-5 bg-gradient-to-r from-[#3A0CA3] to-[#9D4EDD] text-white font-bold rounded-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 justify-center overflow-hidden"
             style={{ boxShadow: '0 0 40px rgba(58,12,163,0.5)' }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
             <Rocket className="w-5 h-5" />
-            <span className="relative">Explore Our Galaxy</span>
+            <span className="relative">Explore Our Cyber Network</span>
             <Sparkles className="w-5 h-5" />
           </button>
           
@@ -930,7 +930,7 @@ function CompletionOverlay() {
           transition={{ delay: 1.2 }}
           className="text-sm text-white/30 mt-8"
         >
-          Discover our comprehensive security services in the Galaxy Experience
+          Discover our comprehensive security services in the Cyber Network
         </motion.p>
       </div>
     </motion.div>

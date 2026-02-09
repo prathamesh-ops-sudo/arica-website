@@ -58,11 +58,11 @@ const galaxies: GalaxyConfig[] = [
     description: 'Vulnerability Assessment & Penetration Testing',
     scrollStart: 0.0,
     scrollEnd: 0.33,
-    colorTheme: { primary: '#ff4444', secondary: '#ff8800', accent: '#9D4EDD' },
+    colorTheme: { primary: '#e63946', secondary: '#d62828', accent: '#9D4EDD' },
     nebulaColors: {
-      color1: [0.8, 0.2, 0.1],
-      color2: [1.0, 0.4, 0.0],
-      color3: [0.0, 0.8, 1.0],
+      color1: [0.6, 0.1, 0.1],
+      color2: [0.8, 0.2, 0.0],
+      color3: [0.0, 0.6, 0.4],
     },
     planets: [
       {
@@ -173,11 +173,11 @@ const galaxies: GalaxyConfig[] = [
     description: 'Comprehensive Audit & Compliance Services',
     scrollStart: 0.33,
     scrollEnd: 0.66,
-    colorTheme: { primary: '#ffc107', secondary: '#ff9800', accent: '#1976d2' },
+    colorTheme: { primary: '#1976d2', secondary: '#0d47a1', accent: '#00bcd4' },
     nebulaColors: {
-      color1: [1.0, 0.8, 0.2],
-      color2: [0.9, 0.6, 0.1],
-      color3: [0.1, 0.4, 0.8],
+      color1: [0.1, 0.3, 0.7],
+      color2: [0.0, 0.5, 0.8],
+      color3: [0.1, 0.8, 0.6],
     },
     planets: [
       {
@@ -290,9 +290,9 @@ const galaxies: GalaxyConfig[] = [
     scrollEnd: 1.0,
     colorTheme: { primary: '#9c27b0', secondary: '#607d8b', accent: '#00bcd4' },
     nebulaColors: {
-      color1: [0.6, 0.2, 0.7],
-      color2: [0.4, 0.5, 0.6],
-      color3: [0.0, 0.7, 0.8],
+      color1: [0.4, 0.1, 0.6],
+      color2: [0.2, 0.3, 0.5],
+      color3: [0.0, 0.5, 0.7],
     },
     planets: [
       {
@@ -1046,7 +1046,7 @@ export function RealisticSolarSystem() {
       refs.composer.addPass(outlinePass);
       refs.outlinePass = outlinePass;
 
-      const ambientLight = new THREE.AmbientLight(0x606080, 2);
+      const ambientLight = new THREE.AmbientLight(0x404060, 2);
       refs.scene.add(ambientLight);
 
       raycasterRef.current = new THREE.Raycaster();
@@ -1170,7 +1170,7 @@ export function RealisticSolarSystem() {
           if (currentGalaxy.id !== lastGalaxyRef.current && !transitionCooldownRef.current) {
             transitionCooldownRef.current = true;
             setWarpEffect(1);
-            setTransitionText(`Entering ${currentGalaxy.name}`);
+            setTransitionText(`Accessing ${currentGalaxy.name}`);
             
             physicsStateRef.current.cameraShake.intensity = 0.8;
             physicsStateRef.current.planetScatter = { active: true, progress: 0 };
@@ -1566,7 +1566,7 @@ export function RealisticSolarSystem() {
       refs.disposables.push(sunGeometry);
       refs.materials.push(sunMaterial);
 
-      galaxyGroup.sunLight = new THREE.PointLight(0xffffee, 50, 500, 1);
+      galaxyGroup.sunLight = new THREE.PointLight(0x8866ff, 50, 500, 1);
       galaxyGroup.sunLight.position.set(0, 0, 0);
       refs.scene!.add(galaxyGroup.sunLight);
 
@@ -1576,7 +1576,7 @@ export function RealisticSolarSystem() {
         { size: 8, intensity: 0.15, offset: 2.0 },
       ];
 
-      const coronaColor = new THREE.Color(0xffaa33);
+      const coronaColor = new THREE.Color(0x7B2FE0);
       coronaLayers.forEach((layer) => {
         const coronaGeom = new THREE.SphereGeometry(layer.size, 32, 32);
         const coronaMat = new THREE.ShaderMaterial({
@@ -2317,7 +2317,7 @@ export function RealisticSolarSystem() {
           <div className="absolute inset-0 flex items-center justify-center bg-background z-50 pointer-events-auto">
             <div className="text-center">
               <div className="w-20 h-20 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-muted-foreground">Initializing Galaxy Experience...</p>
+              <p className="text-muted-foreground">Initializing Cyber Network...</p>
             </div>
           </div>
         )}
@@ -2689,7 +2689,7 @@ export function RealisticSolarSystem() {
                       className="text-lg md:text-xl text-white/60"
                       data-testid="text-quote-subtitle"
                     >
-                      Restarting your journey...
+                      Reinitializing security scan...
                     </motion.p>
                   </div>
                 </motion.div>

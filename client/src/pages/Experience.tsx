@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import { RealisticSolarSystem } from "@/components/ui/realistic-solar-system";
-import { Sparkles, ChevronDown, Home } from "lucide-react";
+import { Shield, ChevronDown, Home } from "lucide-react";
 
 export default function Experience() {
   const [, setLocation] = useLocation();
@@ -55,7 +55,7 @@ export default function Experience() {
                 className="w-24 h-24 rounded-full bg-gradient-to-br from-[#3A0CA3] to-[#9D4EDD] flex items-center justify-center mx-auto mb-6"
                 style={{ boxShadow: '0 0 60px rgba(58,12,163,0.5)' }}
               >
-                <Sparkles className="w-12 h-12 text-white" />
+                <Shield className="w-12 h-12 text-white" />
               </motion.div>
               
               <motion.h2
@@ -64,7 +64,7 @@ export default function Experience() {
                 transition={{ delay: 0.3 }}
                 className="text-3xl font-bold text-white mb-2"
               >
-                Welcome to the Galaxy
+                Welcome to the Cyber Network
               </motion.h2>
               
               <motion.p
@@ -73,7 +73,7 @@ export default function Experience() {
                 transition={{ delay: 0.5 }}
                 className="text-[#8e8e93] text-lg mb-6"
               >
-                Explore our universe of security services
+                Explore our network of security services
               </motion.p>
               
               <motion.div
