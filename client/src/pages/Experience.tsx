@@ -5,15 +5,21 @@ import { RealisticSolarSystem } from "@/components/ui/realistic-solar-system";
 import { Home } from "lucide-react";
 
 const terminalLines = [
-  { text: "root@arica-tech:~# nmap -sV --script=vuln 0.0.0.0/0", color: "#00ff41" },
-  { text: "[*] Scanning cyber defense network...", color: "#00ff41" },
-  { text: "[+] 3 GALAXIES DETECTED", color: "#9D4EDD" },
-  { text: "[+] 15 SERVICE NODES ONLINE", color: "#9D4EDD" },
-  { text: "[+] THREAT LEVEL: MAXIMUM", color: "#9D4EDD" },
-  { text: "root@arica-tech:~# ./launch_exploration.sh", color: "#00ff41" },
-  { text: "[*] Initializing 3D neural map...", color: "#00ff41" },
-  { text: "[████████████████████████] 100%", color: "#00ff41" },
-  { text: "[+] READY. SCROLL TO NAVIGATE.", color: "#9D4EDD" },
+  { text: "root@arica-tech:~# ./initiate_cyberops.sh", color: "#00ff41" },
+  { text: "", color: "#00ff41" },
+  { text: "╔══════════════════════════════════════════╗", color: "#7B2FE0" },
+  { text: "║   ARICA TECH — CYBER OPERATIONS CENTER   ║", color: "#9D4EDD" },
+  { text: "╚══════════════════════════════════════════╝", color: "#7B2FE0" },
+  { text: "", color: "#00ff41" },
+  { text: "[*] Authenticating operator... GRANTED", color: "#00ff41" },
+  { text: "[*] Loading defense matrix............. OK", color: "#00ff41" },
+  { text: "[+] 3 SECTORS MAPPED  |  15 NODES ACTIVE", color: "#9D4EDD" },
+  { text: "[+] THREAT LEVEL: ████████░░ 80% — ELEVATED", color: "#ff4444" },
+  { text: "[*] Neural map rendering...", color: "#00ff41" },
+  { text: "[████████████████████████████████] 100%", color: "#00ff41" },
+  { text: "", color: "#00ff41" },
+  { text: "[+] MISSION: EXPLORE & ASSESS ALL SECTORS", color: "#9D4EDD" },
+  { text: "[+] STATUS: READY — SCROLL TO DEPLOY ▼", color: "#9D4EDD" },
 ];
 
 export default function Experience() {
@@ -39,8 +45,8 @@ export default function Experience() {
 
     fadeTimerRef.current = setTimeout(() => {
       setFadeOut(true);
-      hideTimerRef.current = setTimeout(() => setShowIntro(false), 1000);
-    }, 2500);
+      hideTimerRef.current = setTimeout(() => setShowIntro(false), 800);
+    }, 3800);
 
     return () => {
       clearTimeout(startDelay);
@@ -88,8 +94,8 @@ export default function Experience() {
               transition={{ duration: 0.4 }}
               className="relative w-[90vw] max-w-[700px] rounded-lg overflow-hidden"
               style={{
-                border: "1px solid rgba(123,47,224,0.3)",
-                boxShadow: "0 0 30px rgba(123,47,224,0.15), 0 0 60px rgba(123,47,224,0.05)",
+                border: "1px solid rgba(123,47,224,0.4)",
+                boxShadow: "0 0 40px rgba(123,47,224,0.2), 0 0 80px rgba(123,47,224,0.08), inset 0 0 60px rgba(0,0,0,0.5)",
                 backgroundColor: "rgba(5,5,5,0.95)",
               }}
             >
@@ -110,7 +116,10 @@ export default function Experience() {
                 </span>
               </div>
 
-              <div className="p-4 font-mono text-sm leading-relaxed min-h-[280px]">
+              <div className="relative p-4 font-mono text-sm leading-relaxed min-h-[380px]">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#7B2FE0]/[0.04] text-6xl font-bold uppercase tracking-[0.5em] rotate-[-15deg] pointer-events-none select-none whitespace-nowrap">
+                  CLASSIFIED
+                </div>
                 {terminalLines.slice(0, visibleLines).map((line, i) => (
                   <motion.div
                     key={i}

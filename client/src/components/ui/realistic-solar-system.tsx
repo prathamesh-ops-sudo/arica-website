@@ -912,11 +912,21 @@ export function RealisticSolarSystem() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [warpEffect, setWarpEffect] = useState(0);
-  const [transitionText, setTransitionText] = useState<string | null>(null);
+  const [sectorTransition, setSectorTransition] = useState<{
+    phase: number;
+    galaxyName: string;
+    galaxyId: string;
+  } | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalPlanet, setModalPlanet] = useState<PlanetConfig | null>(null);
   const [showBlackHole, setShowBlackHole] = useState(false);
   const [showQuote, setShowQuote] = useState(false);
+  const [threatEvents, setThreatEvents] = useState<{text: string; color: string; id: number}[]>([]);
+  const [microAlert, setMicroAlert] = useState<string | null>(null);
+  const threatIdRef = useRef(0);
+  const threatIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const microAlertTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const microAlertClearRef = useRef<NodeJS.Timeout | null>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
   const [, setLocation] = useLocation();
   const { triggerTransition } = useHyperspaceTransition();
@@ -1153,7 +1163,7 @@ export function RealisticSolarSystem() {
           
           const cooldownTimer = setTimeout(() => {
             transitionCooldownRef.current = false;
-            setTransitionText(null);
+            setSectorTransition(null);
           }, 500);
           blackHoleTimersRef.current.push(cooldownTimer);
         }, 4500);
@@ -1186,7 +1196,11 @@ export function RealisticSolarSystem() {
           if (currentGalaxy.id !== lastGalaxyRef.current && !transitionCooldownRef.current) {
             transitionCooldownRef.current = true;
             setWarpEffect(1);
-            setTransitionText(`Accessing ${currentGalaxy.name}`);
+            setSectorTransition({ phase: 0, galaxyName: currentGalaxy.name, galaxyId: currentGalaxy.id });
+            const phase1Timer = setTimeout(() => setSectorTransition(prev => prev ? {...prev, phase: 1} : null), 600);
+            const phase2Timer = setTimeout(() => setSectorTransition(prev => prev ? {...prev, phase: 2} : null), 1200);
+            const fadeOutTimer = setTimeout(() => setSectorTransition(null), 2000);
+            blackHoleTimersRef.current.push(phase1Timer, phase2Timer, fadeOutTimer);
             
             physicsStateRef.current.cameraShake.intensity = 0.8;
             physicsStateRef.current.planetScatter = { active: true, progress: 0 };
@@ -1238,7 +1252,6 @@ export function RealisticSolarSystem() {
               });
             });
             
-            setTimeout(() => setTransitionText(null), 2000);
             lastGalaxyRef.current = currentGalaxy.id;
             setTimeout(() => {
               transitionCooldownRef.current = false;
@@ -2306,7 +2319,77 @@ export function RealisticSolarSystem() {
     return () => window.removeEventListener('resize', updateSpacerHeight);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
+  useEffect(() => {
+    const generateThreatEvent = (): {text: string; color: string; id: number} => {
+      const now = new Date();
+      const ts = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+      const ro = () => Math.floor(Math.random() * 256);
+      const r4 = () => String(Math.floor(1000 + Math.random() * 9000));
+      const templates: {text: string; color: string}[] = [
+        { text: `[${ts}] BLOCKED: Brute force attempt from 192.168.${ro()}.${ro()}`, color: 'text-[#00ff41]/40' },
+        { text: `[${ts}] ALERT: Port scan detected on 443,8080,22`, color: 'text-red-400/40' },
+        { text: `[${ts}] MITIGATED: DDoS attack ${(Math.random()*5+0.5).toFixed(1)}Gbps → 0`, color: 'text-[#00ff41]/40' },
+        { text: `[${ts}] DETECTED: SQL injection payload /api/auth`, color: 'text-red-400/40' },
+        { text: `[${ts}] BLOCKED: Unauthorized SSH from 10.0.${ro()}.${ro()}`, color: 'text-[#00ff41]/40' },
+        { text: `[${ts}] ENCRYPTING: Channel rekeyed AES-256-GCM`, color: 'text-[#9D4EDD]/40' },
+        { text: `[${ts}] SCAN: Vulnerability assessment port 3306`, color: 'text-[#00ff41]/20' },
+        { text: `[${ts}] FIREWALL: Rule #${Math.floor(10+Math.random()*90)} triggered ${Math.floor(1+Math.random()*5)}x/min`, color: 'text-[#00ff41]/20' },
+        { text: `[${ts}] PATCHED: CVE-2024-${r4()} applied live`, color: 'text-[#9D4EDD]/40' },
+        { text: `[${ts}] QUARANTINE: Malware hash sha256:a3f${r4()}...`, color: 'text-[#00ff41]/20' },
+      ];
+      const t = templates[Math.floor(Math.random() * templates.length)];
+      threatIdRef.current += 1;
+      return { text: t.text, color: t.color, id: threatIdRef.current };
+    };
+
+    const initial: {text: string; color: string; id: number}[] = [];
+    for (let i = 0; i < 6; i++) initial.push(generateThreatEvent());
+    setThreatEvents(initial);
+
+    threatIntervalRef.current = setInterval(() => {
+      setThreatEvents(prev => {
+        const next = [...prev, generateThreatEvent()];
+        if (next.length > 8) return next.slice(next.length - 8);
+        return next;
+      });
+    }, 2000 + Math.random() * 1000);
+
+    return () => {
+      if (threatIntervalRef.current) clearInterval(threatIntervalRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    const alertMessages = [
+      "INTRUSION ATTEMPT NEUTRALIZED",
+      "ENCRYPTING SECURE CHANNEL",
+      "ANOMALY DETECTED IN SECTOR",
+      "PERIMETER SCAN COMPLETE",
+      "THREAT SIGNATURE UPDATED",
+      "DEFENSE MATRIX RECALIBRATED",
+    ];
+
+    const scheduleNext = () => {
+      const delay = 15000 + Math.random() * 10000;
+      microAlertTimeoutRef.current = setTimeout(() => {
+        const msg = alertMessages[Math.floor(Math.random() * alertMessages.length)];
+        setMicroAlert(msg);
+        microAlertClearRef.current = setTimeout(() => {
+          setMicroAlert(null);
+          scheduleNext();
+        }, 2000);
+      }, delay);
+    };
+
+    scheduleNext();
+
+    return () => {
+      if (microAlertTimeoutRef.current) clearTimeout(microAlertTimeoutRef.current);
+      if (microAlertClearRef.current) clearTimeout(microAlertClearRef.current);
+    };
+  }, []);
+
   return (
     <div ref={containerRef} className="relative w-full h-full">
       <canvas ref={canvasRef} className="fixed inset-0 z-0" />
@@ -2367,6 +2450,33 @@ export function RealisticSolarSystem() {
               <div>LAT: {(37.7749 + scrollProgress * 10).toFixed(4)}</div>
               <div>LON: {(-122.4194 + scrollProgress * 20).toFixed(4)}</div>
             </div>
+
+            <div className="absolute left-6 top-1/2 -translate-y-1/2 z-10 pointer-events-none hidden md:block">
+              <div className="border-l border-[#00ff41]/10 pl-2 max-w-[220px]">
+                <div className="text-[#00ff41]/20 text-[9px] tracking-widest uppercase mb-1">THREAT FEED // LIVE</div>
+                <div className="max-h-[300px] overflow-hidden font-mono text-[10px]">
+                  {threatEvents.map(evt => (
+                    <div key={evt.id} className={`${evt.color} leading-relaxed truncate`}>{evt.text}</div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <AnimatePresence>
+              {microAlert && (
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="absolute bottom-32 right-6 z-20 pointer-events-none font-mono hidden md:block"
+                >
+                  <div className="border border-[#00ff41]/20 bg-black/80 backdrop-blur-sm rounded-sm px-3 py-2 text-[10px]">
+                    <div className="text-[#00ff41]/30 text-[8px] tracking-widest mb-1">SYSTEM ALERT</div>
+                    <div className="text-[#00ff41]/60">{microAlert}</div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </>
         )}
 
@@ -2380,25 +2490,74 @@ export function RealisticSolarSystem() {
         )}
         
         <AnimatePresence>
-          {transitionText && (
+          {sectorTransition && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.2 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
               className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none"
             >
-              <div className="text-center">
-                <motion.div
-                  animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                  className="text-4xl md:text-6xl font-bold"
-                  style={{ 
-                    color: activeGalaxy.colorTheme.accent,
-                    textShadow: `0 0 40px ${activeGalaxy.colorTheme.accent}`,
-                  }}
-                >
-                  {transitionText}
-                </motion.div>
+              <div className="text-center font-mono">
+                {sectorTransition.phase === 0 && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 1, 0.7] }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute inset-0"
+                    style={{ background: 'radial-gradient(circle, rgba(255,0,0,0.08) 0%, rgba(255,0,0,0.02) 100%)' }}
+                  />
+                )}
+                
+                {sectorTransition.phase === 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 1.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
+                  >
+                    <div className="text-red-500 text-xs tracking-[0.5em] uppercase mb-2" style={{ textShadow: '0 0 20px rgba(255,0,0,0.5)' }}>
+                      ⚠ WARNING ⚠
+                    </div>
+                    <div className="text-red-400 text-3xl md:text-5xl font-bold uppercase tracking-wider" style={{ textShadow: '0 0 40px rgba(255,0,0,0.3)' }}>
+                      FIREWALL BREACH
+                    </div>
+                    <div className="text-red-500/50 text-xs mt-2 tracking-widest">UNAUTHORIZED SECTOR TRANSITION DETECTED</div>
+                  </motion.div>
+                )}
+                
+                {sectorTransition.phase === 1 && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div className="text-[#00ff41]/40 text-xs tracking-[0.5em] uppercase mb-3">BYPASSING ENCRYPTION...</div>
+                    <div className="text-[#00ff41] text-2xl md:text-4xl font-bold uppercase tracking-wider mb-4" style={{ textShadow: '0 0 30px rgba(0,255,65,0.3)' }}>
+                      INFILTRATING: {sectorTransition.galaxyName}
+                    </div>
+                    <div className="w-64 h-1 mx-auto bg-[#00ff41]/10 rounded-full overflow-hidden">
+                      <motion.div
+                        initial={{ width: '0%' }}
+                        animate={{ width: '100%' }}
+                        transition={{ duration: 0.6, ease: 'linear' }}
+                        className="h-full bg-[#00ff41]/60 rounded-full"
+                      />
+                    </div>
+                  </motion.div>
+                )}
+                
+                {sectorTransition.phase === 2 && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <div className="text-[#00ff41] text-3xl md:text-5xl font-bold uppercase tracking-wider" style={{ textShadow: '0 0 60px rgba(0,255,65,0.4)' }}>
+                      ACCESS GRANTED
+                    </div>
+                    <div className="text-[#00ff41]/30 text-xs mt-2 tracking-widest">SECTOR {sectorTransition.galaxyId.toUpperCase()} // ONLINE</div>
+                  </motion.div>
+                )}
               </div>
             </motion.div>
           )}
@@ -2486,6 +2645,43 @@ export function RealisticSolarSystem() {
                   </span>
                 </div>
                 
+                <motion.div 
+                  className="px-5 pt-3 pb-0 relative z-10"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3, delay: 0.2 }}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <motion.span 
+                      className="text-[10px] text-red-400/70 uppercase tracking-widest"
+                      animate={{ opacity: [1, 0.3, 1] }}
+                      transition={{ duration: 0.8, repeat: 2 }}
+                    >
+                      ◎ TARGET ACQUIRED
+                    </motion.span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[9px] text-[#00ff41]/30 font-mono mb-2">
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+                      THREAT LVL: <span className="text-red-400/50">HIGH</span>
+                    </motion.div>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
+                      PRIORITY: <span className="text-[#00ff41]/50">CRITICAL</span>
+                    </motion.div>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+                      ENCRYPTION: <span className="text-[#9D4EDD]/50">AES-256</span>
+                    </motion.div>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
+                      STATUS: <span className="text-[#00ff41]/50 animate-pulse">SCANNING</span>
+                    </motion.div>
+                  </div>
+                  <motion.div 
+                    className="w-full h-px bg-[#00ff41]/10 mb-0"
+                    initial={{ scaleX: 0, originX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                  />
+                </motion.div>
+
                 <div className="p-5 md:p-6 relative z-10">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-[10px] text-[#00ff41]/50 uppercase tracking-widest px-2 py-0.5 border border-[#00ff41]/20 rounded-sm">
