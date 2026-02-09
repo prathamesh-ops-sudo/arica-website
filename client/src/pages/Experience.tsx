@@ -4,22 +4,12 @@ import { useLocation } from "wouter";
 import { RealisticSolarSystem } from "@/components/ui/realistic-solar-system";
 import { Home } from "lucide-react";
 
-const terminalLines = [
-  { text: "root@arica-tech:~# ./initiate_cyberops.sh", color: "#00ff41" },
-  { text: "", color: "#00ff41" },
-  { text: "╔══════════════════════════════════════════╗", color: "#7B2FE0" },
-  { text: "║   ARICA TECH — CYBER OPERATIONS CENTER   ║", color: "#9D4EDD" },
-  { text: "╚══════════════════════════════════════════╝", color: "#7B2FE0" },
-  { text: "", color: "#00ff41" },
-  { text: "[*] Authenticating operator... GRANTED", color: "#00ff41" },
-  { text: "[*] Loading defense matrix............. OK", color: "#00ff41" },
-  { text: "[+] 3 SECTORS MAPPED  |  15 NODES ACTIVE", color: "#9D4EDD" },
-  { text: "[+] THREAT LEVEL: ████████░░ 80% — ELEVATED", color: "#ff4444" },
-  { text: "[*] Neural map rendering...", color: "#00ff41" },
-  { text: "[████████████████████████████████] 100%", color: "#00ff41" },
-  { text: "", color: "#00ff41" },
-  { text: "[+] MISSION: EXPLORE & ASSESS ALL SECTORS", color: "#9D4EDD" },
-  { text: "[+] STATUS: READY — SCROLL TO DEPLOY ▼", color: "#9D4EDD" },
+const loadingSteps = [
+  "Initializing security dashboard...",
+  "Loading threat intelligence...",
+  "Configuring defense protocols...",
+  "Connecting to secure network...",
+  "Systems online",
 ];
 
 export default function Experience() {
@@ -27,6 +17,7 @@ export default function Experience() {
   const [showIntro, setShowIntro] = useState(true);
   const [fadeOut, setFadeOut] = useState(false);
   const [visibleLines, setVisibleLines] = useState(0);
+  const [progress, setProgress] = useState(0);
   const fadeTimerRef = useRef<NodeJS.Timeout | null>(null);
   const hideTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lineTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -37,10 +28,11 @@ export default function Experience() {
       lineTimerRef.current = setInterval(() => {
         lineIndex++;
         setVisibleLines(lineIndex);
-        if (lineIndex >= terminalLines.length) {
+        setProgress(Math.min((lineIndex / loadingSteps.length) * 100, 100));
+        if (lineIndex >= loadingSteps.length) {
           if (lineTimerRef.current) clearInterval(lineTimerRef.current);
         }
-      }, 200);
+      }, 500);
     }, 300);
 
     fadeTimerRef.current = setTimeout(() => {
@@ -81,89 +73,68 @@ export default function Experience() {
             style={{ backgroundColor: "#050505" }}
             data-testid="terminal-intro"
           >
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.03) 2px, rgba(0,255,65,0.03) 4px)",
-              }}
-            />
-
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
-              className="relative w-[90vw] max-w-[700px] rounded-lg overflow-hidden"
+              className="relative w-[90vw] max-w-[700px] rounded-2xl overflow-hidden"
               style={{
                 border: "1px solid rgba(123,47,224,0.4)",
                 boxShadow: "0 0 40px rgba(123,47,224,0.2), 0 0 80px rgba(123,47,224,0.08), inset 0 0 60px rgba(0,0,0,0.5)",
                 backgroundColor: "rgba(5,5,5,0.95)",
               }}
             >
-              <div
-                className="flex items-center gap-2 px-4 py-2 font-mono text-xs"
-                style={{
-                  borderBottom: "1px solid rgba(123,47,224,0.2)",
-                  backgroundColor: "rgba(10,10,10,0.9)",
-                }}
-              >
-                <div className="flex gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
-                  <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
-                  <div className="w-3 h-3 rounded-full bg-[#28c840]" />
+              <div className="relative p-8 md:p-10 min-h-[380px] flex flex-col items-center justify-center">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="text-center mb-8"
+                >
+                  <h1 className="text-3xl md:text-4xl font-bold text-white tracking-wide mb-2">
+                    ARICA TECH
+                  </h1>
+                  <div className="w-16 h-0.5 mx-auto bg-gradient-to-r from-[#3A0CA3] via-[#7B2FE0] to-[#9D4EDD] rounded-full mb-3" />
+                  <p className="text-white/40 text-sm tracking-widest uppercase">
+                    Security Solutions
+                  </p>
+                </motion.div>
+
+                <div className="w-full max-w-md space-y-3 mb-6">
+                  {loadingSteps.slice(0, visibleLines).map((line, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -5 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="flex items-center gap-3 text-sm"
+                    >
+                      <span className="text-[#9D4EDD]">
+                        {i < visibleLines - 1 || visibleLines >= loadingSteps.length ? "✓" : "●"}
+                      </span>
+                      <span className="text-white/50">{line}</span>
+                    </motion.div>
+                  ))}
                 </div>
-                <span style={{ color: "#00ff41" }} className="ml-2 opacity-70">
-                  root@arica-tech:~
-                </span>
-              </div>
 
-              <div className="relative p-4 font-mono text-sm leading-relaxed min-h-[380px]">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#7B2FE0]/[0.04] text-6xl font-bold uppercase tracking-[0.5em] rotate-[-15deg] pointer-events-none select-none whitespace-nowrap">
-                  CLASSIFIED
-                </div>
-                {terminalLines.slice(0, visibleLines).map((line, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -5 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.15 }}
-                    style={{ color: line.color }}
-                    className="whitespace-pre"
-                  >
-                    {line.text}
-                  </motion.div>
-                ))}
-
-                {visibleLines < terminalLines.length && (
-                  <span
-                    className="inline-block w-2 h-4 ml-0.5"
-                    style={{
-                      backgroundColor: "#00ff41",
-                      animation: "blink 1s step-end infinite",
-                    }}
-                  />
-                )}
-
-                {visibleLines >= terminalLines.length && (
-                  <div className="flex items-center" style={{ color: "#00ff41" }}>
-                    <span>root@arica-tech:~# </span>
-                    <span
-                      className="inline-block w-2 h-4 ml-0.5"
+                <div className="w-full max-w-md">
+                  <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                    <motion.div
+                      className="h-full rounded-full"
                       style={{
-                        backgroundColor: "#00ff41",
-                        animation: "blink 1s step-end infinite",
+                        background: "linear-gradient(90deg, #3A0CA3, #7B2FE0, #9D4EDD)",
                       }}
+                      initial={{ width: "0%" }}
+                      animate={{ width: `${progress}%` }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
                     />
                   </div>
-                )}
+                  <p className="text-white/20 text-xs text-center mt-3">
+                    {progress < 100 ? "Preparing your experience..." : "Ready"}
+                  </p>
+                </div>
               </div>
             </motion.div>
-
-            <style>{`
-              @keyframes blink {
-                0%, 100% { opacity: 1; }
-                50% { opacity: 0; }
-              }
-            `}</style>
           </motion.div>
         )}
       </AnimatePresence>

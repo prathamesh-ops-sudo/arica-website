@@ -913,7 +913,6 @@ export function RealisticSolarSystem() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [warpEffect, setWarpEffect] = useState(0);
   const [sectorTransition, setSectorTransition] = useState<{
-    phase: number;
     galaxyName: string;
     galaxyId: string;
   } | null>(null);
@@ -921,12 +920,6 @@ export function RealisticSolarSystem() {
   const [modalPlanet, setModalPlanet] = useState<PlanetConfig | null>(null);
   const [showBlackHole, setShowBlackHole] = useState(false);
   const [showQuote, setShowQuote] = useState(false);
-  const [threatEvents, setThreatEvents] = useState<{text: string; color: string; id: number}[]>([]);
-  const [microAlert, setMicroAlert] = useState<string | null>(null);
-  const threatIdRef = useRef(0);
-  const threatIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const microAlertTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const microAlertClearRef = useRef<NodeJS.Timeout | null>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
   const [, setLocation] = useLocation();
   const { triggerTransition } = useHyperspaceTransition();
@@ -1196,11 +1189,9 @@ export function RealisticSolarSystem() {
           if (currentGalaxy.id !== lastGalaxyRef.current && !transitionCooldownRef.current) {
             transitionCooldownRef.current = true;
             setWarpEffect(1);
-            setSectorTransition({ phase: 0, galaxyName: currentGalaxy.name, galaxyId: currentGalaxy.id });
-            const phase1Timer = setTimeout(() => setSectorTransition(prev => prev ? {...prev, phase: 1} : null), 600);
-            const phase2Timer = setTimeout(() => setSectorTransition(prev => prev ? {...prev, phase: 2} : null), 1200);
-            const fadeOutTimer = setTimeout(() => setSectorTransition(null), 2000);
-            blackHoleTimersRef.current.push(phase1Timer, phase2Timer, fadeOutTimer);
+            setSectorTransition({ galaxyName: currentGalaxy.name, galaxyId: currentGalaxy.id });
+            const fadeOutTimer = setTimeout(() => setSectorTransition(null), 1500);
+            blackHoleTimersRef.current.push(fadeOutTimer);
             
             physicsStateRef.current.cameraShake.intensity = 0.8;
             physicsStateRef.current.planetScatter = { active: true, progress: 0 };
@@ -2320,76 +2311,6 @@ export function RealisticSolarSystem() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    const generateThreatEvent = (): {text: string; color: string; id: number} => {
-      const now = new Date();
-      const ts = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
-      const ro = () => Math.floor(Math.random() * 256);
-      const r4 = () => String(Math.floor(1000 + Math.random() * 9000));
-      const templates: {text: string; color: string}[] = [
-        { text: `[${ts}] BLOCKED: Brute force attempt from 192.168.${ro()}.${ro()}`, color: 'text-[#00ff41]/40' },
-        { text: `[${ts}] ALERT: Port scan detected on 443,8080,22`, color: 'text-red-400/40' },
-        { text: `[${ts}] MITIGATED: DDoS attack ${(Math.random()*5+0.5).toFixed(1)}Gbps → 0`, color: 'text-[#00ff41]/40' },
-        { text: `[${ts}] DETECTED: SQL injection payload /api/auth`, color: 'text-red-400/40' },
-        { text: `[${ts}] BLOCKED: Unauthorized SSH from 10.0.${ro()}.${ro()}`, color: 'text-[#00ff41]/40' },
-        { text: `[${ts}] ENCRYPTING: Channel rekeyed AES-256-GCM`, color: 'text-[#9D4EDD]/40' },
-        { text: `[${ts}] SCAN: Vulnerability assessment port 3306`, color: 'text-[#00ff41]/20' },
-        { text: `[${ts}] FIREWALL: Rule #${Math.floor(10+Math.random()*90)} triggered ${Math.floor(1+Math.random()*5)}x/min`, color: 'text-[#00ff41]/20' },
-        { text: `[${ts}] PATCHED: CVE-2024-${r4()} applied live`, color: 'text-[#9D4EDD]/40' },
-        { text: `[${ts}] QUARANTINE: Malware hash sha256:a3f${r4()}...`, color: 'text-[#00ff41]/20' },
-      ];
-      const t = templates[Math.floor(Math.random() * templates.length)];
-      threatIdRef.current += 1;
-      return { text: t.text, color: t.color, id: threatIdRef.current };
-    };
-
-    const initial: {text: string; color: string; id: number}[] = [];
-    for (let i = 0; i < 6; i++) initial.push(generateThreatEvent());
-    setThreatEvents(initial);
-
-    threatIntervalRef.current = setInterval(() => {
-      setThreatEvents(prev => {
-        const next = [...prev, generateThreatEvent()];
-        if (next.length > 8) return next.slice(next.length - 8);
-        return next;
-      });
-    }, 2000 + Math.random() * 1000);
-
-    return () => {
-      if (threatIntervalRef.current) clearInterval(threatIntervalRef.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    const alertMessages = [
-      "INTRUSION ATTEMPT NEUTRALIZED",
-      "ENCRYPTING SECURE CHANNEL",
-      "ANOMALY DETECTED IN SECTOR",
-      "PERIMETER SCAN COMPLETE",
-      "THREAT SIGNATURE UPDATED",
-      "DEFENSE MATRIX RECALIBRATED",
-    ];
-
-    const scheduleNext = () => {
-      const delay = 15000 + Math.random() * 10000;
-      microAlertTimeoutRef.current = setTimeout(() => {
-        const msg = alertMessages[Math.floor(Math.random() * alertMessages.length)];
-        setMicroAlert(msg);
-        microAlertClearRef.current = setTimeout(() => {
-          setMicroAlert(null);
-          scheduleNext();
-        }, 2000);
-      }, delay);
-    };
-
-    scheduleNext();
-
-    return () => {
-      if (microAlertTimeoutRef.current) clearTimeout(microAlertTimeoutRef.current);
-      if (microAlertClearRef.current) clearTimeout(microAlertClearRef.current);
-    };
-  }, []);
-
   return (
     <div ref={containerRef} className="relative w-full h-full">
       <canvas ref={canvasRef} className="fixed inset-0 z-0" />
@@ -2413,71 +2334,12 @@ export function RealisticSolarSystem() {
       
       <div className="fixed inset-0 z-20 pointer-events-none">
         {!isLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center bg-[#050505] z-50 pointer-events-auto font-mono">
+          <div className="absolute inset-0 flex items-center justify-center bg-[#050505] z-50 pointer-events-auto">
             <div className="text-center">
-              <div className="w-16 h-16 border-2 border-[#00ff41]/20 border-t-[#00ff41] rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-[#00ff41]/60 text-xs uppercase tracking-widest">{'>'} Initializing neural map...</p>
+              <div className="w-16 h-16 border-2 border-[#7B2FE0]/20 border-t-[#7B2FE0] rounded-full animate-spin mx-auto mb-4" />
+              <p className="text-white/40 text-xs uppercase tracking-widest">Preparing experience...</p>
             </div>
           </div>
-        )}
-        
-        {isLoaded && (
-          <>
-            <div className="absolute top-16 left-6 z-10 pointer-events-none font-mono text-[10px] text-[#00ff41]/30 space-y-1 hidden md:block">
-              <div>SECTOR: <span className="text-[#00ff41]/50">{activeGalaxy.id.toUpperCase()}</span></div>
-              <div>SCROLL: <span className="text-[#00ff41]/50">{(scrollProgress * 100).toFixed(1)}%</span></div>
-              <div>NODE: <span className="text-[#00ff41]/50">{activePlanet ? activePlanet.id.toUpperCase().replace(/-/g, '_') : 'SCANNING...'}</span></div>
-              <div className="mt-2 text-[#00ff41]/20">
-                ┌{'─'.repeat(16)}┐<br/>
-                │ SIG: {'█'.repeat(Math.floor(scrollProgress * 8))}{'░'.repeat(8 - Math.floor(scrollProgress * 8))} │<br/>
-                │ PWR: {'█'.repeat(6)}{'░'.repeat(2)} │<br/>
-                └{'─'.repeat(16)}┘
-              </div>
-            </div>
-            
-            <div className="absolute top-16 right-6 z-10 pointer-events-none font-mono text-[10px] text-[#00ff41]/30 text-right space-y-1 hidden md:block">
-              <div>ARICA TECH // CYBER NET</div>
-              <div>GALAXIES: <span className="text-[#00ff41]/50">3</span> | NODES: <span className="text-[#00ff41]/50">15</span></div>
-              <div>STATUS: <span className="text-[#00ff41]/50 animate-pulse">ONLINE</span></div>
-            </div>
-
-            <div className="absolute bottom-16 left-6 z-10 pointer-events-none font-mono text-[10px] text-[#00ff41]/20 hidden md:block">
-              <div>{'>'} {new Date().toISOString().split('T')[0]}</div>
-              <div>{'>'} THREAT_LVL: ELEVATED</div>
-            </div>
-
-            <div className="absolute bottom-16 right-6 z-10 pointer-events-none font-mono text-[10px] text-[#00ff41]/20 text-right hidden md:block">
-              <div>LAT: {(37.7749 + scrollProgress * 10).toFixed(4)}</div>
-              <div>LON: {(-122.4194 + scrollProgress * 20).toFixed(4)}</div>
-            </div>
-
-            <div className="absolute left-6 top-1/2 -translate-y-1/2 z-10 pointer-events-none hidden md:block">
-              <div className="border-l border-[#00ff41]/10 pl-2 max-w-[220px]">
-                <div className="text-[#00ff41]/20 text-[9px] tracking-widest uppercase mb-1">THREAT FEED // LIVE</div>
-                <div className="max-h-[300px] overflow-hidden font-mono text-[10px]">
-                  {threatEvents.map(evt => (
-                    <div key={evt.id} className={`${evt.color} leading-relaxed truncate`}>{evt.text}</div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <AnimatePresence>
-              {microAlert && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  className="absolute bottom-32 right-6 z-20 pointer-events-none font-mono hidden md:block"
-                >
-                  <div className="border border-[#00ff41]/20 bg-black/80 backdrop-blur-sm rounded-sm px-3 py-2 text-[10px]">
-                    <div className="text-[#00ff41]/30 text-[8px] tracking-widest mb-1">SYSTEM ALERT</div>
-                    <div className="text-[#00ff41]/60">{microAlert}</div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </>
         )}
 
         {warpEffect > 0.3 && (
@@ -2498,116 +2360,54 @@ export function RealisticSolarSystem() {
               transition={{ duration: 0.3 }}
               className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none"
             >
-              <div className="text-center font-mono">
-                {sectorTransition.phase === 0 && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 1, 0.7] }}
-                    transition={{ duration: 0.3 }}
-                    className="absolute inset-0"
-                    style={{ background: 'radial-gradient(circle, rgba(255,0,0,0.08) 0%, rgba(255,0,0,0.02) 100%)' }}
-                  />
-                )}
-                
-                {sectorTransition.phase === 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 1.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3, ease: 'easeOut' }}
-                  >
-                    <div className="text-red-500 text-xs tracking-[0.5em] uppercase mb-2" style={{ textShadow: '0 0 20px rgba(255,0,0,0.5)' }}>
-                      ⚠ WARNING ⚠
-                    </div>
-                    <div className="text-red-400 text-3xl md:text-5xl font-bold uppercase tracking-wider" style={{ textShadow: '0 0 40px rgba(255,0,0,0.3)' }}>
-                      FIREWALL BREACH
-                    </div>
-                    <div className="text-red-500/50 text-xs mt-2 tracking-widest">UNAUTHORIZED SECTOR TRANSITION DETECTED</div>
-                  </motion.div>
-                )}
-                
-                {sectorTransition.phase === 1 && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <div className="text-[#00ff41]/40 text-xs tracking-[0.5em] uppercase mb-3">BYPASSING ENCRYPTION...</div>
-                    <div className="text-[#00ff41] text-2xl md:text-4xl font-bold uppercase tracking-wider mb-4" style={{ textShadow: '0 0 30px rgba(0,255,65,0.3)' }}>
-                      INFILTRATING: {sectorTransition.galaxyName}
-                    </div>
-                    <div className="w-64 h-1 mx-auto bg-[#00ff41]/10 rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: '0%' }}
-                        animate={{ width: '100%' }}
-                        transition={{ duration: 0.6, ease: 'linear' }}
-                        className="h-full bg-[#00ff41]/60 rounded-full"
-                      />
-                    </div>
-                  </motion.div>
-                )}
-                
-                {sectorTransition.phase === 2 && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.15 }}
-                  >
-                    <div className="text-[#00ff41] text-3xl md:text-5xl font-bold uppercase tracking-wider" style={{ textShadow: '0 0 60px rgba(0,255,65,0.4)' }}>
-                      ACCESS GRANTED
-                    </div>
-                    <div className="text-[#00ff41]/30 text-xs mt-2 tracking-widest">SECTOR {sectorTransition.galaxyId.toUpperCase()} // ONLINE</div>
-                  </motion.div>
-                )}
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
+                className="text-center"
+              >
+                <div className="text-white text-3xl md:text-5xl font-bold tracking-wide" style={{ textShadow: '0 0 40px rgba(123,47,224,0.4)' }}>
+                  {sectorTransition.galaxyName}
+                </div>
+                <div className="w-24 h-0.5 mx-auto mt-4 bg-gradient-to-r from-transparent via-[#7B2FE0] to-transparent rounded-full" />
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
         
         <div className="absolute top-6 left-1/2 -translate-x-1/2 z-20 pointer-events-auto">
-          <div className="flex items-center gap-1 backdrop-blur-xl bg-black/70 rounded-sm px-2 py-1.5 border border-[#00ff41]/20 font-mono text-xs"
-            style={{ boxShadow: '0 0 15px rgba(0,255,65,0.05), inset 0 0 30px rgba(0,0,0,0.5)' }}
-          >
-            <span className="text-[#00ff41]/40 mr-1 hidden md:inline">SECTOR://</span>
-            {galaxies.map((galaxy, index) => (
+          <div className="flex items-center gap-1 backdrop-blur-xl bg-white/5 rounded-full px-2 py-1.5 border border-white/10 text-xs">
+            {galaxies.map((galaxy) => (
               <div
                 key={galaxy.id}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm transition-all duration-500 cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all duration-500 cursor-pointer ${
                   activeGalaxy.id === galaxy.id 
-                    ? 'bg-[#00ff41]/10 border border-[#00ff41]/30' 
-                    : 'opacity-40 hover:opacity-70 border border-transparent'
+                    ? 'bg-[#7B2FE0]/15 border border-[#7B2FE0]/30 text-white' 
+                    : 'text-white/40 hover:text-white/60 border border-transparent'
                 }`}
-                style={{ 
-                  color: activeGalaxy.id === galaxy.id ? '#00ff41' : '#00ff41',
-                  textShadow: activeGalaxy.id === galaxy.id 
-                    ? '0 0 10px rgba(0,255,65,0.5)' 
-                    : 'none'
-                }}
               >
-                {activeGalaxy.id === galaxy.id && <span className="animate-pulse">▸</span>}
                 {getGalaxyIcon(galaxy.id)}
-                <span className="text-xs font-mono hidden md:inline uppercase tracking-wider">{galaxy.name}</span>
+                <span className="text-xs hidden md:inline uppercase tracking-wider">{galaxy.name}</span>
               </div>
             ))}
           </div>
         </div>
         
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-auto">
-          <div className="flex items-center gap-1 backdrop-blur-xl bg-black/70 rounded-sm px-3 py-2 border border-[#00ff41]/20 font-mono text-[10px]"
-            style={{ boxShadow: '0 0 15px rgba(0,255,65,0.05)' }}
-          >
-            <span className="text-[#00ff41]/30 mr-1">NODES:</span>
+          <div className="flex items-center gap-1 backdrop-blur-xl bg-white/5 rounded-full px-3 py-2 border border-white/10 text-[10px]">
             {activeGalaxy.planets.map((planet, idx) => (
               <div
                 key={planet.id}
-                className={`flex items-center gap-1 px-2 py-1 rounded-sm transition-all duration-500 cursor-pointer ${
-                  activePlanet?.id === planet.id ? 'bg-[#00ff41]/10 border border-[#00ff41]/30' : 'opacity-40 hover:opacity-70 border border-transparent'
+                className={`flex items-center gap-1 px-2 py-1 rounded-full transition-all duration-500 cursor-pointer ${
+                  activePlanet?.id === planet.id ? 'bg-[#7B2FE0]/15 border border-[#7B2FE0]/30' : 'opacity-40 hover:opacity-70 border border-transparent'
                 }`}
                 title={planet.name}
               >
-                <span style={{ color: activePlanet?.id === planet.id ? '#00ff41' : '#00ff41' }}>
+                <span className={activePlanet?.id === planet.id ? 'text-[#9D4EDD]' : 'text-white/40'}>
                   {activePlanet?.id === planet.id ? '◉' : '○'}
                 </span>
-                <span className="hidden md:inline text-[#00ff41]/70">{String(idx + 1).padStart(2, '0')}</span>
+                <span className={`hidden md:inline ${activePlanet?.id === planet.id ? 'text-white/70' : 'text-white/40'}`}>{String(idx + 1).padStart(2, '0')}</span>
               </div>
             ))}
           </div>
@@ -2623,94 +2423,34 @@ export function RealisticSolarSystem() {
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 max-w-sm md:max-w-md z-20 pointer-events-auto"
             >
-              <motion.div 
-                className="relative backdrop-blur-2xl bg-black/80 border border-[#00ff41]/20 rounded-sm p-0 shadow-2xl overflow-hidden font-mono"
-                animate={{
-                  boxShadow: [
-                    '0 0 20px rgba(0,255,65,0.05)',
-                    '0 0 40px rgba(0,255,65,0.1)',
-                    '0 0 20px rgba(0,255,65,0.05)',
-                  ],
-                }}
-                transition={{ duration: 3, repeat: Infinity }}
+              <div 
+                className="relative backdrop-blur-2xl bg-black/60 border border-white/10 rounded-2xl p-0 shadow-2xl overflow-hidden"
+                style={{ boxShadow: '0 0 40px rgba(123,47,224,0.1)' }}
               >
-                <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{
-                  backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.1) 2px, rgba(0,255,65,0.1) 4px)',
-                }} />
-                
-                <div className="flex items-center gap-2 px-4 py-2 bg-[#00ff41]/5 border-b border-[#00ff41]/20">
-                  <span className="text-[10px] text-[#00ff41]/40">▪ ▪ ▪</span>
-                  <span className="text-[10px] text-[#00ff41]/60 uppercase tracking-widest flex-1 text-center">
-                    node_intel — {activePlanet.id}
-                  </span>
-                </div>
-                
-                <motion.div 
-                  className="px-5 pt-3 pb-0 relative z-10"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3, delay: 0.2 }}
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <motion.span 
-                      className="text-[10px] text-red-400/70 uppercase tracking-widest"
-                      animate={{ opacity: [1, 0.3, 1] }}
-                      transition={{ duration: 0.8, repeat: 2 }}
-                    >
-                      ◎ TARGET ACQUIRED
-                    </motion.span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[9px] text-[#00ff41]/30 font-mono mb-2">
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-                      THREAT LVL: <span className="text-red-400/50">HIGH</span>
-                    </motion.div>
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
-                      PRIORITY: <span className="text-[#00ff41]/50">CRITICAL</span>
-                    </motion.div>
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-                      ENCRYPTION: <span className="text-[#9D4EDD]/50">AES-256</span>
-                    </motion.div>
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-                      STATUS: <span className="text-[#00ff41]/50 animate-pulse">SCANNING</span>
-                    </motion.div>
-                  </div>
-                  <motion.div 
-                    className="w-full h-px bg-[#00ff41]/10 mb-0"
-                    initial={{ scaleX: 0, originX: 0 }}
-                    animate={{ scaleX: 1 }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
-                  />
-                </motion.div>
-
                 <div className="p-5 md:p-6 relative z-10">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-[10px] text-[#00ff41]/50 uppercase tracking-widest px-2 py-0.5 border border-[#00ff41]/20 rounded-sm">
+                    <span className="text-[10px] text-[#9D4EDD] uppercase tracking-widest px-2 py-0.5 bg-[#7B2FE0]/15 border border-[#7B2FE0]/30 rounded-full">
                       {activeGalaxy.name}
                     </span>
-                    <span className="text-[10px] text-[#00ff41]/30">|</span>
-                    <span className="text-[10px] text-[#00ff41]/40 animate-pulse">● LIVE</span>
                   </div>
                   
                   <h2 
-                    className="font-mono text-xl md:text-2xl font-bold mb-2 uppercase tracking-wider"
-                    style={{ 
-                      color: '#00ff41',
-                      textShadow: '0 0 20px rgba(0,255,65,0.3)'
-                    }}
+                    className="text-xl md:text-2xl font-bold mb-2 text-white tracking-wide"
+                    style={{ textShadow: '0 0 30px rgba(123,47,224,0.3)' }}
                   >
                     {activePlanet.name}
                   </h2>
                   
-                  <p className="text-[#00ff41]/50 leading-relaxed text-xs md:text-sm mb-4">
+                  <p className="text-white/60 leading-relaxed text-xs md:text-sm mb-4">
                     {activePlanet.description}
                   </p>
                   
-                  <div className="border border-[#00ff41]/10 rounded-sm p-3 mb-4 bg-[#00ff41]/[0.02]">
-                    <div className="text-[10px] text-[#00ff41]/40 uppercase tracking-widest mb-2">CAPABILITIES</div>
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-3 mb-4">
+                    <div className="text-[10px] text-white/40 uppercase tracking-widest mb-2">Key Features</div>
                     <ul className="space-y-1.5">
                       {activePlanet.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-start gap-2 text-xs text-[#00ff41]/70">
-                          <span className="text-[#00ff41]/40 mt-0.5">[{String(idx + 1).padStart(2, '0')}]</span>
+                        <li key={idx} className="flex items-start gap-2 text-xs text-white/70">
+                          <span className="text-[#9D4EDD] mt-0.5">→</span>
                           {feature}
                         </li>
                       ))}
@@ -2720,10 +2460,10 @@ export function RealisticSolarSystem() {
                   {activePlanet.actionType === 'modal' ? (
                     <button
                       onClick={() => { setModalPlanet(activePlanet); setModalOpen(true); }}
-                      className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest px-4 py-2.5 rounded-sm border border-[#00ff41]/30 bg-[#00ff41]/10 text-[#00ff41] hover:bg-[#00ff41]/20 hover:border-[#00ff41]/50 transition-all group"
+                      className="flex items-center gap-2 text-xs uppercase tracking-widest px-4 py-2.5 rounded-xl bg-[#7B2FE0] hover:bg-[#9D4EDD] text-white transition-all group"
                       data-testid={`button-learn-more-${activePlanet.id}`}
                     >
-                      <span>{'>'} ACCESS_NODE</span>
+                      <span>Learn More</span>
                       <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                     </button>
                   ) : (
@@ -2732,15 +2472,15 @@ export function RealisticSolarSystem() {
                         const targetUrl = activePlanet.actionType === 'attack-globe' ? '/attack-globe' : activePlanet.link;
                         triggerTransition(() => setLocation(targetUrl));
                       }}
-                      className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest px-4 py-2.5 rounded-sm border border-[#00ff41]/30 bg-[#00ff41]/10 text-[#00ff41] hover:bg-[#00ff41]/20 hover:border-[#00ff41]/50 transition-all group"
+                      className="flex items-center gap-2 text-xs uppercase tracking-widest px-4 py-2.5 rounded-xl bg-[#7B2FE0] hover:bg-[#9D4EDD] text-white transition-all group"
                       data-testid={`link-learn-more-${activePlanet.id}`}
                     >
-                      <span>{'>'} {activePlanet.actionType === 'attack-globe' ? 'LAUNCH_ATTACK_MAP' : 'ACCESS_NODE'}</span>
+                      <span>{activePlanet.actionType === 'attack-globe' ? 'View Details' : 'Learn More'}</span>
                       <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                     </button>
                   )}
                 </div>
-              </motion.div>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -2754,28 +2494,27 @@ export function RealisticSolarSystem() {
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
             >
-              <div className="text-center px-6 font-mono">
-                <div className="text-[10px] text-[#00ff41]/40 uppercase tracking-[0.5em] mb-3">
-                  {'>'} CYBER DEFENSE NETWORK ACTIVE
+              <div className="text-center px-6">
+                <div className="text-[10px] text-white/30 uppercase tracking-[0.5em] mb-3">
+                  Explore Our Security Solutions
                 </div>
                 <motion.h1 
-                  className="font-mono text-5xl md:text-7xl lg:text-8xl font-bold mb-4 uppercase tracking-wider"
+                  className="text-5xl md:text-7xl lg:text-8xl font-bold mb-4 uppercase tracking-wider text-white"
                   style={{ 
-                    color: '#00ff41',
-                    textShadow: '0 0 60px rgba(0,255,65,0.3), 0 0 120px rgba(0,255,65,0.1)'
+                    textShadow: '0 0 60px rgba(123,47,224,0.3), 0 0 120px rgba(123,47,224,0.1)'
                   }}
                 >
                   ARICA TECH
                 </motion.h1>
-                <div className="text-xs text-[#00ff41]/30 tracking-[0.3em] uppercase mb-8">
-                  SCROLL TO EXPLORE // {activeGalaxy.planets.length} NODES DETECTED
+                <div className="text-xs text-white/30 tracking-[0.3em] mb-8">
+                  Scroll to explore
                 </div>
                 <motion.div
                   animate={{ y: [0, 8, 0] }}
                   transition={{ duration: 2, repeat: Infinity }}
                   className="mt-4"
                 >
-                  <div className="text-[#00ff41]/30 text-lg">▼</div>
+                  <div className="text-white/30 text-lg">▼</div>
                 </motion.div>
               </div>
             </motion.div>
@@ -2796,38 +2535,34 @@ export function RealisticSolarSystem() {
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="relative max-w-2xl w-full mx-4 rounded-sm border border-[#00ff41]/20 bg-black/90 backdrop-blur-xl overflow-hidden font-mono"
+              className="relative max-w-2xl w-full mx-4 rounded-2xl border border-white/10 bg-black/90 backdrop-blur-xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{
-                backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.1) 2px, rgba(0,255,65,0.1) 4px)',
-              }} />
-
-              <div className="flex items-center justify-between px-4 py-2 bg-[#00ff41]/5 border-b border-[#00ff41]/20">
-                <span className="text-[10px] text-[#00ff41]/60 uppercase tracking-widest">
-                  sys_module — {modalPlanet.modalContent?.title || modalPlanet.name}
+              <div className="flex items-center justify-between px-5 py-3 border-b border-white/10">
+                <span className="text-sm text-white/70 font-medium">
+                  {modalPlanet.modalContent?.title || modalPlanet.name}
                 </span>
                 <button
                   onClick={() => setModalOpen(false)}
-                  className="text-[#00ff41]/40 hover:text-[#00ff41] transition-colors text-xs"
+                  className="text-white/40 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10"
                   data-testid="button-modal-close"
                 >
-                  [ESC]
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
               <div className="p-6 md:p-8 relative z-10">
                 <h2
-                  className="text-2xl font-bold mb-4 uppercase tracking-wider"
-                  style={{ color: '#00ff41', textShadow: '0 0 20px rgba(0,255,65,0.3)' }}
+                  className="text-2xl font-bold mb-4 tracking-wide text-white"
+                  style={{ textShadow: '0 0 30px rgba(123,47,224,0.3)' }}
                 >
                   {modalPlanet.modalContent?.title || modalPlanet.name}
                 </h2>
 
-                <div className="mb-6 p-4 rounded-sm bg-[#00ff41]/[0.02] border border-[#00ff41]/10 text-sm overflow-hidden">
+                <div className="mb-6 p-4 rounded-xl bg-white/5 border border-white/10 text-sm overflow-hidden">
                   {modalPlanet.modalContent?.type === 'scanner' && (
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-[#00ff41]">
+                      <div className="flex items-center gap-2 text-[#9D4EDD]">
                         <span className="animate-pulse">●</span> Scanning target...
                       </div>
                       {['SQL Injection', 'XSS Vulnerabilities', 'CSRF Tokens', 'Auth Bypass'].map((item, i) => (
@@ -2836,69 +2571,69 @@ export function RealisticSolarSystem() {
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: i * 0.2 }}
-                          className="flex justify-between text-[#00ff41]/70"
+                          className="flex justify-between text-white/70"
                         >
-                          <span>[*] Checking {item}...</span>
-                          <span className="text-yellow-400">⬤</span>
+                          <span>Checking {item}...</span>
+                          <span className="text-yellow-400">●</span>
                         </motion.div>
                       ))}
                     </div>
                   )}
                   {modalPlanet.modalContent?.type === 'tester' && (
                     <div className="space-y-2">
-                      <div className="text-[#9D4EDD]">$ curl -X GET /api/v1/users</div>
-                      <div className="text-[#00ff41]">[+] 200 OK (42ms)</div>
-                      <div className="text-[#9D4EDD] mt-2">$ curl -X POST /api/v1/auth</div>
-                      <div className="text-[#00ff41]">[+] 200 OK (128ms)</div>
-                      <div className="text-[#9D4EDD] mt-2">$ curl -X GET /api/v1/admin</div>
-                      <div className="text-red-400">[-] 401 Unauthorized (15ms)</div>
+                      <div className="text-[#9D4EDD]">GET /api/v1/users</div>
+                      <div className="text-white/70">→ 200 OK (42ms)</div>
+                      <div className="text-[#9D4EDD] mt-2">POST /api/v1/auth</div>
+                      <div className="text-white/70">→ 200 OK (128ms)</div>
+                      <div className="text-[#9D4EDD] mt-2">GET /api/v1/admin</div>
+                      <div className="text-red-400">→ 401 Unauthorized (15ms)</div>
                     </div>
                   )}
                   {modalPlanet.modalContent?.type === 'checker' && (
                     <div className="space-y-2">
-                      <div className="flex justify-between text-[#00ff41]/70"><span>[01] S3 Bucket Encryption</span><span className="text-[#00ff41]">PASS</span></div>
-                      <div className="flex justify-between text-[#00ff41]/70"><span>[02] IAM MFA Enabled</span><span className="text-[#00ff41]">PASS</span></div>
-                      <div className="flex justify-between text-[#00ff41]/70"><span>[03] Public Access Blocked</span><span className="text-red-400">FAIL</span></div>
-                      <div className="flex justify-between text-[#00ff41]/70"><span>[04] CloudTrail Logging</span><span className="text-yellow-400">WARN</span></div>
+                      <div className="flex justify-between text-white/70"><span>S3 Bucket Encryption</span><span className="text-emerald-400">PASS</span></div>
+                      <div className="flex justify-between text-white/70"><span>IAM MFA Enabled</span><span className="text-emerald-400">PASS</span></div>
+                      <div className="flex justify-between text-white/70"><span>Public Access Blocked</span><span className="text-red-400">FAIL</span></div>
+                      <div className="flex justify-between text-white/70"><span>CloudTrail Logging</span><span className="text-yellow-400">WARN</span></div>
                     </div>
                   )}
                   {modalPlanet.modalContent?.type === 'checklist' && (
-                    <div className="space-y-2 text-[#00ff41]/70">
-                      <div className="flex items-center gap-2"><span className="text-[#00ff41]">[x]</span> Information Security Policy</div>
-                      <div className="flex items-center gap-2"><span className="text-[#00ff41]">[x]</span> Risk Assessment Framework</div>
-                      <div className="flex items-center gap-2"><span className="text-yellow-400">[ ]</span> Access Control Policy</div>
-                      <div className="flex items-center gap-2"><span className="text-yellow-400">[ ]</span> Incident Response Plan</div>
+                    <div className="space-y-2 text-white/70">
+                      <div className="flex items-center gap-2"><span className="text-emerald-400">✓</span> Information Security Policy</div>
+                      <div className="flex items-center gap-2"><span className="text-emerald-400">✓</span> Risk Assessment Framework</div>
+                      <div className="flex items-center gap-2"><span className="text-white/30">○</span> Access Control Policy</div>
+                      <div className="flex items-center gap-2"><span className="text-white/30">○</span> Incident Response Plan</div>
                     </div>
                   )}
                   {modalPlanet.modalContent?.type === 'pipeline' && (
-                    <div className="space-y-2 text-[#00ff41]/70">
-                      <div className="flex items-center gap-2"><span className="text-[#00ff41]">[+]</span> Build → <span className="text-[#00ff41]/50">2.3s</span></div>
-                      <div className="flex items-center gap-2"><span className="text-[#00ff41]">[+]</span> SAST Scan → <span className="text-[#00ff41]/50">12.1s</span></div>
-                      <div className="flex items-center gap-2"><span className="text-[#9D4EDD] animate-pulse">●</span> Container Scan → <span className="text-[#00ff41]/50">running...</span></div>
-                      <div className="flex items-center gap-2 text-[#00ff41]/30">[ ] Deploy to Staging</div>
+                    <div className="space-y-2 text-white/70">
+                      <div className="flex items-center gap-2"><span className="text-emerald-400">✓</span> Build → <span className="text-white/50">2.3s</span></div>
+                      <div className="flex items-center gap-2"><span className="text-emerald-400">✓</span> SAST Scan → <span className="text-white/50">12.1s</span></div>
+                      <div className="flex items-center gap-2"><span className="text-[#9D4EDD] animate-pulse">●</span> Container Scan → <span className="text-white/50">running...</span></div>
+                      <div className="flex items-center gap-2"><span className="text-white/30">○</span> Deploy to Staging</div>
                     </div>
                   )}
                 </div>
 
-                <p className="text-[#00ff41]/50 mb-6 text-sm">{modalPlanet.description}</p>
+                <p className="text-white/50 mb-6 text-sm">{modalPlanet.description}</p>
 
                 <div className="flex gap-3">
                   <button
-                    className="flex-1 text-center py-3 rounded-sm text-xs uppercase tracking-widest font-mono border border-[#00ff41]/30 bg-[#00ff41]/10 text-[#00ff41] hover:bg-[#00ff41]/20 transition-all"
+                    className="flex-1 text-center py-3 rounded-xl text-xs uppercase tracking-widest bg-[#7B2FE0] hover:bg-[#9D4EDD] text-white transition-all"
                     onClick={() => {
                       setModalOpen(false);
                       triggerTransition(() => setLocation('/contact'));
                     }}
                     data-testid="link-modal-contact"
                   >
-                    {'>'} INITIATE_CONTACT
+                    Get Started
                   </button>
                   <button
                     onClick={() => setModalOpen(false)}
-                    className="px-6 py-3 rounded-sm text-xs uppercase tracking-widest font-mono border border-[#00ff41]/10 text-[#00ff41]/40 hover:text-[#00ff41]/70 hover:border-[#00ff41]/20 transition-colors"
+                    className="px-6 py-3 rounded-xl text-xs uppercase tracking-widest border border-white/10 text-white/40 hover:text-white/70 hover:border-white/20 transition-colors"
                     data-testid="button-modal-close-secondary"
                   >
-                    CLOSE
+                    Close
                   </button>
                 </div>
               </div>
