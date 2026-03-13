@@ -21,8 +21,14 @@ export function SiteFooter() {
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
               Elite cybersecurity solutions protecting enterprises from evolving digital threats. 
-              Government-certified security division delivering cutting-edge protection.
+              Specializing in VAPT, ISO 27001 Certification, and Secure Software Development.
             </p>
+            <p className="text-xs text-muted-foreground mt-2">
+              Office no: 1204, CTS, 682/686 Kotibhaskar and Mahati Residency, Kothrud, Pune, Maharashtra 411038, India
+            </p>
+            <a href="https://www.aricatech.com" target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:text-primary/80 transition-colors mt-1 inline-block">
+              www.aricatech.com
+            </a>
           </div>
 
           <div className="space-y-4">
@@ -47,20 +53,20 @@ export function SiteFooter() {
             <h3 className="font-display font-semibold text-halo-white text-sm uppercase tracking-wider">Contact Us</h3>
             <div className="space-y-3">
               <a 
-                href="mailto:contact@aricatech.io" 
+                href="mailto:contact@aricatech.com" 
                 className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
                 data-testid="link-footer-email"
               >
                 <Mail className="w-4 h-4" />
-                <span>contact@aricatech.io</span>
+                <span>contact@aricatech.com</span>
               </a>
               <a 
-                href="tel:+18005550199" 
+                href="tel:+917091175596" 
                 className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
                 data-testid="link-footer-phone"
               >
                 <Phone className="w-4 h-4" />
-                <span>+1 (800) 555-0199</span>
+                <span>+91 70911 75596</span>
               </a>
             </div>
             <div className="flex items-center gap-3 pt-2">
@@ -88,7 +94,7 @@ export function SiteFooter() {
 
         <div className="mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground">
-            © 2024 Arica Tech Security. All rights reserved.
+            © 2025 Arica Tech Security LLP. All rights reserved.
           </p>
           <Link href="/privacy">
             <span className="text-xs text-muted-foreground hover:text-primary transition-colors cursor-pointer" data-testid="link-footer-privacy">

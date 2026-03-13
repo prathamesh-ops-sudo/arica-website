@@ -14,7 +14,7 @@ export function Footer() {
           </Link>
 
           <p className="text-sm text-muted-foreground text-center">
-            © 2024 Arica Tech Security Division. All rights reserved. Government Contracted.
+            © 2025 Arica Tech Security LLP. All rights reserved.
           </p>
 
           <div className="flex items-center gap-3">

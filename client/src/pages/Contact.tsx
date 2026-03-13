@@ -8,38 +8,35 @@ const contactInfo = [
   {
     icon: Mail,
     title: "Email",
-    value: "contact@aricatech.security",
+    value: "contact@aricatech.com",
     description: "We respond within 24 hours",
     isEmergency: false,
   },
   {
     icon: Phone,
     title: "Phone",
-    value: "+1 (555) 123-4567",
-    description: "Mon-Fri 9AM-6PM PST",
+    value: "+91 70911 75596",
+    description: "Mon-Sat 9AM-6PM IST",
     isEmergency: false,
   },
   {
     icon: MapPin,
     title: "Location",
-    value: "San Francisco, CA",
-    description: "Headquarters",
+    value: "Pune, Maharashtra, India",
+    description: "Office no: 1204, CTS, 682/686 Kotibhaskar and Mahati Residency, Kothrud, 411038",
     isEmergency: false,
   },
   {
     icon: Clock,
     title: "Emergency",
-    value: "24/7 Hotline",
-    description: "For active incidents",
+    value: "+91 96510 39355",
+    description: "24/7 Incident Response",
     isEmergency: true,
   },
 ];
 
 const officeLocations = [
-  { name: "San Francisco", x: 15, y: 40, isPrimary: true },
-  { name: "London", x: 47, y: 30, isPrimary: false },
-  { name: "Singapore", x: 75, y: 55, isPrimary: false },
-  { name: "Dubai", x: 60, y: 42, isPrimary: false },
+  { name: "Pune, India", x: 68, y: 45, isPrimary: true },
 ];
 
 const floatingIcons = [
