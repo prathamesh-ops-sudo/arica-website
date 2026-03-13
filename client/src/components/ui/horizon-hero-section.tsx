@@ -284,40 +284,28 @@ export function HorizonHeroSection() {
           void main() {
             float n = noise(vUv * 5.0 + time * 0.1);
             float n2 = noise(vUv * 8.0 - time * 0.15);
+            float n3 = noise(vUv * 3.0 + time * 0.05);
             
-            // Flowing energy waves
-            float wave1 = sin(vUv.x * 12.0 + vUv.y * 8.0 + time * 1.5) * 0.5 + 0.5;
-            float wave2 = sin(vUv.x * 8.0 - vUv.y * 15.0 + time * 1.2) * 0.5 + 0.5;
-            float wave3 = cos(vUv.x * 20.0 + time * 2.0) * sin(vUv.y * 15.0 - time * 1.0) * 0.5 + 0.5;
+            float wave1 = sin(vUv.x * 6.0 + vUv.y * 4.0 + time * 0.8) * 0.5 + 0.5;
+            float wave2 = sin(vUv.x * 4.0 - vUv.y * 7.0 + time * 0.6) * 0.5 + 0.5;
+            float wave3 = cos(vUv.x * 3.0 + time * 0.4) * sin(vUv.y * 5.0 - time * 0.3) * 0.5 + 0.5;
             
-            // Circuit-like grid with glow
-            float gridX = smoothstep(0.47, 0.5, fract(vUv.x * 25.0));
-            float gridY = smoothstep(0.47, 0.5, fract(vUv.y * 18.0));
-            float grid = max(gridX, gridY);
-            float gridGlow = grid * (wave1 * 0.4 + 0.1);
+            float nebula1 = smoothstep(0.3, 0.7, n * wave1 + n2 * 0.3);
+            float nebula2 = smoothstep(0.4, 0.8, n2 * wave2 + n3 * 0.2);
             
-            // Pulsing energy nodes at grid intersections
-            float nodeX = fract(vUv.x * 25.0);
-            float nodeY = fract(vUv.y * 18.0);
-            float node = 1.0 - smoothstep(0.0, 0.12, length(vec2(nodeX, nodeY) - 0.5));
-            float nodePulse = node * (sin(time * 3.0 + n * 10.0) * 0.3 + 0.7) * 0.4;
+            float glow1 = exp(-3.0 * length(vUv - vec2(0.3 + sin(time * 0.2) * 0.1, 0.4 + cos(time * 0.15) * 0.1)));
+            float glow2 = exp(-4.0 * length(vUv - vec2(0.7 + cos(time * 0.25) * 0.08, 0.6 + sin(time * 0.18) * 0.08)));
             
-            // Scan line sweep
-            float scanPos = fract(time * 0.15);
-            float scanLine = smoothstep(0.0, 0.02, abs(vUv.y - scanPos)) * 0.0 + 
-                            (1.0 - smoothstep(0.0, 0.02, abs(vUv.y - scanPos))) * 0.6;
-            
-            // Compose colors
             vec3 baseColor = mix(color1, color2, wave1 * n);
-            vec3 color = baseColor * (wave2 * 0.15 + 0.05);
-            color += color2 * gridGlow * 0.6;
-            color += color3 * nodePulse;
-            color += color2 * scanLine * 0.3;
-            color += color3 * wave3 * n2 * 0.08;
+            vec3 color = baseColor * (nebula1 * 0.2 + 0.03);
+            color += color2 * nebula2 * 0.15;
+            color += color3 * glow1 * 0.25;
+            color += color2 * glow2 * 0.2;
+            color += color3 * wave3 * n2 * 0.06;
             
-            float alpha = opacity * (wave2 * 0.3 + gridGlow * 1.5 + nodePulse * 2.0 + scanLine * 0.5 + 0.05);
+            float alpha = opacity * (nebula1 * 0.4 + nebula2 * 0.3 + glow1 * 0.8 + glow2 * 0.6 + 0.02);
             alpha *= 1.0 - length(vUv - 0.5) * 0.8;
-            alpha = clamp(alpha, 0.0, 0.5);
+            alpha = clamp(alpha, 0.0, 0.45);
             
             gl_FragColor = vec4(color, alpha);
           }
