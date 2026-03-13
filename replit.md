@@ -4,10 +4,8 @@
 This project is a modern, full-stack TypeScript cybersecurity company website for ARICA Tech Security LLP. It showcases enterprise security services including VAPT (Vulnerability Assessment & Penetration Testing), ISO 27001 Audit & Certification, and Secure Custom Software Development. The application features an animated React frontend, an Express backend API, and a PostgreSQL database for contact inquiries. The site uses a premium cyan "Obsidian Glow" theme with glassmorphic effects, clean professional design (no hackerish green terminal aesthetics), and is fully responsive for mobile, tablet, and desktop.
 
 ## Deployment
-- **App Runner**: https://hgesimdp2m.us-east-1.awsapprunner.com (2 vCPU, 4 GB RAM, auto-scaling 2-5 instances)
-- **CloudFront CDN**: https://d7x1d0i7m5ts.cloudfront.net
-- **RDS PostgreSQL**: db.t3.small (arica-website-db)
-- **ECR**: 557845624595.dkr.ecr.us-east-1.amazonaws.com/arica-website
+Deployed on AWS using App Runner, RDS PostgreSQL, CloudFront CDN, and ECR.
+See internal deployment documentation or the AWS Console for infrastructure details.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
