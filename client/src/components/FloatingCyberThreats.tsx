@@ -1,5 +1,3 @@
-import { motion } from "framer-motion";
-
 interface FloatingCyberThreatsProps {
   variant?: "red" | "purple" | "mixed";
   density?: "low" | "medium" | "high";
@@ -45,6 +43,11 @@ const allItems = [
   ...threatData.network,
 ];
 
+const seededRandom = (seed: number) => {
+  const x = Math.sin(seed * 9301 + 49297) * 49297;
+  return x - Math.floor(x);
+};
+
 export function FloatingCyberThreats({ 
   variant = "purple", 
   density = "medium",
@@ -53,8 +56,8 @@ export function FloatingCyberThreats({
   const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
   const count = isMobileView 
     ? (density === "low" ? 3 : density === "medium" ? 5 : 8)
-    : (density === "low" ? 8 : density === "medium" ? 14 : 22);
-  const items = allItems.sort(() => Math.random() - 0.5).slice(0, count);
+    : (density === "low" ? 6 : density === "medium" ? 10 : 16);
+  const items = allItems.slice(0, count);
 
   const getColor = (index: number) => {
     if (variant === "red") return `rgba(255, ${60 + index * 5}, ${30 + index * 3}, 0.12)`;
@@ -67,36 +70,32 @@ export function FloatingCyberThreats({
   return (
     <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
       {items.map((text, i) => {
-        const startX = Math.random() * 100;
-        const startY = Math.random() * 100;
-        const duration = 12 + Math.random() * 15;
-        const direction = Math.random() > 0.5 ? 1 : -1;
+        const startX = seededRandom(i * 7 + 1) * 90 + 5;
+        const startY = seededRandom(i * 13 + 3) * 90 + 5;
+        const duration = 15 + seededRandom(i * 11) * 20;
+        const moveX = (seededRandom(i * 17) - 0.5) * 60;
+        const moveY = (seededRandom(i * 23) - 0.5) * 30;
+        const rotation = (seededRandom(i * 29) - 0.5) * 20;
+        const delay = i * 0.6;
         
         return (
-          <motion.div
+          <div
             key={`${text}-${i}`}
-            className="absolute font-mono whitespace-nowrap select-none"
+            className="absolute font-mono whitespace-nowrap select-none floating-threat"
             style={{
               left: `${startX}%`,
               top: `${startY}%`,
-              fontSize: `${9 + Math.random() * 3}px`,
+              fontSize: `${9 + seededRandom(i * 31) * 3}px`,
               color: getColor(i),
-              transform: `rotate(${(Math.random() - 0.5) * 20}deg)`,
-            }}
-            animate={{
-              x: [0, direction * (30 + Math.random() * 60), 0],
-              y: [0, (Math.random() - 0.5) * 40, 0],
-              opacity: [0, 0.6, 0.6, 0],
-            }}
-            transition={{
-              duration: duration,
-              delay: i * 0.8,
-              repeat: Infinity,
-              ease: "linear",
+              transform: `rotate(${rotation}deg)`,
+              ['--move-x' as string]: `${moveX}px`,
+              ['--move-y' as string]: `${moveY}px`,
+              animationDuration: `${duration}s`,
+              animationDelay: `${delay}s`,
             }}
           >
             {text}
-          </motion.div>
+          </div>
         );
       })}
     </div>

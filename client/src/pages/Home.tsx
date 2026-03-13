@@ -6,13 +6,8 @@ import { AsciiHeroSection } from "@/components/AsciiHeroSection";
 import { ComplianceSection } from "@/components/ComplianceSection";
 import { CTA } from "@/components/CTA";
 import { ThreatVortex } from "@/components/ThreatVortex";
-import { useIsMobileOrTablet } from "@/hooks/use-mobile";
-import { lazy, Suspense } from "react";
 
-const WebGLShader = lazy(() => import("@/components/ui/web-gl-shader").then(m => ({ default: m.WebGLShader })));
-const R3FCyberHero = lazy(() => import("@/components/ui/r3f-cyber-hero").then(m => ({ default: m.R3FCyberHero })));
-
-function MobileBackground() {
+function SubtleBackground() {
   return (
     <div className="fixed inset-0 -z-10">
       <div className="absolute inset-0 bg-[#050505]" />
@@ -25,18 +20,9 @@ function MobileBackground() {
 }
 
 export default function Home() {
-  const isMobileOrTablet = useIsMobileOrTablet();
-
   return (
     <div className="min-h-screen bg-[#050505] relative">
-      {isMobileOrTablet ? (
-        <MobileBackground />
-      ) : (
-        <Suspense fallback={null}>
-          <WebGLShader colorScheme="neutral" intensity={0.6} />
-          <R3FCyberHero />
-        </Suspense>
-      )}
+      <SubtleBackground />
       <div className="relative z-10">
         <Navbar />
         <HorizonHeroSection />

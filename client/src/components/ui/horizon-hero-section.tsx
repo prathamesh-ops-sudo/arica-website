@@ -124,7 +124,7 @@ export function HorizonHeroSection() {
       const refs = threeRefs.current;
       if (!refs.scene) return;
       
-      const starCount = 800;
+      const starCount = 400;
       
       for (let i = 0; i < 2; i++) {
         const geometry = new THREE.BufferGeometry();
@@ -440,9 +440,15 @@ export function HorizonHeroSection() {
       refs.scene.add(atmosphere);
     };
 
-    const animate = () => {
+    let lastFrameTime = 0;
+    const frameInterval = 1000 / 30;
+    const animate = (timestamp: number) => {
       const refs = threeRefs.current;
       refs.animationId = requestAnimationFrame(animate);
+      
+      const delta = timestamp - lastFrameTime;
+      if (delta < frameInterval) return;
+      lastFrameTime = timestamp - (delta % frameInterval);
       
       const time = Date.now() * 0.001;
 
@@ -620,7 +626,7 @@ export function HorizonHeroSection() {
 
   return (
     <div ref={containerRef} className={isMobileOrTablet ? "horizon-hero-container horizon-hero-mobile" : "horizon-hero-container"}>
-      {!isMobileOrTablet && (
+      {false && !isMobileOrTablet && (
         <>
           <div 
             className="absolute inset-0 z-[1]" 

@@ -970,6 +970,18 @@
   background-position: 0 0, 0 0, 40px 70px, 40px 70px;
 }
 
+@keyframes float-threat {
+  0% { transform: translate(0, 0); opacity: 0; }
+  10% { opacity: 0.6; }
+  80% { opacity: 0.6; }
+  100% { transform: translate(var(--move-x, 30px), var(--move-y, 10px)); opacity: 0; }
+}
+
+.floating-threat {
+  animation: float-threat linear infinite;
+  will-change: transform, opacity;
+}
+
 @media (max-width: 768px) {
   button, a, [role="button"] {
     min-height: 44px;
