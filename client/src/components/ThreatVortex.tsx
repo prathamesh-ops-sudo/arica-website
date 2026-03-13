@@ -160,15 +160,15 @@ export function ThreatVortex() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
             className="fixed inset-0 z-[100] pointer-events-none"
-            style={{ background: 'radial-gradient(circle, rgba(157,78,221,0.4), rgba(123,47,224,0.15), transparent)' }}
+            style={{ background: 'radial-gradient(circle, rgba(0,212,255,0.4), rgba(0,180,216,0.15), transparent)' }}
           />
         )}
       </AnimatePresence>
 
       <div className="absolute inset-0 opacity-[0.06]" style={{
         backgroundImage: `
-          linear-gradient(rgba(123,47,224,0.5) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(123,47,224,0.5) 1px, transparent 1px)
+          linear-gradient(rgba(0,180,216,0.5) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,180,216,0.5) 1px, transparent 1px)
         `,
         backgroundSize: '40px 40px',
       }} />
@@ -181,7 +181,7 @@ export function ThreatVortex() {
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
-              backgroundColor: i % 3 === 0 ? '#ff4444' : i % 3 === 1 ? '#7B2FE0' : '#9D4EDD',
+              backgroundColor: i % 3 === 0 ? '#ff4444' : i % 3 === 1 ? '#00B4D8' : '#00D4FF',
             }}
             animate={{
               opacity: [0, 0.8, 0],
@@ -210,26 +210,26 @@ export function ThreatVortex() {
               borderColor: phase === "fighting" || phase === "alert"
                 ? ["rgba(255,68,68,0.5)", "rgba(255,68,68,0.2)", "rgba(255,68,68,0.5)"]
                 : phase === "victory"
-                ? "rgba(123,47,224,0.5)"
-                : "rgba(123,47,224,0.3)",
+                ? "rgba(0,180,216,0.5)"
+                : "rgba(0,180,216,0.3)",
               backgroundColor: phase === "alert"
                 ? "rgba(255,68,68,0.08)"
                 : phase === "victory"
-                ? "rgba(123,47,224,0.08)"
-                : "rgba(123,47,224,0.03)",
+                ? "rgba(0,180,216,0.08)"
+                : "rgba(0,180,216,0.03)",
             }}
             transition={{ duration: 0.8, repeat: phase === "fighting" ? Infinity : 0 }}
           >
             <motion.div
               className="w-2 h-2 rounded-full"
               animate={{
-                backgroundColor: phase === "victory" ? "#9D4EDD" : "#ff4444",
+                backgroundColor: phase === "victory" ? "#00D4FF" : "#ff4444",
                 scale: phase === "fighting" ? [1, 1.5, 1] : 1,
               }}
               transition={{ duration: 0.5, repeat: phase === "fighting" ? Infinity : 0 }}
             />
             <span className="text-xs font-mono tracking-widest" style={{
-              color: phase === "victory" ? '#9D4EDD' : phase === "fighting" ? '#ff4444' : '#9D4EDD'
+              color: phase === "victory" ? '#00D4FF' : phase === "fighting" ? '#ff4444' : '#00D4FF'
             }}>
               {phase === "idle" || phase === "incoming" ? "MONITORING ACTIVE" :
                phase === "alert" ? "⚠ INCOMING THREATS DETECTED" :
@@ -242,7 +242,7 @@ export function ThreatVortex() {
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
             We Don't Just Defend.
             <motion.span
-              className="block bg-gradient-to-r from-[#7B2FE0] to-[#9D4EDD] bg-clip-text text-transparent"
+              className="block bg-gradient-to-r from-[#00B4D8] to-[#00D4FF] bg-clip-text text-transparent"
               animate={phase === "fighting" ? {
                 filter: ["brightness(1)", "brightness(1.5)", "brightness(1)"],
               } : {}}
@@ -273,8 +273,8 @@ export function ThreatVortex() {
                   x: '-50%',
                   y: '-50%',
                   borderColor: phase === "fighting"
-                    ? `rgba(157,78,221,${0.3 - ring * 0.05})`
-                    : `rgba(123,47,224,${0.1 - ring * 0.02})`,
+                    ? `rgba(0,212,255,${0.3 - ring * 0.05})`
+                    : `rgba(0,180,216,${0.1 - ring * 0.02})`,
                 }}
                 animate={isInView ? {
                   rotate: ring % 2 === 0 ? 360 : -360,
@@ -291,8 +291,8 @@ export function ThreatVortex() {
             <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 800 700">
               <defs>
                 <linearGradient id="beamGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#9D4EDD" />
-                  <stop offset="50%" stopColor="#7B2FE0" />
+                  <stop offset="0%" stopColor="#00D4FF" />
+                  <stop offset="50%" stopColor="#00B4D8" />
                   <stop offset="100%" stopColor="#ff4444" />
                 </linearGradient>
                 <filter id="beamGlow">
@@ -361,7 +361,7 @@ export function ThreatVortex() {
                   cx={centerX}
                   cy={centerY}
                   fill="none"
-                  stroke="#9D4EDD"
+                  stroke="#00D4FF"
                   strokeWidth="3"
                   filter="url(#explosionGlow)"
                   initial={{ r: 0, opacity: 0.8 }}
@@ -442,7 +442,7 @@ export function ThreatVortex() {
                   height: '220px',
                   left: '-110px',
                   top: '-110px',
-                  background: 'radial-gradient(circle, rgba(123,47,224,0.12) 0%, transparent 70%)',
+                  background: 'radial-gradient(circle, rgba(0,180,216,0.12) 0%, transparent 70%)',
                 }}
                 animate={{
                   scale: phase === "fighting" ? [1, 1.6, 1] : phase === "shockwave" ? [1, 4, 1] : [1, 1.1, 1],
@@ -460,8 +460,8 @@ export function ThreatVortex() {
                 transition={{ duration: phase === "fighting" ? 2 : 8, repeat: Infinity, ease: "linear" }}
               >
                 {/* Outer targeting ring with tick marks */}
-                <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(123,47,224,0.3)" strokeWidth="1" strokeDasharray="4 8" />
-                <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(157,78,221,0.2)" strokeWidth="0.5" />
+                <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(0,180,216,0.3)" strokeWidth="1" strokeDasharray="4 8" />
+                <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(0,212,255,0.2)" strokeWidth="0.5" />
                 {/* Tick marks around outer ring */}
                 {Array.from({ length: 36 }).map((_, i) => {
                   const angle = (i * 10 * Math.PI) / 180;
@@ -474,7 +474,7 @@ export function ThreatVortex() {
                       y1={100 + Math.sin(angle) * inner}
                       x2={100 + Math.cos(angle) * outer}
                       y2={100 + Math.sin(angle) * outer}
-                      stroke={i % 3 === 0 ? "rgba(157,78,221,0.6)" : "rgba(123,47,224,0.3)"}
+                      stroke={i % 3 === 0 ? "rgba(0,212,255,0.6)" : "rgba(0,180,216,0.3)"}
                       strokeWidth={i % 3 === 0 ? "1.5" : "0.5"}
                     />
                   );
@@ -490,17 +490,17 @@ export function ThreatVortex() {
                 transition={{ duration: phase === "fighting" ? 1.5 : 6, repeat: Infinity, ease: "linear" }}
               >
                 {/* Crosshair lines with gaps */}
-                <line x1="70" y1="10" x2="70" y2="35" stroke="rgba(157,78,221,0.7)" strokeWidth="1.5" />
-                <line x1="70" y1="105" x2="70" y2="130" stroke="rgba(157,78,221,0.7)" strokeWidth="1.5" />
-                <line x1="10" y1="70" x2="35" y2="70" stroke="rgba(157,78,221,0.7)" strokeWidth="1.5" />
-                <line x1="105" y1="70" x2="130" y2="70" stroke="rgba(157,78,221,0.7)" strokeWidth="1.5" />
+                <line x1="70" y1="10" x2="70" y2="35" stroke="rgba(0,212,255,0.7)" strokeWidth="1.5" />
+                <line x1="70" y1="105" x2="70" y2="130" stroke="rgba(0,212,255,0.7)" strokeWidth="1.5" />
+                <line x1="10" y1="70" x2="35" y2="70" stroke="rgba(0,212,255,0.7)" strokeWidth="1.5" />
+                <line x1="105" y1="70" x2="130" y2="70" stroke="rgba(0,212,255,0.7)" strokeWidth="1.5" />
                 {/* Corner brackets */}
-                <path d="M30,30 L30,45 M30,30 L45,30" fill="none" stroke="rgba(157,78,221,0.5)" strokeWidth="1" />
-                <path d="M110,30 L110,45 M110,30 L95,30" fill="none" stroke="rgba(157,78,221,0.5)" strokeWidth="1" />
-                <path d="M30,110 L30,95 M30,110 L45,110" fill="none" stroke="rgba(157,78,221,0.5)" strokeWidth="1" />
-                <path d="M110,110 L110,95 M110,110 L95,110" fill="none" stroke="rgba(157,78,221,0.5)" strokeWidth="1" />
+                <path d="M30,30 L30,45 M30,30 L45,30" fill="none" stroke="rgba(0,212,255,0.5)" strokeWidth="1" />
+                <path d="M110,30 L110,45 M110,30 L95,30" fill="none" stroke="rgba(0,212,255,0.5)" strokeWidth="1" />
+                <path d="M30,110 L30,95 M30,110 L45,110" fill="none" stroke="rgba(0,212,255,0.5)" strokeWidth="1" />
+                <path d="M110,110 L110,95 M110,110 L95,110" fill="none" stroke="rgba(0,212,255,0.5)" strokeWidth="1" />
                 {/* Inner diamond */}
-                <path d="M70,45 L95,70 L70,95 L45,70 Z" fill="none" stroke="rgba(123,47,224,0.4)" strokeWidth="0.8" strokeDasharray="3 3" />
+                <path d="M70,45 L95,70 L70,95 L45,70 Z" fill="none" stroke="rgba(0,180,216,0.4)" strokeWidth="0.8" strokeDasharray="3 3" />
               </motion.svg>
 
               {/* Scanning sweep line (during fighting) */}
@@ -514,8 +514,8 @@ export function ThreatVortex() {
                 >
                   <defs>
                     <linearGradient id="sweepGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="rgba(157,78,221,0)" />
-                      <stop offset="100%" stopColor="rgba(157,78,221,0.6)" />
+                      <stop offset="0%" stopColor="rgba(0,212,255,0)" />
+                      <stop offset="100%" stopColor="rgba(0,212,255,0.6)" />
                     </linearGradient>
                   </defs>
                   <path d="M90,90 L90,5 A85,85 0 0,1 160,50 Z" fill="url(#sweepGrad)" opacity="0.4" />
@@ -531,7 +531,7 @@ export function ThreatVortex() {
                     height: '160px',
                     left: '-80px',
                     top: '-80px',
-                    borderColor: 'rgba(157,78,221,0.5)',
+                    borderColor: 'rgba(0,212,255,0.5)',
                   }}
                   animate={{ scale: [1, 1.2, 1], opacity: [0.6, 0.15, 0.6] }}
                   transition={{ duration: 0.6, repeat: Infinity }}
@@ -548,15 +548,15 @@ export function ThreatVortex() {
                   top: '-32px',
                   borderRadius: '50%',
                   background: phase === "fighting" || phase === "shockwave"
-                    ? 'radial-gradient(circle, #c77dff 0%, #9D4EDD 30%, #7B2FE0 60%, #3A0CA3 100%)'
+                    ? 'radial-gradient(circle, #90E0EF 0%, #00D4FF 30%, #00B4D8 60%, #0077B6 100%)'
                     : phase === "victory"
                     ? 'radial-gradient(circle, #00ff41 0%, #00cc33 30%, #009926 60%, #006619 100%)'
-                    : 'radial-gradient(circle, #9D4EDD 0%, #7B2FE0 40%, #3A0CA3 70%, #1a0550 100%)',
+                    : 'radial-gradient(circle, #00D4FF 0%, #00B4D8 40%, #0077B6 70%, #001a2e 100%)',
                   boxShadow: phase === "fighting"
-                    ? '0 0 30px rgba(157,78,221,0.9), 0 0 60px rgba(123,47,224,0.6), 0 0 90px rgba(58,12,163,0.4)'
+                    ? '0 0 30px rgba(0,212,255,0.9), 0 0 60px rgba(0,180,216,0.6), 0 0 90px rgba(0,119,182,0.4)'
                     : phase === "victory"
                     ? '0 0 30px rgba(0,255,65,0.6), 0 0 60px rgba(0,204,51,0.3)'
-                    : '0 0 20px rgba(123,47,224,0.5), 0 0 40px rgba(157,78,221,0.2)',
+                    : '0 0 20px rgba(0,180,216,0.5), 0 0 40px rgba(0,212,255,0.2)',
                 }}
                 animate={{
                   scale: phase === "shockwave" ? [1, 2, 1] :
@@ -594,7 +594,7 @@ export function ThreatVortex() {
               {phase === "fighting" && (
                 <motion.div
                   className="absolute font-mono text-[8px] tracking-widest whitespace-nowrap"
-                  style={{ top: '45px', left: '50%', x: '-50%', color: '#9D4EDD' }}
+                  style={{ top: '45px', left: '50%', x: '-50%', color: '#00D4FF' }}
                   animate={{ opacity: [0.4, 1, 0.4] }}
                   transition={{ duration: 0.4, repeat: Infinity }}
                 >
@@ -623,17 +623,17 @@ export function ThreatVortex() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ duration: 0.6, ease: "easeOut" }}
                 >
-                  <div className="px-8 py-4 rounded-xl border border-[#7B2FE0]/40 bg-[#050505]/90 backdrop-blur-md">
+                  <div className="px-8 py-4 rounded-xl border border-[#00B4D8]/40 bg-[#050505]/90 backdrop-blur-md">
                     <motion.p
                       className="text-xs font-mono tracking-[0.3em] mb-1"
-                      style={{ color: '#9D4EDD', textShadow: '0 0 10px rgba(157,78,221,0.5)' }}
+                      style={{ color: '#00D4FF', textShadow: '0 0 10px rgba(0,212,255,0.5)' }}
                     >
                       MISSION COMPLETE
                     </motion.p>
                     <motion.p
                       className="text-xl md:text-2xl font-bold"
                       style={{
-                        background: 'linear-gradient(to right, #7B2FE0, #9D4EDD, #c77dff)',
+                        background: 'linear-gradient(to right, #00B4D8, #00D4FF, #90E0EF)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                         textShadow: 'none',
@@ -654,11 +654,11 @@ export function ThreatVortex() {
             <div
               className="rounded-xl border overflow-hidden"
               style={{
-                borderColor: phase === "fighting" ? 'rgba(255,68,68,0.3)' : 'rgba(123,47,224,0.2)',
+                borderColor: phase === "fighting" ? 'rgba(255,68,68,0.3)' : 'rgba(0,180,216,0.2)',
                 backgroundColor: 'rgba(5,5,5,0.9)',
               }}
             >
-              <div className="flex items-center gap-2 px-3 py-2 border-b" style={{ borderColor: 'rgba(123,47,224,0.15)' }}>
+              <div className="flex items-center gap-2 px-3 py-2 border-b" style={{ borderColor: 'rgba(0,180,216,0.15)' }}>
                 <div className="flex gap-1">
                   <div className="w-2 h-2 rounded-full bg-[#ff4444]" />
                   <div className="w-2 h-2 rounded-full bg-[#ffaa00]" />
@@ -676,7 +676,7 @@ export function ThreatVortex() {
               <div
                 ref={logContainerRef}
                 className="p-3 h-64 overflow-y-auto scrollbar-thin"
-                style={{ scrollbarWidth: 'thin', scrollbarColor: '#7B2FE0 transparent' }}
+                style={{ scrollbarWidth: 'thin', scrollbarColor: '#00B4D8 transparent' }}
               >
                 {battleLog.length === 0 && (
                   <div className="text-[10px] font-mono text-[#8e8e93]/50">
@@ -696,7 +696,7 @@ export function ThreatVortex() {
                       style={{
                         color: entry.type === "danger" ? '#ff4444' :
                           entry.type === "warning" ? '#ffaa00' :
-                          entry.type === "action" ? '#9D4EDD' : '#00cc44',
+                          entry.type === "action" ? '#00D4FF' : '#00cc44',
                       }}
                     >
                       {entry.text}
@@ -707,7 +707,7 @@ export function ThreatVortex() {
             </div>
 
             <div className="grid grid-cols-2 gap-2">
-              <div className="rounded-lg border border-[#7B2FE0]/20 bg-[#050505]/90 p-3 text-center">
+              <div className="rounded-lg border border-[#00B4D8]/20 bg-[#050505]/90 p-3 text-center">
                 <p className="text-[9px] font-mono text-[#8e8e93] tracking-wider mb-1">THREATS</p>
                 <motion.p
                   className="text-2xl font-bold font-mono"
@@ -719,10 +719,10 @@ export function ThreatVortex() {
                 </motion.p>
                 <p className="text-[8px] font-mono text-[#8e8e93]">REMAINING</p>
               </div>
-              <div className="rounded-lg border border-[#7B2FE0]/20 bg-[#050505]/90 p-3 text-center">
+              <div className="rounded-lg border border-[#00B4D8]/20 bg-[#050505]/90 p-3 text-center">
                 <p className="text-[9px] font-mono text-[#8e8e93] tracking-wider mb-1">TARGET LOCK</p>
                 <motion.p
-                  className="text-2xl font-bold font-mono text-[#9D4EDD]"
+                  className="text-2xl font-bold font-mono text-[#00D4FF]"
                   animate={phase === "fighting" ? { opacity: [0.7, 1, 0.7] } : {}}
                   transition={{ duration: 0.5, repeat: phase === "fighting" ? Infinity : 0 }}
                 >
@@ -744,7 +744,7 @@ export function ThreatVortex() {
           <p className="text-sm text-[#8e8e93] font-mono tracking-wider">
             BREACHES &bull; MALWARE &bull; RANSOMWARE &bull; DDoS &bull; ZERO-DAYS &bull; SQL INJECTION
           </p>
-          <p className="text-xs text-[#7B2FE0] font-mono tracking-widest mt-2">
+          <p className="text-xs text-[#00B4D8] font-mono tracking-widest mt-2">
             EVERY THREAT. INTERCEPTED. DESTROYED.
           </p>
         </motion.div>

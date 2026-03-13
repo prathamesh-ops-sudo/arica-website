@@ -12,8 +12,8 @@ function SubtleBackground() {
     <div className="fixed inset-0 -z-10">
       <div className="absolute inset-0 bg-[#050505]" />
       <div className="absolute inset-0 opacity-30" style={{
-        background: `radial-gradient(ellipse at 30% 20%, rgba(123,47,224,0.15) 0%, transparent 50%),
-                     radial-gradient(ellipse at 70% 80%, rgba(157,78,221,0.1) 0%, transparent 50%)`
+        background: `radial-gradient(ellipse at 30% 20%, rgba(0,180,216,0.15) 0%, transparent 50%),
+                     radial-gradient(ellipse at 70% 80%, rgba(0,212,255,0.1) 0%, transparent 50%)`
       }} />
     </div>
   );

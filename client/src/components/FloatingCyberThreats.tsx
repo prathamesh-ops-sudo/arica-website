@@ -1,5 +1,5 @@
 interface FloatingCyberThreatsProps {
-  variant?: "red" | "purple" | "mixed";
+  variant?: "red" | "purple" | "cyan" | "mixed";
   density?: "low" | "medium" | "high";
   className?: string;
 }
@@ -49,7 +49,7 @@ const seededRandom = (seed: number) => {
 };
 
 export function FloatingCyberThreats({ 
-  variant = "purple", 
+  variant = "cyan", 
   density = "medium",
   className = "" 
 }: FloatingCyberThreatsProps) {
@@ -61,9 +61,9 @@ export function FloatingCyberThreats({
 
   const getColor = (index: number) => {
     if (variant === "red") return `rgba(255, ${60 + index * 5}, ${30 + index * 3}, 0.12)`;
-    if (variant === "purple") return `rgba(${120 + index * 3}, ${40 + index * 2}, ${200 + index * 2}, 0.12)`;
+    if (variant === "purple" || variant === "cyan") return `rgba(0, ${180 + index * 3}, ${216 + index * 2}, 0.12)`;
     return index % 2 === 0 
-      ? `rgba(123, 47, 224, 0.12)` 
+      ? `rgba(0, 180, 216, 0.12)` 
       : `rgba(255, ${60 + index * 5}, ${30 + index * 3}, 0.08)`;
   };
 

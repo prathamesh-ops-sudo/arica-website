@@ -41,7 +41,7 @@ const clientLogos = [
 export function ClientsSlider() {
   return (
     <section className="py-16 bg-[#050505] relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#3A0CA3]/5 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0077B6]/5 to-transparent pointer-events-none" />
       
       <div className="container mx-auto px-4 mb-8">
         <h3 className="text-center text-[#8e8e93] text-sm uppercase tracking-[0.3em] mb-2">
@@ -56,10 +56,10 @@ export function ClientsSlider() {
         {industries.map((industry, index) => (
           <div
             key={index}
-            className="flex items-center gap-3 px-6 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full hover:bg-white/10 hover:border-[#7B2FE0]/30 transition-all duration-300 group"
+            className="flex items-center gap-3 px-6 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full hover:bg-white/10 hover:border-[#00B4D8]/30 transition-all duration-300 group"
             data-testid={`industry-badge-${index}`}
           >
-            <industry.icon className="w-5 h-5 text-[#8e8e93] group-hover:text-[#7B2FE0] transition-colors" />
+            <industry.icon className="w-5 h-5 text-[#8e8e93] group-hover:text-[#00B4D8] transition-colors" />
             <span className="text-white/70 text-sm font-medium whitespace-nowrap group-hover:text-white transition-colors">
               {industry.name}
             </span>
@@ -71,7 +71,7 @@ export function ClientsSlider() {
         {clientLogos.map((client, index) => (
           <div
             key={index}
-            className="flex items-center justify-center px-6 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full hover:bg-white/10 hover:border-[#7B2FE0]/30 transition-all duration-300 group"
+            className="flex items-center justify-center px-6 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full hover:bg-white/10 hover:border-[#00B4D8]/30 transition-all duration-300 group"
             data-testid={`client-logo-${index}`}
           >
             <img 

@@ -3,9 +3,9 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 
 const TETRIS_PIECES = [
-  { shape: [[1, 1, 1, 1]], color: 'bg-purple-500' },
-  { shape: [[1, 1], [1, 1]], color: 'bg-purple-400' },
-  { shape: [[0, 1, 0], [1, 1, 1]], color: 'bg-purple-600' },
+  { shape: [[1, 1, 1, 1]], color: 'bg-cyan-500' },
+  { shape: [[1, 1], [1, 1]], color: 'bg-cyan-400' },
+  { shape: [[0, 1, 0], [1, 1, 1]], color: 'bg-cyan-600' },
   { shape: [[1, 0], [1, 0], [1, 1]], color: 'bg-violet-500' },
   { shape: [[0, 1, 1], [1, 1, 0]], color: 'bg-violet-400' },
   { shape: [[1, 1, 0], [0, 1, 1]], color: 'bg-violet-600' },
@@ -154,7 +154,7 @@ export default function TetrisLoading({
         
         const newGrid = prevGrid.map((row, rowIndex) => {
           if (linesToClear.includes(rowIndex)) {
-            return row.map(cell => ({ ...cell, color: 'bg-purple-300 animate-pulse opacity-50' }))
+            return row.map(cell => ({ ...cell, color: 'bg-cyan-300 animate-pulse opacity-50' }))
           }
           return row
         })
@@ -254,9 +254,9 @@ export default function TetrisLoading({
         {row.map((cell, colIndex) => (
           <div
             key={`${rowIndex}-${colIndex}`}
-            className={`${config.cellSize} border border-purple-900/30 transition-all duration-100 ${
+            className={`${config.cellSize} border border-cyan-900/30 transition-all duration-100 ${
               cell.filled 
-                ? `${cell.color} scale-100 shadow-[0_0_8px_rgba(157,78,221,0.6)]` 
+                ? `${cell.color} scale-100 shadow-[0_0_8px_rgba(0,212,255,0.6)]` 
                 : 'bg-black/80 scale-95'
             } ${isClearing && rowIndex < 4 ? 'animate-pulse' : ''}`}
           />
@@ -268,14 +268,14 @@ export default function TetrisLoading({
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="mb-6">
-        <div className={`border-2 border-purple-500/50 bg-black/90 ${config.padding} rounded-lg shadow-[0_0_30px_rgba(157,78,221,0.3)]`}>
+        <div className={`border-2 border-cyan-500/50 bg-black/90 ${config.padding} rounded-lg shadow-[0_0_30px_rgba(0,212,255,0.3)]`}>
           {renderGrid()}
         </div>
       </div>
 
       {showLoadingText && (
         <div className="text-center">
-          <p className="text-purple-300 font-medium text-lg tracking-wide">{loadingText}</p>
+          <p className="text-cyan-300 font-medium text-lg tracking-wide">{loadingText}</p>
         </div>
       )}
     </div>

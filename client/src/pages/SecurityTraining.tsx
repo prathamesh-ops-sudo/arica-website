@@ -13,8 +13,8 @@ import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background
 import { useGsapStagger } from '@/hooks/useGsapStagger';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
-const CYAN = '#9D4EDD';
-const PURPLE = '#9944ff';
+const CYAN = '#00D4FF';
+const PURPLE = '#00D4FF';
 const NAVY = 'hsl(222, 47%, 5%)';
 const GREEN = '#00FF88';
 
@@ -973,7 +973,7 @@ export default function SecurityTraining() {
       <div className="fixed inset-0 z-0 opacity-30">
         <PurpleGalaxyBackground />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-cyan-900/10 z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/10 via-transparent to-cyan-900/10 z-[1]" />
 
       <div className="fixed top-6 left-6 z-50">
         <Link
@@ -998,7 +998,7 @@ export default function SecurityTraining() {
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-4 gsap-fade-in">
             Learn & Master
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-400">
               Cybersecurity Skills
             </span>
           </h1>
@@ -1288,7 +1288,7 @@ export default function SecurityTraining() {
                 animate={{ scale: 1, opacity: 1 }}
                 className="mb-6"
               >
-                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 flex items-center justify-center mb-4">
+                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-cyan-500/20 to-cyan-500/20 border border-cyan-500/30 flex items-center justify-center mb-4">
                   <Zap className="w-12 h-12 text-cyan-400" />
                 </div>
                 <h3 className="text-2xl font-bold mb-2">Ready to Test Your Knowledge?</h3>
@@ -1300,7 +1300,7 @@ export default function SecurityTraining() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleStartQuiz}
-                className="px-8 py-4 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-purple-500 text-lg"
+                className="px-8 py-4 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-cyan-500 text-lg"
                 data-testid="button-start-quiz"
               >
                 Start Quiz
@@ -1409,7 +1409,7 @@ export default function SecurityTraining() {
                     whileTap={{ scale: 0.95 }}
                     onClick={handleSubmitAnswer}
                     disabled={selectedAnswer === null}
-                    className="px-8 py-3 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-8 py-3 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed"
                     data-testid="button-submit-answer"
                   >
                     Submit Answer
@@ -1419,7 +1419,7 @@ export default function SecurityTraining() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={handleNextQuestion}
-                    className="px-8 py-3 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-purple-500"
+                    className="px-8 py-3 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-cyan-500"
                     data-testid="button-next-question"
                   >
                     Next Question

@@ -188,7 +188,7 @@ export default function DevSecOpsPipeline() {
 
   return (
     <div className="min-h-screen bg-[hsl(222,47%,5%)] text-white relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-cyan-900/10" />
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/10 via-transparent to-cyan-900/10" />
 
       <div className="relative z-10">
         <div className="fixed top-6 left-6 z-50">
@@ -208,13 +208,13 @@ export default function DevSecOpsPipeline() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/30 mb-6">
-              <Zap className="w-4 h-4 text-purple-400" />
-              <span className="text-purple-400 text-sm font-medium">DevSecOps Pipeline</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-6">
+              <Zap className="w-4 h-4 text-cyan-400" />
+              <span className="text-cyan-400 text-sm font-medium">DevSecOps Pipeline</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
               Security-First
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-400">
                 CI/CD Pipeline
               </span>
             </h1>
@@ -229,7 +229,7 @@ export default function DevSecOpsPipeline() {
                 <button
                   onClick={isRunning ? undefined : runPipeline}
                   disabled={isRunning}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-purple-500 to-cyan-500 hover:opacity-90 transition-all disabled:opacity-50"
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-cyan-500 hover:opacity-90 transition-all disabled:opacity-50"
                   data-testid="button-run-pipeline"
                 >
                   <Play className="w-4 h-4" />
@@ -296,7 +296,7 @@ export default function DevSecOpsPipeline() {
                     <div
                       className={`p-6 rounded-2xl border transition-all cursor-pointer ${
                         isActive ? 'border-cyan-500/50 bg-cyan-500/5' : 
-                        selectedStage?.id === stage.id ? 'border-purple-500/50 bg-purple-500/5' : 
+                        selectedStage?.id === stage.id ? 'border-cyan-500/50 bg-cyan-500/5' : 
                         'border-white/10 bg-black/40 hover:border-white/20'
                       }`}
                       onClick={() => setSelectedStage(selectedStage?.id === stage.id ? null : stage)}
@@ -377,7 +377,7 @@ export default function DevSecOpsPipeline() {
           >
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold bg-gradient-to-r from-purple-500 to-cyan-500 hover:opacity-90 transition-all"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold bg-gradient-to-r from-cyan-500 to-cyan-500 hover:opacity-90 transition-all"
               data-testid="link-implement-devsecops"
             >
               <Shield className="w-5 h-5" />

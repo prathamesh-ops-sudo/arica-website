@@ -16,7 +16,7 @@ import { WebGLFallback } from '@/components/ui/webgl-fallback';
 const NEUTRAL_LIGHT = '#e5e5e5';
 const NEUTRAL_MID = '#8e8e93';
 const NEUTRAL_DARK = '#3a3a3c';
-const ACCENT_BLUE = '#7B2FE0';
+const ACCENT_BLUE = '#00B4D8';
 const NAVY = 'hsl(222, 47%, 5%)';
 const GREEN = '#00FF88';
 const RED = '#FF4444';
@@ -421,14 +421,14 @@ function CommandCenterScene() {
       <HolographicScreen position={[-3, -1, -1]} rotation={[0.2, 0.2, 0]} size={[1.5, 1]} color={GREEN} pulseSpeed={1.5} />
       <HolographicScreen position={[3, -1, -1]} rotation={[0.2, -0.2, 0]} size={[1.5, 1]} color={GREEN} pulseSpeed={1.5} />
       <HolographicScreen position={[0, 3, -3]} rotation={[-0.2, 0, 0]} size={[3, 1.5]} color={ACCENT_BLUE} pulseSpeed={0.8} />
-      <HolographicScreen position={[-5, 0, 0]} rotation={[0, 0.5, 0]} size={[1.2, 2]} color="#9944ff" pulseSpeed={1.2} />
-      <HolographicScreen position={[5, 0, 0]} rotation={[0, -0.5, 0]} size={[1.2, 2]} color="#9944ff" pulseSpeed={1.2} />
+      <HolographicScreen position={[-5, 0, 0]} rotation={[0, 0.5, 0]} size={[1.2, 2]} color="#00D4FF" pulseSpeed={1.2} />
+      <HolographicScreen position={[5, 0, 0]} rotation={[0, -0.5, 0]} size={[1.2, 2]} color="#00D4FF" pulseSpeed={1.2} />
       
       <DataStream start={[-4, 2, -2]} end={[0, 0, 0]} color={ACCENT_BLUE} speed={1.5} />
       <DataStream start={[4, 2, -2]} end={[0, 0, 0]} color={ACCENT_BLUE} speed={1.5} />
       <DataStream start={[0, 3, -3]} end={[0, 0, 0]} color={ACCENT_BLUE} speed={1.2} />
-      <DataStream start={[-5, 0, 0]} end={[-3, -1, -1]} color="#9944ff" speed={1} />
-      <DataStream start={[5, 0, 0]} end={[3, -1, -1]} color="#9944ff" speed={1} />
+      <DataStream start={[-5, 0, 0]} end={[-3, -1, -1]} color="#00D4FF" speed={1} />
+      <DataStream start={[5, 0, 0]} end={[3, -1, -1]} color="#00D4FF" speed={1} />
       <DataStream start={[-3, -1, -1]} end={[0, 0, 0]} color={GREEN} speed={0.8} />
       <DataStream start={[3, -1, -1]} end={[0, 0, 0]} color={GREEN} speed={0.8} />
       
@@ -463,7 +463,7 @@ function GlowingMetricCard({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       whileHover={{ scale: 1.05, y: -5 }}
-      className="relative bg-[#000a15]/80 backdrop-blur-sm border border-[#9D4EDD]/20 rounded-xl p-6 text-center overflow-hidden group cursor-pointer"
+      className="relative bg-[#000a15]/80 backdrop-blur-sm border border-[#00D4FF]/20 rounded-xl p-6 text-center overflow-hidden group cursor-pointer"
     >
       <motion.div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -509,7 +509,7 @@ function GlowingMetricCard({
           {children || value}
         </motion.div>
         
-        <div className="text-xs text-[#9D4EDD]/60 font-mono uppercase tracking-wider">{label}</div>
+        <div className="text-xs text-[#00D4FF]/60 font-mono uppercase tracking-wider">{label}</div>
         
         <motion.div
           className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-current to-transparent"
@@ -698,9 +698,9 @@ function ServiceCard({ service, index }: { service: typeof supportServices[0]; i
       />
       
       <motion.div
-        className="relative bg-[#000a15]/90 backdrop-blur-sm border border-[#9D4EDD]/20 rounded-xl p-6 transition-all duration-300 overflow-hidden"
+        className="relative bg-[#000a15]/90 backdrop-blur-sm border border-[#00D4FF]/20 rounded-xl p-6 transition-all duration-300 overflow-hidden"
         animate={{
-          borderColor: isHovered ? statusColor : 'rgba(157, 78, 221, 0.2)',
+          borderColor: isHovered ? statusColor : 'rgba(0, 212, 255, 0.2)',
           boxShadow: isHovered ? `0 0 30px ${statusColor}20, inset 0 0 30px ${statusColor}05` : 'none',
         }}
         layout
@@ -714,14 +714,14 @@ function ServiceCard({ service, index }: { service: typeof supportServices[0]; i
         
         <div className="flex items-start justify-between mb-4">
           <motion.div 
-            className="p-3 rounded-lg bg-[#9D4EDD]/10 border border-[#9D4EDD]/30"
+            className="p-3 rounded-lg bg-[#00D4FF]/10 border border-[#00D4FF]/30"
             animate={isHovered ? { 
               scale: [1, 1.1, 1],
               borderColor: [statusColor, ACCENT_BLUE, statusColor]
             } : {}}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            <Icon className="w-6 h-6 text-[#9D4EDD]" />
+            <Icon className="w-6 h-6 text-[#00D4FF]" />
           </motion.div>
           
           <div className="flex items-center gap-2">
@@ -757,20 +757,20 @@ function ServiceCard({ service, index }: { service: typeof supportServices[0]; i
             animate={{ rotate: isExpanded ? 180 : 0 }}
             transition={{ duration: 0.3 }}
           >
-            <ChevronDown className="w-4 h-4 text-[#9D4EDD]/50" />
+            <ChevronDown className="w-4 h-4 text-[#00D4FF]/50" />
           </motion.span>
         </h3>
-        <p className="text-[#9D4EDD]/60 text-sm mb-4">{service.description}</p>
+        <p className="text-[#00D4FF]/60 text-sm mb-4">{service.description}</p>
         
         <motion.div 
-          className="flex items-center gap-2 mb-4 px-3 py-2 bg-[#9D4EDD]/5 rounded-lg border border-[#9D4EDD]/20"
+          className="flex items-center gap-2 mb-4 px-3 py-2 bg-[#00D4FF]/5 rounded-lg border border-[#00D4FF]/20"
           animate={isHovered ? { 
-            backgroundColor: 'rgba(157, 78, 221, 0.1)',
+            backgroundColor: 'rgba(0, 212, 255, 0.1)',
             borderColor: statusColor
           } : {}}
         >
-          <Clock className="w-4 h-4 text-[#9D4EDD]" />
-          <span className="text-sm font-mono text-[#9D4EDD]">{service.sla}</span>
+          <Clock className="w-4 h-4 text-[#00D4FF]" />
+          <span className="text-sm font-mono text-[#00D4FF]">{service.sla}</span>
         </motion.div>
         
         <AnimatePresence>
@@ -782,8 +782,8 @@ function ServiceCard({ service, index }: { service: typeof supportServices[0]; i
               transition={{ duration: 0.3 }}
               className="overflow-hidden"
             >
-              <div className="pt-4 border-t border-[#9D4EDD]/10">
-                <h4 className="text-xs font-mono text-[#9D4EDD]/80 mb-3 uppercase tracking-wider">Capabilities</h4>
+              <div className="pt-4 border-t border-[#00D4FF]/10">
+                <h4 className="text-xs font-mono text-[#00D4FF]/80 mb-3 uppercase tracking-wider">Capabilities</h4>
                 <ul className="space-y-2 mb-4">
                   {service.details.map((detail, i) => (
                     <motion.li
@@ -791,7 +791,7 @@ function ServiceCard({ service, index }: { service: typeof supportServices[0]; i
                       initial={{ x: -10, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
                       transition={{ delay: i * 0.1 }}
-                      className="flex items-center gap-2 text-sm text-[#9D4EDD]/70"
+                      className="flex items-center gap-2 text-sm text-[#00D4FF]/70"
                     >
                       <CheckCircle className="w-3 h-3 text-green-400 flex-shrink-0" />
                       {detail}
@@ -806,10 +806,10 @@ function ServiceCard({ service, index }: { service: typeof supportServices[0]; i
                       initial={{ scale: 0.8, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ delay: 0.3 + i * 0.1 }}
-                      className="bg-[#9D4EDD]/5 rounded-lg p-2 text-center"
+                      className="bg-[#00D4FF]/5 rounded-lg p-2 text-center"
                     >
-                      <div className="text-lg font-bold text-[#9D4EDD]">{val}</div>
-                      <div className="text-[10px] text-[#9D4EDD]/50 uppercase">
+                      <div className="text-lg font-bold text-[#00D4FF]">{val}</div>
+                      <div className="text-[10px] text-[#00D4FF]/50 uppercase">
                         {key.replace(/([A-Z])/g, ' $1').trim()}
                       </div>
                     </motion.div>
@@ -821,14 +821,14 @@ function ServiceCard({ service, index }: { service: typeof supportServices[0]; i
         </AnimatePresence>
         
         <div className="flex items-center gap-2 mt-4">
-          <span className="text-xs text-[#9D4EDD]/50">Contact:</span>
+          <span className="text-xs text-[#00D4FF]/50">Contact:</span>
           <div className="flex gap-2">
             {service.contactOptions.map((option) => (
               <motion.div 
                 key={option}
-                whileHover={{ scale: 1.2, backgroundColor: 'rgba(157, 78, 221, 0.3)' }}
+                whileHover={{ scale: 1.2, backgroundColor: 'rgba(0, 212, 255, 0.3)' }}
                 whileTap={{ scale: 0.9 }}
-                className="p-1.5 rounded bg-[#9D4EDD]/10 text-[#9D4EDD] cursor-pointer"
+                className="p-1.5 rounded bg-[#00D4FF]/10 text-[#00D4FF] cursor-pointer"
                 title={option}
               >
                 {getContactIcon(option)}
@@ -866,16 +866,16 @@ function LiveSecurityEventsFeed() {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="bg-[#000a15]/80 backdrop-blur-sm border border-[#9D4EDD]/20 rounded-xl overflow-hidden"
+      className="bg-[#000a15]/80 backdrop-blur-sm border border-[#00D4FF]/20 rounded-xl overflow-hidden"
       data-testid="security-events-feed"
     >
-      <div className="flex items-center justify-between p-4 border-b border-[#9D4EDD]/20">
+      <div className="flex items-center justify-between p-4 border-b border-[#00D4FF]/20">
         <div className="flex items-center gap-3">
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
           >
-            <Radio className="w-5 h-5 text-[#9D4EDD]" />
+            <Radio className="w-5 h-5 text-[#00D4FF]" />
           </motion.div>
           <h3 className="font-mono text-lg font-bold text-white">Live Security Feed</h3>
           <motion.span
@@ -890,7 +890,7 @@ function LiveSecurityEventsFeed() {
         
         <button
           onClick={() => setIsPaused(!isPaused)}
-          className="text-xs font-mono px-3 py-1 rounded border border-[#9D4EDD]/30 text-[#9D4EDD] hover:bg-[#9D4EDD]/10 transition-colors"
+          className="text-xs font-mono px-3 py-1 rounded border border-[#00D4FF]/30 text-[#00D4FF] hover:bg-[#00D4FF]/10 transition-colors"
         >
           {isPaused ? 'RESUME' : 'PAUSE'}
         </button>
@@ -907,9 +907,9 @@ function LiveSecurityEventsFeed() {
               animate={{ x: 0, opacity: 1, height: 'auto' }}
               exit={{ x: 100, opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="border-b border-[#9D4EDD]/10 last:border-0"
+              className="border-b border-[#00D4FF]/10 last:border-0"
             >
-              <div className="flex items-center gap-3 p-3 hover:bg-[#9D4EDD]/5 transition-colors">
+              <div className="flex items-center gap-3 p-3 hover:bg-[#00D4FF]/5 transition-colors">
                 <motion.div
                   className="p-2 rounded-lg"
                   style={{ backgroundColor: `${event.color}15` }}
@@ -930,11 +930,11 @@ function LiveSecurityEventsFeed() {
                     >
                       {event.type}
                     </span>
-                    <span className="text-[10px] text-[#9D4EDD]/40 font-mono">
+                    <span className="text-[10px] text-[#00D4FF]/40 font-mono">
                       {event.timestamp}
                     </span>
                   </div>
-                  <p className="text-sm text-[#9D4EDD]/80 truncate font-mono">
+                  <p className="text-sm text-[#00D4FF]/80 truncate font-mono">
                     {event.message}
                   </p>
                 </div>
@@ -977,7 +977,7 @@ function SystemStatusDashboard() {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="bg-[#000a15]/80 backdrop-blur-sm border border-[#9D4EDD]/20 rounded-xl p-6"
+      className="bg-[#000a15]/80 backdrop-blur-sm border border-[#00D4FF]/20 rounded-xl p-6"
       data-testid="system-status-dashboard"
     >
       <div className="flex items-center justify-between mb-6">
@@ -991,7 +991,7 @@ function SystemStatusDashboard() {
           >
             {overallHealth.toFixed(0)}%
           </motion.div>
-          <span className="text-xs text-[#9D4EDD]/50 font-mono">HEALTH</span>
+          <span className="text-xs text-[#00D4FF]/50 font-mono">HEALTH</span>
         </div>
       </div>
       
@@ -1007,7 +1007,7 @@ function SystemStatusDashboard() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.05 }}
               whileHover={{ scale: 1.05, borderColor: statusInfo.color }}
-              className="relative p-3 rounded-lg border border-[#9D4EDD]/20 bg-[#9D4EDD]/5 text-center overflow-hidden"
+              className="relative p-3 rounded-lg border border-[#00D4FF]/20 bg-[#00D4FF]/5 text-center overflow-hidden"
             >
               <motion.div
                 className="absolute inset-0"
@@ -1016,7 +1016,7 @@ function SystemStatusDashboard() {
               
               <div className="relative z-10">
                 <div className="flex items-center justify-center gap-2 mb-2">
-                  <system.icon className="w-4 h-4 text-[#9D4EDD]/70" />
+                  <system.icon className="w-4 h-4 text-[#00D4FF]/70" />
                   <motion.div
                     className="w-2 h-2 rounded-full"
                     style={{ backgroundColor: statusInfo.color }}
@@ -1060,7 +1060,7 @@ function EmergencyContactSection() {
       <motion.div
         className="absolute inset-0 rounded-2xl"
         style={{
-          background: 'linear-gradient(135deg, rgba(255, 68, 68, 0.1) 0%, rgba(157, 78, 221, 0.05) 50%, rgba(255, 68, 68, 0.1) 100%)',
+          background: 'linear-gradient(135deg, rgba(255, 68, 68, 0.1) 0%, rgba(0, 212, 255, 0.05) 50%, rgba(255, 68, 68, 0.1) 100%)',
         }}
         animate={{
           opacity: [0.5, 0.8, 0.5],
@@ -1089,7 +1089,7 @@ function EmergencyContactSection() {
         transition={{ duration: 2, repeat: Infinity }}
       />
       
-      <div className="relative z-10 bg-gradient-to-r from-[#9D4EDD]/10 via-[#9D4EDD]/5 to-[#9D4EDD]/10 border border-[#9D4EDD]/30 rounded-2xl p-8 md:p-12 text-center">
+      <div className="relative z-10 bg-gradient-to-r from-[#00D4FF]/10 via-[#00D4FF]/5 to-[#00D4FF]/10 border border-[#00D4FF]/30 rounded-2xl p-8 md:p-12 text-center">
         <motion.div
           className="inline-flex items-center gap-2 bg-red-500/20 border border-red-500/50 rounded-full px-4 py-2 mb-6"
           animate={{
@@ -1109,9 +1109,9 @@ function EmergencyContactSection() {
         
         <h2 className="font-mono text-2xl md:text-3xl font-bold mb-4">
           Need <motion.span 
-            className="text-[#9D4EDD]"
+            className="text-[#00D4FF]"
             animate={{ 
-              textShadow: ['0 0 10px #9D4EDD40', '0 0 30px #9D4EDD80', '0 0 10px #9D4EDD40']
+              textShadow: ['0 0 10px #00D4FF40', '0 0 30px #00D4FF80', '0 0 10px #00D4FF40']
             }}
             transition={{ duration: 2, repeat: Infinity }}
           >
@@ -1119,7 +1119,7 @@ function EmergencyContactSection() {
           </motion.span>?
         </h2>
         
-        <p className="text-[#9D4EDD]/60 font-mono text-sm mb-8 max-w-xl mx-auto">
+        <p className="text-[#00D4FF]/60 font-mono text-sm mb-8 max-w-xl mx-auto">
           Our security operations center is available around the clock for emergency response
         </p>
         
@@ -1157,11 +1157,11 @@ function EmergencyContactSection() {
             href="/contact"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="relative inline-flex items-center gap-2 px-8 py-4 bg-[#9D4EDD]/20 border border-[#9D4EDD] rounded-lg text-[#9D4EDD] font-mono font-bold overflow-hidden group hover:bg-[#9D4EDD]/30 transition-colors"
+            className="relative inline-flex items-center gap-2 px-8 py-4 bg-[#00D4FF]/20 border border-[#00D4FF] rounded-lg text-[#00D4FF] font-mono font-bold overflow-hidden group hover:bg-[#00D4FF]/30 transition-colors"
             data-testid="btn-contact-support"
           >
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-[#9D4EDD]/20 to-transparent opacity-0 group-hover:opacity-100"
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-[#00D4FF]/20 to-transparent opacity-0 group-hover:opacity-100"
               animate={{ x: ['-100%', '100%'] }}
               transition={{ duration: 2, repeat: Infinity }}
             />
@@ -1171,7 +1171,7 @@ function EmergencyContactSection() {
         </div>
         
         <motion.div
-          className="mt-8 flex items-center justify-center gap-4 text-xs font-mono text-[#9D4EDD]/50"
+          className="mt-8 flex items-center justify-center gap-4 text-xs font-mono text-[#00D4FF]/50"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
@@ -1184,7 +1184,7 @@ function EmergencyContactSection() {
             />
             <span>Response Team Online</span>
           </div>
-          <div className="w-px h-4 bg-[#9D4EDD]/30" />
+          <div className="w-px h-4 bg-[#00D4FF]/30" />
           <div className="flex items-center gap-2">
             <Clock className="w-3 h-3" />
             <span>Avg Response: &lt;5 min</span>
@@ -1208,24 +1208,24 @@ export default function OngoingSupport() {
       <div 
         className="fixed inset-0 pointer-events-none z-0"
         style={{
-          background: 'radial-gradient(ellipse at 50% 0%, rgba(157, 78, 221, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(157, 78, 221, 0.05) 0%, transparent 40%)',
+          background: 'radial-gradient(ellipse at 50% 0%, rgba(0, 212, 255, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(0, 212, 255, 0.05) 0%, transparent 40%)',
         }}
       />
       
       <div 
         className="fixed inset-0 pointer-events-none z-0 opacity-[0.02]"
         style={{
-          backgroundImage: 'linear-gradient(rgba(157, 78, 221, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(157, 78, 221, 0.1) 1px, transparent 1px)',
+          backgroundImage: 'linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px)',
           backgroundSize: '50px 50px',
         }}
       />
 
       <div className="relative z-10">
-        <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#000510]/90 border-b border-[#9D4EDD]/20">
+        <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#000510]/90 border-b border-[#00D4FF]/20">
           <div className="container mx-auto px-6 py-3 flex items-center justify-between">
             <Link
               href="/experience"
-              className="flex items-center gap-2 text-[#9D4EDD] hover:text-[#9D4EDD]/80 transition-colors font-mono text-sm"
+              className="flex items-center gap-2 text-[#00D4FF] hover:text-[#00D4FF]/80 transition-colors font-mono text-sm"
               data-testid="link-back-experience"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -1244,10 +1244,10 @@ export default function OngoingSupport() {
                 </motion.div>
               </div>
               <motion.div 
-                className="flex items-center gap-2 bg-[#9D4EDD]/10 px-3 py-1.5 rounded border border-[#9D4EDD]/30"
+                className="flex items-center gap-2 bg-[#00D4FF]/10 px-3 py-1.5 rounded border border-[#00D4FF]/30"
                 animate={{
-                  borderColor: ['rgba(157, 78, 221, 0.3)', 'rgba(157, 78, 221, 0.6)', 'rgba(157, 78, 221, 0.3)'],
-                  boxShadow: ['0 0 10px rgba(157, 78, 221, 0)', '0 0 20px rgba(157, 78, 221, 0.2)', '0 0 10px rgba(157, 78, 221, 0)']
+                  borderColor: ['rgba(0, 212, 255, 0.3)', 'rgba(0, 212, 255, 0.6)', 'rgba(0, 212, 255, 0.3)'],
+                  boxShadow: ['0 0 10px rgba(0, 212, 255, 0)', '0 0 20px rgba(0, 212, 255, 0.2)', '0 0 10px rgba(0, 212, 255, 0)']
                 }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
@@ -1256,7 +1256,7 @@ export default function OngoingSupport() {
                   animate={{ scale: [1, 1.3, 1] }}
                   transition={{ duration: 1, repeat: Infinity }}
                 />
-                <span className="text-xs text-[#9D4EDD] font-mono font-bold">24/7 ACTIVE</span>
+                <span className="text-xs text-[#00D4FF] font-mono font-bold">24/7 ACTIVE</span>
               </motion.div>
             </div>
           </div>
@@ -1283,9 +1283,9 @@ export default function OngoingSupport() {
                 className="text-center"
               >
                 <motion.div 
-                  className="inline-flex items-center gap-2 bg-[#9D4EDD]/10 border border-[#9D4EDD]/30 rounded px-4 py-2 mb-4 font-mono text-xs backdrop-blur-sm"
+                  className="inline-flex items-center gap-2 bg-[#00D4FF]/10 border border-[#00D4FF]/30 rounded px-4 py-2 mb-4 font-mono text-xs backdrop-blur-sm"
                   animate={{ 
-                    borderColor: ['rgba(157, 78, 221, 0.3)', 'rgba(157, 78, 221, 0.6)', 'rgba(157, 78, 221, 0.3)']
+                    borderColor: ['rgba(0, 212, 255, 0.3)', 'rgba(0, 212, 255, 0.6)', 'rgba(0, 212, 255, 0.3)']
                   }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
@@ -1293,15 +1293,15 @@ export default function OngoingSupport() {
                     animate={{ rotate: [0, 10, -10, 0] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
-                    <Headphones className="w-4 h-4 text-[#9D4EDD]" />
+                    <Headphones className="w-4 h-4 text-[#00D4FF]" />
                   </motion.div>
-                  <span className="text-[#9D4EDD]">SECURITY OPERATIONS CENTER</span>
+                  <span className="text-[#00D4FF]">SECURITY OPERATIONS CENTER</span>
                 </motion.div>
                 <h1 className="font-mono text-4xl md:text-6xl font-bold mb-4">
                   <motion.span 
-                    className="text-[#9D4EDD]"
+                    className="text-[#00D4FF]"
                     animate={{ 
-                      textShadow: ['0 0 20px #9D4EDD40', '0 0 40px #9D4EDD60', '0 0 20px #9D4EDD40']
+                      textShadow: ['0 0 20px #00D4FF40', '0 0 40px #00D4FF60', '0 0 20px #00D4FF40']
                     }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
@@ -1309,7 +1309,7 @@ export default function OngoingSupport() {
                   </motion.span>
                   <span className="text-white">Support</span>
                 </h1>
-                <p className="text-[#9D4EDD]/60 font-mono text-sm max-w-xl mx-auto backdrop-blur-sm">
+                <p className="text-[#00D4FF]/60 font-mono text-sm max-w-xl mx-auto backdrop-blur-sm">
                   24/7 security monitoring and response with industry-leading SLA guarantees
                 </p>
               </motion.div>
@@ -1390,9 +1390,9 @@ export default function OngoingSupport() {
               >
                 <h2 className="font-mono text-3xl md:text-4xl font-bold mb-4">
                   <motion.span 
-                    className="text-[#9D4EDD]"
+                    className="text-[#00D4FF]"
                     animate={{ 
-                      textShadow: ['0 0 10px #9D4EDD40', '0 0 25px #9D4EDD60', '0 0 10px #9D4EDD40']
+                      textShadow: ['0 0 10px #00D4FF40', '0 0 25px #00D4FF60', '0 0 10px #00D4FF40']
                     }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
@@ -1400,10 +1400,10 @@ export default function OngoingSupport() {
                   </motion.span>
                   <span className="text-white">Services</span>
                 </h2>
-                <p className="text-[#9D4EDD]/60 font-mono text-sm max-w-2xl mx-auto">
+                <p className="text-[#00D4FF]/60 font-mono text-sm max-w-2xl mx-auto">
                   Comprehensive security support tailored to your organization's needs
                 </p>
-                <p className="text-[#9D4EDD]/40 font-mono text-xs mt-2">
+                <p className="text-[#00D4FF]/40 font-mono text-xs mt-2">
                   Click any card to expand details
                 </p>
               </motion.div>
@@ -1423,9 +1423,9 @@ export default function OngoingSupport() {
           </section>
         </main>
 
-        <footer className="border-t border-[#9D4EDD]/20 py-8 px-6">
+        <footer className="border-t border-[#00D4FF]/20 py-8 px-6">
           <div className="container mx-auto text-center">
-            <p className="text-[#9D4EDD]/40 font-mono text-xs">
+            <p className="text-[#00D4FF]/40 font-mono text-xs">
               © 2026 CyberSec. All rights reserved. 24/7 Security Operations Center.
             </p>
           </div>

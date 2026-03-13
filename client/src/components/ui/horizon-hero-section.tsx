@@ -161,11 +161,11 @@ export function HorizonHeroSection() {
           const color = new THREE.Color();
           const colorChoice = Math.random();
           if (colorChoice < 0.4) {
-            color.setHSL(0.75, 0.8, 0.5 + Math.random() * 0.3); // purple
+            color.setHSL(0.54, 1.0, 0.5 + Math.random() * 0.3); // cyan
           } else if (colorChoice < 0.7) {
-            color.setHSL(0.78, 0.6, 0.4 + Math.random() * 0.3); // deep violet
+            color.setHSL(0.52, 0.8, 0.4 + Math.random() * 0.3); // deep teal
           } else if (colorChoice < 0.9) {
-            color.setHSL(0.55, 0.7, 0.5 + Math.random() * 0.3); // cyan-blue
+            color.setHSL(0.58, 0.7, 0.5 + Math.random() * 0.3); // light blue
           } else {
             color.setHSL(0, 0, 0.7 + Math.random() * 0.3); // white accent
           }
@@ -244,9 +244,9 @@ export function HorizonHeroSection() {
       const material = new THREE.ShaderMaterial({
         uniforms: {
           time: { value: 0 },
-          color1: { value: new THREE.Color(0x3A0CA3) },  // deep purple
-          color2: { value: new THREE.Color(0x7B2FE0) },  // vivid purple
-          color3: { value: new THREE.Color(0x9D4EDD) },  // light purple glow
+          color1: { value: new THREE.Color(0x0077B6) },  // deep cyan
+          color2: { value: new THREE.Color(0x00B4D8) },  // vivid cyan
+          color3: { value: new THREE.Color(0x00D4FF) },  // light cyan glow
           opacity: { value: 0.30 },
           scrollProgress: { value: 0 }
         },
@@ -423,7 +423,7 @@ export function HorizonHeroSection() {
           
           void main() {
             float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
-            vec3 atmosphere = vec3(0.48, 0.18, 0.88) * intensity; // purple glow
+            vec3 atmosphere = vec3(0.0, 0.83, 1.0) * intensity; // cyan glow
             
             float pulse = sin(time * 2.0) * 0.05 + 0.95;
             atmosphere *= pulse;
@@ -657,7 +657,7 @@ export function HorizonHeroSection() {
       {webglFailed || isMobileOrTablet ? (
         <div className="absolute inset-0 z-[3] bg-gradient-to-b from-[#050505] via-[#0a0510] to-black">
           <div className="absolute inset-0 opacity-30" style={{
-            backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(58, 12, 163, 0.2), transparent 50%), radial-gradient(circle at 80% 30%, rgba(157, 78, 221, 0.2), transparent 50%)'
+            backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(0, 119, 182, 0.2), transparent 50%), radial-gradient(circle at 80% 30%, rgba(0, 212, 255, 0.2), transparent 50%)'
           }} />
         </div>
       ) : (

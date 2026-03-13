@@ -1,7 +1,7 @@
 # ARICA Tech Cybersecurity Website
 
 ## Overview
-This project is a modern, full-stack TypeScript cybersecurity company website for ARICA Tech. It showcases enterprise security services including VAPT (Vulnerability Assessment & Penetration Testing), ISO 27001 Audit & Certification, and Secure Custom Software Development. The application features an animated React frontend, an Express backend API, and a PostgreSQL database for contact inquiries. The site uses a premium purple "Obsidian Glow" theme with glassmorphic effects, clean professional design (no hackerish green terminal aesthetics), and is fully responsive for mobile, tablet, and desktop.
+This project is a modern, full-stack TypeScript cybersecurity company website for ARICA Tech Security LLP. It showcases enterprise security services including VAPT (Vulnerability Assessment & Penetration Testing), ISO 27001 Audit & Certification, and Secure Custom Software Development. The application features an animated React frontend, an Express backend API, and a PostgreSQL database for contact inquiries. The site uses a premium cyan "Obsidian Glow" theme with glassmorphic effects, clean professional design (no hackerish green terminal aesthetics), and is fully responsive for mobile, tablet, and desktop.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
@@ -15,12 +15,12 @@ Design preference: Professional cybersecurity, not hackerish. No green terminal 
 - **Database**: PostgreSQL managed with Drizzle ORM, with schema defined in `shared/schema.ts` and migrations handled by Drizzle Kit.
 
 ### Visual and Interactive Design
-The website employs an Apple-inspired design system featuring the "Obsidian Glow" theme:
-- **Color Palette**: Deep black (#050505) background, vibrant purple accents (#3A0CA3 primary, #7B2FE0 light, #9D4EDD glow), subtle white/gray text
+The website employs an Apple-inspired design system featuring the "Obsidian Glow" cyan theme:
+- **Color Palette**: Deep black (#050505) background, vibrant cyan accents (#0077B6 deep, #00B4D8 medium, #00D4FF glow), subtle white/gray text
 - **Typography**: SF Pro Display/Inter font stack with Apple system fonts as fallback
-- **Glassmorphism**: Frosted glass effects with purple-tinted backdrop-blur (20-40px), subtle purple borders (rgba 138,43,226 8-15%), and saturated overlays
-- **Buttons**: Rounded corners (1rem), purple gradient hover states with scale animations, glass variant for floating elements
-- **Shadows**: Soft Apple-style shadows with purple glow effects for interactive elements
+- **Glassmorphism**: Frosted glass effects with cyan-tinted backdrop-blur (20-40px), subtle cyan borders (rgba 0,212,255 8-15%), and saturated overlays
+- **Buttons**: Rounded corners (1rem), cyan gradient hover states with scale animations, glass variant for floating elements
+- **Shadows**: Soft Apple-style shadows with cyan glow effects for interactive elements
 
 ### Mobile & Tablet Optimization
 The site is fully responsive with specific optimizations:

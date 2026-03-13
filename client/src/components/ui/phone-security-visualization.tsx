@@ -6,8 +6,8 @@ import { Float, RoundedBox, Environment, ContactShadows } from '@react-three/dre
 import * as THREE from 'three';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
-const CYAN = '#9D4EDD';
-const PURPLE = '#9944ff';
+const CYAN = '#00D4FF';
+const PURPLE = '#00D4FF';
 const THREAT_RED = '#ff3344';
 
 interface DeviceType {
@@ -695,7 +695,7 @@ export function PhoneSecurityVisualization({ isScanning, onThreatBlocked }: Phon
   };
   
   return (
-    <div className="relative w-full h-[500px] rounded-2xl overflow-hidden bg-gradient-to-b from-slate-900/80 to-slate-950/80 border border-[#7B2FE0]/20">
+    <div className="relative w-full h-[500px] rounded-2xl overflow-hidden bg-gradient-to-b from-slate-900/80 to-slate-950/80 border border-[#00B4D8]/20">
       <WebGLFallback>
         <Canvas
           camera={{ position: [0, 0, 6], fov: 45 }}
@@ -718,28 +718,28 @@ export function PhoneSecurityVisualization({ isScanning, onThreatBlocked }: Phon
       </WebGLFallback>
       
       {/* Device selector carousel */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-black/60 backdrop-blur-xl rounded-full px-4 py-2 border border-[#7B2FE0]/30">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-black/60 backdrop-blur-xl rounded-full px-4 py-2 border border-[#00B4D8]/30">
         <button 
           onClick={() => cycleDevice(-1)}
-          className="p-2 hover:bg-[#7B2FE0]/20 rounded-full transition-colors"
+          className="p-2 hover:bg-[#00B4D8]/20 rounded-full transition-colors"
           data-testid="btn-prev-device"
         >
-          <svg className="w-5 h-5 text-[#9D4EDD]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-5 h-5 text-[#00D4FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
         
         <div className="text-center min-w-[140px]">
-          <div className="text-[#9D4EDD] font-medium text-sm">{selectedDevice.name}</div>
+          <div className="text-[#00D4FF] font-medium text-sm">{selectedDevice.name}</div>
           <div className="text-gray-500 text-xs">Drag to rotate</div>
         </div>
         
         <button 
           onClick={() => cycleDevice(1)}
-          className="p-2 hover:bg-[#7B2FE0]/20 rounded-full transition-colors"
+          className="p-2 hover:bg-[#00B4D8]/20 rounded-full transition-colors"
           data-testid="btn-next-device"
         >
-          <svg className="w-5 h-5 text-[#9D4EDD]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-5 h-5 text-[#00D4FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
@@ -748,11 +748,11 @@ export function PhoneSecurityVisualization({ isScanning, onThreatBlocked }: Phon
       {/* Status overlay */}
       <div className="absolute top-4 left-4 flex flex-col gap-2">
         <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-          isScanning ? 'bg-[#7B2FE0]/20 text-[#9D4EDD] border border-[#7B2FE0]/50' : 
+          isScanning ? 'bg-[#00B4D8]/20 text-[#00D4FF] border border-[#00B4D8]/50' : 
           attackMode ? 'bg-red-500/20 text-red-400 border border-red-500/50' :
           'bg-gray-800/60 text-gray-400 border border-gray-600/30'
         }`}>
-          <span className={`w-2 h-2 rounded-full ${isScanning ? 'bg-[#9D4EDD] animate-pulse' : attackMode ? 'bg-red-400 animate-pulse' : 'bg-gray-500'}`} />
+          <span className={`w-2 h-2 rounded-full ${isScanning ? 'bg-[#00D4FF] animate-pulse' : attackMode ? 'bg-red-400 animate-pulse' : 'bg-gray-500'}`} />
           {isScanning ? 'Scanning Active' : attackMode ? 'Attack Simulation' : 'Shield Standby'}
         </div>
         
@@ -783,7 +783,7 @@ export function PhoneSecurityVisualization({ isScanning, onThreatBlocked }: Phon
       
       {/* Hotspot info toast */}
       {hotspotInfo && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/80 backdrop-blur-xl px-4 py-2 rounded-lg border border-[#7B2FE0]/50 text-[#9D4EDD] text-sm">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/80 backdrop-blur-xl px-4 py-2 rounded-lg border border-[#00B4D8]/50 text-[#00D4FF] text-sm">
           {hotspotInfo}
         </div>
       )}

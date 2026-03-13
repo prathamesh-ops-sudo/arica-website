@@ -9,8 +9,8 @@ import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background
 import { useGsapStagger } from '@/hooks/useGsapStagger';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
-const CYAN = '#9D4EDD';
-const PURPLE = '#9944ff';
+const CYAN = '#00D4FF';
+const PURPLE = '#00D4FF';
 const RED = '#ff4444';
 const AMBER = '#ffaa44';
 
@@ -838,7 +838,7 @@ export default function CodeReview() {
 
         <div className="container mx-auto px-6 py-24" ref={gsapContainerRef}>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-6 gsap-fade-in" style={{ backgroundColor: 'rgba(157, 78, 221, 0.1)', borderColor: 'rgba(157, 78, 221, 0.3)' }}>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-6 gsap-fade-in" style={{ backgroundColor: 'rgba(0, 212, 255, 0.1)', borderColor: 'rgba(0, 212, 255, 0.3)' }}>
               <Code className="w-4 h-4" style={{ color: CYAN }} />
               <span className="text-sm font-medium" style={{ color: CYAN }}>Code Review</span>
             </div>
