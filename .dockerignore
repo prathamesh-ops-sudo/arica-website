@@ -2,8 +2,7 @@ node_modules
 dist
 .git
 .gitignore
-.replit
-replit.md
+*.md
 *.blend
 *.blend1
 contact-nav-clicked.png
