@@ -1213,10 +1213,9 @@ export default function OngoingSupport() {
       />
       
       <div 
-        className="fixed inset-0 pointer-events-none z-0 opacity-[0.02]"
+        className="fixed inset-0 pointer-events-none z-0 opacity-30"
         style={{
-          backgroundImage: 'linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px)',
-          backgroundSize: '50px 50px',
+          background: 'radial-gradient(ellipse at 25% 35%, rgba(0, 212, 255, 0.04) 0%, transparent 55%), radial-gradient(ellipse at 75% 65%, rgba(0, 119, 182, 0.03) 0%, transparent 50%)',
         }}
       />
 

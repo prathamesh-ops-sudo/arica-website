@@ -7,12 +7,9 @@ import { Loading } from "@/components/ui/circle-unique-load";
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.1) 1px, transparent 0)`,
-          backgroundSize: '40px 40px'
-        }} />
-      </div>
+      <div className="absolute inset-0 opacity-20" style={{
+        background: `radial-gradient(ellipse at 50% 40%, rgba(0, 212, 255, 0.06) 0%, transparent 55%)`
+      }} />
 
       <div className="flex-1 flex items-center justify-center px-6">
         <motion.div

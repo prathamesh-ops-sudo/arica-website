@@ -28,12 +28,10 @@ const features = [
 export function ForensicsSection() {
   return (
     <section className="py-32 relative overflow-hidden bg-card/30">
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(142, 142, 147, 0.15) 1px, transparent 0)`,
-          backgroundSize: '40px 40px'
-        }} />
-      </div>
+      <div className="absolute inset-0 opacity-40" style={{
+        background: `radial-gradient(ellipse at 20% 50%, rgba(0, 180, 216, 0.08) 0%, transparent 60%),
+                     radial-gradient(ellipse at 80% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 50%)`
+      }} />
       <FloatingCyberThreats variant="mixed" density="low" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">

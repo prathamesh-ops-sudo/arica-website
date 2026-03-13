@@ -63,13 +63,9 @@ export function SecurityScanAnimation() {
       className="relative w-full aspect-square rounded-2xl border border-white/10 bg-black/80 overflow-hidden"
     >
       <div
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-20"
         style={{
-          backgroundImage: `
-            linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: "20px 20px",
+          background: `radial-gradient(ellipse at 50% 50%, rgba(0, 212, 255, 0.08) 0%, transparent 60%)`,
         }}
       />
 

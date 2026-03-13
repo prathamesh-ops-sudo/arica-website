@@ -189,13 +189,9 @@ function AnimatedGridBackground({ eventCount }: { eventCount: number }) {
       <div 
         className="absolute inset-0 transition-opacity duration-500"
         style={{
-          opacity: 0.02 + pulseIntensity * 0.03,
-          backgroundImage: `
-            linear-gradient(rgba(0, 212, 255, 0.15) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 212, 255, 0.15) 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px',
-          animation: 'gridMove 20s linear infinite',
+          opacity: 0.15 + pulseIntensity * 0.1,
+          background: `radial-gradient(ellipse at 50% 30%, rgba(0, 212, 255, 0.05) 0%, transparent 60%),
+                       radial-gradient(ellipse at 20% 70%, rgba(0, 119, 182, 0.04) 0%, transparent 50%)`,
         }}
       />
       <style>{`

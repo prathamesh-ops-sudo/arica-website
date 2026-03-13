@@ -282,12 +282,10 @@ export default function Contact() {
       <Navbar />
 
       <section className="pt-32 pb-20 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0, 212, 255, 0.12) 1px, transparent 0)`,
-            backgroundSize: '40px 40px'
-          }} />
-        </div>
+        <div className="absolute inset-0 opacity-30" style={{
+          background: `radial-gradient(ellipse at 60% 30%, rgba(0, 212, 255, 0.06) 0%, transparent 55%),
+                       radial-gradient(ellipse at 20% 70%, rgba(0, 180, 216, 0.05) 0%, transparent 50%)`
+        }} />
 
         {floatingIcons.map((icon, index) => (
           <FloatingIcon key={index} {...icon} mousePosition={mousePosition} />

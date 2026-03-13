@@ -327,10 +327,7 @@
   }
 
   .cyber-grid {
-    background-image: 
-      linear-gradient(hsl(var(--border) / 0.3) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(var(--border) / 0.3) 1px, transparent 1px);
-    background-size: 50px 50px;
+    background: radial-gradient(ellipse at 50% 50%, rgba(0, 212, 255, 0.04) 0%, transparent 60%);
   }
 
   .animate-float {
@@ -896,7 +893,7 @@
   animation: monitoring-pulse 2s ease-in-out infinite;
 }
 
-/* Cyber scan line overlay for hero sections */
+/* Subtle overlay for hero sections */
 .cyber-scanline::after {
   content: '';
   position: absolute;
@@ -904,13 +901,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 255, 136, 0.03) 2px,
-    rgba(0, 255, 136, 0.03) 4px
-  );
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 212, 255, 0.01) 50%, transparent 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -959,15 +950,10 @@
   text-shadow: 0 0 10px rgba(0, 212, 255, 0.5), 0 0 20px rgba(0, 180, 216, 0.3);
 }
 
-/* Hex grid background pattern */
+/* Subtle ambient background */
 .hex-grid-bg {
-  background-image: 
-    linear-gradient(30deg, rgba(0, 255, 136, 0.03) 12%, transparent 12.5%, transparent 87%, rgba(0, 255, 136, 0.03) 87.5%, rgba(0, 255, 136, 0.03)),
-    linear-gradient(150deg, rgba(0, 255, 136, 0.03) 12%, transparent 12.5%, transparent 87%, rgba(0, 255, 136, 0.03) 87.5%, rgba(0, 255, 136, 0.03)),
-    linear-gradient(30deg, rgba(0, 255, 136, 0.03) 12%, transparent 12.5%, transparent 87%, rgba(0, 255, 136, 0.03) 87.5%, rgba(0, 255, 136, 0.03)),
-    linear-gradient(150deg, rgba(0, 255, 136, 0.03) 12%, transparent 12.5%, transparent 87%, rgba(0, 255, 136, 0.03) 87.5%, rgba(0, 255, 136, 0.03));
-  background-size: 80px 140px;
-  background-position: 0 0, 0 0, 40px 70px, 40px 70px;
+  background: radial-gradient(ellipse at 30% 40%, rgba(0, 212, 255, 0.03) 0%, transparent 55%),
+              radial-gradient(ellipse at 70% 60%, rgba(0, 119, 182, 0.02) 0%, transparent 50%);
 }
 
 @keyframes float-threat {

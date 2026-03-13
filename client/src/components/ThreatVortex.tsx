@@ -165,12 +165,8 @@ export function ThreatVortex() {
         )}
       </AnimatePresence>
 
-      <div className="absolute inset-0 opacity-[0.06]" style={{
-        backgroundImage: `
-          linear-gradient(rgba(0,180,216,0.5) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0,180,216,0.5) 1px, transparent 1px)
-        `,
-        backgroundSize: '40px 40px',
+      <div className="absolute inset-0 opacity-[0.15]" style={{
+        background: `radial-gradient(ellipse at 50% 50%, rgba(0,180,216,0.08) 0%, transparent 60%)`,
       }} />
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

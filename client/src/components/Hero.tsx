@@ -15,12 +15,9 @@ export function Hero() {
 
       <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-transparent pointer-events-none z-[1]" />
       
-      <div className="absolute inset-0 opacity-25 pointer-events-none z-[2]">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0, 212, 255, 0.12) 1px, transparent 0)`,
-          backgroundSize: '40px 40px'
-        }} />
-      </div>
+      <div className="absolute inset-0 opacity-25 pointer-events-none z-[2]" style={{
+        background: `radial-gradient(ellipse at 50% 30%, rgba(0, 212, 255, 0.06) 0%, transparent 60%)`
+      }} />
 
       <div className="max-w-7xl w-full mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-8 items-center">

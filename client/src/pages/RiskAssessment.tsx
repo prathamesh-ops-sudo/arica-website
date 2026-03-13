@@ -361,11 +361,8 @@ function ThreatGridBackground({ riskLevel }: { riskLevel: number }) {
       <div 
         className="absolute inset-0 opacity-20"
         style={{
-          backgroundImage: `
-            linear-gradient(rgba(0, 212, 255,0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 212, 255,0.03) 1px, transparent 1px)
-          `,
-          backgroundSize: '50px 50px',
+          background: `radial-gradient(ellipse at 40% 30%, rgba(0, 212, 255, 0.05) 0%, transparent 55%),
+                       radial-gradient(ellipse at 70% 70%, rgba(0, 119, 182, 0.04) 0%, transparent 50%)`,
         }}
       />
       <svg className="absolute inset-0 w-full h-full">

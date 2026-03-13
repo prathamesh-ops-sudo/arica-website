@@ -63,11 +63,7 @@ function FlowingCodeBackground() {
       <div 
         className="absolute inset-0"
         style={{
-          backgroundImage: `
-            linear-gradient(${CYAN}15 1px, transparent 1px),
-            linear-gradient(90deg, ${CYAN}15 1px, transparent 1px)
-          `,
-          backgroundSize: '50px 50px',
+          background: `radial-gradient(ellipse at 50% 30%, ${CYAN}10 0%, transparent 60%)`,
           animation: 'gridPulse 4s ease-in-out infinite',
         }}
       />

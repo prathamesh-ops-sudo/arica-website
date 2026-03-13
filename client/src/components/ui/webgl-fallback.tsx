@@ -55,13 +55,9 @@ function DefaultFallback({ showMessage }: { showMessage: boolean }) {
       <CSSParticles />
       
       <div 
-        className="absolute inset-0 opacity-5"
+        className="absolute inset-0 opacity-10"
         style={{
-          backgroundImage: `
-            linear-gradient(rgba(142, 142, 147, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(142, 142, 147, 0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: '50px 50px',
+          background: `radial-gradient(ellipse at 50% 40%, rgba(0, 212, 255, 0.04) 0%, transparent 55%)`,
         }}
       />
       
