@@ -1,0 +1,14 @@
+node_modules
+dist
+.git
+.gitignore
+.replit
+replit.md
+*.blend
+*.blend1
+contact-nav-clicked.png
+contact-page-accents.png
+hero_after_scroll.png
+hero_before_scroll.png
+homepage-step3.png
+services-section.png
