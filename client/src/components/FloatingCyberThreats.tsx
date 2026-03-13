@@ -50,7 +50,10 @@ export function FloatingCyberThreats({
   density = "medium",
   className = "" 
 }: FloatingCyberThreatsProps) {
-  const count = density === "low" ? 8 : density === "medium" ? 14 : 22;
+  const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
+  const count = isMobileView 
+    ? (density === "low" ? 3 : density === "medium" ? 5 : 8)
+    : (density === "low" ? 8 : density === "medium" ? 14 : 22);
   const items = allItems.sort(() => Math.random() - 0.5).slice(0, count);
 
   const getColor = (index: number) => {

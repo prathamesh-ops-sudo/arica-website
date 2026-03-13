@@ -1,10 +1,11 @@
-# Cyber Guardian Security Website
+# ARICA Tech Cybersecurity Website
 
 ## Overview
-This project is a modern, full-stack TypeScript cybersecurity company website for Cyber Guardian. It showcases enterprise security services including VAPT, ISO 27001 Audit & Certification, and Secure Custom Software Development. The application features an animated React frontend, an Express backend API, and a PostgreSQL database for contact inquiries. The site is designed with an Apple-inspired aesthetic featuring transparent glassmorphic effects, premium SF Pro/Inter fonts, matte neutral colors, and subtle blue accents. The design incorporates advanced visual effects and interactive 3D components to enhance user engagement and convey a high-tech security image. The project aims to provide an immersive and informative experience for potential clients seeking cybersecurity solutions.
+This project is a modern, full-stack TypeScript cybersecurity company website for ARICA Tech. It showcases enterprise security services including VAPT (Vulnerability Assessment & Penetration Testing), ISO 27001 Audit & Certification, and Secure Custom Software Development. The application features an animated React frontend, an Express backend API, and a PostgreSQL database for contact inquiries. The site uses a premium purple "Obsidian Glow" theme with glassmorphic effects, clean professional design (no hackerish green terminal aesthetics), and is fully responsive for mobile, tablet, and desktop.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
+Design preference: Professional cybersecurity, not hackerish. No green terminal effects, no breach warnings, no HUD overlays.
 
 ## System Architecture
 
@@ -20,22 +21,39 @@ The website employs an Apple-inspired design system featuring the "Obsidian Glow
 - **Glassmorphism**: Frosted glass effects with purple-tinted backdrop-blur (20-40px), subtle purple borders (rgba 138,43,226 8-15%), and saturated overlays
 - **Buttons**: Rounded corners (1rem), purple gradient hover states with scale animations, glass variant for floating elements
 - **Shadows**: Soft Apple-style shadows with purple glow effects for interactive elements
-Key visual elements include WebGL shader backgrounds with neutral-colored fluid effects, subtle dot grid patterns, and smooth scrolling.
 
-The site heavily utilizes advanced 3D and animation components to create a dynamic and immersive user experience:
-- **R3FCyberHero**: A React Three Fiber powered 3D hero section with scroll-driven camera movements, animated cyber grid, floating security shields, dynamic data particles, and mouse parallax effects.
-- **FluidSimulation**: WebGL 2D fluid dynamics simulation for subtle background effects.
-- **HorizonHeroSection**: A Three.js 3D space hero with star fields, animated nebulae, and GSAP scroll-triggered camera movement. Enhanced with layered EnergyBeam and TubesBackground (NeonFlow) effects using screen blend modes for a dynamic, interactive visual experience.
-- **TubesBackground (NeonFlow)**: An interactive 3D tubes/neon effect using threejs-components, responding to mouse movement and clicks for color randomization.
-- **RealisticSolarSystem**: A "Galaxy Journey" featuring service-themed galaxies with physics-based interactive planets, realistic NASA planet textures (stored locally in `/client/public/textures/`), bloom postprocessing effects, orbit lines, and hover outline highlighting. Each service category is represented by a galaxy with themed planets: VAPT (Mars, Mercury), ISO 27001 (Jupiter, Saturn), and Custom Software (Earth, Neptune, Uranus).
-- **CyberAttackGlobe**: A WebGL globe visualizing cyber attacks with impact flashes, arc trails, and atmospheric pulsing.
-- **Orca**: An immersive parallax scroll-driven 3D animation experience narrating the security response journey, featuring post-processing effects (bloom, vignette, chromatic aberration), Apple-neutral color palette, and hyperspace transition to the Experience page.
-- **AmbientParticles**: Reusable CSS-animated particles for visual polish.
-- **MegaNavigation**: A fixed glassmorphism navigation bar with dropdown menus and mobile responsiveness.
-- **WebGL Fallback System**: Utilizes `webgl-utils.ts` to detect WebGL capabilities and provides graceful fallback for unsupported environments.
+### Mobile & Tablet Optimization
+The site is fully responsive with specific optimizations:
+- **Breakpoints**: `useIsMobile()` (<768px), `useIsTablet()` (768-1023px), `useIsMobileOrTablet()` (<1024px) hooks in `client/src/hooks/use-mobile.tsx`
+- **3D Performance**: WebGLShader + R3FCyberHero disabled on mobile/tablet; CSS gradient fallback used instead. HorizonHeroSection skips Three.js canvas + EnergyBeam + TubesBackground on mobile
+- **Touch Targets**: Global CSS ensures minimum 44px height for buttons/links on mobile
+- **ThreatVortex**: Responsive height scaling (400px mobile / 500px tablet / 700px desktop)
+- **RealisticSolarSystem**: Bloom post-processing disabled on mobile, reduced pixel ratio
+- **FloatingCyberThreats**: Reduced particle counts on mobile (3/5/8 vs 8/14/22)
+- **CyberAttackGlobe**: Reduced antialias + pixel ratio on mobile
+
+### 3D and Animation Components
+- **R3FCyberHero**: React Three Fiber 3D hero (desktop only)
+- **HorizonHeroSection**: Three.js 3D space hero with star fields, nebulae, GSAP scroll (desktop only)
+- **TubesBackground (NeonFlow)**: Interactive 3D tubes/neon effect (desktop only)
+- **RealisticSolarSystem**: "Galaxy Journey" with service-themed galaxies and interactive planets
+- **CyberAttackGlobe**: WebGL globe visualizing cyber attacks
+- **ThreatVortex**: Interactive threat defense game
+- **Orca**: Parallax scroll-driven 3D animation
+- **MegaNavigation**: Fixed glassmorphism navigation bar with mobile hamburger menu
+- **WebGL Fallback System**: Graceful fallback for unsupported environments
 
 ### Project Structure and Development
 The project is organized into `client/` for the React frontend, `server/` for the Express backend, and `shared/` for common code like Drizzle schema and Zod validators. Path aliases are used for efficient module imports. Development leverages Vite for the frontend with HMR and esbuild for production server bundling.
+
+### Routes
+- `/` - Home page with hero, services overview, contact form
+- `/experience` - 3D Galaxy Journey (RealisticSolarSystem)
+- `/services` - Detailed services page
+- `/contact` - Contact form
+- `/attack-globe` - Live cyber attack visualization
+- `/api-security-lab` - API security interactive lab
+- `/threat-defense` - ThreatVortex interactive game
 
 ### Accessibility
 Focuses on accessibility with features like skip-to-content links, ARIA labels, keyboard navigation, and focus-visible outlines.

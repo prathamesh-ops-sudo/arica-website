@@ -253,12 +253,14 @@ export function CyberAttackGlobe({
     refs.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
     refs.camera.position.set(0, 0, 14);
 
+    const isMobileView = window.innerWidth < 1024;
     refs.renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current,
-      antialias: true,
+      antialias: !isMobileView,
       alpha: true,
+      powerPreference: isMobileView ? 'low-power' : 'default',
     });
-    refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileView ? 1 : 2));
     refs.renderer.setClearColor(COLORS.background, 0);
 
     refs.globeGroup = new THREE.Group();

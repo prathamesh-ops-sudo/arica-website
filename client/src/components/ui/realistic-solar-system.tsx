@@ -923,6 +923,7 @@ export function RealisticSolarSystem() {
   const mouseRef = useRef({ x: 0, y: 0 });
   const [, setLocation] = useLocation();
   const { triggerTransition } = useHyperspaceTransition();
+  const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 1024;
   const prevScrollRef = useRef(0);
   const lastGalaxyRef = useRef<string>(galaxies[0].id);
   const transitionCooldownRef = useRef(false);
@@ -1031,26 +1032,29 @@ export function RealisticSolarSystem() {
 
       refs.renderer = new THREE.WebGLRenderer({
         canvas: canvasRef.current,
-        antialias: true,
+        antialias: !isMobileDevice,
         alpha: false,
-        powerPreference: 'high-performance',
+        powerPreference: isMobileDevice ? 'low-power' : 'high-performance',
         failIfMajorPerformanceCaveat: false,
       });
       refs.renderer.setSize(window.innerWidth, window.innerHeight);
-      refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileDevice ? 1 : 2));
       refs.renderer.toneMapping = THREE.ACESFilmicToneMapping;
       refs.renderer.toneMappingExposure = 1.4;
 
       refs.composer = new EffectComposer(refs.renderer);
       const renderPass = new RenderPass(refs.scene, refs.camera);
       refs.composer.addPass(renderPass);
-      const bloomPass = new UnrealBloomPass(
-        new THREE.Vector2(window.innerWidth, window.innerHeight),
-        1.5,
-        0.4,
-        0.85
-      );
-      refs.composer.addPass(bloomPass);
+
+      if (!isMobileDevice) {
+        const bloomPass = new UnrealBloomPass(
+          new THREE.Vector2(window.innerWidth, window.innerHeight),
+          1.5,
+          0.4,
+          0.85
+        );
+        refs.composer.addPass(bloomPass);
+      }
 
       const outlinePass = new OutlinePass(
         new THREE.Vector2(window.innerWidth, window.innerHeight),
@@ -1059,9 +1063,9 @@ export function RealisticSolarSystem() {
       );
       outlinePass.visibleEdgeColor.set(0x9D4EDD);
       outlinePass.hiddenEdgeColor.set(0x3A0CA3);
-      outlinePass.edgeStrength = 3;
-      outlinePass.edgeGlow = 0.5;
-      outlinePass.edgeThickness = 2;
+      outlinePass.edgeStrength = isMobileDevice ? 2 : 3;
+      outlinePass.edgeGlow = isMobileDevice ? 0.2 : 0.5;
+      outlinePass.edgeThickness = isMobileDevice ? 1 : 2;
       refs.composer.addPass(outlinePass);
       refs.outlinePass = outlinePass;
 
@@ -2421,7 +2425,7 @@ export function RealisticSolarSystem() {
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: -60, scale: 0.95 }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 max-w-sm md:max-w-md z-20 pointer-events-auto"
+              className="absolute right-3 left-3 bottom-20 md:left-auto md:bottom-auto md:right-12 md:top-1/2 md:-translate-y-1/2 max-w-sm md:max-w-md z-20 pointer-events-auto"
             >
               <div 
                 className="relative backdrop-blur-2xl bg-black/60 border border-white/10 rounded-2xl p-0 shadow-2xl overflow-hidden"
@@ -2499,7 +2503,7 @@ export function RealisticSolarSystem() {
                   Explore Our Security Solutions
                 </div>
                 <motion.h1 
-                  className="text-5xl md:text-7xl lg:text-8xl font-bold mb-4 uppercase tracking-wider text-white"
+                  className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-4 uppercase tracking-wider text-white"
                   style={{ 
                     textShadow: '0 0 60px rgba(123,47,224,0.3), 0 0 120px rgba(123,47,224,0.1)'
                   }}

@@ -587,6 +587,10 @@
   padding: 2rem;
 }
 
+.horizon-hero-mobile {
+  min-height: 200vh;
+}
+
 @media (max-width: 768px) {
   .horizon-side-menu {
     left: 1rem;
@@ -599,6 +603,16 @@
   
   .horizon-progress-track {
     width: 60px;
+  }
+
+  .horizon-hero-title {
+    font-size: clamp(2.5rem, 12vw, 6rem);
+  }
+}
+
+@media (max-width: 1024px) {
+  .horizon-hero-mobile {
+    min-height: 150vh;
   }
 }
 
@@ -935,14 +949,14 @@
 
 .terminal-cursor::after {
   content: '█';
-  color: #00ff88;
+  color: #9D4EDD;
   animation: cursor-blink 1s step-end infinite;
   margin-left: 2px;
 }
 
 /* Data stream glow effect */
 .data-glow {
-  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5), 0 0 20px rgba(0, 204, 255, 0.3);
+  text-shadow: 0 0 10px rgba(157, 78, 221, 0.5), 0 0 20px rgba(123, 47, 224, 0.3);
 }
 
 /* Hex grid background pattern */
@@ -954,4 +968,31 @@
     linear-gradient(150deg, rgba(0, 255, 136, 0.03) 12%, transparent 12.5%, transparent 87%, rgba(0, 255, 136, 0.03) 87.5%, rgba(0, 255, 136, 0.03));
   background-size: 80px 140px;
   background-position: 0 0, 0 0, 40px 70px, 40px 70px;
+}
+
+@media (max-width: 768px) {
+  button, a, [role="button"] {
+    min-height: 44px;
+  }
+
+  section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
 }

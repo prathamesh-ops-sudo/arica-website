@@ -469,7 +469,7 @@ function GlassCard({
     purple: { border: '#9944ff', shadow: 'rgba(153, 68, 255, 0.15)' },
     red: { border: '#ff4444', shadow: 'rgba(255, 68, 68, 0.15)' },
     amber: { border: '#ffaa00', shadow: 'rgba(255, 170, 0, 0.15)' },
-    emerald: { border: '#00ff88', shadow: 'rgba(0, 255, 136, 0.15)' },
+    emerald: { border: '#9D4EDD', shadow: 'rgba(157, 78, 221, 0.15)' },
   };
   
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {

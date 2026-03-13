@@ -5,6 +5,7 @@ import {
   HardDrive, Cloud, Router, Lock, Binary, FileWarning,
   Flame, Wifi, Database, Monitor, Cpu
 } from "lucide-react";
+import { useIsMobile, useIsMobileOrTablet } from "@/hooks/use-mobile";
 
 const threatItems = [
   { icon: Bug, label: "MALWARE", color: "#ff4444", angle: 0 },
@@ -37,7 +38,7 @@ const battleLogSequence: { text: string; type: BattleLogEntry["type"]; delay: nu
   { text: "[SCAN] Perimeter breach detected on PORT 443", type: "warning", delay: 0 },
   { text: "[ALERT] 16 hostile payloads inbound", type: "danger", delay: 400 },
   { text: "[ALERT] RANSOMWARE signature matched :: Threat Level CRITICAL", type: "danger", delay: 800 },
-  { text: "[SYS] Activating Cyber Guardian Defense Protocol", type: "action", delay: 1500 },
+  { text: "[SYS] Activating ARICA Defense Protocol", type: "action", delay: 1500 },
   { text: "[WEAPON] Targeting systems online :: Lock at 100%", type: "action", delay: 2200 },
   { text: "[WEAPON] Deploying countermeasure beams", type: "action", delay: 3000 },
   { text: "[HIT] MALWARE neutralized ████████ 100%", type: "success", delay: 3800 },
@@ -63,6 +64,8 @@ export function ThreatVortex() {
   const logIdRef = useRef(0);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const logContainerRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+  const isMobileOrTablet = useIsMobileOrTablet();
 
   const clearTimers = useCallback(() => {
     timersRef.current.forEach(clearTimeout);
@@ -254,15 +257,17 @@ export function ThreatVortex() {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-[1fr_340px] gap-8 items-start">
-          <div className="relative mx-auto w-full" style={{ maxWidth: '800px', height: '700px' }}>
-            {[1, 2, 3, 4].map((ring) => (
+        <div className={`grid ${isMobile ? 'grid-cols-1' : 'lg:grid-cols-[1fr_340px]'} gap-8 items-start`}>
+          <div className="relative mx-auto w-full" style={{ maxWidth: '800px', height: isMobile ? '400px' : isMobileOrTablet ? '500px' : '700px' }}>
+            {[1, 2, 3, 4].map((ring) => {
+              const ringScale = isMobile ? 0.5 : isMobileOrTablet ? 0.7 : 1;
+              return (
               <motion.div
                 key={ring}
                 className="absolute rounded-full border"
                 style={{
-                  width: `${ring * 170 + 30}px`,
-                  height: `${ring * 170 + 30}px`,
+                  width: `${(ring * 170 + 30) * ringScale}px`,
+                  height: `${(ring * 170 + 30) * ringScale}px`,
                   left: '50%',
                   top: '50%',
                   x: '-50%',
@@ -280,7 +285,8 @@ export function ThreatVortex() {
                   scale: { duration: 0.8 },
                 }}
               />
-            ))}
+              );
+            })}
 
             <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 800 700">
               <defs>
@@ -369,9 +375,10 @@ export function ThreatVortex() {
               const rad = (threat.angle * Math.PI) / 180;
               const isDestroyed = destroyedThreats.has(i);
               const isBeingHit = beamTargets.includes(i);
+              const distScale = isMobile ? 0.5 : isMobileOrTablet ? 0.7 : 1;
 
-              const farDist = 320 + (i % 3) * 30;
-              const closeDist = 120 + (i % 3) * 40;
+              const farDist = (320 + (i % 3) * 30) * distScale;
+              const closeDist = (120 + (i % 3) * 40) * distScale;
 
               const farX = Math.cos(rad) * farDist;
               const farY = Math.sin(rad) * (farDist * 0.75);
@@ -673,7 +680,7 @@ export function ThreatVortex() {
               >
                 {battleLog.length === 0 && (
                   <div className="text-[10px] font-mono text-[#8e8e93]/50">
-                    <p>Cyber Guardian v4.2.1</p>
+                    <p>ARICA Defense v4.2.1</p>
                     <p>Initializing threat scanner...</p>
                     <p className="animate-pulse mt-2">{'>'} Waiting for activity_<span className="animate-pulse">█</span></p>
                   </div>

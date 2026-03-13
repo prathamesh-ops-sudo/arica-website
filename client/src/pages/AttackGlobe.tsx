@@ -847,7 +847,7 @@ export default function AttackGlobe() {
             
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-3 tracking-tight">
               <span className="text-white drop-shadow-lg">Real-Time </span>
-              <span className="bg-gradient-to-r from-[#9D4EDD] to-[#00ff88] bg-clip-text text-transparent">Cyber Attack</span>
+              <span className="bg-gradient-to-r from-[#9D4EDD] to-[#7B2FE0] bg-clip-text text-transparent">Cyber Attack</span>
               <span className="text-white drop-shadow-lg"> Monitoring</span>
             </h1>
             
@@ -1106,7 +1106,7 @@ export default function AttackGlobe() {
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <Link 
                       href="/contact"
-                      className="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#9D4EDD] to-[#00ff88] text-[#0a0a1e] font-bold px-8 py-4 rounded-full hover:shadow-[0_0_40px_rgba(157, 78, 221,0.4)] transition-all duration-300"
+                      className="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#7B2FE0] to-[#9D4EDD] text-white font-bold px-8 py-4 rounded-full hover:shadow-[0_0_40px_rgba(157,78,221,0.4)] transition-all duration-300"
                       data-testid="link-get-vapt"
                     >
                       <ShieldCheck className="w-5 h-5" />

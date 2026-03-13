@@ -10,6 +10,7 @@ import { isWebGLAvailable } from '@/lib/webgl-utils';
 import EnergyBeam from './energy-beam';
 import { TubesBackground } from './neon-flow';
 import { CinematicHeroOverlay } from '@/components/CinematicHeroOverlay';
+import { useIsMobileOrTablet } from '@/hooks/use-mobile';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -42,6 +43,7 @@ export function HorizonHeroSection() {
   const [webglFailed, setWebglFailed] = useState(false);
   const [scrollStarted, setScrollStarted] = useState(false);
   const totalSections = 3;
+  const isMobileOrTablet = useIsMobileOrTablet();
   
   const [, setLocation] = useLocation();
   const { triggerTransition } = useHyperspaceTransition();
@@ -57,7 +59,7 @@ export function HorizonHeroSection() {
   });
 
   useEffect(() => {
-    if (!canvasRef.current) return;
+    if (!canvasRef.current || isMobileOrTablet) return;
     
     if (!isWebGLAvailable()) {
       setWebglFailed(true);
@@ -617,34 +619,36 @@ export function HorizonHeroSection() {
   }, [triggerTransition, setLocation]);
 
   return (
-    <div ref={containerRef} className="horizon-hero-container">
-      {/* Energy Beam Background Layer */}
-      <div 
-        className="absolute inset-0 z-[1]" 
-        style={{ 
-          opacity: isPastHero ? 0 : 0.4,
-          mixBlendMode: 'screen',
-          transition: 'opacity 0.5s ease'
-        }}
-        data-testid="hero-energy-beam-layer"
-      >
-        <EnergyBeam className="w-full h-full" />
-      </div>
+    <div ref={containerRef} className={isMobileOrTablet ? "horizon-hero-container horizon-hero-mobile" : "horizon-hero-container"}>
+      {!isMobileOrTablet && (
+        <>
+          <div 
+            className="absolute inset-0 z-[1]" 
+            style={{ 
+              opacity: isPastHero ? 0 : 0.4,
+              mixBlendMode: 'screen',
+              transition: 'opacity 0.5s ease'
+            }}
+            data-testid="hero-energy-beam-layer"
+          >
+            <EnergyBeam className="w-full h-full" />
+          </div>
+          
+          <div 
+            className="absolute inset-0 z-[2]" 
+            style={{ 
+              opacity: isPastHero ? 0 : 0.35,
+              mixBlendMode: 'screen',
+              transition: 'opacity 0.5s ease'
+            }}
+            data-testid="hero-neon-flow-layer"
+          >
+            <TubesBackground className="w-full h-full" enableClickInteraction={true} />
+          </div>
+        </>
+      )}
       
-      {/* Neon Flow Interactive Layer */}
-      <div 
-        className="absolute inset-0 z-[2]" 
-        style={{ 
-          opacity: isPastHero ? 0 : 0.35,
-          mixBlendMode: 'screen',
-          transition: 'opacity 0.5s ease'
-        }}
-        data-testid="hero-neon-flow-layer"
-      >
-        <TubesBackground className="w-full h-full" enableClickInteraction={true} />
-      </div>
-      
-      {webglFailed ? (
+      {webglFailed || isMobileOrTablet ? (
         <div className="absolute inset-0 z-[3] bg-gradient-to-b from-[#050505] via-[#0a0510] to-black">
           <div className="absolute inset-0 opacity-30" style={{
             backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(58, 12, 163, 0.2), transparent 50%), radial-gradient(circle at 80% 30%, rgba(157, 78, 221, 0.2), transparent 50%)'
