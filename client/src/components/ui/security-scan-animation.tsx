@@ -65,16 +65,16 @@ export function SecurityScanAnimation() {
       <div
         className="absolute inset-0 opacity-20"
         style={{
-          background: `radial-gradient(ellipse at 50% 50%, rgba(0, 212, 255, 0.08) 0%, transparent 60%)`,
+          background: `radial-gradient(ellipse at 50% 50%, rgba(61, 112, 183, 0.08) 0%, transparent 60%)`,
         }}
       />
 
       <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
         <defs>
           <linearGradient id="scanGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="rgba(0, 212, 255, 0)" />
-            <stop offset="50%" stopColor="rgba(0, 212, 255, 0.5)" />
-            <stop offset="100%" stopColor="rgba(0, 212, 255, 0)" />
+            <stop offset="0%" stopColor="rgba(61, 112, 183, 0)" />
+            <stop offset="50%" stopColor="rgba(61, 112, 183, 0.5)" />
+            <stop offset="100%" stopColor="rgba(61, 112, 183, 0)" />
           </linearGradient>
           <filter id="glow">
             <feGaussianBlur stdDeviation="1" result="coloredBlur" />
@@ -99,7 +99,7 @@ export function SecurityScanAnimation() {
           y1={scanProgress}
           x2="100"
           y2={scanProgress}
-          stroke="rgba(0, 212, 255, 0.8)"
+          stroke="rgba(61, 112, 183, 0.8)"
           strokeWidth="0.3"
           filter="url(#glow)"
         />
@@ -188,7 +188,7 @@ export function SecurityScanAnimation() {
               y1={point.y}
               x2={conn.x}
               y2={conn.y}
-              stroke="rgba(0, 212, 255, 0.2)"
+              stroke="rgba(61, 112, 183, 0.2)"
               strokeWidth="0.2"
             />
           ));

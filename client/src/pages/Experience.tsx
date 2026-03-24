@@ -79,8 +79,8 @@ export default function Experience() {
               transition={{ duration: 0.4 }}
               className="relative w-[90vw] max-w-[700px] rounded-2xl overflow-hidden"
               style={{
-                border: "1px solid rgba(0,180,216,0.4)",
-                boxShadow: "0 0 40px rgba(0,180,216,0.2), 0 0 80px rgba(0,180,216,0.08), inset 0 0 60px rgba(0,0,0,0.5)",
+                border: "1px solid rgba(61,112,183,0.4)",
+                boxShadow: "0 0 40px rgba(61,112,183,0.2), 0 0 80px rgba(61,112,183,0.08), inset 0 0 60px rgba(0,0,0,0.5)",
                 backgroundColor: "rgba(5,5,5,0.95)",
               }}
             >
@@ -94,7 +94,7 @@ export default function Experience() {
                   <h1 className="text-3xl md:text-4xl font-bold text-white tracking-wide mb-2">
                     ARICA TECH
                   </h1>
-                  <div className="w-16 h-0.5 mx-auto bg-gradient-to-r from-[#0077B6] via-[#00B4D8] to-[#00D4FF] rounded-full mb-3" />
+                  <div className="w-16 h-0.5 mx-auto bg-gradient-to-r from-[#1C2C5A] via-[#42BA90] to-[#3D70B7] rounded-full mb-3" />
                   <p className="text-white/40 text-sm tracking-widest uppercase">
                     Security Solutions
                   </p>
@@ -109,7 +109,7 @@ export default function Experience() {
                       transition={{ duration: 0.2 }}
                       className="flex items-center gap-3 text-sm"
                     >
-                      <span className="text-[#00D4FF]">
+                      <span className="text-[#3D70B7]">
                         {i < visibleLines - 1 || visibleLines >= loadingSteps.length ? "✓" : "●"}
                       </span>
                       <span className="text-white/50">{line}</span>
@@ -122,7 +122,7 @@ export default function Experience() {
                     <motion.div
                       className="h-full rounded-full"
                       style={{
-                        background: "linear-gradient(90deg, #0077B6, #00B4D8, #00D4FF)",
+                        background: "linear-gradient(90deg, #1C2C5A, #42BA90, #3D70B7)",
                       }}
                       initial={{ width: "0%" }}
                       animate={{ width: `${progress}%` }}

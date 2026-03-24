@@ -91,7 +91,7 @@ function TiltCard({ children, className, isEmergency = false }: { children: Reac
       className={`${className} transition-shadow duration-300 relative ${
         isEmergency 
           ? 'hover:shadow-[0_0_30px_rgba(139,0,0,0.4)]' 
-          : 'hover:shadow-[0_0_30px_rgba(0,212,255,0.3)]'
+          : 'hover:shadow-[0_0_30px_rgba(61,112,183,0.3)]'
       }`}
     >
       {children}
@@ -148,8 +148,8 @@ function WorldMap() {
       >
         <defs>
           <linearGradient id="mapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="rgba(0, 212, 255, 0.3)" />
-            <stop offset="100%" stopColor="rgba(0, 212, 255, 0.1)" />
+            <stop offset="0%" stopColor="rgba(61, 112, 183, 0.3)" />
+            <stop offset="100%" stopColor="rgba(61, 112, 183, 0.1)" />
           </linearGradient>
         </defs>
         <path
@@ -164,10 +164,10 @@ function WorldMap() {
           stroke="url(#mapGradient)"
           strokeWidth="0.5"
         />
-        <ellipse cx="20" cy="28" rx="8" ry="4" fill="rgba(0, 212, 255, 0.1)" />
-        <ellipse cx="50" cy="32" rx="12" ry="5" fill="rgba(0, 212, 255, 0.08)" />
-        <ellipse cx="75" cy="35" rx="10" ry="4" fill="rgba(0, 212, 255, 0.1)" />
-        <ellipse cx="60" cy="25" rx="6" ry="3" fill="rgba(0, 212, 255, 0.08)" />
+        <ellipse cx="20" cy="28" rx="8" ry="4" fill="rgba(61, 112, 183, 0.1)" />
+        <ellipse cx="50" cy="32" rx="12" ry="5" fill="rgba(61, 112, 183, 0.08)" />
+        <ellipse cx="75" cy="35" rx="10" ry="4" fill="rgba(61, 112, 183, 0.1)" />
+        <ellipse cx="60" cy="25" rx="6" ry="3" fill="rgba(61, 112, 183, 0.08)" />
       </svg>
       
       {officeLocations.map((location, index) => (
@@ -186,8 +186,8 @@ function WorldMap() {
               }`}
               animate={{
                 boxShadow: [
-                  `0 0 0 0 ${location.isPrimary ? 'rgba(0, 212, 255, 0.7)' : 'rgba(0, 212, 255, 0.4)'}`,
-                  `0 0 0 8px ${location.isPrimary ? 'rgba(0, 212, 255, 0)' : 'rgba(0, 212, 255, 0)'}`,
+                  `0 0 0 0 ${location.isPrimary ? 'rgba(61, 112, 183, 0.7)' : 'rgba(61, 112, 183, 0.4)'}`,
+                  `0 0 0 8px ${location.isPrimary ? 'rgba(61, 112, 183, 0)' : 'rgba(61, 112, 183, 0)'}`,
                 ],
               }}
               transition={{
@@ -211,7 +211,7 @@ function WorldMap() {
       <motion.div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(circle at 50% 50%, rgba(61, 112, 183, 0.1) 0%, transparent 70%)',
         }}
         animate={{
           opacity: [0.3, 0.6, 0.3],
@@ -247,9 +247,9 @@ function GlowingIcon({ Icon, isEmergency = false }: { Icon: any; isEmergency?: b
                 '0 0 10px rgba(139, 0, 0, 0.3)',
               ]
             : [
-                '0 0 10px rgba(0, 212, 255, 0.2)',
-                '0 0 20px rgba(0, 212, 255, 0.4)',
-                '0 0 10px rgba(0, 212, 255, 0.2)',
+                '0 0 10px rgba(61, 112, 183, 0.2)',
+                '0 0 20px rgba(61, 112, 183, 0.4)',
+                '0 0 10px rgba(61, 112, 183, 0.2)',
               ],
         }}
         transition={{
@@ -283,8 +283,8 @@ export default function Contact() {
 
       <section className="pt-32 pb-20 relative overflow-hidden">
         <div className="absolute inset-0 opacity-30" style={{
-          background: `radial-gradient(ellipse at 60% 30%, rgba(0, 212, 255, 0.06) 0%, transparent 55%),
-                       radial-gradient(ellipse at 20% 70%, rgba(0, 180, 216, 0.05) 0%, transparent 50%)`
+          background: `radial-gradient(ellipse at 60% 30%, rgba(61, 112, 183, 0.06) 0%, transparent 55%),
+                       radial-gradient(ellipse at 20% 70%, rgba(61, 112, 183, 0.05) 0%, transparent 50%)`
         }} />
 
         {floatingIcons.map((icon, index) => (

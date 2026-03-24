@@ -3,8 +3,8 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
-const PURPLE = '#00D4FF';
-const CYAN = '#00D4FF';
+const PURPLE = '#3D70B7';
+const CYAN = '#3D70B7';
 const PARTICLE_COUNT_DESKTOP = 2500;
 const PARTICLE_COUNT_MOBILE = 800;
 const MOBILE_BREAKPOINT = 768;

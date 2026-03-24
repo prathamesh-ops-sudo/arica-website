@@ -57,7 +57,7 @@ function DefaultFallback({ showMessage }: { showMessage: boolean }) {
       <div 
         className="absolute inset-0 opacity-10"
         style={{
-          background: `radial-gradient(ellipse at 50% 40%, rgba(0, 212, 255, 0.04) 0%, transparent 55%)`,
+          background: `radial-gradient(ellipse at 50% 40%, rgba(61, 112, 183, 0.04) 0%, transparent 55%)`,
         }}
       />
       

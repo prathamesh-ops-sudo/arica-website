@@ -71,7 +71,7 @@ function AnimatedStat({ stat, index }: { stat: typeof stats[0]; index: number })
       transition={{ duration: 0.5, delay: index * 0.1 }}
       whileHover={{ 
         scale: 1.05,
-        boxShadow: "0 0 30px rgba(0, 212, 255, 0.3)",
+        boxShadow: "0 0 30px rgba(61, 112, 183, 0.3)",
       }}
       data-testid={`stat-${index}`}
       className="rounded-xl p-6 border border-white/10 bg-card/50 text-center cursor-pointer transition-all duration-300 hover:border-primary/50 hover:bg-card/80"
@@ -131,7 +131,7 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
       <div
         className="absolute inset-0 rounded-xl opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"
         style={{
-          background: `radial-gradient(circle at ${glowX}% ${glowY}%, rgba(0, 212, 255, 0.3), transparent 50%)`,
+          background: `radial-gradient(circle at ${glowX}% ${glowY}%, rgba(61, 112, 183, 0.3), transparent 50%)`,
         }}
       />
       <div className="absolute inset-0 rounded-xl border-2 border-transparent hover:border-primary/40 transition-colors duration-300 pointer-events-none" />
@@ -178,7 +178,7 @@ export default function About() {
         <motion.div
           className="absolute top-20 right-10 w-64 h-64 rounded-full opacity-10"
           style={{
-            background: "radial-gradient(circle, rgba(0, 212, 255, 0.4) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(61, 112, 183, 0.4) 0%, transparent 70%)",
           }}
           animate={{
             scale: [1, 1.2, 1],
@@ -270,8 +270,8 @@ export default function About() {
                 className="rounded-xl p-6 border border-white/10 bg-card/80 col-span-2"
                 whileHover={{ 
                   scale: 1.02,
-                  borderColor: "rgba(0, 212, 255, 0.4)",
-                  boxShadow: "0 0 30px rgba(0, 212, 255, 0.15)",
+                  borderColor: "rgba(61, 112, 183, 0.4)",
+                  boxShadow: "0 0 30px rgba(61, 112, 183, 0.15)",
                 }}
                 transition={{ duration: 0.3 }}
               >
@@ -287,8 +287,8 @@ export default function About() {
                 className="rounded-xl p-5 border border-white/10 bg-card/80"
                 whileHover={{ 
                   scale: 1.05,
-                  borderColor: "rgba(0, 212, 255, 0.4)",
-                  boxShadow: "0 0 25px rgba(0, 212, 255, 0.15)",
+                  borderColor: "rgba(61, 112, 183, 0.4)",
+                  boxShadow: "0 0 25px rgba(61, 112, 183, 0.15)",
                 }}
                 transition={{ duration: 0.3 }}
               >
@@ -302,8 +302,8 @@ export default function About() {
                 className="rounded-xl p-5 border border-white/10 bg-card/80"
                 whileHover={{ 
                   scale: 1.05,
-                  borderColor: "rgba(0, 212, 255, 0.4)",
-                  boxShadow: "0 0 25px rgba(0, 212, 255, 0.15)",
+                  borderColor: "rgba(61, 112, 183, 0.4)",
+                  boxShadow: "0 0 25px rgba(61, 112, 183, 0.15)",
                 }}
                 transition={{ duration: 0.3 }}
               >
@@ -346,7 +346,7 @@ export default function About() {
                       className="inline-flex p-3 rounded-xl bg-primary/10 text-primary mb-6"
                       whileHover={{ 
                         scale: 1.1,
-                        boxShadow: "0 0 25px rgba(0, 212, 255, 0.4)",
+                        boxShadow: "0 0 25px rgba(61, 112, 183, 0.4)",
                       }}
                       transition={{ duration: 0.3 }}
                     >

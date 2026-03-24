@@ -244,9 +244,9 @@ export function HorizonHeroSection() {
       const material = new THREE.ShaderMaterial({
         uniforms: {
           time: { value: 0 },
-          color1: { value: new THREE.Color(0x0077B6) },  // deep cyan
-          color2: { value: new THREE.Color(0x00B4D8) },  // vivid cyan
-          color3: { value: new THREE.Color(0x00D4FF) },  // light cyan glow
+          color1: { value: new THREE.Color(0x1C2C5A) },  // deep cyan
+          color2: { value: new THREE.Color(0x3D70B7) },  // vivid cyan
+          color3: { value: new THREE.Color(0x42BA90) },  // light cyan glow
           opacity: { value: 0.30 },
           scrollProgress: { value: 0 }
         },
@@ -411,7 +411,7 @@ export function HorizonHeroSection() {
           
           void main() {
             float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
-            vec3 atmosphere = vec3(0.0, 0.83, 1.0) * intensity; // cyan glow
+            vec3 atmosphere = vec3(0.24, 0.44, 0.72) * intensity; // cyan glow
             
             float pulse = sin(time * 2.0) * 0.05 + 0.95;
             atmosphere *= pulse;
@@ -645,7 +645,7 @@ export function HorizonHeroSection() {
       {webglFailed || isMobileOrTablet ? (
         <div className="absolute inset-0 z-[3] bg-gradient-to-b from-[#050505] via-[#0a0510] to-black">
           <div className="absolute inset-0 opacity-30" style={{
-            backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(0, 119, 182, 0.2), transparent 50%), radial-gradient(circle at 80% 30%, rgba(0, 212, 255, 0.2), transparent 50%)'
+            backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(28, 44, 90, 0.2), transparent 50%), radial-gradient(circle at 80% 30%, rgba(61, 112, 183, 0.2), transparent 50%)'
           }} />
         </div>
       ) : (

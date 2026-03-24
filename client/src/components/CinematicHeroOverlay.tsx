@@ -61,8 +61,8 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
           100% { transform: translate(-50%, -50%) scale(8); opacity: 0; }
         }
         @keyframes shield-pulse {
-          0%, 100% { filter: drop-shadow(0 0 10px #00B4D8) drop-shadow(0 0 20px #00D4FF); }
-          50% { filter: drop-shadow(0 0 20px #00B4D8) drop-shadow(0 0 40px #00D4FF); }
+          0%, 100% { filter: drop-shadow(0 0 10px #42BA90) drop-shadow(0 0 20px #3D70B7); }
+          50% { filter: drop-shadow(0 0 20px #42BA90) drop-shadow(0 0 40px #3D70B7); }
         }
         @keyframes float-particle {
           0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.3; }
@@ -71,8 +71,8 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
           75% { transform: translateY(-20px) translateX(3px); opacity: 0.4; }
         }
         @keyframes letter-flash {
-          0% { text-shadow: 0 0 20px #00B4D8, 0 0 40px #00D4FF, 0 0 60px #00B4D8; color: #fff; }
-          100% { text-shadow: 0 0 8px #00B4D8, 0 0 16px #00D4FF; color: rgba(255,255,255,0.9); }
+          0% { text-shadow: 0 0 20px #42BA90, 0 0 40px #3D70B7, 0 0 60px #42BA90; color: #fff; }
+          100% { text-shadow: 0 0 8px #42BA90, 0 0 16px #3D70B7; color: rgba(255,255,255,0.9); }
         }
       `}</style>
 
@@ -111,7 +111,7 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
                 style={{
                   fontSize: "clamp(2.5rem, 8vw, 6rem)",
                   color: "#ffffff",
-                  textShadow: "0 0 30px rgba(0,180,216,0.4), 0 0 60px rgba(0,212,255,0.2)",
+                  textShadow: "0 0 30px rgba(61,112,183,0.4), 0 0 60px rgba(61,112,183,0.2)",
                 }}
               >
                 ARICA TECH
@@ -123,7 +123,7 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
                 animate={{ width: "120px", opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
                 style={{
-                  background: "linear-gradient(90deg, transparent, #00B4D8, #00D4FF, #00B4D8, transparent)",
+                  background: "linear-gradient(90deg, transparent, #42BA90, #3D70B7, #42BA90, transparent)",
                 }}
               />
 
@@ -158,8 +158,8 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 style={{ animation: "shield-pulse 1.5s ease infinite" }}
               >
-                <path d={shieldPath} fill="none" stroke="#00B4D8" strokeWidth="0.8" />
-                <path d={shieldPath} fill="rgba(0,180,216,0.15)" />
+                <path d={shieldPath} fill="none" stroke="#42BA90" strokeWidth="0.8" />
+                <path d={shieldPath} fill="rgba(61,112,183,0.15)" />
               </motion.svg>
             </motion.div>
           )}
@@ -184,8 +184,8 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
                 animate={{ scale: 1, opacity: 0.7 }}
                 transition={{ duration: 0.8 }}
               >
-                <path d={shieldPath} fill="none" stroke="#00B4D8" strokeWidth="1" />
-                <path d={shieldPath} fill="rgba(0,180,216,0.2)" />
+                <path d={shieldPath} fill="none" stroke="#42BA90" strokeWidth="1" />
+                <path d={shieldPath} fill="rgba(61,112,183,0.2)" />
               </motion.svg>
 
               <div
@@ -194,7 +194,7 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
                 style={{
                   fontSize: "clamp(3rem, 10vw, 8rem)",
                   color: "rgba(255,255,255,0.9)",
-                  textShadow: "0 0 20px #00B4D8, 0 0 40px #00D4FF",
+                  textShadow: "0 0 20px #42BA90, 0 0 40px #3D70B7",
                 }}
               >
                 {companyName.split("").map((char, i) => (
@@ -246,7 +246,7 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
                 key={i}
                 className="absolute w-1 h-1 rounded-full"
                 style={{
-                  backgroundColor: i % 2 === 0 ? "#00B4D8" : "#00D4FF",
+                  backgroundColor: i % 2 === 0 ? "#42BA90" : "#3D70B7",
                   left: `${10 + Math.random() * 80}%`,
                   top: `${10 + Math.random() * 80}%`,
                   opacity: 0.3,

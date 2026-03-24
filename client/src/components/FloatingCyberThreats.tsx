@@ -61,9 +61,9 @@ export function FloatingCyberThreats({
 
   const getColor = (index: number) => {
     if (variant === "red") return `rgba(255, ${60 + index * 5}, ${30 + index * 3}, 0.12)`;
-    if (variant === "purple" || variant === "cyan") return `rgba(0, ${180 + index * 3}, ${216 + index * 2}, 0.12)`;
+    if (variant === "purple" || variant === "cyan") return `rgba(61, 112, 183, 0.12)`;
     return index % 2 === 0 
-      ? `rgba(0, 180, 216, 0.12)` 
+      ? `rgba(61, 112, 183, 0.12)` 
       : `rgba(255, ${60 + index * 5}, ${30 + index * 3}, 0.08)`;
   };
 

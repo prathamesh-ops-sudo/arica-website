@@ -14,7 +14,7 @@ const MOBILE_BREAKPOINT = 768;
 export function AmbientParticles({
   variant = "dots",
   count = 20,
-  color = "#00D4FF",
+  color = "#3D70B7",
   opacity = 0.12,
 }: AmbientParticlesProps) {
   const [isMobile, setIsMobile] = useState(false);

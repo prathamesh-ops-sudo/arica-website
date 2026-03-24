@@ -21,8 +21,8 @@ export function ComplianceSection() {
   return (
     <section className="py-32 relative overflow-hidden">
       <div className="absolute inset-0 opacity-40" style={{
-        background: `radial-gradient(ellipse at 70% 60%, rgba(0, 212, 255, 0.06) 0%, transparent 55%),
-                     radial-gradient(ellipse at 30% 30%, rgba(0, 119, 182, 0.08) 0%, transparent 50%)`
+        background: `radial-gradient(ellipse at 70% 60%, rgba(61, 112, 183, 0.06) 0%, transparent 55%),
+                     radial-gradient(ellipse at 30% 30%, rgba(28, 44, 90, 0.08) 0%, transparent 50%)`
       }} />
       <FloatingCyberThreats variant="purple" density="low" />
 

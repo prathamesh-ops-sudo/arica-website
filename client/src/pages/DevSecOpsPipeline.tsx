@@ -166,7 +166,7 @@ export default function DevSecOpsPipeline() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'success': return 'border-green-500 bg-green-500/20 text-green-400';
-      case 'running': return 'border-cyan-500 bg-cyan-500/20 text-cyan-400 animate-pulse';
+      case 'running': return 'border-[#3D70B7] bg-[#3D70B7]/20 text-[#3D70B7] animate-pulse';
       case 'failed': return 'border-red-500 bg-red-500/20 text-red-400';
       case 'warning': return 'border-yellow-500 bg-yellow-500/20 text-yellow-400';
       default: return 'border-white/20 bg-white/5 text-white/50';
@@ -188,7 +188,7 @@ export default function DevSecOpsPipeline() {
 
   return (
     <div className="min-h-screen bg-[hsl(222,47%,5%)] text-white relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/10 via-transparent to-cyan-900/10" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1C2C5A]/10 via-transparent to-[#1C2C5A]/10" />
 
       <div className="relative z-10">
         <div className="fixed top-6 left-6 z-50">
@@ -208,13 +208,13 @@ export default function DevSecOpsPipeline() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-6">
-              <Zap className="w-4 h-4 text-cyan-400" />
-              <span className="text-cyan-400 text-sm font-medium">DevSecOps Pipeline</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#3D70B7]/10 border border-[#3D70B7]/30 mb-6">
+              <Zap className="w-4 h-4 text-[#3D70B7]" />
+              <span className="text-[#3D70B7] text-sm font-medium">DevSecOps Pipeline</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
               Security-First
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-400">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#42BA90]">
                 CI/CD Pipeline
               </span>
             </h1>
@@ -229,7 +229,7 @@ export default function DevSecOpsPipeline() {
                 <button
                   onClick={isRunning ? undefined : runPipeline}
                   disabled={isRunning}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-cyan-500 hover:opacity-90 transition-all disabled:opacity-50"
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-[#3D70B7] to-[#42BA90] hover:opacity-90 transition-all disabled:opacity-50"
                   data-testid="button-run-pipeline"
                 >
                   <Play className="w-4 h-4" />
@@ -281,7 +281,7 @@ export default function DevSecOpsPipeline() {
                   >
                     <div className={`absolute left-4 w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all ${getStatusColor(stage.status)}`}>
                       {stage.status === 'running' ? (
-                        <div className="w-3 h-3 rounded-full bg-cyan-400 animate-ping" />
+                        <div className="w-3 h-3 rounded-full bg-[#3D70B7] animate-ping" />
                       ) : stage.status === 'success' ? (
                         <CheckCircle className="w-4 h-4" />
                       ) : stage.status === 'failed' ? (
@@ -295,16 +295,16 @@ export default function DevSecOpsPipeline() {
 
                     <div
                       className={`p-6 rounded-2xl border transition-all cursor-pointer ${
-                        isActive ? 'border-cyan-500/50 bg-cyan-500/5' : 
-                        selectedStage?.id === stage.id ? 'border-cyan-500/50 bg-cyan-500/5' : 
+                        isActive ? 'border-[#3D70B7]/50 bg-[#3D70B7]/5' : 
+                        selectedStage?.id === stage.id ? 'border-[#3D70B7]/50 bg-[#3D70B7]/5' : 
                         'border-white/10 bg-black/40 hover:border-white/20'
                       }`}
                       onClick={() => setSelectedStage(selectedStage?.id === stage.id ? null : stage)}
                     >
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
-                          <div className={`p-2 rounded-lg ${stage.status === 'running' ? 'bg-cyan-500/20' : 'bg-white/10'}`}>
-                            <Icon className={`w-5 h-5 ${stage.status === 'running' ? 'text-cyan-400' : 'text-white/70'}`} />
+                          <div className={`p-2 rounded-lg ${stage.status === 'running' ? 'bg-[#3D70B7]/20' : 'bg-white/10'}`}>
+                            <Icon className={`w-5 h-5 ${stage.status === 'running' ? 'text-[#3D70B7]' : 'text-white/70'}`} />
                           </div>
                           <div>
                             <h3 className="font-semibold">{stage.name}</h3>
@@ -377,7 +377,7 @@ export default function DevSecOpsPipeline() {
           >
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold bg-gradient-to-r from-cyan-500 to-cyan-500 hover:opacity-90 transition-all"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold bg-gradient-to-r from-[#3D70B7] to-[#42BA90] hover:opacity-90 transition-all"
               data-testid="link-implement-devsecops"
             >
               <Shield className="w-5 h-5" />

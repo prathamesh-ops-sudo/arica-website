@@ -765,7 +765,7 @@ export function SolarSystemTheatre() {
               <div className="text-center px-6">
                 <motion.h1 
                   className="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-halo-white mb-6"
-                  style={{ textShadow: '0 0 80px rgba(0, 212, 255, 0.4)' }}
+                  style={{ textShadow: '0 0 80px rgba(61, 112, 183, 0.4)' }}
                 >
                   ARICA TECH
                 </motion.h1>

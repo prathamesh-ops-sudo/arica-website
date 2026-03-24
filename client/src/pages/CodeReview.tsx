@@ -9,8 +9,8 @@ import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background
 import { useGsapStagger } from '@/hooks/useGsapStagger';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
-const CYAN = '#00D4FF';
-const PURPLE = '#00D4FF';
+const CYAN = '#3D70B7';
+const PURPLE = '#3D70B7';
 const RED = '#ff4444';
 const AMBER = '#ffaa44';
 
@@ -838,7 +838,7 @@ export default function CodeReview() {
 
         <div className="container mx-auto px-6 py-24" ref={gsapContainerRef}>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-6 gsap-fade-in" style={{ backgroundColor: 'rgba(0, 212, 255, 0.1)', borderColor: 'rgba(0, 212, 255, 0.3)' }}>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-6 gsap-fade-in" style={{ backgroundColor: 'rgba(61, 112, 183, 0.1)', borderColor: 'rgba(61, 112, 183, 0.3)' }}>
               <Code className="w-4 h-4" style={{ color: CYAN }} />
               <span className="text-sm font-medium" style={{ color: CYAN }}>Code Review</span>
             </div>
@@ -973,7 +973,7 @@ export default function CodeReview() {
                     <span className="text-green-400">-23% issues</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <TrendingUp className="w-4 h-4 text-cyan-400" />
+                    <TrendingUp className="w-4 h-4 text-[#3D70B7]" />
                     <span style={{ color: CYAN }}>+15% fixed</span>
                   </div>
                 </div>
@@ -1017,7 +1017,7 @@ export default function CodeReview() {
                     {isScanning ? 'Scanning...' : 'Scan'}
                   </motion.button>
                 </div>
-                <div className="p-4 font-mono text-sm overflow-x-auto max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-cyan-500/30 scrollbar-track-transparent relative">
+                <div className="p-4 font-mono text-sm overflow-x-auto max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-[#3D70B7]/30 scrollbar-track-transparent relative">
                   <ScannerLineEffect scanProgress={scanProgress} isScanning={isScanning} />
                   <pre className="text-gray-300 relative">
                     {demoCode.split('\n').map((line, i) => {
@@ -1046,7 +1046,7 @@ export default function CodeReview() {
                           <span className={
                             result && result.severity !== 'info' ? 'text-red-300' : 
                             result?.severity === 'info' ? 'text-green-300' : 
-                            isCurrentScanLine ? 'text-cyan-300' : ''
+                            isCurrentScanLine ? 'text-[#3D70B7]' : ''
                           }>
                             {line || ' '}
                           </span>

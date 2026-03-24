@@ -53,7 +53,7 @@ const certifications: Certification[] = [
     status: 'Active',
     lastAudit: 'August 2025',
     nextRenewal: 'August 2026',
-    color: '#00D4FF',
+    color: '#3D70B7',
     badgeShape: 'shield',
     details: [
       'Security principle compliance',
@@ -372,7 +372,7 @@ function CertificationBadges3D({
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
     scene.add(ambientLight);
 
-    const pointLight1 = new THREE.PointLight(0x00D4FF, 1.5, 30);
+    const pointLight1 = new THREE.PointLight(0x42BA90, 1.5, 30);
     pointLight1.position.set(5, 5, 5);
     scene.add(pointLight1);
 
@@ -576,7 +576,7 @@ function CertificationBadges3D({
         data-testid="certification-badges-3d-loading"
       >
         <div className="text-center">
-          <div className="w-12 h-12 border-2 border-[#00D4FF]/30 border-t-[#00D4FF] rounded-full animate-spin mx-auto mb-4" />
+          <div className="w-12 h-12 border-2 border-[#3D70B7]/30 border-t-[#3D70B7] rounded-full animate-spin mx-auto mb-4" />
           <p className="text-slate-400">Loading 3D visualization...</p>
         </div>
       </div>
@@ -626,7 +626,7 @@ function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: strin
   }, [value]);
 
   return (
-    <div ref={ref} className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] to-[#FFB800]">
+    <div ref={ref} className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#FFB800]">
       {count.toLocaleString()}{suffix}
     </div>
   );
@@ -739,7 +739,7 @@ export default function Certifications() {
       
       <div className="relative pt-24 pb-16 overflow-hidden">
         <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#00D4FF] rounded-full blur-[150px]" />
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#3D70B7] rounded-full blur-[150px]" />
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#FFB800] rounded-full blur-[150px]" />
         </div>
 
@@ -749,7 +749,7 @@ export default function Certifications() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12"
           >
-            <Link href="/experience" className="inline-flex items-center gap-2 text-[#00D4FF] hover:text-[#00D4FF]/80 transition-colors mb-8" data-testid="link-back-experience">
+            <Link href="/experience" className="inline-flex items-center gap-2 text-[#3D70B7] hover:text-[#3D70B7]/80 transition-colors mb-8" data-testid="link-back-experience">
               <ArrowLeft className="w-4 h-4" />
               Back to Experience
             </Link>
@@ -757,7 +757,7 @@ export default function Certifications() {
             <div className="flex items-center justify-center gap-3 mb-4">
               <Award className="w-10 h-10 text-[#FFB800]" />
               <h1 className="text-4xl md:text-5xl font-bold text-white">
-                Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] to-[#FFB800]">Certifications</span>
+                Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#FFB800]">Certifications</span>
               </h1>
             </div>
             <p className="text-xl text-slate-400 max-w-2xl mx-auto">
@@ -772,7 +772,7 @@ export default function Certifications() {
             className="mb-16"
           >
             <div className="relative bg-gradient-to-br from-slate-900/80 to-slate-800/50 rounded-3xl border border-slate-700/50 p-6 backdrop-blur-sm">
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#00D4FF]/5 to-[#FFB800]/5" />
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#3D70B7]/5 to-[#FFB800]/5" />
               <h2 className="text-2xl font-bold text-white text-center mb-4 relative z-10">
                 <Star className="w-6 h-6 inline-block mr-2 text-[#FFB800]" />
                 Interactive 3D Badge Showcase
@@ -943,7 +943,7 @@ export default function Certifications() {
               {/* Animated path line */}
               <div className="absolute top-1/2 left-0 right-0 h-1 bg-slate-700 -translate-y-1/2 hidden md:block overflow-hidden">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-[#00D4FF] via-[#FFB800] to-[#10B981]"
+                  className="h-full bg-gradient-to-r from-[#3D70B7] via-[#FFB800] to-[#10B981]"
                   initial={{ width: 0 }}
                   animate={{ width: '83%' }}
                   transition={{ duration: 2, delay: 0.5, ease: 'easeOut' }}
@@ -1031,7 +1031,7 @@ export default function Certifications() {
                     className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl border border-slate-700 p-6 text-center"
                     data-testid={`trust-stat-${index}`}
                   >
-                    <Icon className="w-10 h-10 mx-auto mb-4 text-[#00D4FF]" />
+                    <Icon className="w-10 h-10 mx-auto mb-4 text-[#3D70B7]" />
                     <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                     <p className="text-slate-400 mt-2">{stat.label}</p>
                   </motion.div>
