@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { Navbar } from "@/components/Navbar";
-import { CTA } from "@/components/CTA";
 import { Button } from "@/components/ui/button";
 import { Typewriter } from "@/components/ui/typewriter";
 import { AmbientParticles } from "@/components/ui/ambient-particles";
@@ -326,7 +325,7 @@ function CountUpStat({
   }, [springValue]);
 
   const textColor = color === "neutral" ? "text-[#42BA90]" : "text-[#3D70B7]";
-  const glowColor = color === "neutral" ? "drop-shadow-[0_0_8px_rgba(10,132,255,0.5)]" : "drop-shadow-[0_0_8px_rgba(153,68,255,0.5)]";
+  const glowColor = color === "neutral" ? "drop-shadow-[0_0_8px_rgba(66,186,144,0.5)]" : "drop-shadow-[0_0_8px_rgba(61,112,183,0.5)]";
 
   return (
     <div ref={ref} className="text-center">
@@ -424,11 +423,11 @@ function AnimatedProgressBar({
   const animatedWidth = useTransform(springValue, (val) => `${val}%`);
   
   const barColor = color === "neutral" 
-    ? "bg-gradient-to-r from-[#42BA90] to-[#5ac8fa]" 
+    ? "bg-gradient-to-r from-[#42BA90] to-[#3D70B7]" 
     : "bg-gradient-to-r from-[#3D70B7] to-[#42BA90]";
   const glowColor = color === "neutral"
-    ? "shadow-[0_0_20px_rgba(10,132,255,0.6)]"
-    : "shadow-[0_0_20px_rgba(153,68,255,0.6)]";
+        ? "shadow-[0_0_20px_rgba(66,186,144,0.6)]"
+        : "shadow-[0_0_20px_rgba(61,112,183,0.6)]";
 
   return (
     <div ref={ref} className="mb-4">
@@ -574,7 +573,6 @@ export default function ServicesPage() {
         </section>
       ))}
 
-      <CTA />
     </div>
   );
 }

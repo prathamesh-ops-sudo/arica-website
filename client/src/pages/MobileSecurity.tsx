@@ -628,7 +628,7 @@ export default function MobileSecurity() {
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
               Mobile App
-              <span className="block text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(to right, #3D70B7, #a855f7)' }}>
+              <span className="block text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(to right, #3D70B7, #42BA90)' }}>
                 Security Assessment
               </span>
             </h1>
@@ -760,7 +760,7 @@ export default function MobileSecurity() {
                         onClick={startScan}
                         disabled={isScanning}
                         className="px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition-all disabled:opacity-50 flex items-center gap-2 relative overflow-hidden"
-                        style={{ backgroundImage: 'linear-gradient(to right, #3D70B7, #a855f7)' }}
+                        style={{ backgroundImage: 'linear-gradient(to right, #3D70B7, #42BA90)' }}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         data-testid="button-start-scan"
@@ -1268,7 +1268,7 @@ export default function MobileSecurity() {
                     animate={{
                       background: [
                         'radial-gradient(circle at 20% 50%, rgba(61, 112, 183,0.1) 0%, transparent 50%)',
-                        'radial-gradient(circle at 80% 50%, rgba(153,68,255,0.1) 0%, transparent 50%)',
+                        'radial-gradient(circle at 80% 50%, rgba(66,186,144,0.1) 0%, transparent 50%)',
                         'radial-gradient(circle at 20% 50%, rgba(61, 112, 183,0.1) 0%, transparent 50%)',
                       ],
                     }}
@@ -1282,7 +1282,7 @@ export default function MobileSecurity() {
                     <Link
                       href="/contact"
                       className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-semibold hover:opacity-90 transition-all"
-                      style={{ backgroundImage: 'linear-gradient(to right, #3D70B7, #a855f7)' }}
+                      style={{ backgroundImage: 'linear-gradient(to right, #3D70B7, #42BA90)' }}
                       data-testid="link-contact-cta"
                     >
                       <Send className="w-4 h-4" />
