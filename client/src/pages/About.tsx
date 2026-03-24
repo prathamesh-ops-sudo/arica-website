@@ -2,7 +2,6 @@ import { motion, useInView, useSpring, useTransform } from "framer-motion";
 import { Shield, Target, Eye, Award, Users, Globe } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Team } from "@/components/Team";
-import { AmbientParticles } from "@/components/ui/ambient-particles";
 import { useRef, useState, useEffect, useCallback } from "react";
 
 const values = [
@@ -139,38 +138,10 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
   );
 }
 
-function FloatingParticles() {
-  return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-      {Array.from({ length: 20 }).map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 bg-primary/20 rounded-full"
-          initial={{
-            x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
-            y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
-          }}
-          animate={{
-            y: [null, Math.random() * -200 - 100],
-            opacity: [0, 0.6, 0],
-          }}
-          transition={{
-            duration: 8 + Math.random() * 4,
-            repeat: Infinity,
-            delay: Math.random() * 5,
-            ease: "linear",
-          }}
-        />
-      ))}
-    </div>
-  );
-}
 
 export default function About() {
   return (
     <div className="min-h-screen bg-background aurora-bg">
-      <AmbientParticles variant="network" count={25} opacity={0.15} />
-      <FloatingParticles />
       <Navbar />
 
       <section className="pt-32 pb-20 relative overflow-hidden">

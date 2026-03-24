@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
+import { TypewriterTestimonial } from "@/components/ui/typewriter-testimonial";
 
 const teamMembers = [
   {
@@ -25,6 +26,57 @@ const teamMembers = [
     name: "David Chen",
     designation: "Legal Counsel - Cyber Law Specialist",
     src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=500&fit=crop&crop=face",
+  },
+];
+
+const clientTestimonials = [
+  {
+    image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop&crop=face",
+    text: "Arica Tech uncovered critical vulnerabilities in our payment infrastructure that three previous auditors missed. Their VAPT methodology is truly world-class.",
+    name: "Rajesh Mehta",
+    jobtitle: "CTO, FinSecure Banking",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=200&h=200&fit=crop&crop=face",
+    text: "The ISO 27001 certification process was seamless with Arica Tech. They guided us from gap analysis to successful audit in under 6 months.",
+    name: "Anand Sharma",
+    jobtitle: "VP Engineering, CloudNova",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=200&h=200&fit=crop&crop=face",
+    text: "Their penetration testing revealed attack vectors we never considered. The detailed remediation report helped us close every vulnerability within weeks.",
+    name: "Vikram Patel",
+    jobtitle: "CISO, MediGuard Health",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?w=200&h=200&fit=crop&crop=face",
+    text: "Arica Tech's secure development practices transformed how our team writes code. Security is now baked into our SDLC from day one.",
+    name: "Priya Desai",
+    jobtitle: "Engineering Lead, TechShield",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1507003211169-0a6dd7228f2d?w=200&h=200&fit=crop&crop=face",
+    text: "After a ransomware scare, Arica Tech helped us build a comprehensive incident response plan. We now have 24/7 monitoring and peace of mind.",
+    name: "Suresh Kumar",
+    jobtitle: "Director IT, Apex Manufacturing",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face",
+    text: "The cloud security assessment by Arica Tech identified misconfigurations across our AWS and Azure environments that could have led to data breaches.",
+    name: "Neha Joshi",
+    jobtitle: "Cloud Architect, DataVault",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=200&h=200&fit=crop&crop=face",
+    text: "Their mobile app security testing caught injection vulnerabilities and insecure data storage before our product launch. Invaluable partnership.",
+    name: "Arjun Nair",
+    jobtitle: "Product Manager, SecureApp",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face",
+    text: "Working with Arica Tech on our compliance roadmap was exceptional. They made PCI-DSS and SOC 2 compliance achievable for our growing startup.",
+    name: "Karan Singh",
+    jobtitle: "CEO, PayGuard Solutions",
   },
 ];
 
@@ -54,6 +106,26 @@ export function Team() {
         </motion.div>
 
         <AnimatedTestimonials testimonials={teamMembers} autoplay />
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mt-24 mb-10"
+        >
+          <span className="inline-block text-sm font-semibold text-[#42BA90] tracking-wider uppercase mb-4">
+            Client Testimonials
+          </span>
+          <h2 className="font-display text-3xl md:text-4xl font-bold mb-6">
+            What Our <span className="text-gradient">Clients Say</span>
+          </h2>
+          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
+            Hover over a profile to hear what our clients have to say about working with us.
+          </p>
+        </motion.div>
+
+        <TypewriterTestimonial testimonials={clientTestimonials} />
       </div>
     </section>
   );
