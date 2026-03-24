@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { Navbar } from "@/components/Navbar";
-import { CTA } from "@/components/CTA";
 import { Button } from "@/components/ui/button";
 import { Typewriter } from "@/components/ui/typewriter";
 import { AmbientParticles } from "@/components/ui/ambient-particles";
@@ -574,7 +573,6 @@ export default function ServicesPage() {
         </section>
       ))}
 
-      <CTA />
     </div>
   );
 }

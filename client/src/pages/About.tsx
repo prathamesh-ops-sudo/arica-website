@@ -2,7 +2,6 @@ import { motion, useInView, useSpring, useTransform } from "framer-motion";
 import { Shield, Target, Eye, Award, Users, Globe } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Team } from "@/components/Team";
-import { CTA } from "@/components/CTA";
 import { AmbientParticles } from "@/components/ui/ambient-particles";
 import { useRef, useState, useEffect, useCallback } from "react";
 
@@ -365,7 +364,6 @@ export default function About() {
       </section>
 
       <Team />
-      <CTA />
     </div>
   );
 }

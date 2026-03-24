@@ -4,7 +4,6 @@ import { ClientsSlider } from "@/components/ClientsSlider";
 import { ForensicsSection } from "@/components/ForensicsSection";
 import { AsciiHeroSection } from "@/components/AsciiHeroSection";
 import { ComplianceSection } from "@/components/ComplianceSection";
-import { CTA } from "@/components/CTA";
 import { ThreatVortex } from "@/components/ThreatVortex";
 
 function SubtleBackground() {
@@ -31,7 +30,6 @@ export default function Home() {
         <ThreatVortex />
         <AsciiHeroSection />
         <ComplianceSection />
-        <CTA />
       </div>
     </div>
   );
