@@ -119,16 +119,12 @@ export function SiteFooter() {
                   </a>
                 </div>
                 <div className="flex items-center gap-6">
-                  <Link href="/privacy">
-                    <span className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer" data-testid="link-footer-privacy">
-                      Privacy Policy
-                    </span>
-                  </Link>
-                  <Link href="/terms">
-                    <span className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer" data-testid="link-footer-terms">
-                      Terms &amp; Conditions
-                    </span>
-                  </Link>
+                  <a href="#" className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer" data-testid="link-footer-privacy">
+                    Privacy Policy
+                  </a>
+                  <a href="#" className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer" data-testid="link-footer-terms">
+                    Terms &amp; Conditions
+                  </a>
                 </div>
                 <p className="text-sm text-muted-foreground">
                   © 2026 Arica Tech Security LLP. All rights reserved.
