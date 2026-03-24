@@ -1,6 +1,5 @@
 import { Link } from "wouter";
 import { Shield, Linkedin, Twitter, Mail, Phone } from "lucide-react";
-import { AsciiWorldMap } from "@/components/ui/ascii-world-map";
 
 export function SiteFooter() {
   return (
@@ -95,30 +94,42 @@ export function SiteFooter() {
 
         <div className="mt-10 pt-6 border-t border-white/5">
           <div className="relative overflow-hidden">
-            {/* ASCII World Map Background */}
-            <div className="flex justify-center items-center py-8">
-              <AsciiWorldMap />
-            </div>
-
-            {/* Centered copyright overlay */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <p className="text-sm text-muted-foreground">© 2026</p>
-              <p className="text-sm text-muted-foreground">Arica Tech Security LLP.</p>
-              <p className="text-sm text-muted-foreground">Securing the digital frontier.</p>
-            </div>
-          </div>
-
-          {/* Massive ARICA TECH text at bottom */}
-          <div className="relative overflow-hidden -mb-6 sm:-mb-10 md:-mb-16">
-            <div className="select-none pointer-events-none flex justify-center" aria-hidden="true">
+            <div className="select-none pointer-events-none flex justify-center items-center" aria-hidden="true">
               <span
-                className="text-[5rem] sm:text-[8rem] md:text-[12rem] lg:text-[16rem] font-display font-black tracking-[0.05em] leading-none"
+                className="text-[8rem] sm:text-[12rem] md:text-[16rem] font-display font-black tracking-[0.15em] leading-none"
                 style={{
-                  color: 'rgba(255, 255, 255, 0.06)',
+                  color: 'transparent',
+                  WebkitTextStroke: '1.5px rgba(61, 112, 183, 0.25)',
                 }}
               >
-                ARICA TECH
+                ARICA
               </span>
+            </div>
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
+                <div className="flex items-center gap-3">
+                  <a
+                    href="https://linkedin.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-testid="link-footer-bottom-linkedin"
+                    className="p-2 rounded-lg hover:bg-primary/20 text-muted-foreground hover:text-primary transition-all"
+                  >
+                    <Linkedin className="w-5 h-5" />
+                  </a>
+                </div>
+                <div className="flex items-center gap-6">
+                  <a href="#" className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer" data-testid="link-footer-privacy">
+                    Privacy Policy
+                  </a>
+                  <a href="#" className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer" data-testid="link-footer-terms">
+                    Terms &amp; Conditions
+                  </a>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  © 2026 Arica Tech Security LLP. All rights reserved.
+                </p>
+              </div>
             </div>
           </div>
         </div>
