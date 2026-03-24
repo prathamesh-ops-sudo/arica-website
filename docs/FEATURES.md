@@ -2,7 +2,7 @@
 
 > **Last Updated:** March 2026
 > **Stack:** Express.js (backend) + React + TypeScript + Three.js (frontend) + PostgreSQL (database)
-> **Live URL:** https://hgesimdp2m.us-east-1.awsapprunner.com
+> **Live URL:** *(see AWS App Runner console or CloudFront distribution)*
 
 ---
 
