@@ -322,7 +322,7 @@ function AnimatedFilterTabs({
         <motion.div
           className="absolute h-full rounded-lg bg-primary/20 border border-primary/40"
           style={{
-            boxShadow: '0 0 20px rgba(0, 212, 255, 0.3), inset 0 0 20px rgba(0, 212, 255, 0.1)',
+            boxShadow: '0 0 20px rgba(61, 112, 183, 0.3), inset 0 0 20px rgba(61, 112, 183, 0.1)',
           }}
           initial={false}
           animate={{
@@ -349,7 +349,7 @@ function AnimatedFilterTabs({
               : "text-muted-foreground hover:text-foreground"
           }`}
           style={{
-            textShadow: activeCategory === cat ? '0 0 10px rgba(0, 212, 255, 0.5)' : 'none',
+            textShadow: activeCategory === cat ? '0 0 10px rgba(61, 112, 183, 0.5)' : 'none',
           }}
         >
           {cat}
@@ -401,8 +401,8 @@ function FlipCard({ study, index }: { study: typeof caseStudies[0]; index: numbe
             WebkitBackfaceVisibility: 'hidden',
           }}
           whileHover={{
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 212, 255, 0.15)',
-            borderColor: 'rgba(0, 212, 255, 0.4)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(61, 112, 183, 0.15)',
+            borderColor: 'rgba(61, 112, 183, 0.4)',
           }}
         >
           <div className="flex items-center gap-2 mb-4">
@@ -437,7 +437,7 @@ function FlipCard({ study, index }: { study: typeof caseStudies[0]; index: numbe
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
-            boxShadow: '0 0 30px rgba(0, 212, 255, 0.2)',
+            boxShadow: '0 0 30px rgba(61, 112, 183, 0.2)',
           }}
         >
           <div className="flex items-center justify-between mb-4">
@@ -487,8 +487,8 @@ export default function CaseStudies() {
 
       <section className="pt-32 pb-16 relative overflow-hidden">
         <div className="absolute inset-0 opacity-30" style={{
-          background: `radial-gradient(ellipse at 30% 50%, rgba(0, 212, 255, 0.06) 0%, transparent 55%),
-                       radial-gradient(ellipse at 75% 25%, rgba(0, 119, 182, 0.05) 0%, transparent 50%)`
+          background: `radial-gradient(ellipse at 30% 50%, rgba(61, 112, 183, 0.06) 0%, transparent 55%),
+                       radial-gradient(ellipse at 75% 25%, rgba(28, 44, 90, 0.05) 0%, transparent 50%)`
         }} />
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">

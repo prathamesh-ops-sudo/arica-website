@@ -792,11 +792,11 @@ export default function AttackGlobe() {
 
   return (
     <div className="min-h-screen bg-[#0a0a1e] relative overflow-hidden">
-      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#0a0a1e]/80 border-b border-[#00D4FF]/10">
+      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#0a0a1e]/80 border-b border-[#3D70B7]/10">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <Link 
             href="/experience"
-            className="flex items-center gap-2 text-[#00D4FF] hover:text-white transition-colors text-sm font-medium"
+            className="flex items-center gap-2 text-[#3D70B7] hover:text-white transition-colors text-sm font-medium"
             data-testid="link-back-experience"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -805,7 +805,7 @@ export default function AttackGlobe() {
           
           <div className="flex items-center gap-4">
             <div className="hidden md:flex items-center gap-2 text-white/60 text-sm">
-              <Activity className="w-4 h-4 text-[#00D4FF]" />
+              <Activity className="w-4 h-4 text-[#3D70B7]" />
               <span>Live Monitoring</span>
             </div>
             <motion.div 
@@ -847,7 +847,7 @@ export default function AttackGlobe() {
             
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-3 tracking-tight">
               <span className="text-white drop-shadow-lg">Real-Time </span>
-              <span className="bg-gradient-to-r from-[#00D4FF] to-[#00B4D8] bg-clip-text text-transparent">Cyber Attack</span>
+              <span className="bg-gradient-to-r from-[#3D70B7] to-[#42BA90] bg-clip-text text-transparent">Cyber Attack</span>
               <span className="text-white drop-shadow-lg"> Monitoring</span>
             </h1>
             
@@ -878,10 +878,10 @@ export default function AttackGlobe() {
               <p className="text-white/40 text-xs">Seconds a Hack Occurs</p>
             </div>
             
-            <div className="backdrop-blur-xl bg-[#0a0a1e]/70 border border-white/10 rounded-2xl p-4 group hover:border-[#00D4FF]/30 transition-all duration-500">
+            <div className="backdrop-blur-xl bg-[#0a0a1e]/70 border border-white/10 rounded-2xl p-4 group hover:border-[#3D70B7]/30 transition-all duration-500">
               <div className="flex items-center justify-between mb-2">
-                <Target className="w-4 h-4 text-[#00D4FF]" />
-                <Zap className="w-3 h-3 text-[#00D4FF] animate-pulse" />
+                <Target className="w-4 h-4 text-[#3D70B7]" />
+                <Zap className="w-3 h-3 text-[#3D70B7] animate-pulse" />
               </div>
               <motion.h3 
                 className="text-xl md:text-2xl font-bold text-white mb-1"
@@ -922,13 +922,13 @@ export default function AttackGlobe() {
             <div className="lg:col-span-2">
               <div 
                 ref={containerRef}
-                className="relative w-full aspect-square lg:aspect-[4/3] rounded-3xl overflow-hidden border border-[#00D4FF]/20 bg-[#050510]"
-                style={{ boxShadow: '0 0 60px rgba(0, 212, 255,0.15), inset 0 0 60px rgba(0, 212, 255,0.05)' }}
+                className="relative w-full aspect-square lg:aspect-[4/3] rounded-3xl overflow-hidden border border-[#3D70B7]/20 bg-[#050510]"
+                style={{ boxShadow: '0 0 60px rgba(61, 112, 183,0.15), inset 0 0 60px rgba(61, 112, 183,0.05)' }}
               >
                 {webglFailed ? (
                   <div className="w-full h-full flex items-center justify-center" data-testid="webgl-fallback">
                     <div className="text-center p-8">
-                      <Globe2 className="w-24 h-24 mx-auto mb-4 text-[#00D4FF]/50" />
+                      <Globe2 className="w-24 h-24 mx-auto mb-4 text-[#3D70B7]/50" />
                       <h3 className="text-xl font-semibold text-white/80 mb-2">3D Globe Unavailable</h3>
                       <p className="text-white/50">WebGL is required for the interactive globe visualization.</p>
                     </div>
@@ -963,7 +963,7 @@ export default function AttackGlobe() {
               >
                 <div className="backdrop-blur-xl bg-[#0a0a1e]/70 border border-white/10 rounded-2xl p-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <Search className="w-4 h-4 text-[#00D4FF]" />
+                    <Search className="w-4 h-4 text-[#3D70B7]" />
                     <input
                       type="text"
                       value={searchQuery}
@@ -974,7 +974,7 @@ export default function AttackGlobe() {
                     />
                     <button
                       onClick={() => setShowFilters(!showFilters)}
-                      className={`p-1.5 rounded-lg transition-all ${showFilters ? 'bg-[#00D4FF]/20 text-[#00D4FF]' : 'text-white/50 hover:text-white'}`}
+                      className={`p-1.5 rounded-lg transition-all ${showFilters ? 'bg-[#3D70B7]/20 text-[#3D70B7]' : 'text-white/50 hover:text-white'}`}
                       data-testid="btn-toggle-filters"
                     >
                       <Filter className="w-4 h-4" />
@@ -1081,8 +1081,8 @@ export default function AttackGlobe() {
             transition={{ duration: 0.8, delay: 0.8 }}
             className="mt-8 text-center"
           >
-              <div className="backdrop-blur-xl bg-gradient-to-r from-[#00D4FF]/10 via-[#00D4FF]/20 to-[#00D4FF]/10 border border-[#00D4FF]/20 rounded-3xl p-8 md:p-12 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#00D4FF]/5 via-transparent to-transparent" />
+              <div className="backdrop-blur-xl bg-gradient-to-r from-[#3D70B7]/10 via-[#3D70B7]/20 to-[#3D70B7]/10 border border-[#3D70B7]/20 rounded-3xl p-8 md:p-12 relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#3D70B7]/5 via-transparent to-transparent" />
                 
                 <div className="relative z-10">
                   <div className="flex items-center justify-center gap-4 mb-6">
@@ -1090,23 +1090,23 @@ export default function AttackGlobe() {
                       animate={{ rotate: 360 }}
                       transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                     >
-                      <Shield className="w-10 h-10 text-[#00D4FF]" />
+                      <Shield className="w-10 h-10 text-[#3D70B7]" />
                     </motion.div>
                     <div className="text-left">
                       <h2 className="text-2xl md:text-3xl font-bold text-white">Don't Be a Statistic</h2>
-                      <p className="text-[#00D4FF]/70 text-sm">95% of breaches are preventable with proper security</p>
+                      <p className="text-[#3D70B7]/70 text-sm">95% of breaches are preventable with proper security</p>
                     </div>
                   </div>
                   
                   <p className="text-white/60 max-w-2xl mx-auto mb-8 text-lg">
-                    Our <span className="text-[#00D4FF] font-semibold">Vulnerability Assessment & Penetration Testing (VAPT)</span> identifies 
+                    Our <span className="text-[#3D70B7] font-semibold">Vulnerability Assessment & Penetration Testing (VAPT)</span> identifies 
                     your security gaps before attackers do. Get a comprehensive security audit from certified experts.
                   </p>
                   
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <Link 
                       href="/contact"
-                      className="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#00B4D8] to-[#00D4FF] text-white font-bold px-8 py-4 rounded-full hover:shadow-[0_0_40px_rgba(0,212,255,0.4)] transition-all duration-300"
+                      className="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#42BA90] to-[#3D70B7] text-white font-bold px-8 py-4 rounded-full hover:shadow-[0_0_40px_rgba(0,212,255,0.4)] transition-all duration-300"
                       data-testid="link-get-vapt"
                     >
                       <ShieldCheck className="w-5 h-5" />
@@ -1125,15 +1125,15 @@ export default function AttackGlobe() {
                   
                   <div className="grid grid-cols-3 gap-6 mt-10 max-w-2xl mx-auto">
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-[#00D4FF]">500+</div>
+                      <div className="text-3xl font-bold text-[#3D70B7]">500+</div>
                       <p className="text-white/40 text-sm mt-1">Audits Completed</p>
                     </div>
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-[#00D4FF]">99.9%</div>
+                      <div className="text-3xl font-bold text-[#3D70B7]">99.9%</div>
                       <p className="text-white/40 text-sm mt-1">Client Satisfaction</p>
                     </div>
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-[#00D4FF]">24/7</div>
+                      <div className="text-3xl font-bold text-[#3D70B7]">24/7</div>
                       <p className="text-white/40 text-sm mt-1">Monitoring Available</p>
                     </div>
                   </div>

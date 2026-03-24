@@ -81,10 +81,10 @@ function OfficeMonitor({
         material.emissive = new THREE.Color('#ff453a');
         material.emissiveIntensity = 0.3 + Math.sin(state.clock.elapsedTime * 5) * 0.2;
       } else if (isTarget) {
-        material.emissive = new THREE.Color('#00B4D8');
+        material.emissive = new THREE.Color('#42BA90');
         material.emissiveIntensity = glowIntensity;
       } else {
-        material.emissive = new THREE.Color('#00B4D8');
+        material.emissive = new THREE.Color('#42BA90');
         material.emissiveIntensity = 0.1;
       }
     }
@@ -100,7 +100,7 @@ function OfficeMonitor({
         <planeGeometry args={[0.7, 0.4]} />
         <meshStandardMaterial 
           color={showError ? "#2c1810" : "#0a0510"} 
-          emissive={showError ? "#ff453a" : "#00B4D8"}
+          emissive={showError ? "#ff453a" : "#42BA90"}
           emissiveIntensity={0.1}
         />
       </mesh>
@@ -190,7 +190,7 @@ function ScanningBeam({ active }: { active: boolean }) {
   return (
     <mesh ref={ref} rotation={[Math.PI / 2, 0, 0]}>
       <planeGeometry args={[10, 0.05]} />
-      <meshBasicMaterial color="#00B4D8" transparent opacity={0.5} />
+      <meshBasicMaterial color="#42BA90" transparent opacity={0.5} />
     </mesh>
   );
 }
@@ -276,7 +276,7 @@ function ForensicsScene({ progress }: { progress: number }) {
       </mesh>
       <mesh position={[0, 0, 0]} rotation={[Math.PI / 4, 0, 0]}>
         <torusGeometry args={[1.5, 0.02, 16, 100]} />
-        <meshBasicMaterial color="#00B4D8" />
+        <meshBasicMaterial color="#42BA90" />
       </mesh>
       <mesh position={[0, 0, 0]} rotation={[0, Math.PI / 4, Math.PI / 4]}>
         <torusGeometry args={[1, 0.02, 16, 100]} />
@@ -289,8 +289,8 @@ function ForensicsScene({ progress }: { progress: number }) {
             <mesh position={[Math.cos(angle) * 2.5, Math.sin(angle) * 0.5, Math.sin(angle) * 2.5]}>
               <boxGeometry args={[0.2, 0.2, 0.2]} />
               <meshStandardMaterial 
-                color={i % 2 === 0 ? "#8e8e93" : "#00B4D8"} 
-                emissive={i % 2 === 0 ? "#8e8e93" : "#00B4D8"}
+                color={i % 2 === 0 ? "#8e8e93" : "#42BA90"} 
+                emissive={i % 2 === 0 ? "#8e8e93" : "#42BA90"}
                 emissiveIntensity={0.5}
               />
             </mesh>
@@ -407,7 +407,7 @@ function MainScene({ scrollProgress }: SceneProps) {
     <>
       <ambientLight intensity={0.3} />
       <pointLight position={[10, 10, 10]} intensity={1} color="#e5e5e5" />
-      <pointLight position={[-10, 5, -10]} intensity={0.5} color="#00B4D8" />
+      <pointLight position={[-10, 5, -10]} intensity={0.5} color="#42BA90" />
       
       <CyberParticles count={insideSystem ? 2000 : 500} />
       
@@ -441,14 +441,14 @@ function MainScene({ scrollProgress }: SceneProps) {
           {scene === 'iso' && (
             <>
               <SecurityShield position={[-3, 1, -3]} scale={1.5} color="#8e8e93" />
-              <SecurityShield position={[3, 1.5, -4]} scale={1.2} color="#00B4D8" />
+              <SecurityShield position={[3, 1.5, -4]} scale={1.2} color="#42BA90" />
               <SecurityShield position={[0, 2, -5]} scale={1.8} color="#30d158" />
               {Array.from({ length: 5 }).map((_, i) => (
                 <DataStream 
                   key={i}
                   startPos={[-5 + i * 2.5, 3, -3]}
                   endPos={[-5 + i * 2.5, -2, -3]}
-                  color={i % 2 === 0 ? "#8e8e93" : "#00B4D8"}
+                  color={i % 2 === 0 ? "#8e8e93" : "#42BA90"}
                   speed={1 + i * 0.3}
                 />
               ))}
@@ -480,7 +480,7 @@ function MainScene({ scrollProgress }: SceneProps) {
               </mesh>
               <mesh position={[0, 0, -5]} rotation={[Math.PI / 2, 0, 0]}>
                 <torusGeometry args={[3, 0.02, 16, 100]} />
-                <meshBasicMaterial color="#00B4D8" transparent opacity={0.5} />
+                <meshBasicMaterial color="#42BA90" transparent opacity={0.5} />
               </mesh>
             </>
           )}
@@ -509,7 +509,7 @@ function MainScene({ scrollProgress }: SceneProps) {
               ))}
               <SecurityShield position={[-2, 1, -4]} scale={1} color="#8e8e93" />
               <SecurityShield position={[2, 1, -4]} scale={1} color="#8e8e93" />
-              <SecurityShield position={[0, -1, -4]} scale={1} color="#00B4D8" />
+              <SecurityShield position={[0, -1, -4]} scale={1} color="#42BA90" />
             </>
           )}
           
@@ -524,7 +524,7 @@ function MainScene({ scrollProgress }: SceneProps) {
                   <boxGeometry args={[2.5, 3.5, 0.1]} />
                   <meshStandardMaterial 
                     color="#0a0510" 
-                    emissive="#00B4D8"
+                    emissive="#42BA90"
                     emissiveIntensity={0.1}
                   />
                 </mesh>
@@ -569,7 +569,7 @@ function MainScene({ scrollProgress }: SceneProps) {
               >
                 ✓ FORENSICS COMPLETE
               </Text>
-              <SecurityShield position={[0, -1.2, -2.5]} scale={1.5} color="#00B4D8" />
+              <SecurityShield position={[0, -1.2, -2.5]} scale={1.5} color="#42BA90" />
             </>
           )}
         </group>
@@ -637,7 +637,7 @@ function ScrollIndicator({ progress }: { progress: number }) {
                 isCompleted 
                   ? 'bg-[#30d158]/20 border-[#30d158] text-[#30d158]'
                   : isActive 
-                    ? 'bg-[#00B4D8]/20 border-[#00B4D8] text-[#00B4D8] shadow-[0_0_20px_rgba(0,180,216,0.5)]'
+                    ? 'bg-[#42BA90]/20 border-[#42BA90] text-[#42BA90] shadow-[0_0_20px_rgba(0,180,216,0.5)]'
                     : 'bg-transparent border-white/20 text-white/40'
               }`}>
                 {isCompleted ? (
@@ -647,7 +647,7 @@ function ScrollIndicator({ progress }: { progress: number }) {
                 )}
               </div>
               <span className={`text-sm font-medium transition-all duration-300 ${
-                isActive ? 'text-[#00B4D8]' : isCompleted ? 'text-[#30d158]' : 'text-white/40'
+                isActive ? 'text-[#42BA90]' : isCompleted ? 'text-[#30d158]' : 'text-white/40'
               }`}>
                 {stage.label}
               </span>
@@ -682,7 +682,7 @@ function SceneOverlay({ scrollProgress }: { scrollProgress: number }) {
         title: "Entering the System",
         subtitle: "ARICA Security Team deploying...",
         icon: Terminal,
-        color: "#00B4D8"
+        color: "#42BA90"
       };
     }
     if (scrollProgress < 0.50) {
@@ -714,7 +714,7 @@ function SceneOverlay({ scrollProgress }: { scrollProgress: number }) {
         title: "Digital Forensics",
         subtitle: "Analyzing evidence and tracing the attack",
         icon: FileSearch,
-        color: "#00B4D8"
+        color: "#42BA90"
       };
     }
     return {
@@ -778,7 +778,7 @@ function ProgressBar({ progress }: { progress: number }) {
   const getProgressColor = () => {
     if (progress < 0.33) return 'from-[#ff453a] via-[#ff6b3d] to-[#ff9500]';
     if (progress < 0.66) return 'from-[#ff9500] via-[#ffcc00] to-[#30d158]';
-    return 'from-[#30d158] via-[#00B4D8] to-[#00D4FF]';
+    return 'from-[#30d158] via-[#42BA90] to-[#3D70B7]';
   };
   
   return (
@@ -799,8 +799,8 @@ function WebGLFallbackUI() {
   return (
     <div className="min-h-screen bg-[#050505] flex items-center justify-center p-8">
       <div className="text-center max-w-lg">
-        <div className="w-20 h-20 rounded-full bg-[#00B4D8]/20 flex items-center justify-center mx-auto mb-6">
-          <Monitor className="w-10 h-10 text-[#00B4D8]" />
+        <div className="w-20 h-20 rounded-full bg-[#42BA90]/20 flex items-center justify-center mx-auto mb-6">
+          <Monitor className="w-10 h-10 text-[#42BA90]" />
         </div>
         <h2 className="text-2xl font-bold text-white mb-4">WebGL Required</h2>
         <p className="text-white/70 mb-6">
@@ -808,7 +808,7 @@ function WebGLFallbackUI() {
         </p>
         <a 
           href="/"
-          className="inline-block px-6 py-3 bg-[#00B4D8] text-white font-semibold rounded-lg hover:bg-[#00B4D8]/80 transition-colors"
+          className="inline-block px-6 py-3 bg-[#42BA90] text-white font-semibold rounded-lg hover:bg-[#42BA90]/80 transition-colors"
         >
           Return Home
         </a>
@@ -949,7 +949,7 @@ function CompletionOverlay() {
           <button
             onClick={handleExploreServices}
             data-testid="button-explore-network"
-            className="group relative px-10 py-5 bg-gradient-to-r from-[#0077B6] to-[#00D4FF] text-white font-bold rounded-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 justify-center overflow-hidden"
+            className="group relative px-10 py-5 bg-gradient-to-r from-[#1C2C5A] to-[#3D70B7] text-white font-bold rounded-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 justify-center overflow-hidden"
             style={{ boxShadow: '0 0 40px rgba(0,119,182,0.5)' }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />

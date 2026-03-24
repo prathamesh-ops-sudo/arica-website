@@ -29,8 +29,8 @@ export function ForensicsSection() {
   return (
     <section className="py-32 relative overflow-hidden bg-card/30">
       <div className="absolute inset-0 opacity-40" style={{
-        background: `radial-gradient(ellipse at 20% 50%, rgba(0, 180, 216, 0.08) 0%, transparent 60%),
-                     radial-gradient(ellipse at 80% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 50%)`
+        background: `radial-gradient(ellipse at 20% 50%, rgba(61, 112, 183, 0.08) 0%, transparent 60%),
+                     radial-gradient(ellipse at 80% 20%, rgba(61, 112, 183, 0.05) 0%, transparent 50%)`
       }} />
       <FloatingCyberThreats variant="mixed" density="low" />
 
@@ -71,7 +71,7 @@ export function ForensicsSection() {
               Our security experts follow{" "}
               <LinkPreview
                 url="https://owasp.org/www-project-web-security-testing-guide/"
-                className="font-bold bg-clip-text text-transparent bg-gradient-to-br from-[#00B4D8] to-[#00D4FF]"
+                className="font-bold bg-clip-text text-transparent bg-gradient-to-br from-[#42BA90] to-[#3D70B7]"
               >
                 OWASP Testing Guidelines
               </LinkPreview>{" "}

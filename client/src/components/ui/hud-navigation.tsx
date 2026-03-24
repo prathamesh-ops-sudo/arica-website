@@ -44,9 +44,9 @@ function HudCorner({ position }: { position: "top-left" | "top-right" | "bottom-
         <path
           d="M0 0 L24 0 L24 4 L4 4 L4 24 L0 24 Z"
           fill="none"
-          stroke="#00D4FF"
+          stroke="#3D70B7"
           strokeWidth="1.5"
-          className="drop-shadow-[0_0_8px_#00D4FF]"
+          className="drop-shadow-[0_0_8px_#3D70B7]"
         />
       </svg>
     </div>
@@ -56,7 +56,7 @@ function HudCorner({ position }: { position: "top-left" | "top-right" | "bottom-
 function ScanLine() {
   return (
     <motion.div
-      className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#00D4FF]/50 to-transparent pointer-events-none"
+      className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#3D70B7]/50 to-transparent pointer-events-none"
       initial={{ top: "0%" }}
       animate={{ top: "100%" }}
       transition={{
@@ -100,7 +100,7 @@ export function HudNavigation() {
       >
         <div className="relative max-w-7xl mx-auto">
           <div
-            className="relative overflow-hidden rounded-lg border border-[#00D4FF]/30 bg-[rgba(10,10,30,0.8)] backdrop-blur-xl shadow-[0_0_30px_rgba(0,212,255,0.15)]"
+            className="relative overflow-hidden rounded-lg border border-[#3D70B7]/30 bg-[rgba(10,10,30,0.8)] backdrop-blur-xl shadow-[0_0_30px_rgba(0,212,255,0.15)]"
           >
             <HudCorner position="top-left" />
             <HudCorner position="top-right" />
@@ -108,7 +108,7 @@ export function HudNavigation() {
             <HudCorner position="bottom-right" />
             <ScanLine />
 
-            <div className="absolute inset-0 bg-gradient-to-r from-[#00D4FF]/5 via-transparent to-[#00D4FF]/5 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#3D70B7]/5 via-transparent to-[#3D70B7]/5 pointer-events-none" />
             <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,212,255,0.02)_50%)] bg-[length:100%_4px] pointer-events-none opacity-30" />
 
             <div className="relative flex items-center justify-between px-6 py-3">
@@ -118,9 +118,9 @@ export function HudNavigation() {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#00D4FF] to-[#00D4FF] rounded-lg opacity-20 group-hover:opacity-40 transition-opacity" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#3D70B7] to-[#3D70B7] rounded-lg opacity-20 group-hover:opacity-40 transition-opacity" />
                   <div className="absolute inset-[2px] bg-[rgba(10,10,30,0.9)] rounded-md" />
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 relative z-10 text-[#00D4FF] drop-shadow-[0_0_8px_#00D4FF]">
+                  <svg viewBox="0 0 24 24" className="w-5 h-5 relative z-10 text-[#3D70B7] drop-shadow-[0_0_8px_#3D70B7]">
                     <path
                       fill="currentColor"
                       d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"
@@ -129,8 +129,8 @@ export function HudNavigation() {
                 </motion.div>
                 <div className="hidden sm:block">
                   <motion.span
-                    className="text-lg font-bold bg-gradient-to-r from-[#00D4FF] to-[#00D4FF] bg-clip-text text-transparent"
-                    whileHover={{ textShadow: "0 0 20px rgba(0, 212, 255, 0.5)" }}
+                    className="text-lg font-bold bg-gradient-to-r from-[#3D70B7] to-[#3D70B7] bg-clip-text text-transparent"
+                    whileHover={{ textShadow: "0 0 20px rgba(61, 112, 183, 0.5)" }}
                   >
                     CYBER GUARDIAN
                   </motion.span>
@@ -149,7 +149,7 @@ export function HudNavigation() {
                       className={cn(
                         "relative px-4 py-2 rounded-md cursor-pointer transition-all duration-300 group",
                         isActive
-                          ? "text-[#00D4FF]"
+                          ? "text-[#3D70B7]"
                           : "text-white/60 hover:text-white"
                       )}
                       whileHover={{ scale: 1.05 }}
@@ -159,7 +159,7 @@ export function HudNavigation() {
                       {isActive && (
                         <motion.div
                           layoutId="hud-active-bg"
-                          className="absolute inset-0 bg-gradient-to-r from-[#00D4FF]/20 to-[#00D4FF]/20 rounded-md border border-[#00D4FF]/40"
+                          className="absolute inset-0 bg-gradient-to-r from-[#3D70B7]/20 to-[#3D70B7]/20 rounded-md border border-[#3D70B7]/40"
                           initial={false}
                           transition={{ type: "spring", stiffness: 300, damping: 30 }}
                         />
@@ -167,11 +167,11 @@ export function HudNavigation() {
                       <motion.div
                         className="absolute inset-0 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         style={{
-                          boxShadow: "0 0 20px rgba(0, 212, 255, 0.3), inset 0 0 20px rgba(0, 212, 255, 0.05)",
+                          boxShadow: "0 0 20px rgba(61, 112, 183, 0.3), inset 0 0 20px rgba(61, 112, 183, 0.05)",
                         }}
                       />
                       <span className="relative z-10 flex items-center gap-2 text-sm font-medium">
-                        <Icon size={16} className={cn(isActive && "drop-shadow-[0_0_8px_#00D4FF]")} />
+                        <Icon size={16} className={cn(isActive && "drop-shadow-[0_0_8px_#3D70B7]")} />
                         {item.name}
                       </span>
                     </motion.div>
@@ -180,9 +180,9 @@ export function HudNavigation() {
               </div>
 
               <motion.button
-                className="md:hidden relative w-10 h-10 flex items-center justify-center rounded-md border border-[#00D4FF]/30 bg-[rgba(0,212,255,0.1)] text-[#00D4FF]"
+                className="md:hidden relative w-10 h-10 flex items-center justify-center rounded-md border border-[#3D70B7]/30 bg-[rgba(0,212,255,0.1)] text-[#3D70B7]"
                 onClick={() => setMobileOpen(!mobileOpen)}
-                whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(0, 212, 255, 0.4)" }}
+                whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(61, 112, 183, 0.4)" }}
                 whileTap={{ scale: 0.95 }}
               >
                 <AnimatePresence mode="wait">
@@ -228,7 +228,7 @@ export function HudNavigation() {
             />
             
             <motion.div
-              className="absolute top-20 left-4 right-4 overflow-hidden rounded-lg border border-[#00D4FF]/30 bg-[rgba(10,10,30,0.95)] backdrop-blur-xl shadow-[0_0_50px_rgba(0,212,255,0.2)]"
+              className="absolute top-20 left-4 right-4 overflow-hidden rounded-lg border border-[#3D70B7]/30 bg-[rgba(10,10,30,0.95)] backdrop-blur-xl shadow-[0_0_50px_rgba(0,212,255,0.2)]"
               initial={{ y: -20, opacity: 0, scale: 0.95 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: -20, opacity: 0, scale: 0.95 }}
@@ -260,7 +260,7 @@ export function HudNavigation() {
                         className={cn(
                           "relative flex items-center gap-4 px-4 py-3 rounded-md cursor-pointer transition-all duration-300",
                           isActive
-                            ? "text-[#00D4FF] bg-gradient-to-r from-[#00D4FF]/20 to-[#00D4FF]/10 border border-[#00D4FF]/40"
+                            ? "text-[#3D70B7] bg-gradient-to-r from-[#3D70B7]/20 to-[#3D70B7]/10 border border-[#3D70B7]/40"
                             : "text-white/70 hover:text-white hover:bg-white/5"
                         )}
                         whileTap={{ scale: 0.98 }}
@@ -269,15 +269,15 @@ export function HudNavigation() {
                           size={20}
                           className={cn(
                             "transition-all duration-300",
-                            isActive && "drop-shadow-[0_0_8px_#00D4FF]"
+                            isActive && "drop-shadow-[0_0_8px_#3D70B7]"
                           )}
                         />
                         <span className="font-medium">{item.name}</span>
                         {isActive && (
                           <motion.div
-                            className="absolute right-4 w-2 h-2 rounded-full bg-[#00D4FF]"
+                            className="absolute right-4 w-2 h-2 rounded-full bg-[#3D70B7]"
                             layoutId="mobile-indicator"
-                            style={{ boxShadow: "0 0 10px #00D4FF, 0 0 20px #00D4FF" }}
+                            style={{ boxShadow: "0 0 10px #3D70B7, 0 0 20px #3D70B7" }}
                           />
                         )}
                       </motion.div>
@@ -286,7 +286,7 @@ export function HudNavigation() {
                 })}
               </div>
 
-              <div className="h-1 bg-gradient-to-r from-[#00D4FF]/50 via-[#00D4FF]/50 to-[#00D4FF]/50" />
+              <div className="h-1 bg-gradient-to-r from-[#3D70B7]/50 via-[#3D70B7]/50 to-[#3D70B7]/50" />
             </motion.div>
           </motion.div>
         )}

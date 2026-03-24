@@ -128,7 +128,7 @@ function CyberBackground() {
         vy: (Math.random() - 0.5) * 0.5,
         size: Math.random() * 2 + 1,
         opacity: Math.random() * 0.5 + 0.1,
-        color: Math.random() > 0.5 ? '#00D4FF' : '#00D4FF',
+        color: Math.random() > 0.5 ? '#3D70B7' : '#3D70B7',
       });
     }
     
@@ -139,7 +139,7 @@ function CyberBackground() {
       ctx.fillStyle = 'rgba(2, 6, 23, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      ctx.strokeStyle = 'rgba(0, 212, 255, 0.03)';
+      ctx.strokeStyle = 'rgba(61, 112, 183, 0.03)';
       ctx.lineWidth = 1;
       const gridSize = 50;
       for (let x = 0; x < canvas.width; x += gridSize) {
@@ -167,15 +167,15 @@ function CyberBackground() {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         const alpha = p.opacity * pulse;
-        ctx.fillStyle = p.color === '#00D4FF' 
-          ? `rgba(0, 212, 255, ${alpha})` 
+        ctx.fillStyle = p.color === '#3D70B7' 
+          ? `rgba(61, 112, 183, ${alpha})` 
           : `rgba(153, 68, 255, ${alpha})`;
         ctx.fill();
         
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
         const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3);
-        gradient.addColorStop(0, p.color === '#00D4FF' ? 'rgba(0, 212, 255, 0.2)' : 'rgba(153, 68, 255, 0.2)');
+        gradient.addColorStop(0, p.color === '#3D70B7' ? 'rgba(61, 112, 183, 0.2)' : 'rgba(153, 68, 255, 0.2)');
         gradient.addColorStop(1, 'transparent');
         ctx.fillStyle = gradient;
         ctx.fill();
@@ -189,7 +189,7 @@ function CyberBackground() {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(0, 212, 255, ${(1 - dist / 120) * 0.15})`;
+            ctx.strokeStyle = `rgba(61, 112, 183, ${(1 - dist / 120) * 0.15})`;
             ctx.stroke();
           }
         });
@@ -264,7 +264,7 @@ function TypewriterText({ text, speed = 30, onComplete }: { text: string; speed?
   return (
     <span>
       {displayText}
-      <span className="animate-pulse text-[#00D4FF]">▋</span>
+      <span className="animate-pulse text-[#3D70B7]">▋</span>
     </span>
   );
 }
@@ -306,12 +306,12 @@ function LiveRequestPanel({ isActive, method, endpoint }: { isActive: boolean; m
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="p-4 rounded-xl bg-[rgba(2,6,23,0.9)] border border-[#00D4FF]/30 font-mono text-xs overflow-hidden"
-      style={{ boxShadow: '0 0 30px rgba(0, 212, 255, 0.1)' }}
+      className="p-4 rounded-xl bg-[rgba(2,6,23,0.9)] border border-[#3D70B7]/30 font-mono text-xs overflow-hidden"
+      style={{ boxShadow: '0 0 30px rgba(61, 112, 183, 0.1)' }}
     >
       <div className="flex items-center gap-2 mb-3 pb-3 border-b border-slate-800">
-        <Terminal className="w-4 h-4 text-[#00D4FF]" />
-        <span className="text-[#00D4FF]">Live Request Stream</span>
+        <Terminal className="w-4 h-4 text-[#3D70B7]" />
+        <span className="text-[#3D70B7]">Live Request Stream</span>
         <div className="ml-auto flex items-center gap-2">
           <motion.div
             animate={{ opacity: [1, 0.3, 1] }}
@@ -327,13 +327,13 @@ function LiveRequestPanel({ isActive, method, endpoint }: { isActive: boolean; m
             key={i}
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
-            className={`${line.startsWith('$') ? 'text-emerald-400' : line.startsWith('>') ? 'text-[#00D4FF]' : 'text-slate-400'}`}
+            className={`${line.startsWith('$') ? 'text-emerald-400' : line.startsWith('>') ? 'text-[#3D70B7]' : 'text-slate-400'}`}
           >
             {line}
           </motion.div>
         ))}
         {isActive && currentLine < curlLines.length && (
-          <span className="text-[#00D4FF] animate-pulse">▋</span>
+          <span className="text-[#3D70B7] animate-pulse">▋</span>
         )}
       </div>
     </motion.div>
@@ -345,12 +345,12 @@ function AttackVisualization({ attacks }: { attacks: AttackEvent[] }) {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="p-4 rounded-xl bg-[rgba(2,6,23,0.9)] border border-[#00D4FF]/30"
+      className="p-4 rounded-xl bg-[rgba(2,6,23,0.9)] border border-[#3D70B7]/30"
       style={{ boxShadow: '0 0 30px rgba(153, 68, 255, 0.1)' }}
     >
       <div className="flex items-center gap-2 mb-3 pb-3 border-b border-slate-800">
-        <ShieldAlert className="w-4 h-4 text-[#00D4FF]" />
-        <span className="text-[#00D4FF]">Attack Detection Feed</span>
+        <ShieldAlert className="w-4 h-4 text-[#3D70B7]" />
+        <span className="text-[#3D70B7]">Attack Detection Feed</span>
         <motion.div
           animate={{ scale: [1, 1.2, 1] }}
           transition={{ duration: 0.5, repeat: Infinity }}
@@ -370,7 +370,7 @@ function AttackVisualization({ attacks }: { attacks: AttackEvent[] }) {
               className={`p-2 rounded-lg text-xs flex items-center gap-2 ${
                 attack.status === 'blocked' ? 'bg-red-950/50 border border-red-900/50' :
                 attack.status === 'detected' ? 'bg-amber-950/50 border border-amber-900/50' :
-                'bg-[#00D4FF]/10 border border-[#00D4FF]/30'
+                'bg-[#3D70B7]/10 border border-[#3D70B7]/30'
               }`}
             >
               <motion.div
@@ -382,7 +382,7 @@ function AttackVisualization({ attacks }: { attacks: AttackEvent[] }) {
                 ) : attack.status === 'detected' ? (
                   <AlertTriangle className="w-3 h-3 text-amber-400" />
                 ) : (
-                  <Activity className="w-3 h-3 text-[#00D4FF]" />
+                  <Activity className="w-3 h-3 text-[#3D70B7]" />
                 )}
               </motion.div>
               <span className="text-slate-300 flex-1 truncate">{attack.type}</span>
@@ -390,7 +390,7 @@ function AttackVisualization({ attacks }: { attacks: AttackEvent[] }) {
               <span className={`px-1.5 py-0.5 rounded text-[10px] uppercase font-medium ${
                 attack.status === 'blocked' ? 'bg-red-900/50 text-red-400' :
                 attack.status === 'detected' ? 'bg-amber-900/50 text-amber-400' :
-                'bg-[#00D4FF]/30 text-[#00D4FF]'
+                'bg-[#3D70B7]/30 text-[#3D70B7]'
               }`}>
                 {attack.status}
               </span>
@@ -406,11 +406,11 @@ function MetricsPanel({ metrics }: { metrics: LiveMetrics }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
       {[
-        { label: 'Requests/sec', value: metrics.requestsPerSecond, icon: Activity, color: '#00D4FF', suffix: '' },
-        { label: 'Avg Latency', value: metrics.avgLatency, icon: Clock, color: '#00D4FF', suffix: 'ms' },
-        { label: 'Error Rate', value: metrics.errorRate, icon: AlertTriangle, color: metrics.errorRate > 5 ? '#ff4444' : '#00D4FF', suffix: '%' },
-        { label: 'Attacks Blocked', value: metrics.blockedAttacks, icon: Shield, color: '#00D4FF', suffix: '' },
-        { label: 'Connections', value: metrics.activeConnections, icon: Wifi, color: '#00D4FF', suffix: '' },
+        { label: 'Requests/sec', value: metrics.requestsPerSecond, icon: Activity, color: '#3D70B7', suffix: '' },
+        { label: 'Avg Latency', value: metrics.avgLatency, icon: Clock, color: '#3D70B7', suffix: 'ms' },
+        { label: 'Error Rate', value: metrics.errorRate, icon: AlertTriangle, color: metrics.errorRate > 5 ? '#ff4444' : '#3D70B7', suffix: '%' },
+        { label: 'Attacks Blocked', value: metrics.blockedAttacks, icon: Shield, color: '#3D70B7', suffix: '' },
+        { label: 'Connections', value: metrics.activeConnections, icon: Wifi, color: '#3D70B7', suffix: '' },
       ].map((metric, i) => {
         const Icon = metric.icon;
         return (
@@ -420,7 +420,7 @@ function MetricsPanel({ metrics }: { metrics: LiveMetrics }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
             whileHover={{ scale: 1.02, y: -2 }}
-            className="p-4 rounded-xl bg-[rgba(2,6,23,0.8)] border border-slate-800/50 hover:border-[#00D4FF]/30 transition-all duration-300 group"
+            className="p-4 rounded-xl bg-[rgba(2,6,23,0.8)] border border-slate-800/50 hover:border-[#3D70B7]/30 transition-all duration-300 group"
             style={{
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
             }}
@@ -465,11 +465,11 @@ function GlassCard({
   const [rotateY, setRotateY] = useState(0);
   
   const colors = {
-    cyan: { border: '#00D4FF', shadow: 'rgba(0, 212, 255, 0.15)' },
-    purple: { border: '#00D4FF', shadow: 'rgba(153, 68, 255, 0.15)' },
+    cyan: { border: '#3D70B7', shadow: 'rgba(61, 112, 183, 0.15)' },
+    purple: { border: '#3D70B7', shadow: 'rgba(153, 68, 255, 0.15)' },
     red: { border: '#ff4444', shadow: 'rgba(255, 68, 68, 0.15)' },
     amber: { border: '#ffaa00', shadow: 'rgba(255, 170, 0, 0.15)' },
-    emerald: { border: '#00D4FF', shadow: 'rgba(0, 212, 255, 0.15)' },
+    emerald: { border: '#3D70B7', shadow: 'rgba(61, 112, 183, 0.15)' },
   };
   
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -510,7 +510,7 @@ function GlassCard({
   );
 }
 
-function PulsingDot({ color = '#00D4FF', size = 8 }: { color?: string; size?: number }) {
+function PulsingDot({ color = '#3D70B7', size = 8 }: { color?: string; size?: number }) {
   return (
     <div className="relative" style={{ width: size, height: size }}>
       <motion.div
@@ -733,7 +733,7 @@ export default function ApiSecurityLab() {
     if (value > 0.8) return 'bg-red-600';
     if (value > 0.6) return 'bg-orange-600';
     if (value > 0.4) return 'bg-amber-600';
-    if (value > 0.2) return 'bg-[#00D4FF]/50';
+    if (value > 0.2) return 'bg-[#3D70B7]/50';
     return 'bg-slate-700';
   };
 
@@ -748,10 +748,10 @@ export default function ApiSecurityLab() {
       <div className="fixed top-6 left-6 z-50">
         <Link
           href="/experience"
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(2,6,23,0.9)] border border-[#00D4FF]/30 hover:border-[#00D4FF]/60 transition-all duration-300 hover:shadow-[0_0_20px_rgba(0, 212, 255,0.2)]"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(2,6,23,0.9)] border border-[#3D70B7]/30 hover:border-[#3D70B7]/60 transition-all duration-300 hover:shadow-[0_0_20px_rgba(61, 112, 183,0.2)]"
           data-testid="link-back-experience"
         >
-          <ArrowLeft className="w-4 h-4 text-[#00D4FF]" />
+          <ArrowLeft className="w-4 h-4 text-[#3D70B7]" />
           <span className="text-sm">Back to Experience</span>
         </Link>
       </div>
@@ -766,15 +766,15 @@ export default function ApiSecurityLab() {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[rgba(0, 212, 255,0.1)] border border-[#00D4FF]/30 mb-6"
+            className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[rgba(61, 112, 183,0.1)] border border-[#3D70B7]/30 mb-6"
           >
-            <PulsingDot color="#00D4FF" />
-            <Server className="w-4 h-4 text-[#00D4FF]" />
-            <span className="text-[#00D4FF] text-sm font-medium">API Security Operations Center</span>
-            <PulsingDot color="#00D4FF" />
+            <PulsingDot color="#3D70B7" />
+            <Server className="w-4 h-4 text-[#3D70B7]" />
+            <span className="text-[#3D70B7] text-sm font-medium">API Security Operations Center</span>
+            <PulsingDot color="#3D70B7" />
           </motion.div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="bg-gradient-to-r from-[#00D4FF] via-white to-[#00D4FF] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#3D70B7] via-white to-[#3D70B7] bg-clip-text text-transparent">
               API Security Lab
             </span>
           </h1>
@@ -805,7 +805,7 @@ export default function ApiSecurityLab() {
                   <select
                     value={customMethod}
                     onChange={(e) => setCustomMethod(e.target.value as 'GET' | 'POST' | 'PUT' | 'DELETE')}
-                    className="bg-transparent text-[#00D4FF] font-mono text-sm outline-none cursor-pointer"
+                    className="bg-transparent text-[#3D70B7] font-mono text-sm outline-none cursor-pointer"
                     disabled={isScanning}
                     data-testid="select-method"
                   >
@@ -832,7 +832,7 @@ export default function ApiSecurityLab() {
                   disabled={isScanning}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="px-6 py-2.5 rounded-lg font-medium text-sm bg-gradient-to-r from-[#00D4FF] to-[#00D4FF] text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-[0_0_20px_rgba(0, 212, 255,0.3)]"
+                  className="px-6 py-2.5 rounded-lg font-medium text-sm bg-gradient-to-r from-[#3D70B7] to-[#3D70B7] text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-[0_0_20px_rgba(61, 112, 183,0.3)]"
                   data-testid="button-test-endpoint"
                 >
                   {isScanning ? (
@@ -856,7 +856,7 @@ export default function ApiSecurityLab() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-3 rounded-lg bg-[rgba(0,0,0,0.3)] border border-slate-800/50">
-                  <label className="text-xs text-[#00D4FF] font-medium mb-2 block flex items-center gap-2">
+                  <label className="text-xs text-[#3D70B7] font-medium mb-2 block flex items-center gap-2">
                     <Key className="w-3 h-3" />
                     Headers
                   </label>
@@ -870,7 +870,7 @@ export default function ApiSecurityLab() {
                   />
                 </div>
                 <div className="p-3 rounded-lg bg-[rgba(0,0,0,0.3)] border border-slate-800/50">
-                  <label className="text-xs text-[#00D4FF] font-medium mb-2 block flex items-center gap-2">
+                  <label className="text-xs text-[#3D70B7] font-medium mb-2 block flex items-center gap-2">
                     <FileJson className="w-3 h-3" />
                     Request Body (JSON)
                   </label>
@@ -903,17 +903,17 @@ export default function ApiSecurityLab() {
                       animate={{ rotate: 360 }}
                       transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
                     >
-                      <Activity className="w-5 h-5 text-[#00D4FF]" />
+                      <Activity className="w-5 h-5 text-[#3D70B7]" />
                     </motion.div>
                     <span className="text-sm text-slate-400 font-mono">
                       {scanPhase}
                     </span>
                   </div>
-                  <span className="text-sm text-[#00D4FF] font-mono font-bold">{Math.round(scanProgress)}%</span>
+                  <span className="text-sm text-[#3D70B7] font-mono font-bold">{Math.round(scanProgress)}%</span>
                 </div>
                 <div className="h-3 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
                   <motion.div
-                    className="h-full bg-gradient-to-r from-[#00D4FF] to-[#00D4FF] rounded-full relative"
+                    className="h-full bg-gradient-to-r from-[#3D70B7] to-[#3D70B7] rounded-full relative"
                     initial={{ width: 0 }}
                     animate={{ width: `${scanProgress}%` }}
                     transition={{ duration: 0.3 }}
@@ -937,7 +937,7 @@ export default function ApiSecurityLab() {
                         transition={{ delay: i * 0.1 }}
                         className={`p-3 rounded-lg border transition-all duration-300 ${
                           isActive 
-                            ? 'border-[#00D4FF]/50 bg-[#00D4FF]/10' 
+                            ? 'border-[#3D70B7]/50 bg-[#3D70B7]/10' 
                             : 'border-slate-800/50 bg-slate-900/40'
                         }`}
                       >
@@ -946,9 +946,9 @@ export default function ApiSecurityLab() {
                             animate={isActive ? { scale: [1, 1.2, 1] } : {}}
                             transition={{ duration: 0.5 }}
                           >
-                            <Icon className={`w-4 h-4 ${isActive ? 'text-[#00D4FF]' : 'text-slate-600'}`} />
+                            <Icon className={`w-4 h-4 ${isActive ? 'text-[#3D70B7]' : 'text-slate-600'}`} />
                           </motion.div>
-                          <span className={`text-xs ${isActive ? 'text-[#00D4FF]' : 'text-slate-600'}`}>
+                          <span className={`text-xs ${isActive ? 'text-[#3D70B7]' : 'text-slate-600'}`}>
                             {test.name.split(' ')[0]}
                           </span>
                         </div>
@@ -987,9 +987,9 @@ export default function ApiSecurityLab() {
                       transition={{ delay: i * 0.1, type: 'spring' }}
                       className="text-3xl font-bold mb-1"
                       style={{ 
-                        color: stat.color === 'cyan' ? '#00D4FF' : 
+                        color: stat.color === 'cyan' ? '#3D70B7' : 
                                stat.color === 'red' ? '#ff4444' :
-                               stat.color === 'amber' ? '#ffaa00' : '#00D4FF'
+                               stat.color === 'amber' ? '#ffaa00' : '#3D70B7'
                       }}
                     >
                       <AnimatedCounter value={stat.value} />
@@ -1012,8 +1012,8 @@ export default function ApiSecurityLab() {
 
               <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
                 {[
-                  { id: 'request', label: 'Request/Response', icon: FileJson, color: '#00D4FF' },
-                  { id: 'auth', label: 'Authentication', icon: Key, color: '#00D4FF' },
+                  { id: 'request', label: 'Request/Response', icon: FileJson, color: '#3D70B7' },
+                  { id: 'auth', label: 'Authentication', icon: Key, color: '#3D70B7' },
                   { id: 'rate-limit', label: 'Rate Limiting', icon: Zap, color: '#ffaa00' },
                   { id: 'data', label: 'Data Exposure', icon: Eye, color: '#ff4444' },
                 ].map((tab) => {
@@ -1047,7 +1047,7 @@ export default function ApiSecurityLab() {
                 {activeTab === 'request' && requestResponse && (
                   <div>
                     <h3 className="text-lg font-medium mb-4 flex items-center gap-2 text-slate-200">
-                      <FileJson className="w-5 h-5 text-[#00D4FF]" />
+                      <FileJson className="w-5 h-5 text-[#3D70B7]" />
                       Request/Response Visualization
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1058,9 +1058,9 @@ export default function ApiSecurityLab() {
                       >
                         <div className="flex items-center gap-2 mb-3">
                           <motion.span 
-                            animate={{ boxShadow: ['0 0 10px rgba(0, 212, 255,0.3)', '0 0 20px rgba(0, 212, 255,0.5)', '0 0 10px rgba(0, 212, 255,0.3)'] }}
+                            animate={{ boxShadow: ['0 0 10px rgba(61, 112, 183,0.3)', '0 0 20px rgba(61, 112, 183,0.5)', '0 0 10px rgba(61, 112, 183,0.3)'] }}
                             transition={{ duration: 2, repeat: Infinity }}
-                            className="px-2 py-1 rounded text-xs font-mono bg-[#00D4FF]/20 text-[#00D4FF] border border-[#00D4FF]/50"
+                            className="px-2 py-1 rounded text-xs font-mono bg-[#3D70B7]/20 text-[#3D70B7] border border-[#3D70B7]/50"
                           >
                             {requestResponse.method}
                           </motion.span>
@@ -1109,7 +1109,7 @@ export default function ApiSecurityLab() {
                 {activeTab === 'auth' && (
                   <div>
                     <h3 className="text-lg font-medium mb-4 flex items-center gap-2 text-slate-200">
-                      <Key className="w-5 h-5 text-[#00D4FF]" />
+                      <Key className="w-5 h-5 text-[#3D70B7]" />
                       Authentication Security Analysis
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -1166,7 +1166,7 @@ export default function ApiSecurityLab() {
                                     key="pending"
                                     animate={{ rotate: 360 }}
                                     transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                                    className="w-5 h-5 rounded-full border-2 border-slate-600 border-t-[#00D4FF]"
+                                    className="w-5 h-5 rounded-full border-2 border-slate-600 border-t-[#3D70B7]"
                                   />
                                 )}
                               </AnimatePresence>
@@ -1183,14 +1183,14 @@ export default function ApiSecurityLab() {
                           <div key={step.id} className="flex items-center">
                             <motion.div 
                               animate={step.status === 'active' ? { 
-                                boxShadow: ['0 0 10px rgba(0, 212, 255,0.3)', '0 0 25px rgba(0, 212, 255,0.6)', '0 0 10px rgba(0, 212, 255,0.3)']
+                                boxShadow: ['0 0 10px rgba(61, 112, 183,0.3)', '0 0 25px rgba(61, 112, 183,0.6)', '0 0 10px rgba(61, 112, 183,0.3)']
                               } : {}}
                               transition={{ duration: 1, repeat: step.status === 'active' ? Infinity : 0 }}
                               className={`w-10 h-10 rounded-lg flex items-center justify-center text-xs font-medium transition-all ${
                                 step.status === 'success' ? 'bg-emerald-950/50 text-emerald-400 border border-emerald-500/50' :
                                 step.status === 'warning' ? 'bg-amber-950/50 text-amber-400 border border-amber-500/50' :
                                 step.status === 'error' ? 'bg-red-950/50 text-red-400 border border-red-500/50' :
-                                step.status === 'active' ? 'bg-[#00D4FF]/20 text-[#00D4FF] border border-[#00D4FF]/50' :
+                                step.status === 'active' ? 'bg-[#3D70B7]/20 text-[#3D70B7] border border-[#3D70B7]/50' :
                                 'bg-slate-900 text-slate-600 border border-slate-800/50'
                               }`}
                             >
@@ -1202,7 +1202,7 @@ export default function ApiSecurityLab() {
                                 animate={{ scaleX: 1 }}
                                 transition={{ delay: i * 0.2 }}
                                 className={`w-8 h-0.5 origin-left ${
-                                  step.status === 'success' || step.status === 'warning' ? 'bg-gradient-to-r from-[#00D4FF] to-[#00D4FF]' : 'bg-slate-800'
+                                  step.status === 'success' || step.status === 'warning' ? 'bg-gradient-to-r from-[#3D70B7] to-[#3D70B7]' : 'bg-slate-800'
                                 }`}
                               />
                             )}
@@ -1254,7 +1254,7 @@ export default function ApiSecurityLab() {
                           <span>Low</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <div className="w-3 h-3 rounded bg-[#00D4FF]/50" />
+                          <div className="w-3 h-3 rounded bg-[#3D70B7]/50" />
                           <span>Normal</span>
                         </div>
                         <div className="flex items-center gap-1">
@@ -1322,7 +1322,7 @@ export default function ApiSecurityLab() {
                             <span className="font-medium text-slate-200">{vuln.type}</span>
                           </div>
                           <p className="text-sm text-slate-500 mb-2">{vuln.description}</p>
-                          <code className="text-xs text-[#00D4FF] bg-[#00D4FF]/10 px-2 py-1 rounded font-mono border border-[#00D4FF]/20">{vuln.endpoint}</code>
+                          <code className="text-xs text-[#3D70B7] bg-[#3D70B7]/10 px-2 py-1 rounded font-mono border border-[#3D70B7]/20">{vuln.endpoint}</code>
                         </motion.div>
                       ))}
                       {vulnerabilities.filter(v => v.category === 'data-exposure').length === 0 && (
@@ -1373,7 +1373,7 @@ export default function ApiSecurityLab() {
                             <span className="font-medium text-slate-200">{vuln.type}</span>
                           </div>
                           <p className="text-sm text-slate-500 mb-2">{vuln.description}</p>
-                          <code className="text-xs text-[#00D4FF] bg-[#00D4FF]/10 px-2 py-1 rounded font-mono border border-[#00D4FF]/20">{vuln.endpoint}</code>
+                          <code className="text-xs text-[#3D70B7] bg-[#3D70B7]/10 px-2 py-1 rounded font-mono border border-[#3D70B7]/20">{vuln.endpoint}</code>
                         </div>
                         <motion.div
                           whileHover={{ rotate: 90 }}
@@ -1410,9 +1410,9 @@ export default function ApiSecurityLab() {
               >
                 <Link href="/contact">
                   <motion.button
-                    whileHover={{ scale: 1.02, boxShadow: '0 0 40px rgba(0, 212, 255, 0.3)' }}
+                    whileHover={{ scale: 1.02, boxShadow: '0 0 40px rgba(61, 112, 183, 0.3)' }}
                     whileTap={{ scale: 0.98 }}
-                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-medium bg-gradient-to-r from-[#00D4FF] to-[#00D4FF] text-white transition-all shadow-[0_0_30px_rgba(0, 212, 255,0.2)]"
+                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-medium bg-gradient-to-r from-[#3D70B7] to-[#3D70B7] text-white transition-all shadow-[0_0_30px_rgba(61, 112, 183,0.2)]"
                     data-testid="link-get-assessment"
                   >
                     <Shield className="w-5 h-5" />

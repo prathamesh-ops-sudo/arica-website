@@ -645,7 +645,7 @@ export function HorizonHeroSection() {
       {webglFailed || isMobileOrTablet ? (
         <div className="absolute inset-0 z-[3] bg-gradient-to-b from-[#050505] via-[#0a0510] to-black">
           <div className="absolute inset-0 opacity-30" style={{
-            backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(0, 119, 182, 0.2), transparent 50%), radial-gradient(circle at 80% 30%, rgba(0, 212, 255, 0.2), transparent 50%)'
+            backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(28, 44, 90, 0.2), transparent 50%), radial-gradient(circle at 80% 30%, rgba(61, 112, 183, 0.2), transparent 50%)'
           }} />
         </div>
       ) : (

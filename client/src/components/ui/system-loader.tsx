@@ -172,8 +172,8 @@ export function SystemLoader({ onComplete, duration = 4000 }: SystemLoaderProps)
                 className="text-4xl md:text-6xl font-bold tracking-wider"
                 style={{
                   fontFamily: 'monospace',
-                  color: '#00D4FF',
-                  textShadow: '0 0 10px #00D4FF, 0 0 20px #00D4FF, 0 0 40px #00D4FF'
+                  color: '#3D70B7',
+                  textShadow: '0 0 10px #3D70B7, 0 0 20px #3D70B7, 0 0 40px #3D70B7'
                 }}
                 data-testid="loader-title"
               >
@@ -181,7 +181,7 @@ export function SystemLoader({ onComplete, duration = 4000 }: SystemLoaderProps)
                 <motion.span
                   animate={{ opacity: [1, 0, 1] }}
                   transition={{ duration: 0.8, repeat: Infinity }}
-                  style={{ color: '#00D4FF' }}
+                  style={{ color: '#3D70B7' }}
                 >
                   _
                 </motion.span>
@@ -192,15 +192,15 @@ export function SystemLoader({ onComplete, duration = 4000 }: SystemLoaderProps)
               <div
                 className="relative h-3 rounded-full overflow-hidden"
                 style={{
-                  backgroundColor: 'rgba(0, 212, 255, 0.1)',
-                  border: '1px solid rgba(0, 212, 255, 0.3)'
+                  backgroundColor: 'rgba(61, 112, 183, 0.1)',
+                  border: '1px solid rgba(61, 112, 183, 0.3)'
                 }}
               >
                 <motion.div
                   className="absolute inset-y-0 left-0 rounded-full"
                   style={{
-                    background: 'linear-gradient(90deg, #00D4FF, #00D4FF)',
-                    boxShadow: '0 0 10px #00D4FF, 0 0 20px #00D4FF, 0 0 30px #00D4FF'
+                    background: 'linear-gradient(90deg, #3D70B7, #3D70B7)',
+                    boxShadow: '0 0 10px #3D70B7, 0 0 20px #3D70B7, 0 0 30px #3D70B7'
                   }}
                   initial={{ width: '0%' }}
                   animate={{ width: `${progress}%` }}
@@ -221,7 +221,7 @@ export function SystemLoader({ onComplete, duration = 4000 }: SystemLoaderProps)
               <div className="flex justify-between mt-2">
                 <span
                   className="text-sm"
-                  style={{ fontFamily: 'monospace', color: '#00D4FF' }}
+                  style={{ fontFamily: 'monospace', color: '#3D70B7' }}
                 >
                   LOADING
                 </span>
@@ -229,8 +229,8 @@ export function SystemLoader({ onComplete, duration = 4000 }: SystemLoaderProps)
                   className="text-sm font-bold"
                   style={{
                     fontFamily: 'monospace',
-                    color: '#00D4FF',
-                    textShadow: '0 0 5px #00D4FF'
+                    color: '#3D70B7',
+                    textShadow: '0 0 5px #3D70B7'
                   }}
                   data-testid="loader-percentage"
                 >
@@ -249,7 +249,7 @@ export function SystemLoader({ onComplete, duration = 4000 }: SystemLoaderProps)
                 className="text-center"
                 style={{ fontFamily: 'monospace' }}
               >
-                <span style={{ color: '#00D4FF', marginRight: '8px' }}>&gt;</span>
+                <span style={{ color: '#3D70B7', marginRight: '8px' }}>&gt;</span>
                 <span
                   style={{
                     color: '#00ff00',
@@ -280,8 +280,8 @@ export function SystemLoader({ onComplete, duration = 4000 }: SystemLoaderProps)
                   key={i}
                   className="w-3 h-3 rounded-full"
                   style={{
-                    backgroundColor: progress > (i + 1) * 30 ? '#00D4FF' : 'rgba(0, 212, 255, 0.2)',
-                    boxShadow: progress > (i + 1) * 30 ? '0 0 10px #00D4FF' : 'none'
+                    backgroundColor: progress > (i + 1) * 30 ? '#3D70B7' : 'rgba(61, 112, 183, 0.2)',
+                    boxShadow: progress > (i + 1) * 30 ? '0 0 10px #3D70B7' : 'none'
                   }}
                   animate={progress > (i + 1) * 30 ? { scale: [1, 1.2, 1] } : {}}
                   transition={{ duration: 0.3 }}
@@ -291,7 +291,7 @@ export function SystemLoader({ onComplete, duration = 4000 }: SystemLoaderProps)
 
             <motion.div
               className="absolute bottom-8 left-0 right-0 flex justify-center gap-8 text-xs"
-              style={{ fontFamily: 'monospace', color: 'rgba(0, 212, 255, 0.5)' }}
+              style={{ fontFamily: 'monospace', color: 'rgba(61, 112, 183, 0.5)' }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.5 }}

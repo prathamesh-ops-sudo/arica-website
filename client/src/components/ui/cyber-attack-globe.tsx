@@ -595,7 +595,7 @@ export function CyberAttackGlobe({
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <div className="backdrop-blur-xl bg-black/50 border border-[#00D4FF]/30 rounded-xl p-4 min-w-[180px] shadow-[0_0_30px_rgba(0,212,255,0.15)]">
+            <div className="backdrop-blur-xl bg-black/50 border border-[#3D70B7]/30 rounded-xl p-4 min-w-[180px] shadow-[0_0_30px_rgba(0,212,255,0.15)]">
               <div className="flex items-center gap-2 mb-3">
                 <motion.div 
                   className={`w-3 h-3 rounded-full ${getThreatLevelColor(stats.threatLevel).split(' ')[1]}`}
@@ -619,10 +619,10 @@ export function CyberAttackGlobe({
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <div className="backdrop-blur-xl bg-black/50 border border-[#00D4FF]/30 rounded-xl p-4 min-w-[160px] shadow-[0_0_30px_rgba(0,212,255,0.15)]">
+            <div className="backdrop-blur-xl bg-black/50 border border-[#3D70B7]/30 rounded-xl p-4 min-w-[160px] shadow-[0_0_30px_rgba(0,212,255,0.15)]">
               <div className="text-xs text-white/60 uppercase tracking-wider font-medium mb-2">Attacks Blocked</div>
               <motion.div 
-                className="text-3xl font-bold text-[#00D4FF]"
+                className="text-3xl font-bold text-[#3D70B7]"
                 key={stats.attacksBlocked}
                 initial={{ scale: 1.2 }}
                 animate={{ scale: 1 }}
@@ -686,7 +686,7 @@ export function CyberAttackGlobe({
                 <span className="text-[10px] text-white/50 uppercase">Attack</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-0.5 bg-[#00D4FF]" />
+                <div className="w-3 h-0.5 bg-[#3D70B7]" />
                 <span className="text-[10px] text-white/50 uppercase">Blocked</span>
               </div>
             </div>

@@ -13,8 +13,8 @@ import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background
 import { useGsapStagger } from '@/hooks/useGsapStagger';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
-const CYAN = '#00D4FF';
-const PURPLE = '#00D4FF';
+const CYAN = '#3D70B7';
+const PURPLE = '#3D70B7';
 const NAVY = 'hsl(222, 47%, 5%)';
 const GREEN = '#00FF88';
 

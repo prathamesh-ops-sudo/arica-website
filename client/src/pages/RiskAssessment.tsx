@@ -361,8 +361,8 @@ function ThreatGridBackground({ riskLevel }: { riskLevel: number }) {
       <div 
         className="absolute inset-0 opacity-20"
         style={{
-          background: `radial-gradient(ellipse at 40% 30%, rgba(0, 212, 255, 0.05) 0%, transparent 55%),
-                       radial-gradient(ellipse at 70% 70%, rgba(0, 119, 182, 0.04) 0%, transparent 50%)`,
+          background: `radial-gradient(ellipse at 40% 30%, rgba(61, 112, 183, 0.05) 0%, transparent 55%),
+                       radial-gradient(ellipse at 70% 70%, rgba(28, 44, 90, 0.04) 0%, transparent 50%)`,
         }}
       />
       <svg className="absolute inset-0 w-full h-full">
@@ -377,7 +377,7 @@ function ThreatGridBackground({ riskLevel }: { riskLevel: number }) {
               cx={`${x + 100 / gridSize / 2}%`}
               cy={`${y + 100 / gridSize / 2}%`}
               r={isActive ? 4 : 1}
-              fill={isActive ? getColor() : 'rgba(0, 212, 255,0.1)'}
+              fill={isActive ? getColor() : 'rgba(61, 112, 183,0.1)'}
               initial={{ opacity: 0, scale: 0 }}
               animate={{ 
                 opacity: isActive ? [0, 0.8, 0] : 0.2,
@@ -459,11 +459,11 @@ function LiveThreatMatrix({
                   className={`${bgColor} rounded-lg p-2 relative flex items-center justify-center min-h-[60px] border border-white/5`}
                   animate={isPulsing && cellThreats.length > 0 ? {
                     boxShadow: [
-                      '0 0 0 rgba(0, 212, 255,0)',
-                      '0 0 20px rgba(0, 212, 255,0.4)',
-                      '0 0 0 rgba(0, 212, 255,0)'
+                      '0 0 0 rgba(61, 112, 183,0)',
+                      '0 0 20px rgba(61, 112, 183,0.4)',
+                      '0 0 0 rgba(61, 112, 183,0)'
                     ],
-                    borderColor: ['rgba(255,255,255,0.05)', 'rgba(0, 212, 255,0.5)', 'rgba(255,255,255,0.05)']
+                    borderColor: ['rgba(255,255,255,0.05)', 'rgba(61, 112, 183,0.5)', 'rgba(255,255,255,0.05)']
                   } : {}}
                   transition={{ duration: 1 }}
                 >
@@ -520,9 +520,9 @@ function LiveThreatMatrix({
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute top-4 right-4 p-4 rounded-xl bg-[rgba(10,10,30,0.95)] backdrop-blur-xl border border-[#00D4FF]/40 max-w-xs"
+            className="absolute top-4 right-4 p-4 rounded-xl bg-[rgba(10,10,30,0.95)] backdrop-blur-xl border border-[#3D70B7]/40 max-w-xs"
             style={{
-              boxShadow: `0 0 40px rgba(0, 212, 255,0.3), 0 0 80px ${getSeverityColor(hoveredThreat.severity)}20`
+              boxShadow: `0 0 40px rgba(61, 112, 183,0.3), 0 0 80px ${getSeverityColor(hoveredThreat.severity)}20`
             }}
             data-testid="threat-tooltip"
           >
@@ -639,7 +639,7 @@ function InteractiveRiskCard({
       case 'high': return '#f97316';
       case 'medium': return '#f59e0b';
       case 'low': return '#22c55e';
-      default: return '#00D4FF';
+      default: return '#3D70B7';
     }
   };
 
@@ -690,7 +690,7 @@ function InteractiveRiskCard({
                 <HelpCircle className="w-4 h-4 text-muted-foreground" />
               </button>
             </TooltipTrigger>
-            <TooltipContent className="max-w-xs bg-[rgba(10,10,30,0.95)] border-[#00D4FF]/30">
+            <TooltipContent className="max-w-xs bg-[rgba(10,10,30,0.95)] border-[#3D70B7]/30">
               <p className="text-sm">{riskCategoryTooltips[category.id]}</p>
             </TooltipContent>
           </Tooltip>
@@ -846,8 +846,8 @@ function AnimatedTrendChart({ data, animatedData }: { data: number[]; animatedDa
             </feMerge>
           </filter>
           <linearGradient id="trendGradientEnhanced" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#00D4FF" />
-            <stop offset="50%" stopColor="#00D4FF" />
+            <stop offset="0%" stopColor="#3D70B7" />
+            <stop offset="50%" stopColor="#3D70B7" />
             <stop offset="100%" stopColor="#22c55e" />
           </linearGradient>
         </defs>
@@ -873,7 +873,7 @@ function AnimatedTrendChart({ data, animatedData }: { data: number[]; animatedDa
                   cx={`${(index / (data.length - 1)) * 100}%`}
                   cy={`${100 - value}%`}
                   r={pulsingPoint === index ? 10 : 6}
-                  fill={value <= 40 ? '#22c55e' : '#00D4FF'}
+                  fill={value <= 40 ? '#22c55e' : '#3D70B7'}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ 
                     scale: 1, 
@@ -885,7 +885,7 @@ function AnimatedTrendChart({ data, animatedData }: { data: number[]; animatedDa
                     r: { duration: 1, repeat: pulsingPoint === index ? Infinity : 0 }
                   }}
                   style={{
-                    filter: `drop-shadow(0 0 ${pulsingPoint === index ? 15 : 8}px ${value <= 40 ? '#22c55e' : '#00D4FF'})`
+                    filter: `drop-shadow(0 0 ${pulsingPoint === index ? 15 : 8}px ${value <= 40 ? '#22c55e' : '#3D70B7'})`
                   }}
                 />
               </motion.g>
@@ -1008,7 +1008,7 @@ export default function RiskAssessment() {
     <TooltipProvider>
     <div className="min-h-screen aurora-bg text-white relative overflow-hidden">
       <ThreatGridBackground riskLevel={targetScore} />
-      <AmbientParticles variant="network" count={30} color="#00D4FF" opacity={0.15} />
+      <AmbientParticles variant="network" count={30} color="#3D70B7" opacity={0.15} />
 
       <div className="relative z-10">
         <div className="fixed top-6 left-6 z-50">
@@ -1029,12 +1029,12 @@ export default function RiskAssessment() {
             className="text-center mb-12"
           >
             <motion.div 
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00D4FF]/10 border border-[#00D4FF]/30 mb-6"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#3D70B7]/10 border border-[#3D70B7]/30 mb-6"
               animate={{
                 boxShadow: [
-                  '0 0 20px rgba(0, 212, 255,0.1)',
-                  '0 0 40px rgba(0, 212, 255,0.2)',
-                  '0 0 20px rgba(0, 212, 255,0.1)'
+                  '0 0 20px rgba(61, 112, 183,0.1)',
+                  '0 0 40px rgba(61, 112, 183,0.2)',
+                  '0 0 20px rgba(61, 112, 183,0.1)'
                 ]
               }}
               transition={{ duration: 3, repeat: Infinity }}
@@ -1043,9 +1043,9 @@ export default function RiskAssessment() {
                 animate={{ rotate: 360 }}
                 transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
               >
-                <Target className="w-4 h-4 text-[#00D4FF]" />
+                <Target className="w-4 h-4 text-[#3D70B7]" />
               </motion.div>
-              <span className="text-[#00D4FF] text-sm font-medium">Live Risk Assessment</span>
+              <span className="text-[#3D70B7] text-sm font-medium">Live Risk Assessment</span>
               <motion.div
                 className="w-2 h-2 rounded-full bg-green-500"
                 animate={{ opacity: [1, 0.3, 1] }}
@@ -1055,7 +1055,7 @@ export default function RiskAssessment() {
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
               Cybersecurity
               <motion.span 
-                className="block text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] to-cyan-500"
+                className="block text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-cyan-500"
                 animate={{
                   backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
                 }}
@@ -1123,7 +1123,7 @@ export default function RiskAssessment() {
                     animate={{ opacity: [0.5, 1, 0.5] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
-                    <Activity className="w-5 h-5 text-[#00D4FF]" />
+                    <Activity className="w-5 h-5 text-[#3D70B7]" />
                   </motion.div>
                 </h3>
                 <div className="flex items-center gap-2 text-green-400 text-sm">
@@ -1146,7 +1146,7 @@ export default function RiskAssessment() {
                 <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
                   Risk Categories
                   <motion.div
-                    className="w-2 h-2 rounded-full bg-[#00D4FF]"
+                    className="w-2 h-2 rounded-full bg-[#3D70B7]"
                     animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   />
@@ -1206,7 +1206,7 @@ export default function RiskAssessment() {
                     <HelpCircle className="w-5 h-5 text-muted-foreground" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent className="max-w-xs bg-[rgba(10,10,30,0.95)] border-[#00D4FF]/30">
+                <TooltipContent className="max-w-xs bg-[rgba(10,10,30,0.95)] border-[#3D70B7]/30">
                   <p className="text-sm">Hover over threat dots to see details. Cells pulse when threats are actively detected. Position indicates likelihood (x-axis) and impact (y-axis).</p>
                 </TooltipContent>
               </Tooltip>
@@ -1302,7 +1302,7 @@ export default function RiskAssessment() {
                                   className={`p-3 rounded-lg border transition-all ${
                                     item.addressed 
                                       ? 'bg-green-500/10 border-green-500/30 opacity-60' 
-                                      : 'bg-white/5 border-white/10 hover:border-[#00D4FF]/50'
+                                      : 'bg-white/5 border-white/10 hover:border-[#3D70B7]/50'
                                   }`}
                                   whileHover={{ scale: 1.02 }}
                                   data-testid={`action-item-${item.id}`}
@@ -1316,7 +1316,7 @@ export default function RiskAssessment() {
                                       className={`mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
                                         item.addressed 
                                           ? 'bg-green-500 border-green-500' 
-                                          : 'border-white/30 hover:border-[#00D4FF]'
+                                          : 'border-white/30 hover:border-[#3D70B7]'
                                       }`}
                                       data-testid={`checkbox-${item.id}`}
                                     >
@@ -1424,7 +1424,7 @@ export default function RiskAssessment() {
               }}
               transition={{ duration: 3, repeat: Infinity }}
             >
-              <Zap className="w-12 h-12 text-[#00D4FF] mx-auto mb-4" />
+              <Zap className="w-12 h-12 text-[#3D70B7] mx-auto mb-4" />
             </motion.div>
             <h3 className="text-2xl font-bold mb-2">Ready for a Complete Assessment?</h3>
             <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
@@ -1432,7 +1432,7 @@ export default function RiskAssessment() {
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold bg-gradient-to-r from-[#00D4FF] to-cyan-500 hover:opacity-90 transition-all shadow-[0_0_30px_rgba(0, 212, 255,0.3)]"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold bg-gradient-to-r from-[#3D70B7] to-cyan-500 hover:opacity-90 transition-all shadow-[0_0_30px_rgba(61, 112, 183,0.3)]"
               data-testid="link-contact-assessment"
             >
               Request Full Assessment

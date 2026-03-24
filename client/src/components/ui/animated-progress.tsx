@@ -15,9 +15,9 @@ interface AnimatedProgressProps {
 
 const colorStyles = {
   cyan: {
-    bar: 'bg-[#00D4FF]',
+    bar: 'bg-[#3D70B7]',
     glow: 'shadow-[0_0_20px_rgba(0,212,255,0.6)]',
-    text: 'text-[#00D4FF]',
+    text: 'text-[#3D70B7]',
   },
   purple: {
     bar: 'bg-cyan-500',
@@ -40,9 +40,9 @@ const colorStyles = {
     text: 'text-amber-400',
   },
   gradient: {
-    bar: 'bg-gradient-to-r from-[#00D4FF] to-[#00D4FF]',
+    bar: 'bg-gradient-to-r from-[#3D70B7] to-[#3D70B7]',
     glow: 'shadow-[0_0_20px_rgba(0,212,255,0.4)]',
-    text: 'text-[#00D4FF]',
+    text: 'text-[#3D70B7]',
   },
 };
 
@@ -217,13 +217,13 @@ export function CircularProgress({
           <linearGradient id={gradientIds[color]} x1="0%" y1="0%" x2="100%" y2="0%">
             {color === 'gradient' ? (
               <>
-                <stop offset="0%" stopColor="#00D4FF" />
-                <stop offset="100%" stopColor="#00D4FF" />
+                <stop offset="0%" stopColor="#3D70B7" />
+                <stop offset="100%" stopColor="#3D70B7" />
               </>
             ) : (
               <>
-                <stop offset="0%" stopColor={color === 'cyan' ? '#00D4FF' : color === 'purple' ? '#a855f7' : color === 'red' ? '#ef4444' : color === 'green' ? '#22c55e' : '#f59e0b'} />
-                <stop offset="100%" stopColor={color === 'cyan' ? '#00B4D8' : color === 'purple' ? '#00D4FF' : color === 'red' ? '#dc2626' : color === 'green' ? '#16a34a' : '#d97706'} />
+                <stop offset="0%" stopColor={color === 'cyan' ? '#3D70B7' : color === 'purple' ? '#a855f7' : color === 'red' ? '#ef4444' : color === 'green' ? '#22c55e' : '#f59e0b'} />
+                <stop offset="100%" stopColor={color === 'cyan' ? '#42BA90' : color === 'purple' ? '#3D70B7' : color === 'red' ? '#dc2626' : color === 'green' ? '#16a34a' : '#d97706'} />
               </>
             )}
           </linearGradient>

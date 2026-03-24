@@ -151,7 +151,7 @@ function AnimatedSecurityGauge({ score, isAnimating }: { score: number; isAnimat
   
   const getScoreColor = (s: number) => {
     if (s >= 80) return '#22c55e';
-    if (s >= 60) return '#00D4FF';
+    if (s >= 60) return '#3D70B7';
     if (s >= 40) return '#eab308';
     return '#ef4444';
   };
@@ -356,7 +356,7 @@ function ScanRippleEffect({ isActive }: { isActive: boolean }) {
       {[0, 1, 2].map((i) => (
         <motion.div
           key={i}
-          className="absolute inset-0 border-2 border-[#00D4FF] rounded-2xl"
+          className="absolute inset-0 border-2 border-[#3D70B7] rounded-2xl"
           initial={{ scale: 0.8, opacity: 0.8 }}
           animate={{
             scale: [0.8, 1.2],
@@ -380,7 +380,7 @@ function ScanningWave({ progress }: { progress: number }) {
       <motion.div
         className="h-full rounded-full"
         style={{
-          background: 'linear-gradient(90deg, #00D4FF, #00D4FF, #00D4FF)',
+          background: 'linear-gradient(90deg, #3D70B7, #3D70B7, #3D70B7)',
           backgroundSize: '200% 100%',
         }}
         initial={{ width: 0 }}
@@ -595,12 +595,12 @@ export default function MobileSecurity() {
 
   return (
     <div className="min-h-screen text-white relative overflow-hidden" style={{ backgroundColor: '#000510' }}>
-      <AmbientParticles variant="network" count={30} color="#00D4FF" opacity={0.15} />
+      <AmbientParticles variant="network" count={30} color="#3D70B7" opacity={0.15} />
       
       <div 
         className="fixed inset-0 pointer-events-none z-0"
         style={{
-          background: 'radial-gradient(ellipse at 30% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 40%)',
+          background: 'radial-gradient(ellipse at 30% 20%, rgba(61, 112, 183, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 40%)',
         }}
       />
 
@@ -622,13 +622,13 @@ export default function MobileSecurity() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-6" style={{ backgroundColor: 'rgba(0, 212, 255, 0.1)', borderColor: 'rgba(0, 212, 255, 0.3)' }}>
-              <Smartphone className="w-4 h-4" style={{ color: '#00D4FF' }} />
-              <span className="text-sm font-medium" style={{ color: '#00D4FF' }}>Mobile Security Testing</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-6" style={{ backgroundColor: 'rgba(61, 112, 183, 0.1)', borderColor: 'rgba(61, 112, 183, 0.3)' }}>
+              <Smartphone className="w-4 h-4" style={{ color: '#3D70B7' }} />
+              <span className="text-sm font-medium" style={{ color: '#3D70B7' }}>Mobile Security Testing</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
               Mobile App
-              <span className="block text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(to right, #00D4FF, #a855f7)' }}>
+              <span className="block text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(to right, #3D70B7, #a855f7)' }}>
                 Security Assessment
               </span>
             </h1>
@@ -656,7 +656,7 @@ export default function MobileSecurity() {
             className="mb-12"
           >
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              <Smartphone className="w-5 h-5" style={{ color: '#00D4FF' }} />
+              <Smartphone className="w-5 h-5" style={{ color: '#3D70B7' }} />
               Select Target Device
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -667,7 +667,7 @@ export default function MobileSecurity() {
                   onClick={() => handleDeviceSelect(device)}
                   className={`p-4 rounded-xl border backdrop-blur-xl transition-all text-left relative overflow-hidden ${
                     selectedDevice?.id === device.id
-                      ? 'bg-[#00D4FF]/20 border-[#00D4FF]/50'
+                      ? 'bg-[#3D70B7]/20 border-[#3D70B7]/50'
                       : 'bg-white/5 border-white/10 hover:bg-white/10'
                   }`}
                   whileHover={{ scale: 1.02, y: -2 }}
@@ -677,7 +677,7 @@ export default function MobileSecurity() {
                   <AnimatePresence>
                     {selectedDevice?.id === device.id && (
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-br from-[#00D4FF]/20 to-cyan-500/10"
+                        className="absolute inset-0 bg-gradient-to-br from-[#3D70B7]/20 to-cyan-500/10"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -702,7 +702,7 @@ export default function MobileSecurity() {
                   </div>
                   {selectedDevice?.id === device.id && (
                     <motion.div
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#00D4FF] to-cyan-500"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#3D70B7] to-cyan-500"
                       layoutId="device-indicator"
                     />
                   )}
@@ -721,23 +721,23 @@ export default function MobileSecurity() {
                   className="mt-4 space-y-4"
                 >
                   <motion.div 
-                    className="p-4 rounded-xl bg-black/40 backdrop-blur-xl border border-[#00D4FF]/30 relative overflow-hidden"
+                    className="p-4 rounded-xl bg-black/40 backdrop-blur-xl border border-[#3D70B7]/30 relative overflow-hidden"
                     layoutId="device-details-panel"
                   >
                     <ScanRippleEffect isActive={isScanning} />
                     <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
                       <div className="flex items-center gap-4">
                         <motion.div 
-                          className="p-3 rounded-lg bg-[#00D4FF]/10"
+                          className="p-3 rounded-lg bg-[#3D70B7]/10"
                           animate={isScanning ? { 
-                            boxShadow: ['0 0 0 rgba(0, 212, 255,0)', '0 0 20px rgba(0, 212, 255,0.5)', '0 0 0 rgba(0, 212, 255,0)']
+                            boxShadow: ['0 0 0 rgba(61, 112, 183,0)', '0 0 20px rgba(61, 112, 183,0.5)', '0 0 0 rgba(61, 112, 183,0)']
                           } : {}}
                           transition={{ duration: 1.5, repeat: isScanning ? Infinity : 0 }}
                         >
                           {selectedDevice.type === 'phone' ? (
-                            <Smartphone className="w-6 h-6 text-[#00D4FF]" />
+                            <Smartphone className="w-6 h-6 text-[#3D70B7]" />
                           ) : (
-                            <Tablet className="w-6 h-6 text-[#00D4FF]" />
+                            <Tablet className="w-6 h-6 text-[#3D70B7]" />
                           )}
                         </motion.div>
                         <div>
@@ -760,7 +760,7 @@ export default function MobileSecurity() {
                         onClick={startScan}
                         disabled={isScanning}
                         className="px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition-all disabled:opacity-50 flex items-center gap-2 relative overflow-hidden"
-                        style={{ backgroundImage: 'linear-gradient(to right, #00D4FF, #a855f7)' }}
+                        style={{ backgroundImage: 'linear-gradient(to right, #3D70B7, #a855f7)' }}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         data-testid="button-start-scan"
@@ -835,16 +835,16 @@ export default function MobileSecurity() {
                 exit={{ opacity: 0, y: -20 }}
                 className="mb-12 space-y-6"
               >
-                <div className="p-6 rounded-2xl bg-black/40 backdrop-blur-xl border border-[#00D4FF]/30 relative overflow-hidden">
+                <div className="p-6 rounded-2xl bg-black/40 backdrop-blur-xl border border-[#3D70B7]/30 relative overflow-hidden">
                   <ScanRippleEffect isActive={true} />
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="font-semibold flex items-center gap-2">
                         <motion.div 
-                          className="w-3 h-3 rounded-full bg-[#00D4FF]"
+                          className="w-3 h-3 rounded-full bg-[#3D70B7]"
                           animate={{ 
                             scale: [1, 1.2, 1],
-                            boxShadow: ['0 0 0 0 rgba(0, 212, 255,0.5)', '0 0 0 10px rgba(0, 212, 255,0)', '0 0 0 0 rgba(0, 212, 255,0)']
+                            boxShadow: ['0 0 0 0 rgba(61, 112, 183,0.5)', '0 0 0 10px rgba(61, 112, 183,0)', '0 0 0 0 rgba(61, 112, 183,0)']
                           }}
                           transition={{ duration: 1.5, repeat: Infinity }}
                         />
@@ -855,7 +855,7 @@ export default function MobileSecurity() {
                           key={Math.round(scanProgress)}
                           initial={{ scale: 1.2 }}
                           animate={{ scale: 1 }}
-                          className="text-sm font-mono text-[#00D4FF]"
+                          className="text-sm font-mono text-[#3D70B7]"
                         >
                           {Math.round(scanProgress)}%
                         </motion.span>
@@ -872,13 +872,13 @@ export default function MobileSecurity() {
                             key={phase.id}
                             className={`p-3 rounded-lg text-center transition-all relative overflow-hidden ${
                               i === currentPhase
-                                ? 'bg-[#00D4FF]/20 border border-[#00D4FF]/50 text-[#00D4FF]'
+                                ? 'bg-[#3D70B7]/20 border border-[#3D70B7]/50 text-[#3D70B7]'
                                 : i < currentPhase
                                 ? 'bg-green-500/20 border border-green-500/50 text-green-400'
                                 : 'bg-white/5 border border-white/10 text-gray-500'
                             }`}
                             animate={i === currentPhase ? {
-                              boxShadow: ['0 0 0 rgba(0, 212, 255,0)', '0 0 15px rgba(0, 212, 255,0.3)', '0 0 0 rgba(0, 212, 255,0)']
+                              boxShadow: ['0 0 0 rgba(61, 112, 183,0)', '0 0 15px rgba(61, 112, 183,0.3)', '0 0 0 rgba(61, 112, 183,0)']
                             } : {}}
                             transition={{ duration: 1, repeat: i === currentPhase ? Infinity : 0 }}
                           >
@@ -886,7 +886,7 @@ export default function MobileSecurity() {
                             <span className="text-xs">{phase.name}</span>
                             {i === currentPhase && (
                               <motion.div
-                                className="absolute bottom-0 left-0 h-0.5 bg-[#00D4FF]"
+                                className="absolute bottom-0 left-0 h-0.5 bg-[#3D70B7]"
                                 initial={{ width: '0%' }}
                                 animate={{ width: '100%' }}
                                 transition={{ duration: phase.duration / 1000 }}
@@ -939,7 +939,7 @@ export default function MobileSecurity() {
                   transition={{ delay: 0.2 }}
                 >
                   <h3 className="text-sm font-semibold text-gray-400 mb-3 flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-[#00D4FF]" />
+                    <Activity className="w-4 h-4 text-[#3D70B7]" />
                     Real-time Threat Detection
                   </h3>
                   <LiveThreatCounter threats={threatCounts} isScanning={isScanning} />
@@ -958,7 +958,7 @@ export default function MobileSecurity() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex flex-col md:flex-row items-center gap-8 p-6 rounded-2xl bg-black/40 backdrop-blur-xl border border-[#00D4FF]/30"
+                  className="flex flex-col md:flex-row items-center gap-8 p-6 rounded-2xl bg-black/40 backdrop-blur-xl border border-[#3D70B7]/30"
                 >
                   <AnimatedSecurityGauge score={securityScore} isAnimating={false} />
                   <div className="flex-1 space-y-4">
@@ -976,7 +976,7 @@ export default function MobileSecurity() {
                   transition={{ delay: 0.1 }}
                 >
                   <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                    <FileWarning className="w-5 h-5" style={{ color: '#00D4FF' }} />
+                    <FileWarning className="w-5 h-5" style={{ color: '#3D70B7' }} />
                     Discovered Vulnerabilities
                     <span className="ml-2 px-2 py-0.5 rounded-full text-xs bg-red-500/20 text-red-400 border border-red-500/30">
                       {vulnerabilities.length} found
@@ -1103,11 +1103,11 @@ export default function MobileSecurity() {
                 >
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-semibold flex items-center gap-2">
-                      <Shield className="w-5 h-5" style={{ color: '#00D4FF' }} />
+                      <Shield className="w-5 h-5" style={{ color: '#3D70B7' }} />
                       OWASP Mobile Top 10 Checklist
                     </h2>
                     <motion.div 
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black/40 border border-[#00D4FF]/30"
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black/40 border border-[#3D70B7]/30"
                       initial={{ scale: 0.9 }}
                       animate={{ scale: 1 }}
                     >
@@ -1176,7 +1176,7 @@ export default function MobileSecurity() {
                   transition={{ delay: 0.3 }}
                 >
                   <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                    <Eye className="w-5 h-5" style={{ color: '#00D4FF' }} />
+                    <Eye className="w-5 h-5" style={{ color: '#3D70B7' }} />
                     App Permissions Analyzer
                   </h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
@@ -1190,7 +1190,7 @@ export default function MobileSecurity() {
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: 0.05 * index }}
                           className={`p-4 rounded-xl border backdrop-blur-xl text-center transition-all relative overflow-hidden ${getRiskColor(perm.risk)} ${
-                            selectedPermission?.id === perm.id ? 'ring-2 ring-[#00D4FF]' : ''
+                            selectedPermission?.id === perm.id ? 'ring-2 ring-[#3D70B7]' : ''
                           }`}
                           whileHover={{ scale: 1.05, y: -3 }}
                           whileTap={{ scale: 0.95 }}
@@ -1261,15 +1261,15 @@ export default function MobileSecurity() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="mt-12 p-8 rounded-2xl bg-gradient-to-r from-[#00D4FF]/10 to-cyan-500/10 border border-[#00D4FF]/30 text-center relative overflow-hidden"
+                  className="mt-12 p-8 rounded-2xl bg-gradient-to-r from-[#3D70B7]/10 to-cyan-500/10 border border-[#3D70B7]/30 text-center relative overflow-hidden"
                 >
                   <motion.div
                     className="absolute inset-0"
                     animate={{
                       background: [
-                        'radial-gradient(circle at 20% 50%, rgba(0, 212, 255,0.1) 0%, transparent 50%)',
+                        'radial-gradient(circle at 20% 50%, rgba(61, 112, 183,0.1) 0%, transparent 50%)',
                         'radial-gradient(circle at 80% 50%, rgba(153,68,255,0.1) 0%, transparent 50%)',
-                        'radial-gradient(circle at 20% 50%, rgba(0, 212, 255,0.1) 0%, transparent 50%)',
+                        'radial-gradient(circle at 20% 50%, rgba(61, 112, 183,0.1) 0%, transparent 50%)',
                       ],
                     }}
                     transition={{ duration: 5, repeat: Infinity }}
@@ -1282,7 +1282,7 @@ export default function MobileSecurity() {
                     <Link
                       href="/contact"
                       className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-semibold hover:opacity-90 transition-all"
-                      style={{ backgroundImage: 'linear-gradient(to right, #00D4FF, #a855f7)' }}
+                      style={{ backgroundImage: 'linear-gradient(to right, #3D70B7, #a855f7)' }}
                       data-testid="link-contact-cta"
                     >
                       <Send className="w-4 h-4" />
@@ -1301,13 +1301,13 @@ export default function MobileSecurity() {
               className="text-center py-12"
             >
               <motion.div 
-                className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-[#00D4FF]/10 border border-[#00D4FF]/30 mb-4"
+                className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-[#3D70B7]/10 border border-[#3D70B7]/30 mb-4"
                 animate={{ 
-                  boxShadow: ['0 0 0 0 rgba(0, 212, 255,0.3)', '0 0 0 20px rgba(0, 212, 255,0)', '0 0 0 0 rgba(0, 212, 255,0)']
+                  boxShadow: ['0 0 0 0 rgba(61, 112, 183,0.3)', '0 0 0 20px rgba(61, 112, 183,0)', '0 0 0 0 rgba(61, 112, 183,0)']
                 }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                <Smartphone className="w-10 h-10 text-[#00D4FF]" />
+                <Smartphone className="w-10 h-10 text-[#3D70B7]" />
               </motion.div>
               <p className="text-gray-400">Select a device above to begin security testing</p>
             </motion.div>

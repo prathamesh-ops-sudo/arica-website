@@ -58,7 +58,7 @@ const galaxies: GalaxyConfig[] = [
     description: 'Vulnerability Assessment & Penetration Testing',
     scrollStart: 0.0,
     scrollEnd: 0.33,
-    colorTheme: { primary: '#e63946', secondary: '#d62828', accent: '#00D4FF' },
+    colorTheme: { primary: '#e63946', secondary: '#d62828', accent: '#3D70B7' },
     nebulaColors: {
       color1: [0.6, 0.1, 0.1],
       color2: [0.8, 0.2, 0.0],
@@ -2340,7 +2340,7 @@ export function RealisticSolarSystem() {
         {!isLoaded && (
           <div className="absolute inset-0 flex items-center justify-center bg-[#050505] z-50 pointer-events-auto">
             <div className="text-center">
-              <div className="w-16 h-16 border-2 border-[#00B4D8]/20 border-t-[#00B4D8] rounded-full animate-spin mx-auto mb-4" />
+              <div className="w-16 h-16 border-2 border-[#42BA90]/20 border-t-[#42BA90] rounded-full animate-spin mx-auto mb-4" />
               <p className="text-white/40 text-xs uppercase tracking-widest">Preparing experience...</p>
             </div>
           </div>
@@ -2374,7 +2374,7 @@ export function RealisticSolarSystem() {
                 <div className="text-white text-3xl md:text-5xl font-bold tracking-wide" style={{ textShadow: '0 0 40px rgba(0,180,216,0.4)' }}>
                   {sectorTransition.galaxyName}
                 </div>
-                <div className="w-24 h-0.5 mx-auto mt-4 bg-gradient-to-r from-transparent via-[#00B4D8] to-transparent rounded-full" />
+                <div className="w-24 h-0.5 mx-auto mt-4 bg-gradient-to-r from-transparent via-[#42BA90] to-transparent rounded-full" />
               </motion.div>
             </motion.div>
           )}
@@ -2387,7 +2387,7 @@ export function RealisticSolarSystem() {
                 key={galaxy.id}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all duration-500 cursor-pointer ${
                   activeGalaxy.id === galaxy.id 
-                    ? 'bg-[#00B4D8]/15 border border-[#00B4D8]/30 text-white' 
+                    ? 'bg-[#42BA90]/15 border border-[#42BA90]/30 text-white' 
                     : 'text-white/40 hover:text-white/60 border border-transparent'
                 }`}
               >
@@ -2404,11 +2404,11 @@ export function RealisticSolarSystem() {
               <div
                 key={planet.id}
                 className={`flex items-center gap-1 px-2 py-1 rounded-full transition-all duration-500 cursor-pointer ${
-                  activePlanet?.id === planet.id ? 'bg-[#00B4D8]/15 border border-[#00B4D8]/30' : 'opacity-40 hover:opacity-70 border border-transparent'
+                  activePlanet?.id === planet.id ? 'bg-[#42BA90]/15 border border-[#42BA90]/30' : 'opacity-40 hover:opacity-70 border border-transparent'
                 }`}
                 title={planet.name}
               >
-                <span className={activePlanet?.id === planet.id ? 'text-[#00D4FF]' : 'text-white/40'}>
+                <span className={activePlanet?.id === planet.id ? 'text-[#3D70B7]' : 'text-white/40'}>
                   {activePlanet?.id === planet.id ? '◉' : '○'}
                 </span>
                 <span className={`hidden md:inline ${activePlanet?.id === planet.id ? 'text-white/70' : 'text-white/40'}`}>{String(idx + 1).padStart(2, '0')}</span>
@@ -2433,7 +2433,7 @@ export function RealisticSolarSystem() {
               >
                 <div className="p-5 md:p-6 relative z-10">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-[10px] text-[#00D4FF] uppercase tracking-widest px-2 py-0.5 bg-[#00B4D8]/15 border border-[#00B4D8]/30 rounded-full">
+                    <span className="text-[10px] text-[#3D70B7] uppercase tracking-widest px-2 py-0.5 bg-[#42BA90]/15 border border-[#42BA90]/30 rounded-full">
                       {activeGalaxy.name}
                     </span>
                   </div>
@@ -2454,7 +2454,7 @@ export function RealisticSolarSystem() {
                     <ul className="space-y-1.5">
                       {activePlanet.features.map((feature, idx) => (
                         <li key={idx} className="flex items-start gap-2 text-xs text-white/70">
-                          <span className="text-[#00D4FF] mt-0.5">→</span>
+                          <span className="text-[#3D70B7] mt-0.5">→</span>
                           {feature}
                         </li>
                       ))}
@@ -2464,7 +2464,7 @@ export function RealisticSolarSystem() {
                   {activePlanet.actionType === 'modal' ? (
                     <button
                       onClick={() => { setModalPlanet(activePlanet); setModalOpen(true); }}
-                      className="flex items-center gap-2 text-xs uppercase tracking-widest px-4 py-2.5 rounded-xl bg-[#00B4D8] hover:bg-[#00D4FF] text-white transition-all group"
+                      className="flex items-center gap-2 text-xs uppercase tracking-widest px-4 py-2.5 rounded-xl bg-[#42BA90] hover:bg-[#3D70B7] text-white transition-all group"
                       data-testid={`button-learn-more-${activePlanet.id}`}
                     >
                       <span>Learn More</span>
@@ -2476,7 +2476,7 @@ export function RealisticSolarSystem() {
                         const targetUrl = activePlanet.actionType === 'attack-globe' ? '/attack-globe' : activePlanet.link;
                         triggerTransition(() => setLocation(targetUrl));
                       }}
-                      className="flex items-center gap-2 text-xs uppercase tracking-widest px-4 py-2.5 rounded-xl bg-[#00B4D8] hover:bg-[#00D4FF] text-white transition-all group"
+                      className="flex items-center gap-2 text-xs uppercase tracking-widest px-4 py-2.5 rounded-xl bg-[#42BA90] hover:bg-[#3D70B7] text-white transition-all group"
                       data-testid={`link-learn-more-${activePlanet.id}`}
                     >
                       <span>{activePlanet.actionType === 'attack-globe' ? 'View Details' : 'Learn More'}</span>
@@ -2566,7 +2566,7 @@ export function RealisticSolarSystem() {
                 <div className="mb-6 p-4 rounded-xl bg-white/5 border border-white/10 text-sm overflow-hidden">
                   {modalPlanet.modalContent?.type === 'scanner' && (
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-[#00D4FF]">
+                      <div className="flex items-center gap-2 text-[#3D70B7]">
                         <span className="animate-pulse">●</span> Scanning target...
                       </div>
                       {['SQL Injection', 'XSS Vulnerabilities', 'CSRF Tokens', 'Auth Bypass'].map((item, i) => (
@@ -2585,11 +2585,11 @@ export function RealisticSolarSystem() {
                   )}
                   {modalPlanet.modalContent?.type === 'tester' && (
                     <div className="space-y-2">
-                      <div className="text-[#00D4FF]">GET /api/v1/users</div>
+                      <div className="text-[#3D70B7]">GET /api/v1/users</div>
                       <div className="text-white/70">→ 200 OK (42ms)</div>
-                      <div className="text-[#00D4FF] mt-2">POST /api/v1/auth</div>
+                      <div className="text-[#3D70B7] mt-2">POST /api/v1/auth</div>
                       <div className="text-white/70">→ 200 OK (128ms)</div>
-                      <div className="text-[#00D4FF] mt-2">GET /api/v1/admin</div>
+                      <div className="text-[#3D70B7] mt-2">GET /api/v1/admin</div>
                       <div className="text-red-400">→ 401 Unauthorized (15ms)</div>
                     </div>
                   )}
@@ -2613,7 +2613,7 @@ export function RealisticSolarSystem() {
                     <div className="space-y-2 text-white/70">
                       <div className="flex items-center gap-2"><span className="text-emerald-400">✓</span> Build → <span className="text-white/50">2.3s</span></div>
                       <div className="flex items-center gap-2"><span className="text-emerald-400">✓</span> SAST Scan → <span className="text-white/50">12.1s</span></div>
-                      <div className="flex items-center gap-2"><span className="text-[#00D4FF] animate-pulse">●</span> Container Scan → <span className="text-white/50">running...</span></div>
+                      <div className="flex items-center gap-2"><span className="text-[#3D70B7] animate-pulse">●</span> Container Scan → <span className="text-white/50">running...</span></div>
                       <div className="flex items-center gap-2"><span className="text-white/30">○</span> Deploy to Staging</div>
                     </div>
                   )}
@@ -2623,7 +2623,7 @@ export function RealisticSolarSystem() {
 
                 <div className="flex gap-3">
                   <button
-                    className="flex-1 text-center py-3 rounded-xl text-xs uppercase tracking-widest bg-[#00B4D8] hover:bg-[#00D4FF] text-white transition-all"
+                    className="flex-1 text-center py-3 rounded-xl text-xs uppercase tracking-widest bg-[#42BA90] hover:bg-[#3D70B7] text-white transition-all"
                     onClick={() => {
                       setModalOpen(false);
                       triggerTransition(() => setLocation('/contact'));
@@ -2658,8 +2658,8 @@ export function RealisticSolarSystem() {
             data-testid="overlay-breach"
             style={{
               backgroundImage: `
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 180, 216, 0.03) 2px, rgba(0, 180, 216, 0.03) 4px),
-                radial-gradient(ellipse at 50% 50%, rgba(0, 119, 182, 0.3) 0%, transparent 70%)
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(61, 112, 183, 0.03) 2px, rgba(61, 112, 183, 0.03) 4px),
+                radial-gradient(ellipse at 50% 50%, rgba(28, 44, 90, 0.3) 0%, transparent 70%)
               `,
             }}
           >
@@ -2671,7 +2671,7 @@ export function RealisticSolarSystem() {
                   className="absolute text-xs font-mono leading-tight whitespace-pre"
                   style={{
                     left: `${i * 5 + Math.random() * 2}%`,
-                    color: i % 3 === 0 ? '#00D4FF' : i % 3 === 1 ? '#00B4D8' : '#0077B6',
+                    color: i % 3 === 0 ? '#3D70B7' : i % 3 === 1 ? '#42BA90' : '#1C2C5A',
                     fontSize: '10px',
                     textShadow: `0 0 8px ${i % 2 === 0 ? 'rgba(0,212,255,0.8)' : 'rgba(0,180,216,0.6)'}`,
                     letterSpacing: '2px',
@@ -2699,8 +2699,8 @@ export function RealisticSolarSystem() {
             <motion.div
               className="absolute inset-x-0 h-1"
               style={{
-                background: 'linear-gradient(90deg, transparent, #00B4D8, #00D4FF, #00B4D8, transparent)',
-                boxShadow: '0 0 20px #00B4D8, 0 0 60px rgba(0,180,216,0.5)',
+                background: 'linear-gradient(90deg, transparent, #42BA90, #3D70B7, #42BA90, transparent)',
+                boxShadow: '0 0 20px #42BA90, 0 0 60px rgba(0,180,216,0.5)',
               }}
               animate={{ top: ['0%', '100%'] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
@@ -2727,12 +2727,12 @@ export function RealisticSolarSystem() {
                       className="mb-8"
                     >
                       <p
-                        className="text-sm md:text-base font-mono tracking-[0.5em] text-[#00D4FF] mb-2"
+                        className="text-sm md:text-base font-mono tracking-[0.5em] text-[#3D70B7] mb-2"
                         style={{ textShadow: '0 0 20px rgba(0,212,255,0.8)' }}
                       >
                         &#x25B6; FIREWALL BREACH DETECTED
                       </p>
-                      <div className="w-48 h-px mx-auto bg-gradient-to-r from-transparent via-[#00B4D8] to-transparent" />
+                      <div className="w-48 h-px mx-auto bg-gradient-to-r from-transparent via-[#42BA90] to-transparent" />
                     </motion.div>
 
                     {/* Sanskrit quote with hacker frame */}
@@ -2742,16 +2742,16 @@ export function RealisticSolarSystem() {
                       transition={{ delay: 0.5, duration: 0.8 }}
                       className="relative inline-block"
                     >
-                      <div className="absolute -inset-4 border border-[#00B4D8]/30 rounded-lg" 
+                      <div className="absolute -inset-4 border border-[#42BA90]/30 rounded-lg" 
                         style={{ boxShadow: '0 0 30px rgba(0,180,216,0.15)' }} 
                       />
                       <div className="absolute -top-1 left-4 bg-black px-2">
-                        <span className="text-[10px] font-mono text-[#00B4D8]/60 tracking-widest">SYSTEM.CORE</span>
+                        <span className="text-[10px] font-mono text-[#42BA90]/60 tracking-widest">SYSTEM.CORE</span>
                       </div>
                       <p
                         className="text-4xl md:text-6xl font-bold text-white py-4 px-8"
                         style={{
-                          textShadow: '0 0 40px rgba(0, 212, 255, 0.8), 0 0 80px rgba(0, 119, 182, 0.6)',
+                          textShadow: '0 0 40px rgba(61, 112, 183, 0.8), 0 0 80px rgba(28, 44, 90, 0.6)',
                         }}
                         data-testid="text-quote-main"
                       >
@@ -2767,11 +2767,11 @@ export function RealisticSolarSystem() {
                       className="mt-6"
                     >
                       <p
-                        className="text-sm md:text-base font-mono text-[#00D4FF]/70"
+                        className="text-sm md:text-base font-mono text-[#3D70B7]/70"
                         style={{ textShadow: '0 0 10px rgba(0,212,255,0.4)' }}
                         data-testid="text-quote-subtitle"
                       >
-                        <span className="text-[#00B4D8]">$</span> reinitializing_security_protocols<span className="animate-pulse">█</span>
+                        <span className="text-[#42BA90]">$</span> reinitializing_security_protocols<span className="animate-pulse">█</span>
                       </p>
                     </motion.div>
                   </div>
