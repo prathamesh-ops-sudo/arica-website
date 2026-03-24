@@ -92,15 +92,50 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground">
-            © 2025 Arica Tech Security LLP. All rights reserved.
-          </p>
-          <Link href="/privacy">
-            <span className="text-xs text-muted-foreground hover:text-primary transition-colors cursor-pointer" data-testid="link-footer-privacy">
-              Privacy Policy
-            </span>
-          </Link>
+        <div className="mt-10 pt-6 border-t border-white/5">
+          <div className="relative overflow-hidden">
+            <div className="select-none pointer-events-none flex justify-center items-center" aria-hidden="true">
+              <span
+                className="text-[8rem] sm:text-[12rem] md:text-[16rem] font-display font-black tracking-[0.15em] leading-none"
+                style={{
+                  color: 'transparent',
+                  WebkitTextStroke: '1.5px rgba(61, 112, 183, 0.25)',
+                }}
+              >
+                ARICA
+              </span>
+            </div>
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
+                <div className="flex items-center gap-3">
+                  <a
+                    href="https://linkedin.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-testid="link-footer-bottom-linkedin"
+                    className="p-2 rounded-lg hover:bg-primary/20 text-muted-foreground hover:text-primary transition-all"
+                  >
+                    <Linkedin className="w-5 h-5" />
+                  </a>
+                </div>
+                <div className="flex items-center gap-6">
+                  <Link href="/privacy">
+                    <span className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer" data-testid="link-footer-privacy">
+                      Privacy Policy
+                    </span>
+                  </Link>
+                  <Link href="/terms">
+                    <span className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer" data-testid="link-footer-terms">
+                      Terms &amp; Conditions
+                    </span>
+                  </Link>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  © 2026 Arica Tech Security LLP. All rights reserved.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
