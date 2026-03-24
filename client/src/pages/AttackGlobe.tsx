@@ -903,10 +903,10 @@ export default function AttackGlobe() {
               <p className="text-white/40 text-xs">Avg. Breach Cost</p>
             </div>
             
-            <div className="backdrop-blur-xl bg-[#0a0a1e]/70 border border-white/10 rounded-2xl p-4 group hover:border-cyan-500/30 transition-all duration-500">
+            <div className="backdrop-blur-xl bg-[#0a0a1e]/70 border border-white/10 rounded-2xl p-4 group hover:border-[#3D70B7]/30 transition-all duration-500">
               <div className="flex items-center justify-between mb-2">
-                <Globe2 className="w-4 h-4 text-cyan-400" />
-                <span className="text-[10px] text-cyan-400/70 uppercase font-medium">Global</span>
+                <Globe2 className="w-4 h-4 text-[#3D70B7]" />
+                <span className="text-[10px] text-[#3D70B7]/70 uppercase font-medium">Global</span>
               </div>
               <h3 className="text-xl md:text-2xl font-bold text-white mb-1">$10.5T</h3>
               <p className="text-white/40 text-xs">Annual Cybercrime Cost</p>
@@ -1106,7 +1106,7 @@ export default function AttackGlobe() {
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <Link 
                       href="/contact"
-                      className="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#42BA90] to-[#3D70B7] text-white font-bold px-8 py-4 rounded-full hover:shadow-[0_0_40px_rgba(0,212,255,0.4)] transition-all duration-300"
+                      className="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#42BA90] to-[#3D70B7] text-white font-bold px-8 py-4 rounded-full hover:shadow-[0_0_40px_rgba(61,112,183,0.4)] transition-all duration-300"
                       data-testid="link-get-vapt"
                     >
                       <ShieldCheck className="w-5 h-5" />

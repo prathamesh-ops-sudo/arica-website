@@ -100,7 +100,7 @@ export function HudNavigation() {
       >
         <div className="relative max-w-7xl mx-auto">
           <div
-            className="relative overflow-hidden rounded-lg border border-[#3D70B7]/30 bg-[rgba(10,10,30,0.8)] backdrop-blur-xl shadow-[0_0_30px_rgba(0,212,255,0.15)]"
+            className="relative overflow-hidden rounded-lg border border-[#3D70B7]/30 bg-[rgba(10,10,30,0.8)] backdrop-blur-xl shadow-[0_0_30px_rgba(61,112,183,0.15)]"
           >
             <HudCorner position="top-left" />
             <HudCorner position="top-right" />
@@ -109,7 +109,7 @@ export function HudNavigation() {
             <ScanLine />
 
             <div className="absolute inset-0 bg-gradient-to-r from-[#3D70B7]/5 via-transparent to-[#3D70B7]/5 pointer-events-none" />
-            <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,212,255,0.02)_50%)] bg-[length:100%_4px] pointer-events-none opacity-30" />
+            <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(61,112,183,0.02)_50%)] bg-[length:100%_4px] pointer-events-none opacity-30" />
 
             <div className="relative flex items-center justify-between px-6 py-3">
               <Link href="/" className="flex items-center gap-3 group">
@@ -180,7 +180,7 @@ export function HudNavigation() {
               </div>
 
               <motion.button
-                className="md:hidden relative w-10 h-10 flex items-center justify-center rounded-md border border-[#3D70B7]/30 bg-[rgba(0,212,255,0.1)] text-[#3D70B7]"
+                className="md:hidden relative w-10 h-10 flex items-center justify-center rounded-md border border-[#3D70B7]/30 bg-[rgba(61,112,183,0.1)] text-[#3D70B7]"
                 onClick={() => setMobileOpen(!mobileOpen)}
                 whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(61, 112, 183, 0.4)" }}
                 whileTap={{ scale: 0.95 }}
@@ -228,7 +228,7 @@ export function HudNavigation() {
             />
             
             <motion.div
-              className="absolute top-20 left-4 right-4 overflow-hidden rounded-lg border border-[#3D70B7]/30 bg-[rgba(10,10,30,0.95)] backdrop-blur-xl shadow-[0_0_50px_rgba(0,212,255,0.2)]"
+              className="absolute top-20 left-4 right-4 overflow-hidden rounded-lg border border-[#3D70B7]/30 bg-[rgba(10,10,30,0.95)] backdrop-blur-xl shadow-[0_0_50px_rgba(61,112,183,0.2)]"
               initial={{ y: -20, opacity: 0, scale: 0.95 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: -20, opacity: 0, scale: 0.95 }}
@@ -240,7 +240,7 @@ export function HudNavigation() {
               <HudCorner position="bottom-right" />
               <ScanLine />
 
-              <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,212,255,0.02)_50%)] bg-[length:100%_4px] pointer-events-none opacity-30" />
+              <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(61,112,183,0.02)_50%)] bg-[length:100%_4px] pointer-events-none opacity-30" />
 
               <div className="relative p-4 space-y-2">
                 {navItems.map((item, index) => {

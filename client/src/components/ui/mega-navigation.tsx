@@ -67,7 +67,7 @@ function DropdownPanel({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[400px] p-4 rounded-lg border border-[#3D70B7]/30 bg-[rgba(10,10,30,0.95)] backdrop-blur-xl shadow-[0_0_40px_rgba(0,212,255,0.2)]"
+          className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[400px] p-4 rounded-lg border border-[#3D70B7]/30 bg-[rgba(10,10,30,0.95)] backdrop-blur-xl shadow-[0_0_40px_rgba(61,112,183,0.2)]"
           initial={{ opacity: 0, y: -10, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -84,7 +84,7 @@ function DropdownPanel({
                   whileHover={{ x: 4 }}
                   data-testid={`dropdown-link-${link.url.replace('/', '')}`}
                 >
-                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-[#42BA90]/20 to-[#3D70B7]/20 flex items-center justify-center group-hover:from-[#42BA90]/30 group-hover:to-[#3D70B7]/30 group-hover:shadow-[0_0_15px_rgba(0,212,255,0.3)] transition-all duration-200">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-[#42BA90]/20 to-[#3D70B7]/20 flex items-center justify-center group-hover:from-[#42BA90]/30 group-hover:to-[#3D70B7]/30 group-hover:shadow-[0_0_15px_rgba(61,112,183,0.3)] transition-all duration-200">
                     <Icon size={20} className="text-[#3D70B7] group-hover:drop-shadow-[0_0_8px_#3D70B7]" />
                   </div>
                   <div>
@@ -187,7 +187,7 @@ export function MegaNavigation() {
 
       <motion.nav
         ref={navRef}
-        className="fixed top-0 left-0 right-0 z-[9999] bg-[rgba(10,10,30,0.85)] backdrop-blur-xl border-b border-[#3D70B7]/20 shadow-[0_4px_30px_rgba(0,212,255,0.1)]"
+        className="fixed top-0 left-0 right-0 z-[9999] bg-[rgba(10,10,30,0.85)] backdrop-blur-xl border-b border-[#3D70B7]/20 shadow-[0_4px_30px_rgba(61,112,183,0.1)]"
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
@@ -271,7 +271,7 @@ export function MegaNavigation() {
               </motion.button>
               <motion.button
                 onClick={() => handleNavigate("/contact")}
-                className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-gradient-to-r from-[#42BA90]/20 to-[#3D70B7]/20 border border-[#3D70B7]/40 text-[#3D70B7] hover:from-[#42BA90]/30 hover:to-[#3D70B7]/30 hover:border-[#3D70B7]/60 hover:shadow-[0_0_20px_rgba(0,212,255,0.3)] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3D70B7] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,10,30,0.85)]"
+                className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-gradient-to-r from-[#42BA90]/20 to-[#3D70B7]/20 border border-[#3D70B7]/40 text-[#3D70B7] hover:from-[#42BA90]/30 hover:to-[#3D70B7]/30 hover:border-[#3D70B7]/60 hover:shadow-[0_0_20px_rgba(61,112,183,0.3)] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3D70B7] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,10,30,0.85)]"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 data-testid="nav-contact"
@@ -282,7 +282,7 @@ export function MegaNavigation() {
             </div>
 
             <motion.button
-              className="lg:hidden relative w-10 h-10 flex items-center justify-center rounded-md border border-[#3D70B7]/30 bg-[rgba(0,212,255,0.1)] text-[#3D70B7] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3D70B7]"
+              className="lg:hidden relative w-10 h-10 flex items-center justify-center rounded-md border border-[#3D70B7]/30 bg-[rgba(61,112,183,0.1)] text-[#3D70B7] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3D70B7]"
               onClick={() => setMobileOpen(!mobileOpen)}
               whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(61, 112, 183, 0.4)" }}
               whileTap={{ scale: 0.95 }}
@@ -330,7 +330,7 @@ export function MegaNavigation() {
             />
 
             <motion.div
-              className="fixed top-0 right-0 bottom-0 z-[9998] w-80 max-w-[85vw] bg-[rgba(10,10,30,0.98)] backdrop-blur-xl border-l border-[#3D70B7]/20 shadow-[-10px_0_40px_rgba(0,212,255,0.15)] lg:hidden overflow-y-auto"
+              className="fixed top-0 right-0 bottom-0 z-[9998] w-80 max-w-[85vw] bg-[rgba(10,10,30,0.98)] backdrop-blur-xl border-l border-[#3D70B7]/20 shadow-[-10px_0_40px_rgba(61,112,183,0.15)] lg:hidden overflow-y-auto"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}

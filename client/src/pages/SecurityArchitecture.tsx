@@ -1111,7 +1111,7 @@ export default function SecurityArchitecture() {
                     {selectedNode.type === 'server' && <Server className="w-5 h-5 text-blue-400" />}
                     {selectedNode.type === 'database' && <Database className="w-5 h-5 text-green-400" />}
                     {selectedNode.type === 'user' && <Users className="w-5 h-5 text-[#3D70B7]" />}
-                    {selectedNode.type === 'cloud' && <Cloud className="w-5 h-5 text-cyan-400" />}
+                    {selectedNode.type === 'cloud' && <Cloud className="w-5 h-5 text-[#3D70B7]" />}
                   </div>
                   <div>
                     <h3 className="font-mono text-lg text-white font-bold">{selectedNode.label}</h3>

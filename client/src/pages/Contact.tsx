@@ -91,7 +91,7 @@ function TiltCard({ children, className, isEmergency = false }: { children: Reac
       className={`${className} transition-shadow duration-300 relative ${
         isEmergency 
           ? 'hover:shadow-[0_0_30px_rgba(139,0,0,0.4)]' 
-          : 'hover:shadow-[0_0_30px_rgba(0,212,255,0.3)]'
+          : 'hover:shadow-[0_0_30px_rgba(61,112,183,0.3)]'
       }`}
     >
       {children}

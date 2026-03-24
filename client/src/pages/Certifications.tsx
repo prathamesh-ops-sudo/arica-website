@@ -372,7 +372,7 @@ function CertificationBadges3D({
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
     scene.add(ambientLight);
 
-    const pointLight1 = new THREE.PointLight(0x00D4FF, 1.5, 30);
+    const pointLight1 = new THREE.PointLight(0x42BA90, 1.5, 30);
     pointLight1.position.set(5, 5, 5);
     scene.add(pointLight1);
 

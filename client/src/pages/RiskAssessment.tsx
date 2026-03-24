@@ -1055,7 +1055,7 @@ export default function RiskAssessment() {
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
               Cybersecurity
               <motion.span 
-                className="block text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-cyan-500"
+                className="block text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#42BA90]"
                 animate={{
                   backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
                 }}
@@ -1197,7 +1197,7 @@ export default function RiskAssessment() {
                   animate={{ rotate: [0, 360] }}
                   transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
                 >
-                  <Shield className="w-5 h-5 text-cyan-400" />
+                  <Shield className="w-5 h-5 text-[#3D70B7]" />
                 </motion.div>
               </h3>
               <Tooltip>
@@ -1432,7 +1432,7 @@ export default function RiskAssessment() {
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold bg-gradient-to-r from-[#3D70B7] to-cyan-500 hover:opacity-90 transition-all shadow-[0_0_30px_rgba(61, 112, 183,0.3)]"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold bg-gradient-to-r from-[#3D70B7] to-[#42BA90] hover:opacity-90 transition-all shadow-[0_0_30px_rgba(61, 112, 183,0.3)]"
               data-testid="link-contact-assessment"
             >
               Request Full Assessment

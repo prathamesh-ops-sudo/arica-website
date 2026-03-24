@@ -2371,7 +2371,7 @@ export function RealisticSolarSystem() {
                 transition={{ duration: 0.4, ease: 'easeOut' }}
                 className="text-center"
               >
-                <div className="text-white text-3xl md:text-5xl font-bold tracking-wide" style={{ textShadow: '0 0 40px rgba(0,180,216,0.4)' }}>
+                <div className="text-white text-3xl md:text-5xl font-bold tracking-wide" style={{ textShadow: '0 0 40px rgba(61,112,183,0.4)' }}>
                   {sectorTransition.galaxyName}
                 </div>
                 <div className="w-24 h-0.5 mx-auto mt-4 bg-gradient-to-r from-transparent via-[#42BA90] to-transparent rounded-full" />
@@ -2429,7 +2429,7 @@ export function RealisticSolarSystem() {
             >
               <div 
                 className="relative backdrop-blur-2xl bg-black/60 border border-white/10 rounded-2xl p-0 shadow-2xl overflow-hidden"
-                style={{ boxShadow: '0 0 40px rgba(0,180,216,0.1)' }}
+                style={{ boxShadow: '0 0 40px rgba(61,112,183,0.1)' }}
               >
                 <div className="p-5 md:p-6 relative z-10">
                   <div className="flex items-center gap-2 mb-3">
@@ -2440,7 +2440,7 @@ export function RealisticSolarSystem() {
                   
                   <h2 
                     className="text-xl md:text-2xl font-bold mb-2 text-white tracking-wide"
-                    style={{ textShadow: '0 0 30px rgba(0,180,216,0.3)' }}
+                    style={{ textShadow: '0 0 30px rgba(61,112,183,0.3)' }}
                   >
                     {activePlanet.name}
                   </h2>
@@ -2505,7 +2505,7 @@ export function RealisticSolarSystem() {
                 <motion.h1 
                   className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-4 uppercase tracking-wider text-white"
                   style={{ 
-                    textShadow: '0 0 60px rgba(0,180,216,0.3), 0 0 120px rgba(0,180,216,0.1)'
+                    textShadow: '0 0 60px rgba(61,112,183,0.3), 0 0 120px rgba(61,112,183,0.1)'
                   }}
                 >
                   ARICA TECH
@@ -2558,7 +2558,7 @@ export function RealisticSolarSystem() {
               <div className="p-6 md:p-8 relative z-10">
                 <h2
                   className="text-2xl font-bold mb-4 tracking-wide text-white"
-                  style={{ textShadow: '0 0 30px rgba(0,180,216,0.3)' }}
+                  style={{ textShadow: '0 0 30px rgba(61,112,183,0.3)' }}
                 >
                   {modalPlanet.modalContent?.title || modalPlanet.name}
                 </h2>
@@ -2673,7 +2673,7 @@ export function RealisticSolarSystem() {
                     left: `${i * 5 + Math.random() * 2}%`,
                     color: i % 3 === 0 ? '#3D70B7' : i % 3 === 1 ? '#42BA90' : '#1C2C5A',
                     fontSize: '10px',
-                    textShadow: `0 0 8px ${i % 2 === 0 ? 'rgba(0,212,255,0.8)' : 'rgba(0,180,216,0.6)'}`,
+                    textShadow: `0 0 8px ${i % 2 === 0 ? 'rgba(61,112,183,0.8)' : 'rgba(61,112,183,0.6)'}`,
                     letterSpacing: '2px',
                   }}
                   initial={{ y: '-100%', opacity: 0 }}
@@ -2700,7 +2700,7 @@ export function RealisticSolarSystem() {
               className="absolute inset-x-0 h-1"
               style={{
                 background: 'linear-gradient(90deg, transparent, #42BA90, #3D70B7, #42BA90, transparent)',
-                boxShadow: '0 0 20px #42BA90, 0 0 60px rgba(0,180,216,0.5)',
+                boxShadow: '0 0 20px #42BA90, 0 0 60px rgba(61,112,183,0.5)',
               }}
               animate={{ top: ['0%', '100%'] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
@@ -2728,7 +2728,7 @@ export function RealisticSolarSystem() {
                     >
                       <p
                         className="text-sm md:text-base font-mono tracking-[0.5em] text-[#3D70B7] mb-2"
-                        style={{ textShadow: '0 0 20px rgba(0,212,255,0.8)' }}
+                        style={{ textShadow: '0 0 20px rgba(61,112,183,0.8)' }}
                       >
                         &#x25B6; FIREWALL BREACH DETECTED
                       </p>
@@ -2743,7 +2743,7 @@ export function RealisticSolarSystem() {
                       className="relative inline-block"
                     >
                       <div className="absolute -inset-4 border border-[#42BA90]/30 rounded-lg" 
-                        style={{ boxShadow: '0 0 30px rgba(0,180,216,0.15)' }} 
+                        style={{ boxShadow: '0 0 30px rgba(61,112,183,0.15)' }} 
                       />
                       <div className="absolute -top-1 left-4 bg-black px-2">
                         <span className="text-[10px] font-mono text-[#42BA90]/60 tracking-widest">SYSTEM.CORE</span>
@@ -2768,7 +2768,7 @@ export function RealisticSolarSystem() {
                     >
                       <p
                         className="text-sm md:text-base font-mono text-[#3D70B7]/70"
-                        style={{ textShadow: '0 0 10px rgba(0,212,255,0.4)' }}
+                        style={{ textShadow: '0 0 10px rgba(61,112,183,0.4)' }}
                         data-testid="text-quote-subtitle"
                       >
                         <span className="text-[#42BA90]">$</span> reinitializing_security_protocols<span className="animate-pulse">█</span>

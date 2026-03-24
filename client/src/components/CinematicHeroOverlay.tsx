@@ -111,7 +111,7 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
                 style={{
                   fontSize: "clamp(2.5rem, 8vw, 6rem)",
                   color: "#ffffff",
-                  textShadow: "0 0 30px rgba(0,180,216,0.4), 0 0 60px rgba(0,212,255,0.2)",
+                  textShadow: "0 0 30px rgba(61,112,183,0.4), 0 0 60px rgba(61,112,183,0.2)",
                 }}
               >
                 ARICA TECH
@@ -159,7 +159,7 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
                 style={{ animation: "shield-pulse 1.5s ease infinite" }}
               >
                 <path d={shieldPath} fill="none" stroke="#42BA90" strokeWidth="0.8" />
-                <path d={shieldPath} fill="rgba(0,180,216,0.15)" />
+                <path d={shieldPath} fill="rgba(61,112,183,0.15)" />
               </motion.svg>
             </motion.div>
           )}
@@ -185,7 +185,7 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
                 transition={{ duration: 0.8 }}
               >
                 <path d={shieldPath} fill="none" stroke="#42BA90" strokeWidth="1" />
-                <path d={shieldPath} fill="rgba(0,180,216,0.2)" />
+                <path d={shieldPath} fill="rgba(61,112,183,0.2)" />
               </motion.svg>
 
               <div

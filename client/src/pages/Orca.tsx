@@ -637,7 +637,7 @@ function ScrollIndicator({ progress }: { progress: number }) {
                 isCompleted 
                   ? 'bg-[#30d158]/20 border-[#30d158] text-[#30d158]'
                   : isActive 
-                    ? 'bg-[#42BA90]/20 border-[#42BA90] text-[#42BA90] shadow-[0_0_20px_rgba(0,180,216,0.5)]'
+                    ? 'bg-[#42BA90]/20 border-[#42BA90] text-[#42BA90] shadow-[0_0_20px_rgba(61,112,183,0.5)]'
                     : 'bg-transparent border-white/20 text-white/40'
               }`}>
                 {isCompleted ? (
@@ -787,7 +787,7 @@ function ProgressBar({ progress }: { progress: number }) {
         className={`h-full bg-gradient-to-r ${getProgressColor()}`}
         style={{ width: `${progress * 100}%` }}
         animate={{ 
-          boxShadow: ['0 0 10px rgba(0,180,216,0.5)', '0 0 20px rgba(0,180,216,0.8)', '0 0 10px rgba(0,180,216,0.5)']
+          boxShadow: ['0 0 10px rgba(61,112,183,0.5)', '0 0 20px rgba(61,112,183,0.8)', '0 0 10px rgba(61,112,183,0.5)']
         }}
         transition={{ duration: 2, repeat: Infinity }}
       />
@@ -950,7 +950,7 @@ function CompletionOverlay() {
             onClick={handleExploreServices}
             data-testid="button-explore-network"
             className="group relative px-10 py-5 bg-gradient-to-r from-[#1C2C5A] to-[#3D70B7] text-white font-bold rounded-2xl hover:scale-105 transition-all duration-300 flex items-center gap-3 justify-center overflow-hidden"
-            style={{ boxShadow: '0 0 40px rgba(0,119,182,0.5)' }}
+            style={{ boxShadow: '0 0 40px rgba(28,44,90,0.5)' }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
             <ShieldCheck className="w-5 h-5" />

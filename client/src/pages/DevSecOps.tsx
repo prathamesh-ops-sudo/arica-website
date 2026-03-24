@@ -916,7 +916,7 @@ export default function DevSecOps() {
     <div className="min-h-screen text-white relative overflow-hidden" style={{ backgroundColor: '#0a0a1e' }}>
       <PurpleGalaxyBackground />
       <FlowingCodeBackground />
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/10 via-transparent to-[#1C2C5A]/10 z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1C2C5A]/10 via-transparent to-[#1C2C5A]/10 z-[1]" />
 
       <div className="fixed top-6 left-6 z-50">
         <Link
@@ -955,7 +955,7 @@ export default function DevSecOps() {
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-4 gsap-fade-in">
             Security-Integrated
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-cyan-400">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#42BA90]">
               CI/CD Pipeline
             </span>
           </h1>
@@ -1002,7 +1002,7 @@ export default function DevSecOps() {
               className={`flex items-center gap-2 px-8 py-3 rounded-xl font-semibold transition-all ${
                 isRunning 
                   ? 'bg-red-500/20 border border-red-500/50 text-red-400 hover:bg-red-500/30' 
-                  : 'bg-gradient-to-r from-[#42BA90] to-cyan-500 hover:opacity-90'
+                  : 'bg-gradient-to-r from-[#42BA90] to-[#42BA90] hover:opacity-90'
               }`}
               data-testid="button-run-pipeline"
             >
@@ -1178,7 +1178,7 @@ export default function DevSecOps() {
           <div className="inline-flex flex-col sm:flex-row items-center gap-4">
             <Link
               href="/contact"
-              className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#42BA90] to-cyan-500 font-semibold hover:opacity-90 transition-all"
+              className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#42BA90] to-[#42BA90] font-semibold hover:opacity-90 transition-all"
               data-testid="link-implement-devsecops"
             >
               Implement DevSecOps

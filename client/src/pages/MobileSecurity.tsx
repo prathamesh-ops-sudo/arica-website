@@ -677,7 +677,7 @@ export default function MobileSecurity() {
                   <AnimatePresence>
                     {selectedDevice?.id === device.id && (
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-br from-[#3D70B7]/20 to-cyan-500/10"
+                        className="absolute inset-0 bg-gradient-to-br from-[#3D70B7]/20 to-[#42BA90]/10"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -702,7 +702,7 @@ export default function MobileSecurity() {
                   </div>
                   {selectedDevice?.id === device.id && (
                     <motion.div
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#3D70B7] to-cyan-500"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#3D70B7] to-[#42BA90]"
                       layoutId="device-indicator"
                     />
                   )}
@@ -791,9 +791,9 @@ export default function MobileSecurity() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="p-4 rounded-xl bg-black/30 backdrop-blur-xl border border-cyan-500/30"
+                    className="p-4 rounded-xl bg-black/30 backdrop-blur-xl border border-[#3D70B7]/30"
                   >
-                    <h4 className="text-sm font-semibold text-cyan-400 mb-3 flex items-center gap-2">
+                    <h4 className="text-sm font-semibold text-[#3D70B7] mb-3 flex items-center gap-2">
                       <Shield className="w-4 h-4" />
                       OWASP Mobile Top 10 Security Checks
                     </h4>
@@ -804,14 +804,14 @@ export default function MobileSecurity() {
                           initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: 0.1 + i * 0.05 }}
-                          className="group relative p-2 rounded-lg bg-white/5 border border-white/10 hover:border-cyan-500/50 transition-all cursor-help"
+                          className="group relative p-2 rounded-lg bg-white/5 border border-white/10 hover:border-[#3D70B7]/50 transition-all cursor-help"
                           data-testid={`owasp-preview-${item.id}`}
                         >
-                          <div className="text-[10px] font-mono text-cyan-400 mb-1">{item.id.toUpperCase()}</div>
+                          <div className="text-[10px] font-mono text-[#3D70B7] mb-1">{item.id.toUpperCase()}</div>
                           <div className="text-[10px] text-white/70 line-clamp-2">{item.name.replace(`${item.id.toUpperCase()}: `, '')}</div>
                           <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 w-48">
-                            <div className="bg-[#000510] border border-cyan-500/50 rounded-lg p-2 text-xs">
-                              <div className="text-cyan-400 font-semibold mb-1">{item.name}</div>
+                            <div className="bg-[#000510] border border-[#3D70B7]/50 rounded-lg p-2 text-xs">
+                              <div className="text-[#3D70B7] font-semibold mb-1">{item.name}</div>
                               <div className="text-white/60">{item.description}</div>
                             </div>
                           </div>
@@ -1261,7 +1261,7 @@ export default function MobileSecurity() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="mt-12 p-8 rounded-2xl bg-gradient-to-r from-[#3D70B7]/10 to-cyan-500/10 border border-[#3D70B7]/30 text-center relative overflow-hidden"
+                  className="mt-12 p-8 rounded-2xl bg-gradient-to-r from-[#3D70B7]/10 to-[#42BA90]/10 border border-[#3D70B7]/30 text-center relative overflow-hidden"
                 >
                   <motion.div
                     className="absolute inset-0"

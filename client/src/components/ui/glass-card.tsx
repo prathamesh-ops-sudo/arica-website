@@ -12,8 +12,8 @@ interface GlassCardProps {
 }
 
 const glowColors = {
-  cyan: 'border-[#3D70B7]/20 hover:border-[#3D70B7]/40 hover:shadow-[0_0_30px_rgba(0,212,255,0.15)]',
-  purple: 'border-[#42BA90]/20 hover:border-[#42BA90]/40 hover:shadow-[0_0_30px_rgba(0,180,216,0.15)]',
+  cyan: 'border-[#3D70B7]/20 hover:border-[#3D70B7]/40 hover:shadow-[0_0_30px_rgba(61,112,183,0.15)]',
+  purple: 'border-[#42BA90]/20 hover:border-[#42BA90]/40 hover:shadow-[0_0_30px_rgba(61,112,183,0.15)]',
   amber: 'border-amber-500/20 hover:border-amber-500/40 hover:shadow-[0_0_30px_rgba(245,158,11,0.15)]',
   green: 'border-green-500/20 hover:border-green-500/40 hover:shadow-[0_0_30px_rgba(34,197,94,0.15)]',
   red: 'border-red-500/20 hover:border-red-500/40 hover:shadow-[0_0_30px_rgba(239,68,68,0.15)]',

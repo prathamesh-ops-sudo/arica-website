@@ -317,7 +317,7 @@ function ThreeJSScene({
     const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
     scene.add(ambientLight);
 
-    const pointLight = new THREE.PointLight(0x00D4FF, 2, 20);
+    const pointLight = new THREE.PointLight(0x42BA90, 2, 20);
     pointLight.position.set(0, 0, 5);
     scene.add(pointLight);
 
@@ -325,7 +325,7 @@ function ThreeJSScene({
     const shieldMaterial = new THREE.ShaderMaterial({
       uniforms: {
         time: { value: 0 },
-        primaryColor: { value: new THREE.Color(0x00D4FF) },
+        primaryColor: { value: new THREE.Color(0x42BA90) },
         secondaryColor: { value: new THREE.Color(0x8B5CF6) }
       },
       vertexShader: shieldShader.vertexShader,
@@ -395,7 +395,7 @@ function ThreeJSScene({
     const particleMaterial = new THREE.ShaderMaterial({
       uniforms: {
         time: { value: 0 },
-        color: { value: new THREE.Color(0x00D4FF) }
+        color: { value: new THREE.Color(0x42BA90) }
       },
       vertexShader: particleShader.vertexShader,
       fragmentShader: particleShader.fragmentShader,
@@ -819,7 +819,7 @@ export default function SecurityPolicies() {
           transition: 'transform 0.1s ease-out',
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-[#3D70B7]/5 via-transparent to-cyan-500/5" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#3D70B7]/5 via-transparent to-[#42BA90]/5" />
       </div>
       <AmbientParticles variant="network" count={isMobile ? 12 : 30} color="#3D70B7" opacity={0.15} />
 
@@ -847,7 +847,7 @@ export default function SecurityPolicies() {
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
               Security
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-cyan-500">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#42BA90]">
                 Policies
               </span>
             </h1>
@@ -1074,7 +1074,7 @@ export default function SecurityPolicies() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className="p-6 rounded-3xl bg-gradient-to-r from-[#3D70B7]/10 to-cyan-500/10 border border-[#3D70B7]/30"
+            className="p-6 rounded-3xl bg-gradient-to-r from-[#3D70B7]/10 to-[#42BA90]/10 border border-[#3D70B7]/30"
           >
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
               <div>

@@ -623,7 +623,7 @@ function PhaseProgressIndicator({ phases, currentPhase, buildProgress }: {
                 isComplete
                   ? 'bg-green-500 text-white'
                   : isActive
-                  ? 'bg-gradient-to-r from-[#42BA90] to-cyan-500 text-white'
+                  ? 'bg-gradient-to-r from-[#42BA90] to-[#42BA90] text-white'
                   : 'bg-white/10 text-white/40'
               }`}
               animate={isActive ? { scale: [1, 1.1, 1] } : {}}
@@ -724,7 +724,7 @@ export default function SecurityImplementation() {
 
   return (
     <div className="min-h-screen text-white relative overflow-hidden" style={{ backgroundColor: NAVY }}>
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/10 via-transparent to-[#1C2C5A]/10" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1C2C5A]/10 via-transparent to-[#1C2C5A]/10" />
 
       <div className="fixed top-6 left-6 z-50">
         <Link
@@ -749,7 +749,7 @@ export default function SecurityImplementation() {
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
             Building Your
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-cyan-400">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#42BA90]">
               Security Fortress
             </span>
           </h1>
@@ -823,7 +823,7 @@ export default function SecurityImplementation() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={isBuilding ? () => setIsBuilding(false) : startBuild}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-[#42BA90] to-cyan-500 hover:from-[#3D70B7] hover:to-cyan-400 transition-all shadow-lg shadow-[#42BA90]/25"
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-[#42BA90] to-[#42BA90] hover:from-[#3D70B7] hover:to-[#42BA90] transition-all shadow-lg shadow-[#42BA90]/25"
                   data-testid="button-build"
                 >
                   {isBuilding ? (
@@ -854,7 +854,7 @@ export default function SecurityImplementation() {
                 <span className="text-sm text-white/60">Build Progress</span>
                 <div className="w-32 sm:w-48 h-2 bg-white/10 rounded-full overflow-hidden">
                   <motion.div
-                    className="h-full bg-gradient-to-r from-[#42BA90] to-cyan-500"
+                    className="h-full bg-gradient-to-r from-[#42BA90] to-[#42BA90]"
                     initial={{ width: 0 }}
                     animate={{ width: `${buildProgress * 100}%` }}
                     transition={{ duration: 0.3 }}
@@ -878,7 +878,7 @@ export default function SecurityImplementation() {
                     initial={{ scale: 0.5, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 1.5, opacity: 0 }}
-                    className="flex items-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-[#42BA90]/20 to-cyan-500/20 border border-[#42BA90]/50"
+                    className="flex items-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-[#42BA90]/20 to-[#42BA90]/20 border border-[#42BA90]/50"
                   >
                     <Sparkles className="w-6 h-6 text-[#3D70B7] animate-pulse" />
                     <span className="text-xl font-bold text-white">Phase Complete!</span>
@@ -924,7 +924,7 @@ export default function SecurityImplementation() {
                   onClick={() => setSelectedPhase(isExpanded ? null : index)}
                   className={`p-6 rounded-2xl border cursor-pointer transition-all duration-300 ${
                     isActive
-                      ? 'bg-gradient-to-br from-[#42BA90]/20 to-cyan-500/20 border-[#42BA90]/50 shadow-lg shadow-[#42BA90]/10'
+                      ? 'bg-gradient-to-br from-[#42BA90]/20 to-[#42BA90]/20 border-[#42BA90]/50 shadow-lg shadow-[#42BA90]/10'
                       : isComplete
                       ? 'bg-green-500/10 border-green-500/30'
                       : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
@@ -1047,7 +1047,7 @@ export default function SecurityImplementation() {
                           
                           <div>
                             <h4 className="text-sm font-semibold text-white/80 mb-2 flex items-center gap-2">
-                              <Lock className="w-4 h-4 text-cyan-400" />
+                              <Lock className="w-4 h-4 text-[#3D70B7]" />
                               Dependencies
                             </h4>
                             <ul className="space-y-1.5">
@@ -1102,7 +1102,7 @@ export default function SecurityImplementation() {
                     transition={{ delay: 0.05 * index }}
                     className={`p-4 rounded-xl border ${
                       isActive
-                        ? 'bg-gradient-to-r from-[#42BA90]/20 to-cyan-500/20 border-[#42BA90]/50'
+                        ? 'bg-gradient-to-r from-[#42BA90]/20 to-[#42BA90]/20 border-[#42BA90]/50'
                         : isComplete
                         ? 'bg-green-500/10 border-green-500/30'
                         : 'bg-white/5 border-white/10'
@@ -1218,12 +1218,12 @@ export default function SecurityImplementation() {
             </h2>
             <div className="flex flex-wrap items-center gap-3 bg-white/5 backdrop-blur-xl rounded-xl px-4 py-2 border border-white/10">
               <span className="text-white/60">Progress:</span>
-              <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-cyan-400">
+              <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#42BA90]">
                 {progressPercentage}%
               </span>
               <div className="w-24 h-2 bg-white/10 rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-[#42BA90] to-cyan-500"
+                  className="h-full bg-gradient-to-r from-[#42BA90] to-[#42BA90]"
                   animate={{ width: `${progressPercentage}%` }}
                   transition={{ duration: 0.5, ease: 'easeOut' }}
                 />

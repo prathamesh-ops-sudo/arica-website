@@ -319,7 +319,7 @@ function InfrastructureNode({ region, isSelected, onClick }: {
                 <div className="text-white/50 text-[10px] uppercase tracking-wider mb-2">{region.provider}</div>
                 <div className="flex items-center justify-between gap-4 text-xs">
                   <div className="flex items-center gap-1">
-                    <Server className="w-3 h-3 text-cyan-400" />
+                    <Server className="w-3 h-3 text-[#3D70B7]" />
                     <span className="text-green-400">{region.resources}</span>
                   </div>
                   {region.threats > 0 && (
@@ -450,7 +450,7 @@ function SecurityEventItem({ event, index }: { event: SecurityEvent; index: numb
       case 'warning':
         return { bg: 'bg-yellow-500/10', border: 'border-yellow-500/30', icon: <Eye className="w-4 h-4 text-yellow-400" /> };
       default:
-        return { bg: 'bg-cyan-500/10', border: 'border-cyan-500/30', icon: <CheckCircle className="w-4 h-4 text-cyan-400" /> };
+        return { bg: 'bg-[#3D70B7]/10', border: 'border-[#3D70B7]/30', icon: <CheckCircle className="w-4 h-4 text-[#3D70B7]" /> };
     }
   };
 

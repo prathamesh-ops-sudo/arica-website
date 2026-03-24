@@ -79,8 +79,8 @@ export default function Experience() {
               transition={{ duration: 0.4 }}
               className="relative w-[90vw] max-w-[700px] rounded-2xl overflow-hidden"
               style={{
-                border: "1px solid rgba(0,180,216,0.4)",
-                boxShadow: "0 0 40px rgba(0,180,216,0.2), 0 0 80px rgba(0,180,216,0.08), inset 0 0 60px rgba(0,0,0,0.5)",
+                border: "1px solid rgba(61,112,183,0.4)",
+                boxShadow: "0 0 40px rgba(61,112,183,0.2), 0 0 80px rgba(61,112,183,0.08), inset 0 0 60px rgba(0,0,0,0.5)",
                 backgroundColor: "rgba(5,5,5,0.95)",
               }}
             >

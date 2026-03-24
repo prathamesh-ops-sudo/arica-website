@@ -973,7 +973,7 @@ export default function CodeReview() {
                     <span className="text-green-400">-23% issues</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <TrendingUp className="w-4 h-4 text-cyan-400" />
+                    <TrendingUp className="w-4 h-4 text-[#3D70B7]" />
                     <span style={{ color: CYAN }}>+15% fixed</span>
                   </div>
                 </div>
@@ -1017,7 +1017,7 @@ export default function CodeReview() {
                     {isScanning ? 'Scanning...' : 'Scan'}
                   </motion.button>
                 </div>
-                <div className="p-4 font-mono text-sm overflow-x-auto max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-cyan-500/30 scrollbar-track-transparent relative">
+                <div className="p-4 font-mono text-sm overflow-x-auto max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-[#3D70B7]/30 scrollbar-track-transparent relative">
                   <ScannerLineEffect scanProgress={scanProgress} isScanning={isScanning} />
                   <pre className="text-gray-300 relative">
                     {demoCode.split('\n').map((line, i) => {
@@ -1046,7 +1046,7 @@ export default function CodeReview() {
                           <span className={
                             result && result.severity !== 'info' ? 'text-red-300' : 
                             result?.severity === 'info' ? 'text-green-300' : 
-                            isCurrentScanLine ? 'text-cyan-300' : ''
+                            isCurrentScanLine ? 'text-[#3D70B7]' : ''
                           }>
                             {line || ' '}
                           </span>

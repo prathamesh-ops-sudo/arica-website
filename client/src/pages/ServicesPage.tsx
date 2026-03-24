@@ -256,8 +256,8 @@ function AnimatedIcon({
   const [isHovered, setIsHovered] = useState(false);
   
   const glowColor = color === "neutral" ? "rgba(10, 132, 255, 0.6)" : "rgba(153, 68, 255, 0.6)";
-  const bgColor = color === "neutral" ? "bg-[#42BA90]/10" : "bg-cyan-500/10";
-  const textColor = color === "neutral" ? "text-[#42BA90]" : "text-cyan-400";
+  const bgColor = color === "neutral" ? "bg-[#42BA90]/10" : "bg-[#3D70B7]/10";
+  const textColor = color === "neutral" ? "text-[#42BA90]" : "text-[#3D70B7]";
 
   return (
     <motion.div
@@ -325,7 +325,7 @@ function CountUpStat({
     return unsubscribe;
   }, [springValue]);
 
-  const textColor = color === "neutral" ? "text-[#42BA90]" : "text-cyan-400";
+  const textColor = color === "neutral" ? "text-[#42BA90]" : "text-[#3D70B7]";
   const glowColor = color === "neutral" ? "drop-shadow-[0_0_8px_rgba(10,132,255,0.5)]" : "drop-shadow-[0_0_8px_rgba(153,68,255,0.5)]";
 
   return (
@@ -384,7 +384,7 @@ function StaggeredFeatures({
               delay: index * 0.1 + 0.2,
             }}
           >
-            <CheckCircle className={`w-5 h-5 mt-0.5 flex-shrink-0 ${color === "neutral" ? "text-[#42BA90]" : "text-cyan-400"}`} />
+            <CheckCircle className={`w-5 h-5 mt-0.5 flex-shrink-0 ${color === "neutral" ? "text-[#42BA90]" : "text-[#3D70B7]"}`} />
           </motion.div>
           <span className="text-muted-foreground">{feature}</span>
         </motion.li>
@@ -425,7 +425,7 @@ function AnimatedProgressBar({
   
   const barColor = color === "neutral" 
     ? "bg-gradient-to-r from-[#42BA90] to-[#5ac8fa]" 
-    : "bg-gradient-to-r from-cyan-500 to-cyan-400";
+    : "bg-gradient-to-r from-[#3D70B7] to-[#42BA90]";
   const glowColor = color === "neutral"
     ? "shadow-[0_0_20px_rgba(10,132,255,0.6)]"
     : "shadow-[0_0_20px_rgba(153,68,255,0.6)]";
@@ -434,7 +434,7 @@ function AnimatedProgressBar({
     <div ref={ref} className="mb-4">
       <div className="flex justify-between mb-2">
         <span className="text-sm text-muted-foreground">{label}</span>
-        <span className={`text-sm font-bold ${color === "neutral" ? "text-[#42BA90]" : "text-cyan-400"}`}>
+        <span className={`text-sm font-bold ${color === "neutral" ? "text-[#42BA90]" : "text-[#3D70B7]"}`}>
           {displayValue}%
         </span>
       </div>
@@ -549,7 +549,7 @@ export default function ServicesPage() {
                 <div className="p-8 relative z-10">
                   <h3 className="font-display text-xl font-bold mb-6 flex items-center gap-2">
                     <motion.div
-                      className={`w-2 h-2 rounded-full ${service.color === "neutral" ? "bg-[#42BA90]" : "bg-cyan-500"}`}
+                      className={`w-2 h-2 rounded-full ${service.color === "neutral" ? "bg-[#42BA90]" : "bg-[#3D70B7]"}`}
                       animate={{ scale: [1, 1.3, 1] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
                     />

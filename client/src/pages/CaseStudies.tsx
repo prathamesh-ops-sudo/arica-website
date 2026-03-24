@@ -410,8 +410,8 @@ function FlipCard({ study, index }: { study: typeof caseStudies[0]; index: numbe
               study.category === "VAPT" ? "bg-red-500" :
               study.category === "ISO Audit" ? "bg-green-500" :
               study.category === "Software" ? "bg-blue-500" :
-              study.category === "Enterprise" ? "bg-cyan-500" :
-              "bg-cyan-500"
+              study.category === "Enterprise" ? "bg-[#3D70B7]" :
+              "bg-[#3D70B7]"
             }`} />
             <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
               {study.category}

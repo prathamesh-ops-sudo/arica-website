@@ -16,13 +16,13 @@ interface AnimatedProgressProps {
 const colorStyles = {
   cyan: {
     bar: 'bg-[#3D70B7]',
-    glow: 'shadow-[0_0_20px_rgba(0,212,255,0.6)]',
+    glow: 'shadow-[0_0_20px_rgba(61,112,183,0.6)]',
     text: 'text-[#3D70B7]',
   },
   purple: {
-    bar: 'bg-cyan-500',
+    bar: 'bg-[#3D70B7]',
     glow: 'shadow-[0_0_20px_rgba(168,85,247,0.6)]',
-    text: 'text-cyan-400',
+    text: 'text-[#3D70B7]',
   },
   red: {
     bar: 'bg-red-500',
@@ -41,7 +41,7 @@ const colorStyles = {
   },
   gradient: {
     bar: 'bg-gradient-to-r from-[#3D70B7] to-[#3D70B7]',
-    glow: 'shadow-[0_0_20px_rgba(0,212,255,0.4)]',
+    glow: 'shadow-[0_0_20px_rgba(61,112,183,0.4)]',
     text: 'text-[#3D70B7]',
   },
 };

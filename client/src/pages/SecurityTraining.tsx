@@ -14,7 +14,7 @@ import { useGsapStagger } from '@/hooks/useGsapStagger';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
 const CYAN = '#3D70B7';
-const PURPLE = '#3D70B7';
+const PURPLE = '#42BA90';
 const NAVY = 'hsl(222, 47%, 5%)';
 const GREEN = '#00FF88';
 
@@ -973,7 +973,7 @@ export default function SecurityTraining() {
       <div className="fixed inset-0 z-0 opacity-30">
         <PurpleGalaxyBackground />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/10 via-transparent to-cyan-900/10 z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1C2C5A]/10 via-transparent to-[#1C2C5A]/10 z-[1]" />
 
       <div className="fixed top-6 left-6 z-50">
         <Link
@@ -992,13 +992,13 @@ export default function SecurityTraining() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-6 gsap-fade-in">
-            <BookOpen className="w-4 h-4 text-cyan-400" />
-            <span className="text-cyan-400 text-sm font-medium">Security Training Center</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#3D70B7]/10 border border-[#3D70B7]/30 mb-6 gsap-fade-in">
+            <BookOpen className="w-4 h-4 text-[#3D70B7]" />
+            <span className="text-[#3D70B7] text-sm font-medium">Security Training Center</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-4 gsap-fade-in">
             Learn & Master
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-400">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#42BA90]">
               Cybersecurity Skills
             </span>
           </h1>
@@ -1070,7 +1070,7 @@ export default function SecurityTraining() {
         >
           <div className="lg:col-span-2 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-cyan-400" />
+              <TrendingUp className="w-5 h-5 text-[#3D70B7]" />
               Team Training Progress
               <motion.span 
                 className="ml-auto text-xs px-2 py-1 rounded-full bg-green-500/20 text-green-400"
@@ -1091,7 +1091,7 @@ export default function SecurityTraining() {
 
           <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Target className="w-5 h-5 text-cyan-400" />
+              <Target className="w-5 h-5 text-[#3D70B7]" />
               Skill Proficiency
             </h3>
             <SkillRadarChart skills={skills} />
@@ -1107,7 +1107,7 @@ export default function SecurityTraining() {
             data-testid="progress-dashboard"
           >
             <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-cyan-400" />
+              <TrendingUp className="w-5 h-5 text-[#3D70B7]" />
               Your Progress
             </h3>
             
@@ -1135,7 +1135,7 @@ export default function SecurityTraining() {
                     whileHover={badge.earned ? { scale: 1.1 } : undefined}
                     className={`flex items-center gap-2 p-2 rounded-lg border ${
                       badge.earned 
-                        ? 'bg-cyan-500/10 border-cyan-500/30' 
+                        ? 'bg-[#3D70B7]/10 border-[#3D70B7]/30' 
                         : 'bg-gray-500/10 border-gray-500/30 opacity-50'
                     }`}
                     data-testid={`badge-${badge.name.toLowerCase().replace(' ', '-')}`}
@@ -1144,7 +1144,7 @@ export default function SecurityTraining() {
                       animate={badge.earned ? { rotateY: [0, 360] } : undefined}
                       transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
                     >
-                      <badge.icon className={`w-4 h-4 ${badge.earned ? 'text-cyan-400' : 'text-gray-500'}`} />
+                      <badge.icon className={`w-4 h-4 ${badge.earned ? 'text-[#3D70B7]' : 'text-gray-500'}`} />
                     </motion.div>
                     <span className="text-xs">{badge.name}</span>
                   </motion.div>
@@ -1160,7 +1160,7 @@ export default function SecurityTraining() {
             className="lg:col-span-3 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6"
           >
             <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-              <BookOpen className="w-6 h-6 text-cyan-400" />
+              <BookOpen className="w-6 h-6 text-[#3D70B7]" />
               Training Modules
             </h2>
             
@@ -1176,7 +1176,7 @@ export default function SecurityTraining() {
                     index < completedModules 
                       ? 'border-green-500/30' 
                       : index === activeModule 
-                        ? 'border-cyan-500/50' 
+                        ? 'border-[#3D70B7]/50' 
                         : 'border-white/10'
                   }`}
                   onClick={() => {
@@ -1194,10 +1194,10 @@ export default function SecurityTraining() {
                   )}
                   
                   <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${
-                    index < completedModules ? 'bg-green-500/20' : 'bg-cyan-500/20'
+                    index < completedModules ? 'bg-green-500/20' : 'bg-[#3D70B7]/20'
                   }`}>
                     <module.icon className={`w-5 h-5 ${
-                      index < completedModules ? 'text-green-400' : 'text-cyan-400'
+                      index < completedModules ? 'text-green-400' : 'text-[#3D70B7]'
                     }`} />
                   </div>
                   
@@ -1216,7 +1216,7 @@ export default function SecurityTraining() {
                   <div className="space-y-1">
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-gray-400">Completion</span>
-                      <span className="text-cyan-400">{module.completionRate}%</span>
+                      <span className="text-[#3D70B7]">{module.completionRate}%</span>
                     </div>
                     <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                       <motion.div
@@ -1246,7 +1246,7 @@ export default function SecurityTraining() {
           
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold flex items-center gap-2">
-              <Shield className="w-6 h-6 text-cyan-400" />
+              <Shield className="w-6 h-6 text-[#3D70B7]" />
               Interactive Security Quiz
             </h2>
             {quizStarted && (
@@ -1254,7 +1254,7 @@ export default function SecurityTraining() {
                 <div className="flex items-center gap-2">
                   <motion.div
                     className={`w-12 h-12 rounded-full flex items-center justify-center border-2 ${
-                      timeLeft <= 10 ? 'border-red-500 text-red-400' : 'border-cyan-500 text-cyan-400'
+                      timeLeft <= 10 ? 'border-red-500 text-red-400' : 'border-[#3D70B7] text-[#3D70B7]'
                     }`}
                     animate={timeLeft <= 10 ? { scale: [1, 1.1, 1] } : {}}
                     transition={{ duration: 0.5, repeat: Infinity }}
@@ -1268,14 +1268,14 @@ export default function SecurityTraining() {
                     key={totalScore}
                     initial={{ scale: 1.2 }}
                     animate={{ scale: 1 }}
-                    className="text-xl font-bold text-cyan-400"
+                    className="text-xl font-bold text-[#3D70B7]"
                   >
                     {totalScore}
                   </motion.div>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-cyan-500/10 rounded-xl border border-cyan-500/30">
-                  <Trophy className="w-4 h-4 text-cyan-400" />
-                  <span className="font-bold text-cyan-400">{score}/{quizQuestions.length}</span>
+                <div className="flex items-center gap-2 px-4 py-2 bg-[#3D70B7]/10 rounded-xl border border-[#3D70B7]/30">
+                  <Trophy className="w-4 h-4 text-[#3D70B7]" />
+                  <span className="font-bold text-[#3D70B7]">{score}/{quizQuestions.length}</span>
                 </div>
               </div>
             )}
@@ -1288,8 +1288,8 @@ export default function SecurityTraining() {
                 animate={{ scale: 1, opacity: 1 }}
                 className="mb-6"
               >
-                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-cyan-500/20 to-cyan-500/20 border border-cyan-500/30 flex items-center justify-center mb-4">
-                  <Zap className="w-12 h-12 text-cyan-400" />
+                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-[#3D70B7]/20 to-[#42BA90]/20 border border-[#3D70B7]/30 flex items-center justify-center mb-4">
+                  <Zap className="w-12 h-12 text-[#3D70B7]" />
                 </div>
                 <h3 className="text-2xl font-bold mb-2">Ready to Test Your Knowledge?</h3>
                 <p className="text-gray-400 max-w-md mx-auto">
@@ -1300,7 +1300,7 @@ export default function SecurityTraining() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleStartQuiz}
-                className="px-8 py-4 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-cyan-500 text-lg"
+                className="px-8 py-4 rounded-xl font-semibold bg-gradient-to-r from-[#3D70B7] to-[#42BA90] text-lg"
                 data-testid="button-start-quiz"
               >
                 Start Quiz
@@ -1321,7 +1321,7 @@ export default function SecurityTraining() {
                       key={i}
                       className={`w-3 h-3 rounded-full ${
                         i < currentQuestion ? 'bg-green-500' : 
-                        i === currentQuestion ? 'bg-cyan-500' : 'bg-white/20'
+                        i === currentQuestion ? 'bg-[#3D70B7]' : 'bg-white/20'
                       }`}
                       animate={i === currentQuestion ? { scale: [1, 1.2, 1] } : {}}
                       transition={{ duration: 1, repeat: Infinity }}
@@ -1351,14 +1351,14 @@ export default function SecurityTraining() {
                             ? 'bg-red-500/20 border-red-500/50 text-red-400'
                             : 'bg-white/5 border-white/10'
                         : selectedAnswer === index
-                          ? 'bg-cyan-500/20 border-cyan-500/50'
+                          ? 'bg-[#3D70B7]/20 border-[#3D70B7]/50'
                           : 'bg-white/5 border-white/10 hover:bg-white/10'
                     }`}
                     data-testid={`quiz-option-${index}`}
                   >
                     {selectedAnswer === index && !showResult && (
                       <motion.div
-                        className="absolute inset-0 bg-cyan-500/10"
+                        className="absolute inset-0 bg-[#3D70B7]/10"
                         layoutId="selected-answer"
                       />
                     )}
@@ -1409,7 +1409,7 @@ export default function SecurityTraining() {
                     whileTap={{ scale: 0.95 }}
                     onClick={handleSubmitAnswer}
                     disabled={selectedAnswer === null}
-                    className="px-8 py-3 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-8 py-3 rounded-xl font-semibold bg-gradient-to-r from-[#3D70B7] to-[#42BA90] disabled:opacity-50 disabled:cursor-not-allowed"
                     data-testid="button-submit-answer"
                   >
                     Submit Answer
@@ -1419,7 +1419,7 @@ export default function SecurityTraining() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={handleNextQuestion}
-                    className="px-8 py-3 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-cyan-500"
+                    className="px-8 py-3 rounded-xl font-semibold bg-gradient-to-r from-[#3D70B7] to-[#42BA90]"
                     data-testid="button-next-question"
                   >
                     Next Question
@@ -1431,7 +1431,7 @@ export default function SecurityTraining() {
                       <motion.div 
                         initial={{ scale: 0.5 }}
                         animate={{ scale: 1 }}
-                        className="text-3xl font-bold text-cyan-400"
+                        className="text-3xl font-bold text-[#3D70B7]"
                       >
                         {totalScore}
                       </motion.div>

@@ -67,7 +67,7 @@ function AnimatedInput({
           disabled={disabled}
           className={`bg-background/50 border-border pt-4 transition-all duration-300 ${
             isFocused 
-              ? 'border-[#42BA90] shadow-[0_0_15px_rgba(0,180,216,0.3)] ring-1 ring-[#42BA90]/30' 
+              ? 'border-[#42BA90] shadow-[0_0_15px_rgba(61,112,183,0.3)] ring-1 ring-[#42BA90]/30' 
               : 'hover:border-primary/50'
           }`}
         />
@@ -147,7 +147,7 @@ function AnimatedTextarea({
           rows={rows}
           className={`bg-background/50 border-border pt-5 resize-none transition-all duration-300 ${
             isFocused 
-              ? 'border-[#42BA90] shadow-[0_0_15px_rgba(0,180,216,0.3)] ring-1 ring-[#42BA90]/30' 
+              ? 'border-[#42BA90] shadow-[0_0_15px_rgba(61,112,183,0.3)] ring-1 ring-[#42BA90]/30' 
               : 'hover:border-primary/50'
           }`}
         />
@@ -417,7 +417,7 @@ export function ContactForm() {
           >
             <SelectTrigger
               data-testid="select-service"
-              className="bg-background/50 border-border transition-all duration-300 hover:border-primary/50 focus:border-primary focus:shadow-[0_0_15px_rgba(0,180,216,0.3)] focus:ring-1 focus:ring-[#42BA90]/30"
+              className="bg-background/50 border-border transition-all duration-300 hover:border-primary/50 focus:border-primary focus:shadow-[0_0_15px_rgba(61,112,183,0.3)] focus:ring-1 focus:ring-[#42BA90]/30"
             >
               <SelectValue placeholder="Select a service" />
             </SelectTrigger>

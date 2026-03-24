@@ -160,13 +160,13 @@ export function ThreatVortex() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
             className="fixed inset-0 z-[100] pointer-events-none"
-            style={{ background: 'radial-gradient(circle, rgba(0,212,255,0.4), rgba(0,180,216,0.15), transparent)' }}
+            style={{ background: 'radial-gradient(circle, rgba(61,112,183,0.4), rgba(61,112,183,0.15), transparent)' }}
           />
         )}
       </AnimatePresence>
 
       <div className="absolute inset-0 opacity-[0.15]" style={{
-        background: `radial-gradient(ellipse at 50% 50%, rgba(0,180,216,0.08) 0%, transparent 60%)`,
+        background: `radial-gradient(ellipse at 50% 50%, rgba(61,112,183,0.08) 0%, transparent 60%)`,
       }} />
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -206,13 +206,13 @@ export function ThreatVortex() {
               borderColor: phase === "fighting" || phase === "alert"
                 ? ["rgba(255,68,68,0.5)", "rgba(255,68,68,0.2)", "rgba(255,68,68,0.5)"]
                 : phase === "victory"
-                ? "rgba(0,180,216,0.5)"
-                : "rgba(0,180,216,0.3)",
+                ? "rgba(61,112,183,0.5)"
+                : "rgba(61,112,183,0.3)",
               backgroundColor: phase === "alert"
                 ? "rgba(255,68,68,0.08)"
                 : phase === "victory"
-                ? "rgba(0,180,216,0.08)"
-                : "rgba(0,180,216,0.03)",
+                ? "rgba(61,112,183,0.08)"
+                : "rgba(61,112,183,0.03)",
             }}
             transition={{ duration: 0.8, repeat: phase === "fighting" ? Infinity : 0 }}
           >
@@ -269,8 +269,8 @@ export function ThreatVortex() {
                   x: '-50%',
                   y: '-50%',
                   borderColor: phase === "fighting"
-                    ? `rgba(0,212,255,${0.3 - ring * 0.05})`
-                    : `rgba(0,180,216,${0.1 - ring * 0.02})`,
+                    ? `rgba(61,112,183,${0.3 - ring * 0.05})`
+                    : `rgba(61,112,183,${0.1 - ring * 0.02})`,
                 }}
                 animate={isInView ? {
                   rotate: ring % 2 === 0 ? 360 : -360,
@@ -438,7 +438,7 @@ export function ThreatVortex() {
                   height: '220px',
                   left: '-110px',
                   top: '-110px',
-                  background: 'radial-gradient(circle, rgba(0,180,216,0.12) 0%, transparent 70%)',
+                  background: 'radial-gradient(circle, rgba(61,112,183,0.12) 0%, transparent 70%)',
                 }}
                 animate={{
                   scale: phase === "fighting" ? [1, 1.6, 1] : phase === "shockwave" ? [1, 4, 1] : [1, 1.1, 1],
@@ -456,8 +456,8 @@ export function ThreatVortex() {
                 transition={{ duration: phase === "fighting" ? 2 : 8, repeat: Infinity, ease: "linear" }}
               >
                 {/* Outer targeting ring with tick marks */}
-                <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(0,180,216,0.3)" strokeWidth="1" strokeDasharray="4 8" />
-                <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(0,212,255,0.2)" strokeWidth="0.5" />
+                <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(61,112,183,0.3)" strokeWidth="1" strokeDasharray="4 8" />
+                <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(61,112,183,0.2)" strokeWidth="0.5" />
                 {/* Tick marks around outer ring */}
                 {Array.from({ length: 36 }).map((_, i) => {
                   const angle = (i * 10 * Math.PI) / 180;
@@ -470,7 +470,7 @@ export function ThreatVortex() {
                       y1={100 + Math.sin(angle) * inner}
                       x2={100 + Math.cos(angle) * outer}
                       y2={100 + Math.sin(angle) * outer}
-                      stroke={i % 3 === 0 ? "rgba(0,212,255,0.6)" : "rgba(0,180,216,0.3)"}
+                      stroke={i % 3 === 0 ? "rgba(61,112,183,0.6)" : "rgba(61,112,183,0.3)"}
                       strokeWidth={i % 3 === 0 ? "1.5" : "0.5"}
                     />
                   );
@@ -486,17 +486,17 @@ export function ThreatVortex() {
                 transition={{ duration: phase === "fighting" ? 1.5 : 6, repeat: Infinity, ease: "linear" }}
               >
                 {/* Crosshair lines with gaps */}
-                <line x1="70" y1="10" x2="70" y2="35" stroke="rgba(0,212,255,0.7)" strokeWidth="1.5" />
-                <line x1="70" y1="105" x2="70" y2="130" stroke="rgba(0,212,255,0.7)" strokeWidth="1.5" />
-                <line x1="10" y1="70" x2="35" y2="70" stroke="rgba(0,212,255,0.7)" strokeWidth="1.5" />
-                <line x1="105" y1="70" x2="130" y2="70" stroke="rgba(0,212,255,0.7)" strokeWidth="1.5" />
+                <line x1="70" y1="10" x2="70" y2="35" stroke="rgba(61,112,183,0.7)" strokeWidth="1.5" />
+                <line x1="70" y1="105" x2="70" y2="130" stroke="rgba(61,112,183,0.7)" strokeWidth="1.5" />
+                <line x1="10" y1="70" x2="35" y2="70" stroke="rgba(61,112,183,0.7)" strokeWidth="1.5" />
+                <line x1="105" y1="70" x2="130" y2="70" stroke="rgba(61,112,183,0.7)" strokeWidth="1.5" />
                 {/* Corner brackets */}
-                <path d="M30,30 L30,45 M30,30 L45,30" fill="none" stroke="rgba(0,212,255,0.5)" strokeWidth="1" />
-                <path d="M110,30 L110,45 M110,30 L95,30" fill="none" stroke="rgba(0,212,255,0.5)" strokeWidth="1" />
-                <path d="M30,110 L30,95 M30,110 L45,110" fill="none" stroke="rgba(0,212,255,0.5)" strokeWidth="1" />
-                <path d="M110,110 L110,95 M110,110 L95,110" fill="none" stroke="rgba(0,212,255,0.5)" strokeWidth="1" />
+                <path d="M30,30 L30,45 M30,30 L45,30" fill="none" stroke="rgba(61,112,183,0.5)" strokeWidth="1" />
+                <path d="M110,30 L110,45 M110,30 L95,30" fill="none" stroke="rgba(61,112,183,0.5)" strokeWidth="1" />
+                <path d="M30,110 L30,95 M30,110 L45,110" fill="none" stroke="rgba(61,112,183,0.5)" strokeWidth="1" />
+                <path d="M110,110 L110,95 M110,110 L95,110" fill="none" stroke="rgba(61,112,183,0.5)" strokeWidth="1" />
                 {/* Inner diamond */}
-                <path d="M70,45 L95,70 L70,95 L45,70 Z" fill="none" stroke="rgba(0,180,216,0.4)" strokeWidth="0.8" strokeDasharray="3 3" />
+                <path d="M70,45 L95,70 L70,95 L45,70 Z" fill="none" stroke="rgba(61,112,183,0.4)" strokeWidth="0.8" strokeDasharray="3 3" />
               </motion.svg>
 
               {/* Scanning sweep line (during fighting) */}
@@ -510,8 +510,8 @@ export function ThreatVortex() {
                 >
                   <defs>
                     <linearGradient id="sweepGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="rgba(0,212,255,0)" />
-                      <stop offset="100%" stopColor="rgba(0,212,255,0.6)" />
+                      <stop offset="0%" stopColor="rgba(61,112,183,0)" />
+                      <stop offset="100%" stopColor="rgba(61,112,183,0.6)" />
                     </linearGradient>
                   </defs>
                   <path d="M90,90 L90,5 A85,85 0 0,1 160,50 Z" fill="url(#sweepGrad)" opacity="0.4" />
@@ -527,7 +527,7 @@ export function ThreatVortex() {
                     height: '160px',
                     left: '-80px',
                     top: '-80px',
-                    borderColor: 'rgba(0,212,255,0.5)',
+                    borderColor: 'rgba(61,112,183,0.5)',
                   }}
                   animate={{ scale: [1, 1.2, 1], opacity: [0.6, 0.15, 0.6] }}
                   transition={{ duration: 0.6, repeat: Infinity }}
@@ -549,10 +549,10 @@ export function ThreatVortex() {
                     ? 'radial-gradient(circle, #00ff41 0%, #00cc33 30%, #009926 60%, #006619 100%)'
                     : 'radial-gradient(circle, #3D70B7 0%, #42BA90 40%, #1C2C5A 70%, #001a2e 100%)',
                   boxShadow: phase === "fighting"
-                    ? '0 0 30px rgba(0,212,255,0.9), 0 0 60px rgba(0,180,216,0.6), 0 0 90px rgba(0,119,182,0.4)'
+                    ? '0 0 30px rgba(61,112,183,0.9), 0 0 60px rgba(61,112,183,0.6), 0 0 90px rgba(28,44,90,0.4)'
                     : phase === "victory"
                     ? '0 0 30px rgba(0,255,65,0.6), 0 0 60px rgba(0,204,51,0.3)'
-                    : '0 0 20px rgba(0,180,216,0.5), 0 0 40px rgba(0,212,255,0.2)',
+                    : '0 0 20px rgba(61,112,183,0.5), 0 0 40px rgba(61,112,183,0.2)',
                 }}
                 animate={{
                   scale: phase === "shockwave" ? [1, 2, 1] :
@@ -622,7 +622,7 @@ export function ThreatVortex() {
                   <div className="px-8 py-4 rounded-xl border border-[#42BA90]/40 bg-[#050505]/90 backdrop-blur-md">
                     <motion.p
                       className="text-xs font-mono tracking-[0.3em] mb-1"
-                      style={{ color: '#3D70B7', textShadow: '0 0 10px rgba(0,212,255,0.5)' }}
+                      style={{ color: '#3D70B7', textShadow: '0 0 10px rgba(61,112,183,0.5)' }}
                     >
                       MISSION COMPLETE
                     </motion.p>
@@ -650,11 +650,11 @@ export function ThreatVortex() {
             <div
               className="rounded-xl border overflow-hidden"
               style={{
-                borderColor: phase === "fighting" ? 'rgba(255,68,68,0.3)' : 'rgba(0,180,216,0.2)',
+                borderColor: phase === "fighting" ? 'rgba(255,68,68,0.3)' : 'rgba(61,112,183,0.2)',
                 backgroundColor: 'rgba(5,5,5,0.9)',
               }}
             >
-              <div className="flex items-center gap-2 px-3 py-2 border-b" style={{ borderColor: 'rgba(0,180,216,0.15)' }}>
+              <div className="flex items-center gap-2 px-3 py-2 border-b" style={{ borderColor: 'rgba(61,112,183,0.15)' }}>
                 <div className="flex gap-1">
                   <div className="w-2 h-2 rounded-full bg-[#ff4444]" />
                   <div className="w-2 h-2 rounded-full bg-[#ffaa00]" />
