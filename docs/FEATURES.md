@@ -1069,7 +1069,7 @@ If you want to add actual AI functionality, here's what would be needed:
 | AWS App Runner | `arica-website` | 2 vCPU, 4 GB RAM, 2-5 instances |
 | AWS RDS | `arica-website-db` | db.t3.small, PostgreSQL, 20 GB |
 | AWS ECR | `arica-website` | Docker image registry |
-| AWS CloudFront | `E319SR29FW2GY7` | CDN distribution |
+| AWS CloudFront | *(see AWS console)* | CDN distribution |
 
 ### Deployment Steps
 
@@ -1080,19 +1080,20 @@ If you want to add actual AI functionality, here's what would be needed:
 
 2. **Push to ECR:**
    ```bash
-   aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 557845624595.dkr.ecr.us-east-1.amazonaws.com
-   docker tag arica-website:latest 557845624595.dkr.ecr.us-east-1.amazonaws.com/arica-website:latest
-   docker push 557845624595.dkr.ecr.us-east-1.amazonaws.com/arica-website:latest
+   aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com
+   docker tag arica-website:latest <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/arica-website:latest
+   docker push <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/arica-website:latest
    ```
 
 3. **Trigger App Runner redeployment:**
    ```bash
-   aws apprunner start-deployment --service-arn arn:aws:apprunner:us-east-1:557845624595:service/arica-website/1589653076d44a8eb9e96302e4997983
+   aws apprunner start-deployment --service-arn <APP_RUNNER_SERVICE_ARN>
    ```
+   > Get the service ARN from the AWS App Runner console.
 
 4. **Verify:**
-   - App Runner URL: https://hgesimdp2m.us-east-1.awsapprunner.com
-   - CloudFront URL: https://d7x1d0i7m5ts.cloudfront.net
+   - App Runner URL: *(see AWS App Runner console)*
+   - CloudFront URL: *(see AWS CloudFront console)*
 
 ### Environment Variables
 
