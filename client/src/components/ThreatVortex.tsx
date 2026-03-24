@@ -544,10 +544,10 @@ export function ThreatVortex() {
                   top: '-32px',
                   borderRadius: '50%',
                   background: phase === "fighting" || phase === "shockwave"
-                    ? 'radial-gradient(circle, #90E0EF 0%, #3D70B7 30%, #42BA90 60%, #1C2C5A 100%)'
+                    ? 'radial-gradient(circle, #FFFFFF 0%, #3D70B7 30%, #42BA90 60%, #1C2C5A 100%)'
                     : phase === "victory"
                     ? 'radial-gradient(circle, #00ff41 0%, #00cc33 30%, #009926 60%, #006619 100%)'
-                    : 'radial-gradient(circle, #3D70B7 0%, #42BA90 40%, #1C2C5A 70%, #001a2e 100%)',
+                    : 'radial-gradient(circle, #3D70B7 0%, #42BA90 40%, #1C2C5A 70%, #010101 100%)',
                   boxShadow: phase === "fighting"
                     ? '0 0 30px rgba(61,112,183,0.9), 0 0 60px rgba(61,112,183,0.6), 0 0 90px rgba(28,44,90,0.4)'
                     : phase === "victory"
@@ -629,7 +629,7 @@ export function ThreatVortex() {
                     <motion.p
                       className="text-xl md:text-2xl font-bold"
                       style={{
-                        background: 'linear-gradient(to right, #42BA90, #3D70B7, #90E0EF)',
+                        background: 'linear-gradient(to right, #42BA90, #3D70B7, #FFFFFF)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                         textShadow: 'none',

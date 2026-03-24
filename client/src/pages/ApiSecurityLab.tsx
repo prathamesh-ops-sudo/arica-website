@@ -766,7 +766,7 @@ export default function ApiSecurityLab() {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[rgba(61, 112, 183,0.1)] border border-[#3D70B7]/30 mb-6"
+            className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[rgba(61,112,183,0.1)] border border-[#3D70B7]/30 mb-6"
           >
             <PulsingDot color="#3D70B7" />
             <Server className="w-4 h-4 text-[#3D70B7]" />

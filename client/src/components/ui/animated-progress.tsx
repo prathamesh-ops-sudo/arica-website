@@ -222,7 +222,7 @@ export function CircularProgress({
               </>
             ) : (
               <>
-                <stop offset="0%" stopColor={color === 'cyan' ? '#3D70B7' : color === 'purple' ? '#a855f7' : color === 'red' ? '#ef4444' : color === 'green' ? '#22c55e' : '#f59e0b'} />
+                <stop offset="0%" stopColor={color === 'cyan' ? '#3D70B7' : color === 'purple' ? '#42BA90' : color === 'red' ? '#ef4444' : color === 'green' ? '#22c55e' : '#f59e0b'} />
                 <stop offset="100%" stopColor={color === 'cyan' ? '#42BA90' : color === 'purple' ? '#3D70B7' : color === 'red' ? '#dc2626' : color === 'green' ? '#16a34a' : '#d97706'} />
               </>
             )}

@@ -51,7 +51,7 @@ export function TubesBackground({
             colors: ["#42BA90", "#1C2C5A", "#3D70B7"],
             lights: {
               intensity: 150,
-              colors: ["#3D70B7", "#42BA90", "#1C2C5A", "#60aed5"]
+              colors: ["#3D70B7", "#42BA90", "#1C2C5A", "#3D70B7"]
             }
           }
         });

@@ -727,7 +727,7 @@ export default function CloudSecurityCenter() {
           >
             <motion.div 
               className="inline-flex items-center gap-2 bg-[#3D70B7]/10 border border-[#3D70B7]/30 rounded px-4 py-2 mb-4 font-mono text-xs"
-              animate={{ borderColor: ['rgba(61, 112, 183,0.3)', 'rgba(153,68,255,0.3)', 'rgba(61, 112, 183,0.3)'] }}
+              animate={{ borderColor: ['rgba(61,112,183,0.3)', 'rgba(66,186,144,0.3)', 'rgba(61,112,183,0.3)'] }}
               transition={{ duration: 4, repeat: Infinity }}
             >
               <Cloud className="w-4 h-4 text-[#3D70B7]" />
