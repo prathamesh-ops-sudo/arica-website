@@ -449,7 +449,7 @@ function AnimatedProgressBar({
 
 export default function ServicesPage() {
   return (
-    <div className="min-h-screen bg-background aurora-bg">
+    <div className="min-h-screen bg-background">
       <FloatingSecurityElements />
       <AmbientParticles variant="dots" count={25} opacity={0.12} />
       <Navbar />

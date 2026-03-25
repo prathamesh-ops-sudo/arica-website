@@ -141,7 +141,7 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-background aurora-bg">
+    <div className="min-h-screen bg-background">
       <Navbar />
 
       <section className="pt-32 pb-20 relative overflow-hidden">

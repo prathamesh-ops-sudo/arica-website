@@ -811,7 +811,7 @@ export default function SecurityPolicies() {
   const parallaxScale = isMobile ? 1 : 1 + progress * 0.05;
 
   return (
-    <div className="min-h-screen aurora-bg text-white relative overflow-hidden">
+    <div className="min-h-screen bg-background text-white relative overflow-hidden">
       <div 
         className="fixed inset-0 z-background pointer-events-none"
         style={{

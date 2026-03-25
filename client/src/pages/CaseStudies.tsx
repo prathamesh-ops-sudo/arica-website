@@ -481,7 +481,7 @@ export default function CaseStudies() {
     : caseStudies.filter(s => s.category === activeCategory);
 
   return (
-    <div className="min-h-screen bg-background aurora-bg">
+    <div className="min-h-screen bg-background">
       <AmbientParticles variant="data" count={15} opacity={0.1} />
       <Navbar />
 

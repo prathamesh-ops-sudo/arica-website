@@ -278,7 +278,7 @@ export default function Contact() {
   }, []);
   
   return (
-    <div className="min-h-screen bg-background aurora-bg">
+    <div className="min-h-screen bg-background">
       <Navbar />
 
       <section className="pt-32 pb-20 relative overflow-hidden">
