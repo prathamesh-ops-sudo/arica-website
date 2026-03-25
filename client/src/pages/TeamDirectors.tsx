@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { ArrowLeft } from "lucide-react";
@@ -70,7 +70,6 @@ function TeamMemberRow({
   onToggle: () => void;
 }) {
   const [isHovered, setIsHovered] = useState(false);
-  const rowRef = useRef<HTMLLIElement>(null);
 
   const handleMouseEnter = useCallback(() => {
     setIsHovered(true);
@@ -81,10 +80,11 @@ function TeamMemberRow({
   }, []);
 
   return (
-    <li ref={rowRef} className="relative">
+    <li className="relative">
       <motion.button
         className="w-full text-center py-4 sm:py-6 md:py-8 cursor-pointer relative group"
         onClick={onToggle}
+        aria-expanded={isExpanded}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         initial={{ opacity: 0, y: 40 }}
