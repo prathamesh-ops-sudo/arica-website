@@ -23,7 +23,8 @@ export function SiteFooter() {
           <span
             className="bg-gradient-to-b from-foreground/20 via-foreground/10 to-transparent bg-clip-text text-transparent font-extrabold tracking-tighter text-center leading-none"
             style={{
-              fontFamily: "'Alfa Slab One', serif",
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 900,
               fontSize: "clamp(3rem, 14vw, 12rem)",
             }}
           >

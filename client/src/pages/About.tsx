@@ -366,7 +366,8 @@ export default function About() {
                   <h2
                     className="font-extrabold tracking-tight leading-none mb-4"
                     style={{
-                      fontFamily: "'Alfa Slab One', serif",
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 900,
                       fontSize: "clamp(2.5rem, 6vw, 5rem)",
                     }}
                   >

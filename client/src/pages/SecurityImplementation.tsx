@@ -205,7 +205,7 @@ function BuildingFoundation() {
     <group position={[0, -2.5, 0]}>
       <mesh>
         <boxGeometry args={[8, 0.3, 8]} />
-        <meshStandardMaterial color="#1a1a2e" metalness={0.8} roughness={0.3} transparent opacity={0.5} />
+        <meshStandardMaterial color="#1C2C5A" metalness={0.8} roughness={0.3} transparent opacity={0.5} />
       </mesh>
       
       {[-3, -1.5, 0, 1.5, 3].map((x, i) => (

@@ -24,7 +24,7 @@ export function AsciiHeroSection() {
     <section className="relative py-24 lg:py-32 overflow-hidden bg-background">
       {/* Subtle gradient background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#050505] via-[#0a0510] to-[#050505]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#010101] via-[#010101] to-[#010101]" />
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#1C2C5A]/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#3D70B7]/10 rounded-full blur-3xl" />
       </div>
@@ -44,7 +44,7 @@ export function AsciiHeroSection() {
               <div className="w-10 h-10 rounded-xl bg-[#42BA90]/10 border border-[#42BA90]/20 flex items-center justify-center">
                 <Shield className="w-5 h-5 text-[#42BA90]" />
               </div>
-              <span className="text-[#8e8e93] text-sm tracking-widest uppercase">Security Excellence</span>
+              <span className="text-[#ACACAC] text-sm tracking-widest uppercase">Security Excellence</span>
             </div>
 
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
@@ -54,7 +54,7 @@ export function AsciiHeroSection() {
               </span>
             </h2>
 
-            <p className="text-lg text-[#8e8e93] mb-8 leading-relaxed max-w-lg">
+            <p className="text-lg text-[#ACACAC] mb-8 leading-relaxed max-w-lg">
               In cybersecurity, there is no finish line. Every threat neutralized reveals another. 
               Every vulnerability patched exposes new attack vectors. We embrace this eternal pursuit.
             </p>
@@ -87,7 +87,7 @@ export function AsciiHeroSection() {
                   className="text-center sm:text-left"
                 >
                   <div className="text-2xl sm:text-3xl font-bold text-white mb-1">{stat.value}</div>
-                  <div className="text-xs text-[#8e8e93]">{stat.label}</div>
+                  <div className="text-xs text-[#ACACAC]">{stat.label}</div>
                 </motion.div>
               ))}
             </div>
@@ -118,7 +118,7 @@ export function AsciiHeroSection() {
                     <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-[#42BA90] transition-colors">
                       {feature.title}
                     </h3>
-                    <p className="text-[#8e8e93] text-sm">{feature.desc}</p>
+                    <p className="text-[#ACACAC] text-sm">{feature.desc}</p>
                   </div>
                 </div>
               </motion.div>
@@ -132,7 +132,7 @@ export function AsciiHeroSection() {
                   <div className="text-5xl font-bold bg-gradient-to-r from-[#42BA90] to-[#3D70B7] bg-clip-text text-transparent">
                     ∞
                   </div>
-                  <div className="text-xs text-[#8e8e93] mt-1 tracking-widest">CONTINUOUS PROTECTION</div>
+                  <div className="text-xs text-[#ACACAC] mt-1 tracking-widest">CONTINUOUS PROTECTION</div>
                 </div>
               </div>
             </div>

@@ -14,8 +14,8 @@ import {
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
 const NEUTRAL_LIGHT = '#e5e5e5';
-const NEUTRAL_MID = '#8e8e93';
-const NEUTRAL_DARK = '#3a3a3c';
+const NEUTRAL_MID = '#ACACAC';
+const NEUTRAL_DARK = '#1C2C5A';
 const ACCENT_BLUE = '#42BA90';
 const NAVY = 'hsl(222, 47%, 5%)';
 const GREEN = '#00FF88';

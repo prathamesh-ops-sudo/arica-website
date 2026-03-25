@@ -18,7 +18,7 @@ interface DeviceType {
 }
 
 const devices: DeviceType[] = [
-  { id: 'iphone', name: 'iPhone 15 Pro', color: '#1a1a2e', screenRatio: 0.92 },
+  { id: 'iphone', name: 'iPhone 15 Pro', color: '#1C2C5A', screenRatio: 0.92 },
   { id: 'pixel', name: 'Pixel 8 Pro', color: '#2d2d3a', screenRatio: 0.90 },
   { id: 'samsung', name: 'Galaxy S24', color: '#1e1e2a', screenRatio: 0.91 },
 ];
@@ -203,7 +203,7 @@ function RealisticPhone({ isScanning, mousePosition, selectedDevice, onHotspotCl
         {/* Front camera lens */}
         <mesh position={[-0.08, 1.15, 0.075]}>
           <circleGeometry args={[0.025, 32]} />
-          <meshPhysicalMaterial color="#1a1a2e" metalness={0.5} roughness={0.2} />
+          <meshPhysicalMaterial color="#1C2C5A" metalness={0.5} roughness={0.2} />
         </mesh>
         
         {/* Camera bump on back */}

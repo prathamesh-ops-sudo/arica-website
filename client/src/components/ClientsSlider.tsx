@@ -44,7 +44,7 @@ export function ClientsSlider() {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1C2C5A]/5 to-transparent pointer-events-none" />
       
       <div className="container mx-auto px-4 mb-8">
-        <h3 className="text-center text-[#8e8e93] text-sm uppercase tracking-[0.3em] mb-2">
+        <h3 className="text-center text-[#ACACAC] text-sm uppercase tracking-[0.3em] mb-2">
           Trusted By Industry Leaders
         </h3>
         <p className="text-center text-white/40 text-xs">
@@ -59,7 +59,7 @@ export function ClientsSlider() {
             className="flex items-center gap-3 px-6 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full hover:bg-white/10 hover:border-[#42BA90]/30 transition-all duration-300 group"
             data-testid={`industry-badge-${index}`}
           >
-            <industry.icon className="w-5 h-5 text-[#8e8e93] group-hover:text-[#42BA90] transition-colors" />
+            <industry.icon className="w-5 h-5 text-[#ACACAC] group-hover:text-[#42BA90] transition-colors" />
             <span className="text-white/70 text-sm font-medium whitespace-nowrap group-hover:text-white transition-colors">
               {industry.name}
             </span>
