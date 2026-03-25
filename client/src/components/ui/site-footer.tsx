@@ -14,13 +14,13 @@ export function SiteFooter() {
 
   return (
     <footer className="border-t border-border bg-background mt-20">
-      <div className="max-w-7xl mx-auto flex items-center justify-center py-10">
-        <div className="flex gap-6">
+      <div className="max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[30rem] sm:min-h-[35rem] md:min-h-[40rem] py-20">
+        <div className="flex gap-8">
           {socialLinks.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              className="w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:bg-white/20 hover:scale-110 transition-all duration-300"
+              className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:bg-white/20 hover:scale-110 transition-all duration-300"
               target="_blank"
               rel="noopener noreferrer"
               aria-label={link.label}
@@ -28,7 +28,7 @@ export function SiteFooter() {
               <img
                 src={link.icon}
                 alt={link.label}
-                className="w-5 h-5 object-contain invert opacity-70"
+                className="w-7 h-7 sm:w-8 sm:h-8 object-contain invert opacity-70"
                 loading="lazy"
               />
             </a>
