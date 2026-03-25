@@ -32,6 +32,7 @@ import SecurityTraining from "@/pages/SecurityTraining";
 import OngoingSupport from "@/pages/OngoingSupport";
 import SecurityImplementation from "@/pages/SecurityImplementation";
 import Orca from "@/pages/Orca";
+import TeamDirectors from "@/pages/TeamDirectors";
 
 function Router() {
   return (
@@ -61,6 +62,7 @@ function Router() {
       <Route path="/ongoing-support" component={OngoingSupport} />
       <Route path="/security-implementation" component={SecurityImplementation} />
       <Route path="/orca" component={Orca} />
+      <Route path="/team" component={TeamDirectors} />
       <Route path="/portal" component={Contact} />
       <Route component={NotFound} />
     </Switch>
