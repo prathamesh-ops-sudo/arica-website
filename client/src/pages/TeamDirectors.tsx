@@ -17,44 +17,94 @@ interface TeamMember {
 
 const teamMembers: TeamMember[] = [
   {
-    firstName: "Dr. Arica",
-    lastName: "Kumar",
-    role: "Founder & CEO",
+    firstName: "Chitra",
+    lastName: "Mete",
+    role: "Managing Partner",
     location: "Pune",
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&h=800&fit=crop&crop=face",
-    secondaryImage: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop",
-    bio: "Former NSA Cybersecurity Analyst with over 15 years of experience in offensive security. Founded Arica Tech to protect businesses from evolving digital threats. Every vulnerability we find is one less attack vector for malicious actors.",
-    expertise: ["Penetration Testing", "Threat Intelligence", "Security Architecture"],
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&h=800&fit=crop&crop=face",
+    secondaryImage: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop",
+    bio: "Brings 26+ years of experience in integrated communication across social impact, government, and corporate sectors. With expertise in advertising and visual communication, she has led campaigns for UNICEF, WHO, Tata Trusts, and state bodies, driving change in public health, gender equity, road safety, and civic participation. A strategic leader, she blends creative direction, research, and narrative design to deliver impactful, culturally resonant work.",
+    expertise: ["Brand & Marketing Strategy", "Digital & Data-Led Growth", "Market Expansion & Operating Model Design", "Customer Engagement & Retention"],
   },
   {
-    firstName: "James",
-    lastName: "Wilson",
-    role: "Chief Technology Officer",
+    firstName: "Sahil",
+    lastName: "Phadnis",
+    role: "Managing Partner",
     location: "Pune",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600&h=800&fit=crop&crop=face",
     secondaryImage: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=400&fit=crop",
-    bio: "Ex-Google Security Engineer who has built and scaled security systems for billions of users. Security isn't just about technology — it's about building systems that are resilient by design.",
-    expertise: ["Cloud Security", "DevSecOps", "Secure Architecture"],
+    bio: "A business strategist with deep operational expertise, focused on driving brand-led, data-driven growth. Works at the intersection of strategy, execution, and customer insight to build scalable growth programs. At Zomato, played a key role in revenue growth, market expansion, and operational scale across multiple regions. Aligns brand positioning with long-term commercial impact.",
+    expertise: ["B2B Partnerships & Revenue Strategy", "Digital & Data-Led Growth", "Market Expansion & Operating Model Design", "Customer Engagement & Retention Programs"],
   },
   {
-    firstName: "Elena",
-    lastName: "Rodriguez",
-    role: "Head of Forensics",
-    location: "Pune",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&h=800&fit=crop&crop=face",
-    secondaryImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&h=400&fit=crop",
-    bio: "FBI-trained digital forensics expert with a track record of solving complex cyber incidents. Digital forensics is like solving a puzzle — every piece of evidence tells a story.",
-    expertise: ["Digital Forensics", "Incident Response", "Malware Analysis"],
-  },
-  {
-    firstName: "David",
-    lastName: "Chen",
-    role: "Legal Counsel",
+    firstName: "Siddhant",
+    lastName: "Malegaonkar",
+    role: "Criminal Law Advocate",
     location: "Pune",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=800&fit=crop&crop=face",
     secondaryImage: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&h=400&fit=crop",
-    bio: "Cyber law specialist who bridges the gap between legal expertise and technical understanding. Navigating cyber regulations requires both perspectives to protect our clients effectively.",
-    expertise: ["Cyber Law", "Compliance", "Data Privacy"],
+    bio: "A Pune-based practicing advocate specialising in cyber law, information technology law, and digital crimes. With grounding in traditional litigation and a strong focus on technology-driven disputes, he advises and represents clients across cybercrime litigation, digital compliance, and data protection matters in an increasingly digital legal environment.",
+    expertise: ["Cybercrime & Digital Offences Litigation", "IT Act Compliance & Advisory", "Data Protection & Privacy Advisory", "Digital Evidence & Technology Risk"],
+  },
+  {
+    firstName: "H. B.",
+    lastName: "Keshava",
+    role: "CEO & Managing Partner",
+    location: "Pune",
+    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&h=800&fit=crop&crop=face",
+    secondaryImage: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop",
+    bio: "Leads Arica Tech Security LLP with expertise across cybersecurity governance, cyber law, and digital risk management. Actively engaged with leading universities as an educator in cyber law, data protection, and digital ethics. Advises organisations on cybersecurity compliance, cybercrime response, forensic documentation, and regulation-aligned security frameworks. Honoured at IP Gorilla Conference, Singapore. Featured in Forbes India 2026.",
+    expertise: ["Cyber Law & IT Act Compliance", "Data Protection & Privacy Governance", "ISO 27001 Audits & Security Governance", "Cyber Incident & Forensic Documentation"],
+  },
+  {
+    firstName: "Kunal",
+    lastName: "Dhonge",
+    role: "Chief Operations Officer",
+    location: "Pune",
+    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600&h=800&fit=crop&crop=face",
+    secondaryImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&h=400&fit=crop",
+    bio: "Brings hands-on expertise in cybercrime investigation, digital forensics, and incident response. Has supported police departments and corporate investigations across fraud, phishing, ransomware, and data breach cases, with a focus on evidence integrity, forensic reporting, and post-incident security improvement. Trained 200+ professionals and students in cybersecurity.",
+    expertise: ["Cybercrime Investigation & Digital Forensics", "Incident Response & Threat Mitigation", "Disk Imaging & Evidence Handling", "Cyber Audit & Security Documentation"],
+  },
+  {
+    firstName: "Uttakarsh Manoj",
+    lastName: "Mattikop",
+    role: "Lead Consultant",
+    location: "Pune",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&h=800&fit=crop&crop=face",
+    secondaryImage: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&h=400&fit=crop",
+    bio: "A technology-focused consultant specialising in cyber law, data protection, and cybersecurity governance. Actively involved in academia, teaching cyber law, AI & law, and technology governance at leading universities. Supports organisations with ISO 27001 alignment, regulatory compliance, cyber risk advisory, and incident-response documentation. Founder of Exordium Alliances (AI & Cyber Law education).",
+    expertise: ["Cyber Law & IT Act Compliance", "Data Protection & Privacy Frameworks", "ISO 27001 Audits & Documentation", "Cyber Risk & Incident Advisory"],
+  },
+  {
+    firstName: "K.",
+    lastName: "Shhyamsundar",
+    role: "Business Development Officer",
+    location: "Pune",
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&h=800&fit=crop&crop=face",
+    secondaryImage: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=600&h=400&fit=crop",
+    bio: "Drives business development and strategic partnerships, working closely with leadership and delivery teams. Brings experience in vendor management, contract negotiation, market intelligence, and operational alignment to support scalable and compliant growth. Led high-value negotiations across enterprise environments and built scalable partner ecosystems.",
+    expertise: ["Strategic Partnerships & Client Development", "Contract Negotiation & Deal Structuring", "Market Intelligence & Opportunity Assessment", "Operational Strategy & Governance"],
+  },
+  {
+    firstName: "Prathamesh",
+    lastName: "Dabir",
+    role: "Associate | Security Operations & Threat Intelligence",
+    location: "Pune",
+    image: "https://images.unsplash.com/photo-1531891437562-4301cf35b7e4?w=600&h=800&fit=crop&crop=face",
+    secondaryImage: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&h=400&fit=crop",
+    bio: "Works across security operations, threat hunting, and detection engineering to strengthen proactive defence and SOC efficiency. Experienced with SIEM platforms, endpoint monitoring, cloud security, and automation-led workflows. Actively involved in cybersecurity research and technical community initiatives. Top 13 in India on TryHackMe. Speaker at TryHackMe Pune Chapter.",
+    expertise: ["Threat Hunting & Detection Engineering", "SIEM & Endpoint Monitoring", "Incident Response & Log Correlation", "Vulnerability Assessment & Pentesting"],
+  },
+  {
+    firstName: "Bhargav",
+    lastName: "Iyer",
+    role: "Associate | Cyber Law & Data Protection",
+    location: "Pune",
+    image: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=600&h=800&fit=crop&crop=face",
+    secondaryImage: "https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?w=600&h=400&fit=crop",
+    bio: "Supports Arica\u2019s cyber-legal and compliance practice with a focus on data protection, platform governance, and technology documentation. Assists in drafting privacy policies, platform terms, IT contracts, and compliance frameworks for digital platforms and SaaS organisations. Certified in GDPR & Technology Law.",
+    expertise: ["Cyber Law & Digital Regulation", "Data Protection & Privacy Compliance", "Platform Policies & IT Contracts", "Cyber Incident Documentation Support"],
   },
 ];
 
@@ -91,12 +141,12 @@ function TeamMemberRow({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: index * 0.1 }}
       >
-        {/* First name - small text */}
+        {/* Last name - small text */}
         <span className="block text-xs sm:text-sm tracking-[0.2em] uppercase text-muted-foreground mb-1 font-medium">
-          {member.firstName}
+          {member.lastName}
         </span>
 
-        {/* Last name - large serif text */}
+        {/* First name - large text */}
         <span
           className="block font-bold tracking-tight leading-none transition-colors duration-300"
           style={{
@@ -106,7 +156,7 @@ function TeamMemberRow({
             color: isHovered ? "hsl(var(--primary))" : "hsl(var(--foreground))",
           }}
         >
-          {member.lastName.toUpperCase()}
+          {member.firstName.toUpperCase()}
         </span>
 
         {/* Role - small text below */}
