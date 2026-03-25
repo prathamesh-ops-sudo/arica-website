@@ -61,7 +61,7 @@ const teamMembers: TeamMember[] = [
     expertise: ["Cybercrime Investigation & Digital Forensics", "Incident Response & Threat Mitigation", "Disk Imaging & Evidence Handling", "Cyber Audit & Security Documentation"],
   },
   {
-    firstName: "Uttakarsh Manoj",
+    firstName: "Uttakarsh",
     lastName: "Mattikop",
     role: "Lead Consultant",
     location: "Pune",
@@ -92,7 +92,7 @@ const teamMembers: TeamMember[] = [
     lastName: "Iyer",
     role: "Associate | Cyber Law & Data Protection",
     location: "Pune",
-    image: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=600&h=800&fit=crop&crop=face",
+    image: "/team/bhargav-iyer.jpg",
     bio: "Supports Arica\u2019s cyber-legal and compliance practice with a focus on data protection, platform governance, and technology documentation. Assists in drafting privacy policies, platform terms, IT contracts, and compliance frameworks for digital platforms and SaaS organisations. Certified in GDPR & Technology Law.",
     expertise: ["Cyber Law & Digital Regulation", "Data Protection & Privacy Compliance", "Platform Policies & IT Contracts", "Cyber Incident Documentation Support"],
   },

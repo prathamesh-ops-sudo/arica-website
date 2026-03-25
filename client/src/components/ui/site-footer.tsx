@@ -19,7 +19,7 @@ export function SiteFooter() {
         {/* Full-width ARICA text using SVG with gradient fade */}
         <div className="absolute inset-0 flex items-end pointer-events-none select-none" aria-hidden="true">
           <svg
-            viewBox="0 -10 500 120"
+            viewBox="0 -100 500 200"
             className="w-full h-auto block"
             preserveAspectRatio="xMidYMid meet"
           >
