@@ -10,7 +10,6 @@ interface TeamMember {
   role: string;
   location: string;
   image: string;
-  secondaryImage: string;
   bio: string;
   expertise: string[];
 }
@@ -22,7 +21,6 @@ const teamMembers: TeamMember[] = [
     role: "Managing Partner",
     location: "Pune",
     image: "/team/chitra-mete.jpg",
-    secondaryImage: "/team/chitra-mete.jpg",
     bio: "Brings 26+ years of experience in integrated communication across social impact, government, and corporate sectors. With expertise in advertising and visual communication, she has led campaigns for UNICEF, WHO, Tata Trusts, and state bodies, driving change in public health, gender equity, road safety, and civic participation. A strategic leader, she blends creative direction, research, and narrative design to deliver impactful, culturally resonant work.",
     expertise: ["Brand & Marketing Strategy", "Digital & Data-Led Growth", "Market Expansion & Operating Model Design", "Customer Engagement & Retention"],
   },
@@ -32,7 +30,6 @@ const teamMembers: TeamMember[] = [
     role: "Managing Partner",
     location: "Pune",
     image: "/team/sahil-phadnis.jpg",
-    secondaryImage: "/team/sahil-phadnis.jpg",
     bio: "A business strategist with deep operational expertise, focused on driving brand-led, data-driven growth. Works at the intersection of strategy, execution, and customer insight to build scalable growth programs. At Zomato, played a key role in revenue growth, market expansion, and operational scale across multiple regions. Aligns brand positioning with long-term commercial impact.",
     expertise: ["B2B Partnerships & Revenue Strategy", "Digital & Data-Led Growth", "Market Expansion & Operating Model Design", "Customer Engagement & Retention Programs"],
   },
@@ -42,7 +39,6 @@ const teamMembers: TeamMember[] = [
     role: "Criminal Law Advocate",
     location: "Pune",
     image: "/team/siddhant-malegaonkar.jpg",
-    secondaryImage: "/team/siddhant-malegaonkar.jpg",
     bio: "A Pune-based practicing advocate specialising in cyber law, information technology law, and digital crimes. With grounding in traditional litigation and a strong focus on technology-driven disputes, he advises and represents clients across cybercrime litigation, digital compliance, and data protection matters in an increasingly digital legal environment.",
     expertise: ["Cybercrime & Digital Offences Litigation", "IT Act Compliance & Advisory", "Data Protection & Privacy Advisory", "Digital Evidence & Technology Risk"],
   },
@@ -52,7 +48,6 @@ const teamMembers: TeamMember[] = [
     role: "CEO & Managing Partner",
     location: "Pune",
     image: "/team/hb-keshava.jpg",
-    secondaryImage: "/team/hb-keshava.jpg",
     bio: "Leads Arica Tech Security LLP with expertise across cybersecurity governance, cyber law, and digital risk management. Actively engaged with leading universities as an educator in cyber law, data protection, and digital ethics. Advises organisations on cybersecurity compliance, cybercrime response, forensic documentation, and regulation-aligned security frameworks. Honoured at IP Gorilla Conference, Singapore. Featured in Forbes India 2026.",
     expertise: ["Cyber Law & IT Act Compliance", "Data Protection & Privacy Governance", "ISO 27001 Audits & Security Governance", "Cyber Incident & Forensic Documentation"],
   },
@@ -62,7 +57,6 @@ const teamMembers: TeamMember[] = [
     role: "Chief Operations Officer",
     location: "Pune",
     image: "/team/kunal-dhonge.jpg",
-    secondaryImage: "/team/kunal-dhonge.jpg",
     bio: "Brings hands-on expertise in cybercrime investigation, digital forensics, and incident response. Has supported police departments and corporate investigations across fraud, phishing, ransomware, and data breach cases, with a focus on evidence integrity, forensic reporting, and post-incident security improvement. Trained 200+ professionals and students in cybersecurity.",
     expertise: ["Cybercrime Investigation & Digital Forensics", "Incident Response & Threat Mitigation", "Disk Imaging & Evidence Handling", "Cyber Audit & Security Documentation"],
   },
@@ -72,7 +66,6 @@ const teamMembers: TeamMember[] = [
     role: "Lead Consultant",
     location: "Pune",
     image: "/team/uttakarsh-mattikop.jpg",
-    secondaryImage: "/team/uttakarsh-mattikop.jpg",
     bio: "A technology-focused consultant specialising in cyber law, data protection, and cybersecurity governance. Actively involved in academia, teaching cyber law, AI & law, and technology governance at leading universities. Supports organisations with ISO 27001 alignment, regulatory compliance, cyber risk advisory, and incident-response documentation. Founder of Exordium Alliances (AI & Cyber Law education).",
     expertise: ["Cyber Law & IT Act Compliance", "Data Protection & Privacy Frameworks", "ISO 27001 Audits & Documentation", "Cyber Risk & Incident Advisory"],
   },
@@ -82,7 +75,6 @@ const teamMembers: TeamMember[] = [
     role: "Business Development Officer",
     location: "Pune",
     image: "/team/k-shhyamsundar.jpg",
-    secondaryImage: "/team/k-shhyamsundar.jpg",
     bio: "Drives business development and strategic partnerships, working closely with leadership and delivery teams. Brings experience in vendor management, contract negotiation, market intelligence, and operational alignment to support scalable and compliant growth. Led high-value negotiations across enterprise environments and built scalable partner ecosystems.",
     expertise: ["Strategic Partnerships & Client Development", "Contract Negotiation & Deal Structuring", "Market Intelligence & Opportunity Assessment", "Operational Strategy & Governance"],
   },
@@ -92,7 +84,6 @@ const teamMembers: TeamMember[] = [
     role: "Associate | Security Operations & Threat Intelligence",
     location: "Pune",
     image: "/team/prathamesh-dabir.jpg",
-    secondaryImage: "/team/prathamesh-dabir.jpg",
     bio: "Works across security operations, threat hunting, and detection engineering to strengthen proactive defence and SOC efficiency. Experienced with SIEM platforms, endpoint monitoring, cloud security, and automation-led workflows. Actively involved in cybersecurity research and technical community initiatives. Top 13 in India on TryHackMe. Speaker at TryHackMe Pune Chapter.",
     expertise: ["Threat Hunting & Detection Engineering", "SIEM & Endpoint Monitoring", "Incident Response & Log Correlation", "Vulnerability Assessment & Pentesting"],
   },
@@ -102,7 +93,6 @@ const teamMembers: TeamMember[] = [
     role: "Associate | Cyber Law & Data Protection",
     location: "Pune",
     image: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=600&h=800&fit=crop&crop=face",
-    secondaryImage: "https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?w=600&h=400&fit=crop",
     bio: "Supports Arica\u2019s cyber-legal and compliance practice with a focus on data protection, platform governance, and technology documentation. Assists in drafting privacy policies, platform terms, IT contracts, and compliance frameworks for digital platforms and SaaS organisations. Certified in GDPR & Technology Law.",
     expertise: ["Cyber Law & Digital Regulation", "Data Protection & Privacy Compliance", "Platform Policies & IT Contracts", "Cyber Incident Documentation Support"],
   },
@@ -178,28 +168,6 @@ function TeamMemberRow({
                 <img
                   src={member.image}
                   alt={`${member.firstName} ${member.lastName}`}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Hover images - right side */}
-        <AnimatePresence>
-          {isHovered && (
-            <motion.div
-              className="absolute right-2 sm:right-8 md:right-16 top-1/2 -translate-y-1/2 pointer-events-none z-20 hidden md:block"
-              initial={{ opacity: 0, x: 40, scale: 0.8 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 40, scale: 0.8 }}
-              transition={{ duration: 0.4, ease: "easeOut", delay: 0.05 }}
-            >
-              <div className="w-36 lg:w-48 h-48 lg:h-64 rounded-lg overflow-hidden shadow-2xl">
-                <img
-                  src={member.secondaryImage}
-                  alt={`${member.firstName} ${member.lastName} work`}
                   className="w-full h-full object-cover"
                   loading="lazy"
                 />

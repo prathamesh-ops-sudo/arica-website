@@ -1006,7 +1006,7 @@ export default function RiskAssessment() {
 
   return (
     <TooltipProvider>
-    <div className="min-h-screen aurora-bg text-white relative overflow-hidden">
+    <div className="min-h-screen bg-background text-white relative overflow-hidden">
       <ThreatGridBackground riskLevel={targetScore} />
       <AmbientParticles variant="network" count={30} color="#3D70B7" opacity={0.15} />
 
