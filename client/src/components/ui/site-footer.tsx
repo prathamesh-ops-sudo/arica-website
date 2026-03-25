@@ -55,7 +55,7 @@ export function SiteFooter() {
       </div>
 
       {/* Copyright bar */}
-      <div className="border-t border-border px-6 py-4">
+      <div className="px-6 py-4">
         <p className="text-center text-xs text-muted-foreground">
           &copy; {new Date().getFullYear()} Arica Tech. All rights reserved.
         </p>
