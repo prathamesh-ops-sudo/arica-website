@@ -141,12 +141,12 @@ function TeamMemberRow({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: index * 0.1 }}
       >
-        {/* First name - small text */}
+        {/* Last name - small text */}
         <span className="block text-xs sm:text-sm tracking-[0.2em] uppercase text-muted-foreground mb-1 font-medium">
-          {member.firstName}
+          {member.lastName}
         </span>
 
-        {/* Last name - large serif text */}
+        {/* First name - large text */}
         <span
           className="block font-bold tracking-tight leading-none transition-colors duration-300"
           style={{
@@ -156,7 +156,7 @@ function TeamMemberRow({
             color: isHovered ? "hsl(var(--primary))" : "hsl(var(--foreground))",
           }}
         >
-          {member.lastName.toUpperCase()}
+          {member.firstName.toUpperCase()}
         </span>
 
         {/* Role - small text below */}
