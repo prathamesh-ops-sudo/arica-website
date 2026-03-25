@@ -24,7 +24,7 @@ export function AsciiHeroSection() {
     <section className="relative py-24 lg:py-32 overflow-hidden bg-background">
       {/* Subtle gradient background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#010101] via-[#010101] to-[#010101]" />
+        <div className="absolute inset-0 bg-background" />
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#1C2C5A]/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#3D70B7]/10 rounded-full blur-3xl" />
       </div>

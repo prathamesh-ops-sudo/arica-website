@@ -11,7 +11,7 @@ interface WebGLShaderProps {
 
 function CSSFallback() {
   return (
-    <div className="fixed inset-0 -z-10 bg-gradient-to-br from-[#010101] via-[#010101] to-[#010101] animate-gradient-shift" style={{ backgroundSize: '400% 400%' }}>
+    <div className="fixed inset-0 -z-10 bg-gradient-to-br from-background via-background to-background animate-gradient-shift" style={{ backgroundSize: '400% 400%' }}>
       <div className="absolute inset-0 opacity-20" style={{
         background: `radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 40%),
                      radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.03) 0%, transparent 40%)`
