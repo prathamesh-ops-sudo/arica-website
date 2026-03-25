@@ -14,50 +14,59 @@ export function SiteFooter() {
 
   return (
     <footer className="relative overflow-hidden bg-background">
-      {/* Social icons above ARICA text */}
-      <div className="flex justify-center gap-6 pt-10 pb-4 relative z-10">
-        {socialLinks.map((link) => (
-          <a
-            key={link.label}
-            href={link.href}
-            className="w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:bg-white/20 hover:scale-110 transition-all duration-300"
-            target={link.href.startsWith("mailto:") ? undefined : "_blank"}
-            rel={link.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-            aria-label={link.label}
+      {/* Large ARICA background text with gradient */}
+      <div className="relative flex flex-col items-center justify-center" style={{ minHeight: "clamp(14rem, 25vw, 22rem)" }}>
+        {/* Full-width ARICA text using SVG with gradient fade */}
+        <div className="absolute inset-0 flex items-end pointer-events-none select-none" aria-hidden="true">
+          <svg
+            viewBox="0 -10 500 120"
+            className="w-full h-auto block"
+            preserveAspectRatio="xMidYMid meet"
           >
-            <img
-              src={link.icon}
-              alt={link.label}
-              className="w-5 h-5 object-contain invert opacity-70"
-              loading="lazy"
-            />
-          </a>
-        ))}
-      </div>
+            <defs>
+              <linearGradient id="arica-gradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="currentColor" stopOpacity="0.2" />
+                <stop offset="50%" stopColor="currentColor" stopOpacity="0.1" />
+                <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <text
+              x="250"
+              y="85"
+              textAnchor="middle"
+              fill="url(#arica-gradient)"
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 900,
+                fontSize: "120px",
+                letterSpacing: "-0.05em",
+              }}
+            >
+              ARICA
+            </text>
+          </svg>
+        </div>
 
-      {/* Full-width ARICA text using SVG for edge-to-edge scaling */}
-      <div className="w-full pointer-events-none select-none" aria-hidden="true">
-        <svg
-          viewBox="0 -10 500 120"
-          className="w-full h-auto block"
-          preserveAspectRatio="xMidYMid meet"
-        >
-          <text
-            x="250"
-            y="85"
-            textAnchor="middle"
-            fill="currentColor"
-            className="text-foreground/10"
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: 900,
-              fontSize: "120px",
-              letterSpacing: "-0.05em",
-            }}
-          >
-            ARICA
-          </text>
-        </svg>
+        {/* Social icons above ARICA text */}
+        <div className="relative z-10 flex gap-6">
+          {socialLinks.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:bg-white/20 hover:scale-110 transition-all duration-300"
+              target={link.href.startsWith("mailto:") ? undefined : "_blank"}
+              rel={link.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
+              aria-label={link.label}
+            >
+              <img
+                src={link.icon}
+                alt={link.label}
+                className="w-5 h-5 object-contain invert opacity-70"
+                loading="lazy"
+              />
+            </a>
+          ))}
+        </div>
       </div>
 
       {/* Copyright bar */}
