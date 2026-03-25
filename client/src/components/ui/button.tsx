@@ -16,7 +16,7 @@ const buttonVariants = cva(
         outline:
           "border border-white/15 bg-white/5 backdrop-blur-sm hover:bg-white/10 active:scale-[0.98]",
         secondary:
-          "bg-[#1C2C5A] text-white hover:bg-[#1C2C5A] active:scale-[0.98]",
+          "bg-[#1C2C5A] text-white hover:bg-[#1C2C5A]/80 active:scale-[0.98]",
         ghost: 
           "hover:bg-white/10 active:scale-[0.98]",
         link: 
