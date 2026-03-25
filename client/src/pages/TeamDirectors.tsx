@@ -17,16 +17,6 @@ interface TeamMember {
 
 const teamMembers: TeamMember[] = [
   {
-    firstName: "H. B.",
-    lastName: "Keshava",
-    role: "CEO & Managing Partner",
-    location: "Pune",
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&h=800&fit=crop&crop=face",
-    secondaryImage: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop",
-    bio: "Leads Arica Tech Security LLP with expertise across cybersecurity governance, cyber law, and digital risk management. Actively engaged with leading universities as an educator in cyber law, data protection, and digital ethics. Advises organisations on cybersecurity compliance, cybercrime response, forensic documentation, and regulation-aligned security frameworks. Honoured at IP Gorilla Conference, Singapore. Featured in Forbes India 2026.",
-    expertise: ["Cyber Law & IT Act Compliance", "Data Protection & Privacy Governance", "ISO 27001 Audits & Security Governance", "Cyber Incident & Forensic Documentation"],
-  },
-  {
     firstName: "Chitra",
     lastName: "Mete",
     role: "Managing Partner",
@@ -55,6 +45,16 @@ const teamMembers: TeamMember[] = [
     secondaryImage: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&h=400&fit=crop",
     bio: "A Pune-based practicing advocate specialising in cyber law, information technology law, and digital crimes. With grounding in traditional litigation and a strong focus on technology-driven disputes, he advises and represents clients across cybercrime litigation, digital compliance, and data protection matters in an increasingly digital legal environment.",
     expertise: ["Cybercrime & Digital Offences Litigation", "IT Act Compliance & Advisory", "Data Protection & Privacy Advisory", "Digital Evidence & Technology Risk"],
+  },
+  {
+    firstName: "H. B.",
+    lastName: "Keshava",
+    role: "CEO & Managing Partner",
+    location: "Pune",
+    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&h=800&fit=crop&crop=face",
+    secondaryImage: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop",
+    bio: "Leads Arica Tech Security LLP with expertise across cybersecurity governance, cyber law, and digital risk management. Actively engaged with leading universities as an educator in cyber law, data protection, and digital ethics. Advises organisations on cybersecurity compliance, cybercrime response, forensic documentation, and regulation-aligned security frameworks. Honoured at IP Gorilla Conference, Singapore. Featured in Forbes India 2026.",
+    expertise: ["Cyber Law & IT Act Compliance", "Data Protection & Privacy Governance", "ISO 27001 Audits & Security Governance", "Cyber Incident & Forensic Documentation"],
   },
   {
     firstName: "Kunal",
@@ -101,7 +101,7 @@ const teamMembers: TeamMember[] = [
     lastName: "Iyer",
     role: "Associate | Cyber Law & Data Protection",
     location: "Pune",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&h=800&fit=crop&crop=face",
+    image: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=600&h=800&fit=crop&crop=face",
     secondaryImage: "https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?w=600&h=400&fit=crop",
     bio: "Supports Arica\u2019s cyber-legal and compliance practice with a focus on data protection, platform governance, and technology documentation. Assists in drafting privacy policies, platform terms, IT contracts, and compliance frameworks for digital platforms and SaaS organisations. Certified in GDPR & Technology Law.",
     expertise: ["Cyber Law & Digital Regulation", "Data Protection & Privacy Compliance", "Platform Policies & IT Contracts", "Cyber Incident Documentation Support"],
