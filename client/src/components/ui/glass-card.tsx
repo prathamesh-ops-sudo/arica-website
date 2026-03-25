@@ -53,7 +53,7 @@ export function GlassCard({
   return (
     <motion.div
       className={cn(
-        'relative rounded-2xl bg-[rgba(10,10,30,0.7)] backdrop-blur-xl border transition-all duration-300',
+        'relative rounded-2xl bg-card/70 backdrop-blur-xl border transition-all duration-300',
         glowColors[glowColor],
         onClick && 'cursor-pointer',
         className

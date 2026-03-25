@@ -6,8 +6,8 @@ const navItems = [
   { name: "Services", url: "/services", icon: Briefcase },
   { name: "Case Studies", url: "/case-studies", icon: FileText },
   { name: "About", url: "/about", icon: Users },
+  { name: "Team", url: "/team", icon: Users },
   { name: "Contact", url: "/contact", icon: Mail },
-  { name: "Attack Globe", url: "/attack-globe", icon: Globe },
 ];
 
 export function Navbar() {

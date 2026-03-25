@@ -149,7 +149,7 @@ export function ThreatVortex() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-24 md:py-32 overflow-hidden bg-[#050505]"
+      className="relative py-24 md:py-32 overflow-hidden bg-background"
       data-testid="section-threat-vortex"
     >
       <AnimatePresence>
@@ -619,7 +619,7 @@ export function ThreatVortex() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ duration: 0.6, ease: "easeOut" }}
                 >
-                  <div className="px-8 py-4 rounded-xl border border-[#42BA90]/40 bg-[#050505]/90 backdrop-blur-md">
+                  <div className="px-8 py-4 rounded-xl border border-[#42BA90]/40 bg-background/90 backdrop-blur-md">
                     <motion.p
                       className="text-xs font-mono tracking-[0.3em] mb-1"
                       style={{ color: '#3D70B7', textShadow: '0 0 10px rgba(61,112,183,0.5)' }}
@@ -703,7 +703,7 @@ export function ThreatVortex() {
             </div>
 
             <div className="grid grid-cols-2 gap-2">
-              <div className="rounded-lg border border-[#42BA90]/20 bg-[#050505]/90 p-3 text-center">
+              <div className="rounded-lg border border-[#42BA90]/20 bg-background/90 p-3 text-center">
                 <p className="text-[9px] font-mono text-[#8e8e93] tracking-wider mb-1">THREATS</p>
                 <motion.p
                   className="text-2xl font-bold font-mono"
@@ -715,7 +715,7 @@ export function ThreatVortex() {
                 </motion.p>
                 <p className="text-[8px] font-mono text-[#8e8e93]">REMAINING</p>
               </div>
-              <div className="rounded-lg border border-[#42BA90]/20 bg-[#050505]/90 p-3 text-center">
+              <div className="rounded-lg border border-[#42BA90]/20 bg-background/90 p-3 text-center">
                 <p className="text-[9px] font-mono text-[#8e8e93] tracking-wider mb-1">TARGET LOCK</p>
                 <motion.p
                   className="text-2xl font-bold font-mono text-[#3D70B7]"

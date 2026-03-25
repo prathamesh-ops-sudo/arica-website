@@ -21,7 +21,7 @@ const NAVY = 'hsl(222, 47%, 5%)';
 const GREEN = '#00FF88';
 const RED = '#FF4444';
 const YELLOW = '#FFD93D';
-const PURPLE = '#9944FF';
+const PURPLE = '#3D70B7';
 
 const supportServices = [
   {

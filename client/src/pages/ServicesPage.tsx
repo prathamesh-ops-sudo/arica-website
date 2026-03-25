@@ -59,7 +59,7 @@ const services = [
       { label: "Certifications Achieved", value: 98, suffix: "%" },
       { label: "Compliance Rate", value: 100, suffix: "%" },
     ],
-    color: "purple" as const,
+    color: "neutral" as const,
   },
   {
     id: "custom-software",
@@ -199,7 +199,7 @@ function Card3D({
     setGlowPosition({ x: 50, y: 50 });
   }, []);
 
-  const glowColorValue = glowColor === "neutral" ? "142, 142, 147" : "153, 68, 255";
+  const glowColorValue = glowColor === "neutral" ? "61, 112, 183" : "66, 186, 144";
 
   return (
     <motion.div
@@ -254,7 +254,7 @@ function AnimatedIcon({
 }) {
   const [isHovered, setIsHovered] = useState(false);
   
-  const glowColor = color === "neutral" ? "rgba(10, 132, 255, 0.6)" : "rgba(153, 68, 255, 0.6)";
+  const glowColor = color === "neutral" ? "rgba(61, 112, 183, 0.6)" : "rgba(66, 186, 144, 0.6)";
   const bgColor = color === "neutral" ? "bg-[#42BA90]/10" : "bg-[#3D70B7]/10";
   const textColor = color === "neutral" ? "text-[#42BA90]" : "text-[#3D70B7]";
 
