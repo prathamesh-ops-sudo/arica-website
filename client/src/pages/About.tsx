@@ -1,7 +1,7 @@
 import { motion, useInView, useSpring, useTransform } from "framer-motion";
-import { Shield, Target, Eye, Award, Users, Globe } from "lucide-react";
+import { Shield, Target, Eye, Award, Users, Globe, ArrowRight } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
-import { Team } from "@/components/Team";
+import { Link } from "wouter";
 import { useRef, useState, useEffect, useCallback } from "react";
 
 const values = [
@@ -334,7 +334,70 @@ export default function About() {
         </div>
       </section>
 
-      <Team />
+      {/* Team page teaser */}
+      <section className="py-32 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <Link href="/team">
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="group cursor-pointer relative rounded-2xl border border-white/10 bg-card/30 backdrop-blur-sm overflow-hidden"
+              whileHover={{
+                borderColor: "rgba(61, 112, 183, 0.5)",
+                boxShadow: "0 0 60px rgba(61, 112, 183, 0.15)",
+              }}
+            >
+              {/* Gradient overlay on hover */}
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-[#42BA90]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+              <div className="relative px-8 py-16 md:px-16 md:py-24 flex flex-col md:flex-row items-center justify-between gap-8">
+                <div className="flex-1">
+                  <motion.span
+                    className="inline-block text-sm font-semibold text-primary tracking-wider uppercase mb-4"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                  >
+                    The People Behind the Shield
+                  </motion.span>
+                  <h2
+                    className="font-extrabold tracking-tight leading-none mb-4"
+                    style={{
+                      fontFamily: "'Alfa Slab One', serif",
+                      fontSize: "clamp(2.5rem, 6vw, 5rem)",
+                    }}
+                  >
+                    <span className="text-foreground/90 group-hover:text-foreground transition-colors duration-500">
+                      Meet Our{" "}
+                    </span>
+                    <span className="text-gradient">Directors</span>
+                  </h2>
+                  <p className="text-muted-foreground text-lg max-w-lg">
+                    Get to know the experts defending your digital frontier.
+                  </p>
+                </div>
+
+                {/* Arrow indicator */}
+                <motion.div
+                  className="flex items-center gap-3 text-primary"
+                  whileHover={{ x: 10 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <span className="text-sm font-medium tracking-wider uppercase hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    Explore
+                  </span>
+                  <div className="w-14 h-14 rounded-full border border-primary/30 flex items-center justify-center group-hover:bg-primary/10 group-hover:border-primary/60 transition-all duration-500">
+                    <ArrowRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform duration-300" />
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }
