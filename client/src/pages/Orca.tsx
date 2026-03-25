@@ -797,7 +797,7 @@ function ProgressBar({ progress }: { progress: number }) {
 
 function WebGLFallbackUI() {
   return (
-    <div className="min-h-screen bg-[#050505] flex items-center justify-center p-8">
+    <div className="min-h-screen bg-background flex items-center justify-center p-8">
       <div className="text-center max-w-lg">
         <div className="w-20 h-20 rounded-full bg-[#42BA90]/20 flex items-center justify-center mx-auto mb-6">
           <Monitor className="w-10 h-10 text-[#42BA90]" />
@@ -843,7 +843,7 @@ export default function Orca() {
   }
 
   return (
-    <div ref={containerRef} className="relative bg-[#050505]" style={{ height: '800vh' }}>
+    <div ref={containerRef} className="relative bg-background" style={{ height: '800vh' }}>
       <AnimeNavBar items={navItems} />
       <ProgressBar progress={scrollProgress} />
       

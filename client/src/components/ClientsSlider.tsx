@@ -40,7 +40,7 @@ const clientLogos = [
 
 export function ClientsSlider() {
   return (
-    <section className="py-16 bg-[#050505] relative overflow-hidden">
+    <section className="py-16 bg-background relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1C2C5A]/5 to-transparent pointer-events-none" />
       
       <div className="container mx-auto px-4 mb-8">

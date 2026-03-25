@@ -33,7 +33,7 @@ function DefaultFallback({ showMessage }: { showMessage: boolean }) {
       data-testid="webgl-fallback-container"
     >
       <div 
-        className="absolute inset-0 bg-gradient-to-br from-[#0a0a1e] via-[#1a0a2e] to-[#0a1a2e] animate-gradient-shift"
+        className="absolute inset-0 bg-gradient-to-br from-[#070a0f] via-[#0a0f1a] to-[#070f1a] animate-gradient-shift"
         style={{
           backgroundSize: '400% 400%',
         }}
@@ -44,7 +44,7 @@ function DefaultFallback({ showMessage }: { showMessage: boolean }) {
           className="absolute inset-0"
           style={{
             background: `
-              radial-gradient(circle at 20% 30%, rgba(10, 132, 255, 0.2) 0%, transparent 40%),
+              radial-gradient(circle at 20% 30%, rgba(61, 112, 183, 0.2) 0%, transparent 40%),
               radial-gradient(circle at 80% 70%, rgba(58, 58, 60, 0.2) 0%, transparent 40%),
               radial-gradient(circle at 50% 50%, rgba(142, 142, 147, 0.1) 0%, transparent 60%)
             `,
