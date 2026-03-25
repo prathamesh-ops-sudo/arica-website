@@ -38,7 +38,7 @@ export function SiteFooter() {
       {/* Full-width ARICA text using SVG for edge-to-edge scaling */}
       <div className="w-full pointer-events-none select-none" aria-hidden="true">
         <svg
-          viewBox="0 0 500 100"
+          viewBox="0 -10 500 120"
           className="w-full h-auto block"
           preserveAspectRatio="xMidYMid meet"
         >
