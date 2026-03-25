@@ -662,7 +662,7 @@ export default function CloudSecurityCenter() {
         style={{
           background: `
             radial-gradient(ellipse at 50% 0%, rgba(61, 112, 183, 0.08) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 80%, rgba(153, 68, 255, 0.05) 0%, transparent 40%),
+            radial-gradient(ellipse at 80% 80%, rgba(66, 186, 144, 0.05) 0%, transparent 40%),
             radial-gradient(ellipse at 20% 60%, rgba(61, 112, 183, 0.03) 0%, transparent 30%)
           `,
         }}
@@ -1369,7 +1369,7 @@ export default function CloudSecurityCenter() {
                 <div 
                   className="absolute inset-0 opacity-30"
                   style={{
-                    backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(61, 112, 183, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(153, 68, 255, 0.1) 0%, transparent 50%)',
+                    backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(61, 112, 183, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(66, 186, 144, 0.1) 0%, transparent 50%)',
                   }}
                 />
               </div>

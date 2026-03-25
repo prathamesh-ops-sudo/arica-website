@@ -169,13 +169,13 @@ function CyberBackground() {
         const alpha = p.opacity * pulse;
         ctx.fillStyle = p.color === '#3D70B7' 
           ? `rgba(61, 112, 183, ${alpha})` 
-          : `rgba(153, 68, 255, ${alpha})`;
+          : `rgba(66, 186, 144, ${alpha})`;
         ctx.fill();
         
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
         const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3);
-        gradient.addColorStop(0, p.color === '#3D70B7' ? 'rgba(61, 112, 183, 0.2)' : 'rgba(153, 68, 255, 0.2)');
+        gradient.addColorStop(0, p.color === '#3D70B7' ? 'rgba(61, 112, 183, 0.2)' : 'rgba(66, 186, 144, 0.2)');
         gradient.addColorStop(1, 'transparent');
         ctx.fillStyle = gradient;
         ctx.fill();
@@ -346,7 +346,7 @@ function AttackVisualization({ attacks }: { attacks: AttackEvent[] }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="p-4 rounded-xl bg-[rgba(2,6,23,0.9)] border border-[#3D70B7]/30"
-      style={{ boxShadow: '0 0 30px rgba(153, 68, 255, 0.1)' }}
+      style={{ boxShadow: '0 0 30px rgba(61, 112, 183, 0.1)' }}
     >
       <div className="flex items-center gap-2 mb-3 pb-3 border-b border-slate-800">
         <ShieldAlert className="w-4 h-4 text-[#3D70B7]" />
@@ -466,7 +466,7 @@ function GlassCard({
   
   const colors = {
     cyan: { border: '#3D70B7', shadow: 'rgba(61, 112, 183, 0.15)' },
-    purple: { border: '#3D70B7', shadow: 'rgba(153, 68, 255, 0.15)' },
+    purple: { border: '#3D70B7', shadow: 'rgba(61, 112, 183, 0.15)' },
     red: { border: '#ff4444', shadow: 'rgba(255, 68, 68, 0.15)' },
     amber: { border: '#ffaa00', shadow: 'rgba(255, 170, 0, 0.15)' },
     emerald: { border: '#3D70B7', shadow: 'rgba(61, 112, 183, 0.15)' },

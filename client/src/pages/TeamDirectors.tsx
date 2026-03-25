@@ -100,7 +100,8 @@ function TeamMemberRow({
         <span
           className="block font-bold tracking-tight leading-none transition-colors duration-300"
           style={{
-            fontFamily: "'Alfa Slab One', serif",
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 900,
             fontSize: "clamp(2.5rem, 8vw, 8rem)",
             color: isHovered ? "hsl(var(--primary))" : "hsl(var(--foreground))",
           }}
@@ -207,7 +208,8 @@ function TeamMemberRow({
                   <h2
                     className="font-bold mb-6"
                     style={{
-                      fontFamily: "'Alfa Slab One', serif",
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 900,
                       fontSize: "clamp(1.5rem, 4vw, 3rem)",
                       lineHeight: 1.1,
                     }}
@@ -267,7 +269,8 @@ export default function TeamDirectors() {
               <h1
                 className="mt-2"
                 style={{
-                  fontFamily: "'Alfa Slab One', serif",
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 900,
                   fontSize: "clamp(1.5rem, 4vw, 3rem)",
                   lineHeight: 1.2,
                 }}

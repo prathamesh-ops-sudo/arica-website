@@ -9,7 +9,7 @@ import { ThreatVortex } from "@/components/ThreatVortex";
 function SubtleBackground() {
   return (
     <div className="fixed inset-0 -z-10">
-      <div className="absolute inset-0 bg-[#050505]" />
+      <div className="absolute inset-0 bg-background" />
       <div className="absolute inset-0 opacity-30" style={{
         background: `radial-gradient(ellipse at 30% 20%, rgba(61,112,183,0.15) 0%, transparent 50%),
                      radial-gradient(ellipse at 70% 80%, rgba(61,112,183,0.1) 0%, transparent 50%)`
@@ -20,7 +20,7 @@ function SubtleBackground() {
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#050505] relative">
+    <div className="min-h-screen bg-background relative">
       <SubtleBackground />
       <div className="relative z-10">
         <Navbar />

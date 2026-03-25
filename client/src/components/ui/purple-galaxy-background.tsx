@@ -150,7 +150,7 @@ function GalaxyCore() {
 function GalaxyScene({ particleCount }: { particleCount: number }) {
   return (
     <>
-      <color attach="background" args={['#0a0a1e']} />
+      <color attach="background" args={['#070a0f']} />
       <ambientLight intensity={0.1} />
       <GalaxyParticles particleCount={particleCount} />
       <GalaxyCore />
@@ -189,7 +189,7 @@ export function PurpleGalaxyBackground({ enabled = true }: PurpleGalaxyBackgroun
             alpha: true,
             powerPreference: 'high-performance'
           }}
-          style={{ background: '#0a0a1e' }}
+          style={{ background: '#070a0f' }}
         >
           <GalaxyScene particleCount={particleCount} />
         </Canvas>

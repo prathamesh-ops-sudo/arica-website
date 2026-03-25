@@ -149,7 +149,7 @@ export function ThreatVortex() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-24 md:py-32 overflow-hidden bg-[#050505]"
+      className="relative py-24 md:py-32 overflow-hidden bg-background"
       data-testid="section-threat-vortex"
     >
       <AnimatePresence>
@@ -247,7 +247,7 @@ export function ThreatVortex() {
               We Fight Back.
             </motion.span>
           </h2>
-          <p className="text-lg text-[#8e8e93] max-w-2xl mx-auto">
+          <p className="text-lg text-[#ACACAC] max-w-2xl mx-auto">
             Watch as our defense systems detect, engage, and eliminate every cyber threat in real-time. 
             No breach survives. No malware escapes.
           </p>
@@ -619,7 +619,7 @@ export function ThreatVortex() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ duration: 0.6, ease: "easeOut" }}
                 >
-                  <div className="px-8 py-4 rounded-xl border border-[#42BA90]/40 bg-[#050505]/90 backdrop-blur-md">
+                  <div className="px-8 py-4 rounded-xl border border-[#42BA90]/40 bg-background/90 backdrop-blur-md">
                     <motion.p
                       className="text-xs font-mono tracking-[0.3em] mb-1"
                       style={{ color: '#3D70B7', textShadow: '0 0 10px rgba(61,112,183,0.5)' }}
@@ -639,7 +639,7 @@ export function ThreatVortex() {
                     >
                       16/16 THREATS ELIMINATED
                     </motion.p>
-                    <p className="text-[10px] text-[#8e8e93] font-mono mt-1">PERIMETER SECURE :: ZERO CASUALTIES</p>
+                    <p className="text-[10px] text-[#ACACAC] font-mono mt-1">PERIMETER SECURE :: ZERO CASUALTIES</p>
                   </div>
                 </motion.div>
               )}
@@ -660,7 +660,7 @@ export function ThreatVortex() {
                   <div className="w-2 h-2 rounded-full bg-[#ffaa00]" />
                   <div className="w-2 h-2 rounded-full bg-[#00cc44]" />
                 </div>
-                <span className="text-[9px] font-mono text-[#8e8e93] tracking-wider">GUARDIAN_TERMINAL</span>
+                <span className="text-[9px] font-mono text-[#ACACAC] tracking-wider">GUARDIAN_TERMINAL</span>
                 <motion.div
                   className="ml-auto w-1.5 h-1.5 rounded-full"
                   style={{ backgroundColor: phase === "fighting" ? '#ff4444' : phase === "victory" ? '#00cc44' : '#ffaa00' }}
@@ -675,7 +675,7 @@ export function ThreatVortex() {
                 style={{ scrollbarWidth: 'thin', scrollbarColor: '#42BA90 transparent' }}
               >
                 {battleLog.length === 0 && (
-                  <div className="text-[10px] font-mono text-[#8e8e93]/50">
+                  <div className="text-[10px] font-mono text-[#ACACAC]/50">
                     <p>ARICA Defense v4.2.1</p>
                     <p>Initializing threat scanner...</p>
                     <p className="animate-pulse mt-2">{'>'} Waiting for activity_<span className="animate-pulse">█</span></p>
@@ -703,8 +703,8 @@ export function ThreatVortex() {
             </div>
 
             <div className="grid grid-cols-2 gap-2">
-              <div className="rounded-lg border border-[#42BA90]/20 bg-[#050505]/90 p-3 text-center">
-                <p className="text-[9px] font-mono text-[#8e8e93] tracking-wider mb-1">THREATS</p>
+              <div className="rounded-lg border border-[#42BA90]/20 bg-background/90 p-3 text-center">
+                <p className="text-[9px] font-mono text-[#ACACAC] tracking-wider mb-1">THREATS</p>
                 <motion.p
                   className="text-2xl font-bold font-mono"
                   style={{ color: destroyedThreats.size < 16 ? '#ff4444' : '#00cc44' }}
@@ -713,10 +713,10 @@ export function ThreatVortex() {
                 >
                   {16 - destroyedThreats.size}
                 </motion.p>
-                <p className="text-[8px] font-mono text-[#8e8e93]">REMAINING</p>
+                <p className="text-[8px] font-mono text-[#ACACAC]">REMAINING</p>
               </div>
-              <div className="rounded-lg border border-[#42BA90]/20 bg-[#050505]/90 p-3 text-center">
-                <p className="text-[9px] font-mono text-[#8e8e93] tracking-wider mb-1">TARGET LOCK</p>
+              <div className="rounded-lg border border-[#42BA90]/20 bg-background/90 p-3 text-center">
+                <p className="text-[9px] font-mono text-[#ACACAC] tracking-wider mb-1">TARGET LOCK</p>
                 <motion.p
                   className="text-2xl font-bold font-mono text-[#3D70B7]"
                   animate={phase === "fighting" ? { opacity: [0.7, 1, 0.7] } : {}}
@@ -724,7 +724,7 @@ export function ThreatVortex() {
                 >
                   {shieldPower}%
                 </motion.p>
-                <p className="text-[8px] font-mono text-[#8e8e93]">POWER</p>
+                <p className="text-[8px] font-mono text-[#ACACAC]">POWER</p>
               </div>
             </div>
           </div>
@@ -737,7 +737,7 @@ export function ThreatVortex() {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="text-center mt-12 md:mt-16"
         >
-          <p className="text-sm text-[#8e8e93] font-mono tracking-wider">
+          <p className="text-sm text-[#ACACAC] font-mono tracking-wider">
             BREACHES &bull; MALWARE &bull; RANSOMWARE &bull; DDoS &bull; ZERO-DAYS &bull; SQL INJECTION
           </p>
           <p className="text-xs text-[#42BA90] font-mono tracking-widest mt-2">

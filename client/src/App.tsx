@@ -7,7 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { HyperspaceTransitionProvider } from "@/components/ui/hyperspace-transition";
 import { SiteFooter } from "@/components/ui/site-footer";
 
-const FULLSCREEN_ROUTES = ["/experience", "/attack-globe", "/orca"];
+const FULLSCREEN_ROUTES = ["/experience", "/attack-globe"];
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
@@ -31,7 +31,6 @@ import Certifications from "@/pages/Certifications";
 import SecurityTraining from "@/pages/SecurityTraining";
 import OngoingSupport from "@/pages/OngoingSupport";
 import SecurityImplementation from "@/pages/SecurityImplementation";
-import Orca from "@/pages/Orca";
 import TeamDirectors from "@/pages/TeamDirectors";
 
 function Router() {
@@ -61,7 +60,6 @@ function Router() {
       <Route path="/security-training" component={SecurityTraining} />
       <Route path="/ongoing-support" component={OngoingSupport} />
       <Route path="/security-implementation" component={SecurityImplementation} />
-      <Route path="/orca" component={Orca} />
       <Route path="/team" component={TeamDirectors} />
       <Route path="/portal" component={Contact} />
       <Route component={NotFound} />
