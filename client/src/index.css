@@ -438,7 +438,7 @@
   position: relative;
   width: 100%;
   min-height: 300vh;
-  background: #000;
+  background: hsl(var(--background));
   overflow: hidden;
   z-index: 0;
 }
