@@ -122,7 +122,7 @@ function TeamMemberRow({
   return (
     <li className="relative">
       <motion.button
-        className="w-full text-center py-4 sm:py-6 md:py-8 cursor-pointer relative group"
+        className="w-full text-center py-6 sm:py-8 md:py-10 cursor-pointer relative group"
         onClick={onToggle}
         aria-expanded={isExpanded}
         onMouseEnter={handleMouseEnter}
@@ -131,50 +131,23 @@ function TeamMemberRow({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: index * 0.1 }}
       >
-        {/* Last name - small text */}
-        <span className="block text-xs sm:text-sm tracking-[0.2em] uppercase text-muted-foreground mb-1 font-medium">
-          {member.lastName}
-        </span>
-
-        {/* First name - large text */}
+        {/* Full name - single line */}
         <span
           className="block font-bold tracking-tight leading-none transition-colors duration-300"
           style={{
             fontFamily: "'Inter', sans-serif",
             fontWeight: 900,
-            fontSize: "clamp(2.5rem, 8vw, 8rem)",
+            fontSize: "clamp(1.8rem, 5vw, 5rem)",
             color: isHovered ? "hsl(var(--primary))" : "hsl(var(--foreground))",
           }}
         >
-          {member.firstName.toUpperCase()}
+          {member.firstName.toUpperCase()} {member.lastName.toUpperCase()}
         </span>
 
         {/* Role - small text below */}
-        <span className="block text-xs sm:text-sm tracking-[0.15em] uppercase text-muted-foreground mt-1">
+        <span className="block text-xs sm:text-sm tracking-[0.15em] uppercase text-muted-foreground mt-2">
           {member.role}
         </span>
-
-        {/* Hover images - left side */}
-        <AnimatePresence>
-          {isHovered && (
-            <motion.div
-              className="absolute left-2 sm:left-8 md:left-16 top-1/2 -translate-y-1/2 pointer-events-none z-20 hidden md:block"
-              initial={{ opacity: 0, x: -40, scale: 0.8 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: -40, scale: 0.8 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-            >
-              <div className="w-36 lg:w-48 h-48 lg:h-64 rounded-lg overflow-hidden shadow-2xl">
-                <img
-                  src={member.image}
-                  alt={`${member.firstName} ${member.lastName}`}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* Divider line */}
         <motion.div
@@ -184,6 +157,28 @@ function TeamMemberRow({
           transition={{ duration: 0.8, delay: index * 0.1 + 0.3 }}
         />
       </motion.button>
+
+      {/* Hover image - positioned outside button to avoid overlap */}
+      <AnimatePresence>
+        {isHovered && !isExpanded && (
+          <motion.div
+            className="fixed left-8 md:left-16 top-1/2 -translate-y-1/2 pointer-events-none z-50 hidden md:block"
+            initial={{ opacity: 0, x: -40, scale: 0.8 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: -40, scale: 0.8 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
+            <div className="w-36 lg:w-48 h-48 lg:h-64 rounded-lg overflow-hidden shadow-2xl">
+              <img
+                src={member.image}
+                alt={`${member.firstName} ${member.lastName}`}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Expanded detail panel */}
       <AnimatePresence>
