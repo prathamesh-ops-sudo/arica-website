@@ -14,7 +14,7 @@ export function SiteFooter() {
 
   return (
     <footer className="relative overflow-hidden bg-background">
-      {/* Large ARICA TECH background text */}
+      {/* Large ARICA background text */}
       <div className="min-h-[30rem] sm:min-h-[35rem] md:min-h-[40rem] relative flex flex-col items-center justify-center">
         <div
           className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
@@ -25,15 +25,15 @@ export function SiteFooter() {
             style={{
               fontFamily: "'Inter', sans-serif",
               fontWeight: 900,
-              fontSize: "clamp(3rem, 14vw, 12rem)",
+              fontSize: "clamp(5rem, 22vw, 20rem)",
             }}
           >
-            ARICA TECH
+            ARICA
           </span>
         </div>
 
-        {/* Social icons centered on top */}
-        <div className="relative z-10 flex gap-6">
+        {/* Social icons above ARICA text */}
+        <div className="relative z-10 flex gap-6 mb-16 sm:mb-20 md:mb-24">
           {socialLinks.map((link) => (
             <a
               key={link.label}
