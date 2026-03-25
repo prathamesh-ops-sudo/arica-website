@@ -13,7 +13,7 @@ export function SiteFooter() {
   ];
 
   return (
-    <footer className="border-t border-border bg-background mt-20 relative overflow-hidden">
+    <footer className="bg-background relative overflow-hidden">
       {/* Large ARICA TECH background text */}
       <div className="min-h-[30rem] sm:min-h-[35rem] md:min-h-[40rem] relative flex flex-col items-center justify-center">
         <div
