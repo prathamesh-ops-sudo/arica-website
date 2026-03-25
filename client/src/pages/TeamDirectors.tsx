@@ -108,9 +108,9 @@ function TeamMemberRow({
           {member.lastName.toUpperCase()}
         </span>
 
-        {/* Role - small text to the right */}
+        {/* Role - small text below */}
         <span className="block text-xs sm:text-sm tracking-[0.15em] uppercase text-muted-foreground mt-1">
-          {member.location}
+          {member.role}
         </span>
 
         {/* Hover images - left side */}
