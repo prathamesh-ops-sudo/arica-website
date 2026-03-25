@@ -283,7 +283,7 @@ export default function TeamDirectors() {
 
         {/* Team list */}
         <ul className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="h-px bg-border" />
+          <li aria-hidden="true" className="h-px bg-border list-none" />
           {teamMembers.map((member, index) => (
             <TeamMemberRow
               key={`${member.firstName}-${member.lastName}`}
