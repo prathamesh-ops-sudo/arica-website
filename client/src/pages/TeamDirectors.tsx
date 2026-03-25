@@ -288,7 +288,7 @@ export default function TeamDirectors() {
                   lineHeight: 1.2,
                 }}
               >
-                Our Team
+                Meet Our Team
               </h1>
             </div>
             <span className="text-muted-foreground text-sm">
