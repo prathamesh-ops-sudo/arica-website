@@ -374,7 +374,7 @@ export default function About() {
                     <span className="text-foreground/90 group-hover:text-foreground transition-colors duration-500">
                       Meet Our{" "}
                     </span>
-                    <span className="text-gradient">Directors</span>
+                    <span className="text-gradient">Team!</span>
                   </h2>
                   <p className="text-muted-foreground text-lg max-w-lg">
                     Get to know the experts defending your digital frontier.
