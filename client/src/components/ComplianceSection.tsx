@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { ClipboardCheck, Bot, ArrowRight, Search, FileCheck, Shield } from "lucide-react";
@@ -16,7 +17,18 @@ const certifications = [
   { id: "certified", name: "ISO 27001", description: "Certification Ready" },
 ];
 
+const PARTICLE_POSITIONS = [
+  { left: 35, top: 25, duration: 4.2 },
+  { left: 55, top: 65, duration: 3.8 },
+  { left: 72, top: 18, duration: 4.5 },
+  { left: 28, top: 78, duration: 3.3 },
+  { left: 60, top: 42, duration: 4.8 },
+  { left: 45, top: 85, duration: 3.6 },
+];
+
 export function ComplianceSection() {
+  const svgId = useMemo(() => `shield-${Math.random().toString(36).slice(2, 8)}`, []);
+
   return (
     <section className="py-32 relative overflow-hidden">
       <div className="absolute inset-0 opacity-40" style={{
@@ -142,54 +154,48 @@ export function ComplianceSection() {
                     viewBox="0 0 200 240"
                     className="w-48 h-56 md:w-56 md:h-64 drop-shadow-[0_0_30px_rgba(61,112,183,0.4)]"
                     fill="none"
+                    role="img"
+                    aria-label="ISO 27001 compliance shield with checkmark"
                   >
                     <defs>
-                      {/* Shield body gradient */}
-                      <linearGradient id="shieldBody" x1="0" y1="0" x2="1" y2="1">
+                      <linearGradient id={`${svgId}-body`} x1="0" y1="0" x2="1" y2="1">
                         <stop offset="0%" stopColor="#2a3a5c" />
                         <stop offset="40%" stopColor="#1C2C5A" />
                         <stop offset="100%" stopColor="#0f1a35" />
                       </linearGradient>
-                      {/* Shield edge gradient */}
-                      <linearGradient id="shieldEdge" x1="0" y1="0" x2="1" y2="1">
+                      <linearGradient id={`${svgId}-edge`} x1="0" y1="0" x2="1" y2="1">
                         <stop offset="0%" stopColor="#6b7fa0" />
                         <stop offset="50%" stopColor="#4a5a7a" />
                         <stop offset="100%" stopColor="#8899bb" />
                       </linearGradient>
-                      {/* Checkmark glow */}
-                      <filter id="checkGlow">
+                      <filter id={`${svgId}-glow`}>
                         <feGaussianBlur stdDeviation="4" result="blur" />
                         <feMerge>
                           <feMergeNode in="blur" />
                           <feMergeNode in="SourceGraphic" />
                         </feMerge>
                       </filter>
-                      {/* Shield highlight */}
-                      <linearGradient id="shieldHighlight" x1="0.3" y1="0" x2="0.7" y2="1">
+                      <linearGradient id={`${svgId}-highlight`} x1="0.3" y1="0" x2="0.7" y2="1">
                         <stop offset="0%" stopColor="rgba(255,255,255,0.15)" />
                         <stop offset="50%" stopColor="rgba(255,255,255,0.02)" />
                         <stop offset="100%" stopColor="rgba(255,255,255,0)" />
                       </linearGradient>
                     </defs>
 
-                    {/* Shield outline / border */}
                     <path
                       d="M100 10 L180 50 C180 50 185 140 100 220 C15 140 20 50 20 50 Z"
-                      fill="url(#shieldEdge)"
+                      fill={`url(#${svgId}-edge)`}
                       stroke="none"
                     />
-                    {/* Shield inner body */}
                     <path
                       d="M100 20 L172 56 C172 56 176 138 100 212 C24 138 28 56 28 56 Z"
-                      fill="url(#shieldBody)"
+                      fill={`url(#${svgId}-body)`}
                       stroke="none"
                     />
-                    {/* Glass highlight on left half */}
                     <path
                       d="M100 20 L28 56 C28 56 24 138 100 212 Z"
-                      fill="url(#shieldHighlight)"
+                      fill={`url(#${svgId}-highlight)`}
                     />
-                    {/* Center divider line */}
                     <line
                       x1="100" y1="20" x2="100" y2="212"
                       stroke="rgba(255,255,255,0.06)"
@@ -216,7 +222,7 @@ export function ComplianceSection() {
                         strokeWidth="6"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        filter="url(#checkGlow)"
+                        filter={`url(#${svgId}-glow)`}
                         initial={{ pathLength: 0 }}
                         whileInView={{ pathLength: 1 }}
                         viewport={{ once: true }}
@@ -241,20 +247,20 @@ export function ComplianceSection() {
                 </motion.div>
 
                 {/* Small floating particles */}
-                {[...Array(6)].map((_, i) => (
+                {PARTICLE_POSITIONS.map((particle, i) => (
                   <motion.div
                     key={i}
                     className="absolute w-1 h-1 rounded-full bg-[#3D70B7]/60"
                     style={{
-                      left: `${20 + Math.random() * 60}%`,
-                      top: `${10 + Math.random() * 80}%`,
+                      left: `${particle.left}%`,
+                      top: `${particle.top}%`,
                     }}
                     animate={{
                       y: [0, -20, 0],
                       opacity: [0, 0.8, 0],
                     }}
                     transition={{
-                      duration: 3 + Math.random() * 2,
+                      duration: particle.duration,
                       repeat: Infinity,
                       delay: i * 0.5,
                       ease: "easeInOut",
