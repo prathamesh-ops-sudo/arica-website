@@ -1,389 +1,375 @@
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { Mail, Phone, MapPin, Clock, Shield, Lock, Globe } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Mail, Phone, Send, CheckCircle, AlertCircle } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
-import { ContactForm } from "@/components/ContactForm";
-import { useRef, useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 
-const contactInfo = [
-  {
-    icon: Mail,
-    title: "Email",
-    value: "contact@aricatech.com",
-    description: "We respond within 24 hours",
-    isEmergency: false,
-  },
-  {
-    icon: Phone,
-    title: "Phone",
-    value: "+91 70911 75596",
-    description: "Mon-Sat 9AM-6PM IST",
-    isEmergency: false,
-  },
-  {
-    icon: MapPin,
-    title: "Location",
-    value: "Pune, Maharashtra, India",
-    description: "Office no: 1204, CTS, 682/686 Kotibhaskar and Mahati Residency, Kothrud, 411038",
-    isEmergency: false,
-  },
-  {
-    icon: Clock,
-    title: "Emergency",
-    value: "+91 96510 39355",
-    description: "24/7 Incident Response",
-    isEmergency: true,
-  },
+const services = [
+  "Cybersecurity",
+  "Digital Forensics",
+  "Compliance & Governance",
+  "Vulnerability Assessment",
+  "Incident Response",
+  "Other",
 ];
 
-const officeLocations = [
-  { name: "Pune, India", x: 68, y: 45, isPrimary: true },
-];
-
-const floatingIcons = [
-  { Icon: Mail, initialX: 10, initialY: 20, size: 24, delay: 0 },
-  { Icon: Phone, initialX: 85, initialY: 15, size: 20, delay: 0.5 },
-  { Icon: Shield, initialX: 90, initialY: 70, size: 28, delay: 1 },
-  { Icon: Lock, initialX: 5, initialY: 75, size: 22, delay: 1.5 },
-  { Icon: Globe, initialX: 50, initialY: 10, size: 26, delay: 2 },
-  { Icon: MapPin, initialX: 75, initialY: 85, size: 20, delay: 2.5 },
-];
-
-function TiltCard({ children, className, isEmergency = false }: { children: React.ReactNode; className?: string; isEmergency?: boolean }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [8, -8]), { stiffness: 300, damping: 30 });
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-8, 8]), { stiffness: 300, damping: 30 });
-  const scale = useSpring(1, { stiffness: 300, damping: 30 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    mouseX.set(x);
-    mouseY.set(y);
-  };
-
-  const handleMouseEnter = () => {
-    scale.set(1.02);
-  };
-
-  const handleMouseLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-    scale.set(1);
-  };
-
+function SuccessAnimation({ onReset }: { onReset: () => void }) {
   return (
     <motion.div
-      ref={cardRef}
-      style={{
-        rotateX,
-        rotateY,
-        scale,
-        transformStyle: "preserve-3d",
-      }}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className={`${className} transition-shadow duration-300 relative ${
-        isEmergency 
-          ? 'hover:shadow-[0_0_30px_rgba(139,0,0,0.4)]' 
-          : 'hover:shadow-[0_0_30px_rgba(61,112,183,0.3)]'
-      }`}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function FloatingIcon({ Icon, initialX, initialY, size, delay, mousePosition }: { Icon: any; initialX: number; initialY: number; size: number; delay: number; mousePosition: { x: number; y: number } }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0 }}
-      animate={{ 
-        opacity: 0.15, 
-        scale: 1,
-        x: mousePosition.x * (1 + delay * 0.2),
-        y: mousePosition.y * (1 + delay * 0.2),
-      }}
-      transition={{ 
-        opacity: { duration: 0.5, delay },
-        scale: { duration: 0.5, delay },
-        x: { duration: 0.3, ease: "easeOut" },
-        y: { duration: 0.3, ease: "easeOut" },
-      }}
-      className="absolute pointer-events-none text-primary/30"
-      style={{ 
-        left: `${initialX}%`, 
-        top: `${initialY}%`,
-      }}
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="text-center py-16"
     >
       <motion.div
-        animate={{ 
-          y: [0, -15, 0],
-          rotate: [0, 5, -5, 0],
-        }}
-        transition={{ 
-          duration: 4 + delay, 
-          repeat: Infinity, 
-          ease: "easeInOut" 
-        }}
+        className="inline-flex p-4 rounded-full bg-green-500/10 text-green-500 mb-6"
+        initial={{ scale: 0, rotate: -180 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
       >
-        <Icon size={size} />
+        <CheckCircle className="w-12 h-12" />
       </motion.div>
-    </motion.div>
-  );
-}
-
-function WorldMap() {
-  return (
-    <div className="relative w-full h-48 rounded-xl overflow-hidden bg-gradient-to-br from-slate-900/80 to-slate-800/80 border border-white/10">
-      <svg
-        viewBox="0 0 100 50"
-        className="w-full h-full opacity-40"
-        preserveAspectRatio="xMidYMid slice"
+      <h3 className="text-2xl font-bold mb-3">Message Received!</h3>
+      <p className="text-muted-foreground mb-6">
+        Thank you for reaching out. Our team will contact you within 24 hours.
+      </p>
+      <button
+        onClick={onReset}
+        className="text-sm text-primary underline underline-offset-4 hover:text-primary/80 transition-colors"
       >
-        <defs>
-          <linearGradient id="mapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="rgba(61, 112, 183, 0.3)" />
-            <stop offset="100%" stopColor="rgba(61, 112, 183, 0.1)" />
-          </linearGradient>
-        </defs>
-        <path
-          d="M5,25 Q15,20 25,22 T45,20 Q55,18 65,22 T85,20 Q95,22 95,25"
-          fill="none"
-          stroke="url(#mapGradient)"
-          strokeWidth="0.5"
-        />
-        <path
-          d="M10,30 Q20,35 30,32 T50,35 Q60,38 70,32 T90,35"
-          fill="none"
-          stroke="url(#mapGradient)"
-          strokeWidth="0.5"
-        />
-        <ellipse cx="20" cy="28" rx="8" ry="4" fill="rgba(61, 112, 183, 0.1)" />
-        <ellipse cx="50" cy="32" rx="12" ry="5" fill="rgba(61, 112, 183, 0.08)" />
-        <ellipse cx="75" cy="35" rx="10" ry="4" fill="rgba(61, 112, 183, 0.1)" />
-        <ellipse cx="60" cy="25" rx="6" ry="3" fill="rgba(61, 112, 183, 0.08)" />
-      </svg>
-      
-      {officeLocations.map((location, index) => (
-        <motion.div
-          key={location.name}
-          className="absolute"
-          style={{ left: `${location.x}%`, top: `${location.y}%` }}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.5 + index * 0.2, duration: 0.5 }}
-        >
-          <div className="relative">
-            <motion.div
-              className={`w-3 h-3 rounded-full ${
-                location.isPrimary ? 'bg-primary' : 'bg-primary/70'
-              }`}
-              animate={{
-                boxShadow: [
-                  `0 0 0 0 ${location.isPrimary ? 'rgba(61, 112, 183, 0.7)' : 'rgba(61, 112, 183, 0.4)'}`,
-                  `0 0 0 8px ${location.isPrimary ? 'rgba(61, 112, 183, 0)' : 'rgba(61, 112, 183, 0)'}`,
-                ],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeOut",
-              }}
-            />
-            <motion.div
-              className="absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] text-primary/80 font-medium"
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 + index * 0.2 }}
-            >
-              {location.name}
-            </motion.div>
-          </div>
-        </motion.div>
-      ))}
-      
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle at 50% 50%, rgba(61, 112, 183, 0.1) 0%, transparent 70%)',
-        }}
-        animate={{
-          opacity: [0.3, 0.6, 0.3],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-    </div>
-  );
-}
-
-function GlowingIcon({ Icon, isEmergency = false }: { Icon: any; isEmergency?: boolean }) {
-  return (
-    <motion.div
-      className={`p-2.5 rounded-lg relative ${
-        isEmergency 
-          ? 'bg-red-500/20 text-red-400' 
-          : 'bg-primary/10 text-primary'
-      }`}
-      whileHover={{ scale: 1.1 }}
-      transition={{ type: "spring", stiffness: 400, damping: 10 }}
-    >
-      <motion.div
-        className="absolute inset-0 rounded-lg"
-        animate={{
-          boxShadow: isEmergency
-            ? [
-                '0 0 10px rgba(139, 0, 0, 0.3)',
-                '0 0 20px rgba(139, 0, 0, 0.5)',
-                '0 0 10px rgba(139, 0, 0, 0.3)',
-              ]
-            : [
-                '0 0 10px rgba(61, 112, 183, 0.2)',
-                '0 0 20px rgba(61, 112, 183, 0.4)',
-                '0 0 10px rgba(61, 112, 183, 0.2)',
-              ],
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      <Icon className="w-5 h-5 relative z-10" />
+        Send another message
+      </button>
     </motion.div>
   );
 }
 
 export default function Contact() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 20;
-      const y = (e.clientY / window.innerHeight - 0.5) * 20;
-      setMousePosition({ x, y });
-    };
-    
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-  
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const toggleService = (service: string) => {
+    setSelectedServices((prev) =>
+      prev.includes(service)
+        ? prev.filter((s) => s !== service)
+        : [...prev, service]
+    );
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: `${formData.firstName} ${formData.lastName}`.trim(),
+          email: formData.email,
+          company: "",
+          service: selectedServices.join(", "),
+          message: formData.message,
+          phone: formData.phone,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to submit form");
+      }
+
+      setSubmitted(true);
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please try again.";
+      setError(message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleReset = () => {
+    setSubmitted(false);
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      message: "",
+    });
+    setSelectedServices([]);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <section className="pt-32 pb-20 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-30" style={{
-          background: `radial-gradient(ellipse at 60% 30%, rgba(61, 112, 183, 0.06) 0%, transparent 55%),
-                       radial-gradient(ellipse at 20% 70%, rgba(61, 112, 183, 0.05) 0%, transparent 50%)`
-        }} />
-
-        {floatingIcons.map((icon, index) => (
-          <FloatingIcon key={index} {...icon} mousePosition={mousePosition} />
-        ))}
-
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 mb-6">
-              <motion.span 
-                className="w-1.5 h-1.5 bg-primary rounded-full"
-                animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              />
-              <span className="text-xs text-primary font-medium tracking-wider uppercase">
-                Contact Us
-              </span>
-            </span>
-            <h1 className="font-display text-5xl md:text-6xl font-bold mb-6">
-              Let's Secure Your{" "}
-              <span className="text-gradient">Future</span>
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Ready to protect your business? Get in touch for a free security
-              assessment.
-            </p>
-          </motion.div>
-
-          <div className="grid lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-2">
-              <ContactForm />
-            </div>
-
-            <div className="space-y-4">
-              {contactInfo.map((info, index) => (
-                <TiltCard
-                  key={info.title}
-                  isEmergency={info.isEmergency}
-                  className={`rounded-xl p-5 border cursor-pointer ${
-                    info.isEmergency 
-                      ? 'border-red-500/30 bg-red-500/10' 
-                      : 'border-white/10 bg-card/50 hover:border-primary/30'
-                  }`}
-                >
-                  <motion.div
-                    initial={{ opacity: 0, x: 30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    data-testid={`contact-info-${index}`}
-                    className="flex items-start gap-4"
-                  >
-                    <GlowingIcon Icon={info.icon} isEmergency={info.isEmergency} />
-                    <div>
-                      <p className="font-semibold text-sm mb-0.5 text-halo-white">{info.title}</p>
-                      <p className={`text-sm font-medium ${info.isEmergency ? 'text-red-400' : 'text-primary'}`}>{info.value}</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {info.description}
-                      </p>
-                    </div>
-                  </motion.div>
-                  
-                  {info.isEmergency && (
-                    <motion.div
-                      className="absolute inset-0 rounded-xl pointer-events-none"
-                      animate={{
-                        boxShadow: [
-                          '0 0 20px rgba(139, 0, 0, 0.2), inset 0 0 20px rgba(139, 0, 0, 0.05)',
-                          '0 0 40px rgba(139, 0, 0, 0.4), inset 0 0 30px rgba(139, 0, 0, 0.1)',
-                          '0 0 20px rgba(139, 0, 0, 0.2), inset 0 0 20px rgba(139, 0, 0, 0.05)',
-                        ],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  )}
-                </TiltCard>
-              ))}
-
-              <TiltCard className="rounded-xl p-5 border border-white/10 bg-card/50 hover:border-primary/30">
+      <section className="pt-28 pb-12 md:pt-32 md:pb-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-0 min-h-[600px]">
+            {/* Left side - Form */}
+            <div className="py-8 md:py-12 lg:pr-12">
+              {submitted ? (
+                <SuccessAnimation onReset={handleReset} />
+              ) : (
                 <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
                 >
-                  <h3 className="font-display font-bold mb-4">
-                    Global Offices
-                  </h3>
-                  <WorldMap />
+                  <h1 className="text-3xl md:text-4xl font-bold mb-3">
+                    How can we help?
+                  </h1>
+                  <p className="text-muted-foreground mb-8">
+                    Looking for cybersecurity support? Reach out to our team.
+                  </p>
+
+                  {/* Contact links */}
+                  <div className="flex flex-col gap-3 mb-10">
+                    <a
+                      href="tel:+917091175596"
+                      className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                    >
+                      <Phone className="w-4 h-4" />
+                      Call us
+                    </a>
+                    <a
+                      href="mailto:contact@aricatech.com"
+                      className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                    >
+                      <Mail className="w-4 h-4" />
+                      Shoot us an email
+                    </a>
+                  </div>
+
+                  {/* Form */}
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <AnimatePresence>
+                      {error && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10, height: 0 }}
+                          animate={{ opacity: 1, y: 0, height: "auto" }}
+                          exit={{ opacity: 0, y: -10, height: 0 }}
+                          className="flex items-start gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500"
+                        >
+                          <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                          <p className="text-sm">{error}</p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    {/* First name + Last name */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="firstName" className="text-sm font-medium">
+                          First name
+                        </Label>
+                        <Input
+                          id="firstName"
+                          placeholder="First name"
+                          value={formData.firstName}
+                          onChange={(e) =>
+                            handleInputChange("firstName", e.target.value)
+                          }
+                          required
+                          disabled={submitting}
+                          className="bg-background border-border/60 focus:border-primary"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="lastName" className="text-sm font-medium">
+                          Last name
+                        </Label>
+                        <Input
+                          id="lastName"
+                          placeholder="Last name"
+                          value={formData.lastName}
+                          onChange={(e) =>
+                            handleInputChange("lastName", e.target.value)
+                          }
+                          disabled={submitting}
+                          className="bg-background border-border/60 focus:border-primary"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Work email */}
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-sm font-medium">
+                        Work email
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="you@company.com"
+                        value={formData.email}
+                        onChange={(e) =>
+                          handleInputChange("email", e.target.value)
+                        }
+                        required
+                        disabled={submitting}
+                        className="bg-background border-border/60 focus:border-primary"
+                      />
+                    </div>
+
+                    {/* Phone number */}
+                    <div className="space-y-2">
+                      <Label htmlFor="phone" className="text-sm font-medium">
+                        Phone number
+                      </Label>
+                      <div className="flex gap-2">
+                        <div className="flex items-center gap-1 px-3 rounded-md border border-border/60 bg-background text-sm text-muted-foreground shrink-0">
+                          IN
+                          <span className="text-xs">&#9662;</span>
+                        </div>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          placeholder="+91 00000 00000"
+                          value={formData.phone}
+                          onChange={(e) =>
+                            handleInputChange("phone", e.target.value)
+                          }
+                          disabled={submitting}
+                          className="bg-background border-border/60 focus:border-primary"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Services checkboxes */}
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium">
+                        Which services are you interested in?
+                      </Label>
+                      <div className="grid grid-cols-2 gap-3">
+                        {services.map((service) => (
+                          <label
+                            key={service}
+                            className="flex items-center gap-2 cursor-pointer group"
+                          >
+                            <Checkbox
+                              checked={selectedServices.includes(service)}
+                              onCheckedChange={() => toggleService(service)}
+                              disabled={submitting}
+                              className="border-border/60 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                            />
+                            <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                              {service}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Message */}
+                    <div className="space-y-2">
+                      <Label htmlFor="message" className="text-sm font-medium">
+                        Message
+                      </Label>
+                      <Textarea
+                        id="message"
+                        placeholder="Is there anything particular you need help with?"
+                        value={formData.message}
+                        onChange={(e) =>
+                          handleInputChange("message", e.target.value)
+                        }
+                        required
+                        disabled={submitting}
+                        rows={4}
+                        className="bg-background border-border/60 focus:border-primary resize-none"
+                      />
+                    </div>
+
+                    {/* Submit */}
+                    <motion.button
+                      type="submit"
+                      disabled={submitting}
+                      className="w-full rounded-lg py-3 px-6 font-medium text-white bg-gradient-to-r from-[#1C2C5A] to-[#010101] transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2"
+                      whileHover={{ scale: 1.01 }}
+                      whileTap={{ scale: 0.99 }}
+                    >
+                      {submitting ? (
+                        <motion.div
+                          className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                          animate={{ rotate: 360 }}
+                          transition={{
+                            duration: 1,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
+                        />
+                      ) : (
+                        <>
+                          <Send className="w-4 h-4" />
+                          Send message
+                        </>
+                      )}
+                    </motion.button>
+                  </form>
                 </motion.div>
-              </TiltCard>
+              )}
             </div>
+
+            {/* Right side - Google Maps */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="relative rounded-2xl overflow-hidden min-h-[400px] lg:min-h-0"
+            >
+              <iframe
+                title="Arica Tech Security LLP Office Location"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3783.5!2d73.8077!3d18.5074!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bf8a2f4bffff%3A0x0!2sKothrud%2C%20Pune%2C%20Maharashtra%20411038!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                className="absolute inset-0 w-full h-full border-0 grayscale-[40%] contrast-[1.1]"
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+              {/* Map overlay with office info */}
+              <div className="absolute bottom-4 left-4 right-4 bg-background/90 backdrop-blur-sm rounded-xl p-4 border border-border/40">
+                <p className="font-semibold text-sm mb-1">
+                  Arica Tech Security LLP
+                </p>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Office no: 1204, CTS, 682/686 Kotibhaskar and Mahati
+                  Residency, Kothrud, Pune, Maharashtra 411038
+                </p>
+                <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                  <a
+                    href="tel:+917091175596"
+                    className="hover:text-primary transition-colors"
+                  >
+                    +91 70911 75596
+                  </a>
+                  <a
+                    href="mailto:contact@aricatech.com"
+                    className="hover:text-primary transition-colors"
+                  >
+                    contact@aricatech.com
+                  </a>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
