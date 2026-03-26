@@ -2,27 +2,36 @@ export function SiteFooter() {
   return (
     <footer className="relative overflow-hidden bg-background">
       {/* Large ARICA background text with gradient */}
-      <div className="relative flex items-end justify-center overflow-hidden" style={{ height: "clamp(10rem, 20vw, 18rem)" }}>
-        {/* Full-width ARICA text using CSS instead of SVG for better responsiveness */}
-        <div className="absolute inset-0 flex items-end justify-center pointer-events-none select-none" aria-hidden="true">
-          <span
-            className="block text-center leading-none"
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: 900,
-              fontSize: "clamp(6rem, 18vw, 22rem)",
-              letterSpacing: "-0.05em",
-              background: "linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 50%, transparent 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              whiteSpace: "nowrap",
-              lineHeight: "0.85",
-              transform: "translateY(15%)",
-            }}
+      <div className="relative flex items-end justify-center overflow-hidden" style={{ height: "clamp(10rem, 22vw, 20rem)" }}>
+        {/* Full-width ARICA text using SVG to guarantee edge-to-edge coverage on all screens */}
+        <div className="absolute inset-0 flex items-end pointer-events-none select-none" aria-hidden="true">
+          <svg
+            viewBox="0 0 500 120"
+            className="w-full h-auto block"
+            preserveAspectRatio="xMidYMax meet"
           >
-            ARICA
-          </span>
+            <defs>
+              <linearGradient id="footer-arica-grad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="white" stopOpacity="0.15" />
+                <stop offset="50%" stopColor="white" stopOpacity="0.05" />
+                <stop offset="100%" stopColor="white" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <text
+              x="250"
+              y="110"
+              textAnchor="middle"
+              fill="url(#footer-arica-grad)"
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 900,
+                fontSize: "160px",
+                letterSpacing: "-0.04em",
+              }}
+            >
+              ARICA
+            </text>
+          </svg>
         </div>
       </div>
 
