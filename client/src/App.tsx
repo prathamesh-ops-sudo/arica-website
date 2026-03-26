@@ -70,6 +70,7 @@ function Router() {
 function AppContent() {
   const [location] = useLocation();
   const isFullscreenRoute = FULLSCREEN_ROUTES.includes(location);
+  const isExperiencePage = location === "/experience";
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -77,6 +78,15 @@ function AppContent() {
   
   return (
     <>
+      {!isExperiencePage && (
+        <a href="/" className="fixed top-4 left-4 md:top-6 md:left-6 z-[9999]" aria-label="Arica Tech Security LLP Home">
+          <img
+            src="/arica-logo.png"
+            alt="Arica Tech Security LLP"
+            className="h-8 md:h-10 w-auto"
+          />
+        </a>
+      )}
       <Router />
       {!isFullscreenRoute && <SiteFooter />}
     </>
