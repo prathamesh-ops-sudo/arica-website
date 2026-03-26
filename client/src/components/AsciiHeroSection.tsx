@@ -8,10 +8,10 @@ import { FloatingCyberThreats } from '@/components/FloatingCyberThreats';
 
 export function AsciiHeroSection() {
   const stats = [
-    { value: "99.9%", label: "Uptime Monitoring" },
     { value: "24/7", label: "Threat Detection" },
-    { value: "<1min", label: "Response Time" },
-    { value: "500+", label: "Enterprises Protected" },
+    { value: "100+", label: "Brands Associated" },
+    { value: "200+", label: "Professionals Trained" },
+    { value: "9", label: "Expert Team Members" },
   ];
 
   const features = [

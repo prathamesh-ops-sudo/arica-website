@@ -23,9 +23,9 @@ const values = [
 ];
 
 const stats = [
-  { icon: Users, value: 200, suffix: "+", label: "Security Assessments" },
-  { icon: Globe, value: 50, suffix: "+", label: "Enterprise Clients" },
-  { icon: Award, value: 10, suffix: "+", label: "Years Experience" },
+  { icon: Users, value: 100, suffix: "+", label: "Brands Associated" },
+  { icon: Globe, value: 200, suffix: "+", label: "Professionals Trained" },
+  { icon: Award, value: 9, suffix: "", label: "Expert Team Members" },
   { icon: Shield, value: 100, suffix: "%", label: "Audit Success Rate" },
 ];
 
@@ -175,13 +175,13 @@ export default function About() {
               </span>
             </span>
             <h1 className="font-display text-5xl md:text-6xl font-bold mb-6">
-              Defending the Digital{" "}
-              <span className="text-gradient">Frontier</span>
+              Security That Goes{" "}
+              <span className="text-gradient">Beyond Prevention</span>
             </h1>
             <p className="text-xl text-muted-foreground leading-relaxed">
-              Founded in 2010, Arica Tech Security has grown from a small
-              consulting firm to a global leader in cybersecurity. Our mission
-              is simple: protect businesses from evolving digital threats.
+              Arica Tech Security LLP delivers end-to-end protection of your digital world.
+              We integrate cybersecurity operations, digital forensics, and compliance
+              expertise across the full incident lifecycle.
             </p>
           </motion.div>
         </div>
@@ -207,24 +207,24 @@ export default function About() {
               transition={{ duration: 0.6 }}
             >
               <h2 className="font-display text-4xl font-bold mb-6">
-                From Humble Beginnings to{" "}
-                <span className="text-gradient">Industry Leader</span>
+                Trusted Across{" "}
+                <span className="text-gradient">Industries</span>
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  Arica Tech Security was founded by the founding team with deep
-                  backgrounds in offensive security and compliance, who recognized
-                  the critical need for specialized security consulting services.
+                  Data moves without pause across cloud platforms, industrial systems,
+                  mobile devices, and third-party networks. As connectivity expands, so
+                  does exposure. Cyber risk today is continuous and business-critical.
                 </p>
                 <p>
-                  We specialize in Vulnerability Assessment and Penetration Testing
-                  (VAPT), ISO compliance audits, and secure custom software development.
-                  Our expertise helps organizations identify risks before attackers do.
+                  From governance and proactive testing to 24×7 monitoring, rapid
+                  containment, forensic investigation, and regulatory closure — every
+                  stage is managed with structure and accountability.
                 </p>
                 <p>
-                  Today, we partner with enterprises across industries to strengthen
-                  their security posture through rigorous testing, comprehensive audits,
-                  and building secure software from the ground up.
+                  Behind this delivery is an expert team of cybersecurity, forensic, and
+                  compliance specialists with experience across complex digital
+                  environments. Associated with 100+ brands.
                 </p>
               </div>
             </motion.div>
@@ -249,8 +249,8 @@ export default function About() {
                   Our Mission
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  To deliver expert security assessments, compliance guidance,
-                  and secure software solutions that protect organizations.
+                  End-to-end protection of your digital world — cybersecurity,
+                  digital forensics, and compliance & governance.
                 </p>
               </motion.div>
               <motion.div 
@@ -264,8 +264,8 @@ export default function About() {
               >
                 <h3 className="font-display font-bold mb-2 text-halo-white">Vision</h3>
                 <p className="text-xs text-muted-foreground">
-                  A world where every business can operate securely in the
-                  digital realm.
+                  Built to protect, investigate, and comply — keeping you
+                  prepared for what others react to.
                 </p>
               </motion.div>
               <motion.div 

@@ -36,10 +36,13 @@ export function SiteFooter() {
 
       </div>
 
-      {/* Copyright bar */}
-      <div className="px-6 py-4">
+      {/* Tagline + Copyright bar */}
+      <div className="px-6 py-4 space-y-1">
+        <p className="text-center text-xs text-muted-foreground/60 italic">
+          Built to protect, investigate, and comply.
+        </p>
         <p className="text-center text-xs text-muted-foreground">
-          &copy; {new Date().getFullYear()} Arica Tech. All rights reserved.
+          &copy; {new Date().getFullYear()} Arica Tech Security LLP. All rights reserved.
         </p>
       </div>
     </footer>
