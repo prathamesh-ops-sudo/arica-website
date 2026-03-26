@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Phone, Send, CheckCircle, AlertCircle } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
@@ -50,7 +50,6 @@ export default function Contact() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
-  const typingTimeouts = useRef<Record<string, NodeJS.Timeout>>({});
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -71,12 +70,6 @@ export default function Contact() {
         : [...prev, service]
     );
   };
-
-  useEffect(() => {
-    return () => {
-      Object.values(typingTimeouts.current).forEach(clearTimeout);
-    };
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
