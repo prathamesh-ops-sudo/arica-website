@@ -59,7 +59,6 @@ export function ThreatVortex() {
   const [destroyedThreats, setDestroyedThreats] = useState<Set<number>>(new Set());
   const [beamTargets, setBeamTargets] = useState<number[]>([]);
   const [shieldPower, setShieldPower] = useState(0);
-  const [screenFlash, setScreenFlash] = useState(false);
   const [shockwaveScale, setShockwaveScale] = useState(0);
   const logIdRef = useRef(0);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -86,7 +85,6 @@ export function ThreatVortex() {
       setDestroyedThreats(new Set());
       setBeamTargets([]);
       setShieldPower(0);
-      setScreenFlash(false);
       setShockwaveScale(0);
       return;
     }
@@ -146,19 +144,6 @@ export function ThreatVortex() {
       className="relative py-24 md:py-32 overflow-hidden bg-background"
       data-testid="section-threat-vortex"
     >
-      <AnimatePresence>
-        {screenFlash && (
-          <motion.div
-            initial={{ opacity: 0.6 }}
-            animate={{ opacity: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="fixed inset-0 z-[100] pointer-events-none"
-            style={{ background: 'radial-gradient(circle, rgba(61,112,183,0.4), rgba(61,112,183,0.15), transparent)' }}
-          />
-        )}
-      </AnimatePresence>
-
       <div className="absolute inset-0 opacity-[0.15]" style={{
         background: `radial-gradient(ellipse at 50% 50%, rgba(61,112,183,0.08) 0%, transparent 60%)`,
       }} />
