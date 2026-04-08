@@ -774,7 +774,7 @@ export default function ApiSecurityLab() {
             <PulsingDot color="#3D70B7" />
           </motion.div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="bg-gradient-to-r from-[#3D70B7] via-white to-[#3D70B7] bg-clip-text text-transparent">
+            <span style={{ color: '#3D70B7' }}>
               API Security Lab
             </span>
           </h1>

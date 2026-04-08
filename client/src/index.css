@@ -170,6 +170,10 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
   }
+  .lucide {
+    fill: currentColor;
+    stroke-width: 2.5;
+  }
   
   ::selection {
     background: hsl(var(--primary) / 0.3);
@@ -194,17 +198,11 @@
   .z-modal { z-index: 9999; }
 
   .text-gradient {
-    background: linear-gradient(135deg, var(--obsidian-cyan) 0%, var(--obsidian-glow) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #3D70B7;
   }
   
   .text-gradient-obsidian {
-    background: linear-gradient(135deg, #1C2C5A 0%, #42BA90 50%, #3D70B7 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #3D70B7;
   }
   
   .glow-cyan {
@@ -248,10 +246,7 @@
   }
 
   .text-gradient-rose {
-    background: linear-gradient(135deg, hsl(var(--bulgarian-rose)) 0%, hsl(350 70% 35%) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #3D70B7;
   }
   
   .glass {
@@ -314,10 +309,7 @@
   }
 
   .text-gradient-subtle {
-    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #3D70B7;
   }
   
   .glass-strong {
