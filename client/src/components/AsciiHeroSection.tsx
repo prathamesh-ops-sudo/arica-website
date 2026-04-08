@@ -49,7 +49,7 @@ export function AsciiHeroSection() {
 
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Endless
-              <span className="block bg-gradient-to-r from-[#42BA90] to-[#3D70B7] bg-clip-text text-transparent">
+              <span className="block" style={{ color: '#3D70B7' }}>
                 Vigilance
               </span>
             </h2>
@@ -129,7 +129,7 @@ export function AsciiHeroSection() {
               <div className="absolute inset-0 bg-gradient-to-r from-[#1C2C5A]/20 via-[#3D70B7]/20 to-[#1C2C5A]/20 animate-pulse" />
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
-                  <div className="text-5xl font-bold bg-gradient-to-r from-[#42BA90] to-[#3D70B7] bg-clip-text text-transparent">
+                  <div className="text-5xl font-bold" style={{ color: '#3D70B7' }}>
                     ∞
                   </div>
                   <div className="text-xs text-[#ACACAC] mt-1 tracking-widest">CONTINUOUS PROTECTION</div>

@@ -210,7 +210,7 @@ export function MegaNavigation() {
                 <div className="absolute inset-[2px] bg-[rgba(10,10,30,0.9)] rounded-md" />
                 <Shield className="w-5 h-5 relative z-10 text-[#3D70B7] drop-shadow-[0_0_8px_#3D70B7]" />
               </motion.div>
-              <span className="hidden sm:block text-lg font-bold bg-gradient-to-r from-[#42BA90] to-[#3D70B7] bg-clip-text text-transparent">
+              <span className="hidden sm:block text-lg font-bold" style={{ color: '#3D70B7' }}>
                 Arica Tech Security
               </span>
             </Link>

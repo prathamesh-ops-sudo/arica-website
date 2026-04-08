@@ -129,7 +129,7 @@ export function HudNavigation() {
                 </motion.div>
                 <div className="hidden sm:block">
                   <motion.span
-                    className="text-lg font-bold bg-gradient-to-r from-[#3D70B7] to-[#3D70B7] bg-clip-text text-transparent"
+                    className="text-lg font-bold" style={{ color: '#3D70B7' }}
                     whileHover={{ textShadow: "0 0 20px rgba(61, 112, 183, 0.5)" }}
                   >
                     CYBER GUARDIAN

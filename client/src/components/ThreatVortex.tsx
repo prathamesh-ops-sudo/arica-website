@@ -41,14 +41,14 @@ const battleLogSequence: { text: string; type: BattleLogEntry["type"]; delay: nu
   { text: "[SYS] Activating ARICA Defense Protocol", type: "action", delay: 1500 },
   { text: "[WEAPON] Targeting systems online :: Lock at 100%", type: "action", delay: 2200 },
   { text: "[WEAPON] Deploying countermeasure beams", type: "action", delay: 3000 },
-  { text: "[HIT] MALWARE neutralized ████████ 100%", type: "success", delay: 3800 },
-  { text: "[HIT] RANSOMWARE payload destroyed", type: "success", delay: 4200 },
-  { text: "[HIT] DDoS wave absorbed and deflected", type: "success", delay: 4600 },
-  { text: "[HIT] SQL INJECTION blocked at firewall", type: "success", delay: 5000 },
-  { text: "[SYS] Charging EMP shockwave...", type: "action", delay: 5500 },
-  { text: "[BOOM] ███ SHOCKWAVE DEPLOYED ███", type: "action", delay: 6200 },
-  { text: "[CLEAR] All hostile entities eliminated", type: "success", delay: 7200 },
-  { text: "[STATUS] Threat level: ZERO :: Perimeter secure", type: "success", delay: 7800 },
+  { text: "[HIT] MALWARE neutralized ████████ 100%", type: "success", delay: 4500 },
+  { text: "[HIT] RANSOMWARE payload destroyed", type: "success", delay: 5500 },
+  { text: "[HIT] DDoS wave absorbed and deflected", type: "success", delay: 6500 },
+  { text: "[HIT] SQL INJECTION blocked at firewall", type: "success", delay: 7500 },
+  { text: "[SYS] Charging EMP shockwave...", type: "action", delay: 8500 },
+  { text: "[BOOM] ███ SHOCKWAVE DEPLOYED ███", type: "action", delay: 9500 },
+  { text: "[CLEAR] All hostile entities eliminated", type: "success", delay: 10500 },
+  { text: "[STATUS] Threat level: ZERO :: Perimeter secure", type: "success", delay: 11500 },
 ];
 
 export function ThreatVortex() {
@@ -112,27 +112,21 @@ export function ThreatVortex() {
       addTimer(() => {
         setBeamTargets((prev) => [...prev, threatIdx]);
         addTimer(() => {
-          setScreenFlash(true);
-          addTimer(() => setScreenFlash(false), 80);
-        }, 200);
-        addTimer(() => {
           setDestroyedThreats((prev) => { const n = new Set(Array.from(prev)); n.add(threatIdx); return n; });
           setBeamTargets((prev) => prev.filter((t) => t !== threatIdx));
-        }, 400);
-      }, 3200 + i * 250);
+        }, 600);
+      }, 3200 + i * 450);
     });
 
     addTimer(() => {
       setPhase("shockwave");
       setShockwaveScale(1);
-      setScreenFlash(true);
-      addTimer(() => setScreenFlash(false), 150);
-    }, 6200);
+    }, 9500);
 
     addTimer(() => {
       setPhase("victory");
       const allIds = new Set<number>(); threatItems.forEach((_, i) => allIds.add(i)); setDestroyedThreats(allIds);
-    }, 7200);
+    }, 10500);
 
     return clearTimers;
   }, [isInView, addTimer, clearTimers]);
@@ -170,7 +164,7 @@ export function ThreatVortex() {
       }} />
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {phase !== "idle" && Array.from({ length: 30 }).map((_, i) => (
+        {phase !== "idle" && Array.from({ length: 10 }).map((_, i) => (
           <motion.div
             key={`particle-${i}`}
             className="absolute w-1 h-1 rounded-full"
@@ -180,12 +174,12 @@ export function ThreatVortex() {
               backgroundColor: i % 3 === 0 ? '#ff4444' : i % 3 === 1 ? '#42BA90' : '#3D70B7',
             }}
             animate={{
-              opacity: [0, 0.8, 0],
-              scale: [0, 1.5, 0],
+              opacity: [0, 0.4, 0],
+              scale: [0, 1, 0],
             }}
             transition={{
-              duration: 2 + Math.random() * 2,
-              delay: Math.random() * 3,
+              duration: 3 + Math.random() * 3,
+              delay: Math.random() * 4,
               repeat: Infinity,
             }}
           />
@@ -237,15 +231,9 @@ export function ThreatVortex() {
 
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
             We Don't Just Defend.
-            <motion.span
-              className="block bg-gradient-to-r from-[#42BA90] to-[#3D70B7] bg-clip-text text-transparent"
-              animate={phase === "fighting" ? {
-                filter: ["brightness(1)", "brightness(1.5)", "brightness(1)"],
-              } : {}}
-              transition={{ duration: 0.5, repeat: phase === "fighting" ? Infinity : 0 }}
-            >
+            <span className="block" style={{ color: '#3D70B7' }}>
               We Fight Back.
-            </motion.span>
+            </span>
           </h2>
           <p className="text-lg text-[#ACACAC] max-w-2xl mx-auto">
             Watch as our defense systems detect, engage, and eliminate every cyber threat in real-time. 
@@ -441,10 +429,10 @@ export function ThreatVortex() {
                   background: 'radial-gradient(circle, rgba(61,112,183,0.12) 0%, transparent 70%)',
                 }}
                 animate={{
-                  scale: phase === "fighting" ? [1, 1.6, 1] : phase === "shockwave" ? [1, 4, 1] : [1, 1.1, 1],
-                  opacity: phase === "fighting" ? [0.2, 0.7, 0.2] : 0.4,
+                  scale: phase === "fighting" ? [1, 1.2, 1] : phase === "shockwave" ? [1, 2.5, 1] : [1, 1.05, 1],
+                  opacity: phase === "fighting" ? [0.3, 0.5, 0.3] : 0.4,
                 }}
-                transition={{ duration: phase === "shockwave" ? 0.5 : 1.5, repeat: phase === "fighting" ? Infinity : 0 }}
+                transition={{ duration: phase === "shockwave" ? 1 : 2.5, repeat: phase === "fighting" ? Infinity : 0 }}
               />
 
               {/* SVG Targeting Reticle System */}
@@ -453,7 +441,7 @@ export function ThreatVortex() {
                 style={{ width: '200px', height: '200px', left: '-100px', top: '-100px' }}
                 viewBox="0 0 200 200"
                 animate={{ rotate: phase === "fighting" ? 360 : 0 }}
-                transition={{ duration: phase === "fighting" ? 2 : 8, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: phase === "fighting" ? 6 : 12, repeat: Infinity, ease: "linear" }}
               >
                 {/* Outer targeting ring with tick marks */}
                 <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(61,112,183,0.3)" strokeWidth="1" strokeDasharray="4 8" />
@@ -483,7 +471,7 @@ export function ThreatVortex() {
                 style={{ width: '140px', height: '140px', left: '-70px', top: '-70px' }}
                 viewBox="0 0 140 140"
                 animate={{ rotate: phase === "fighting" ? -360 : 0 }}
-                transition={{ duration: phase === "fighting" ? 1.5 : 6, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: phase === "fighting" ? 4 : 8, repeat: Infinity, ease: "linear" }}
               >
                 {/* Crosshair lines with gaps */}
                 <line x1="70" y1="10" x2="70" y2="35" stroke="rgba(61,112,183,0.7)" strokeWidth="1.5" />
@@ -506,7 +494,7 @@ export function ThreatVortex() {
                   style={{ width: '180px', height: '180px', left: '-90px', top: '-90px' }}
                   viewBox="0 0 180 180"
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                 >
                   <defs>
                     <linearGradient id="sweepGrad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -529,8 +517,8 @@ export function ThreatVortex() {
                     top: '-80px',
                     borderColor: 'rgba(61,112,183,0.5)',
                   }}
-                  animate={{ scale: [1, 1.2, 1], opacity: [0.6, 0.15, 0.6] }}
-                  transition={{ duration: 0.6, repeat: Infinity }}
+                  animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.2, 0.5] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
                 />
               )}
 
@@ -555,12 +543,12 @@ export function ThreatVortex() {
                     : '0 0 20px rgba(61,112,183,0.5), 0 0 40px rgba(61,112,183,0.2)',
                 }}
                 animate={{
-                  scale: phase === "shockwave" ? [1, 2, 1] :
-                    phase === "fighting" ? [1, 1.15, 1] :
-                    phase === "victory" ? [1, 1.08, 1] : [1, 1.03, 1],
+                  scale: phase === "shockwave" ? [1, 1.5, 1] :
+                    phase === "fighting" ? [1, 1.08, 1] :
+                    phase === "victory" ? [1, 1.05, 1] : [1, 1.03, 1],
                 }}
                 transition={{
-                  duration: phase === "fighting" ? 0.25 : 2,
+                  duration: phase === "fighting" ? 1.5 : 2.5,
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
@@ -591,8 +579,8 @@ export function ThreatVortex() {
                 <motion.div
                   className="absolute font-mono text-[8px] tracking-widest whitespace-nowrap"
                   style={{ top: '45px', left: '50%', x: '-50%', color: '#3D70B7' }}
-                  animate={{ opacity: [0.4, 1, 0.4] }}
-                  transition={{ duration: 0.4, repeat: Infinity }}
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 1.2, repeat: Infinity }}
                 >
                   TARGET LOCK {shieldPower}%
                 </motion.div>
@@ -629,10 +617,7 @@ export function ThreatVortex() {
                     <motion.p
                       className="text-xl md:text-2xl font-bold"
                       style={{
-                        background: 'linear-gradient(to right, #42BA90, #3D70B7, #FFFFFF)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        textShadow: 'none',
+                        color: '#3D70B7',
                       }}
                       animate={{ opacity: [0.8, 1, 0.8] }}
                       transition={{ duration: 2, repeat: Infinity }}

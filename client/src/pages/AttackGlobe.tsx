@@ -847,7 +847,7 @@ export default function AttackGlobe() {
             
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-3 tracking-tight">
               <span className="text-white drop-shadow-lg">Real-Time </span>
-              <span className="bg-gradient-to-r from-[#3D70B7] to-[#42BA90] bg-clip-text text-transparent">Cyber Attack</span>
+              <span style={{ color: '#3D70B7' }}>Cyber Attack</span>
               <span className="text-white drop-shadow-lg"> Monitoring</span>
             </h1>
             
