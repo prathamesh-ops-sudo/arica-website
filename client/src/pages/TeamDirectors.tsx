@@ -119,24 +119,12 @@ function TeamMemberRow({
   isExpanded: boolean;
   onToggle: () => void;
 }) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleMouseEnter = useCallback(() => {
-    setIsHovered(true);
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    setIsHovered(false);
-  }, []);
-
   return (
     <li className="relative">
       <motion.button
-        className="w-full text-center py-6 sm:py-8 md:py-10 cursor-pointer relative group"
+        className="w-full text-left py-6 sm:py-8 md:py-10 cursor-pointer relative group"
         onClick={onToggle}
         aria-expanded={isExpanded}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -148,7 +136,7 @@ function TeamMemberRow({
             fontFamily: "'Inter', sans-serif",
             fontWeight: 900,
             fontSize: "clamp(1.8rem, 5vw, 5rem)",
-            color: isHovered ? "hsl(var(--primary))" : "hsl(var(--foreground))",
+            color: isExpanded ? "hsl(var(--primary))" : "hsl(var(--foreground))",
           }}
         >
           {member.firstName.toUpperCase()} {member.lastName.toUpperCase()}
@@ -167,28 +155,6 @@ function TeamMemberRow({
           transition={{ duration: 0.8, delay: index * 0.1 + 0.3 }}
         />
       </motion.button>
-
-      {/* Hover image - positioned outside button to avoid overlap */}
-      <AnimatePresence>
-        {isHovered && !isExpanded && (
-          <motion.div
-            className="fixed left-8 md:left-16 top-1/2 -translate-y-1/2 pointer-events-none z-50 hidden md:block"
-            initial={{ opacity: 0, x: -40, scale: 0.8 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: -40, scale: 0.8 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-          >
-            <div className="w-36 lg:w-48 h-48 lg:h-64 rounded-lg overflow-hidden shadow-2xl">
-              <img
-                src={member.image}
-                alt={`${member.firstName} ${member.lastName}`}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Expanded detail panel */}
       <AnimatePresence>
