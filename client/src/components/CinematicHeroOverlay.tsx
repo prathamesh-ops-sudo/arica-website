@@ -104,12 +104,15 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
             >
               <motion.div
                 data-testid="text-boot-brand"
-                className="font-bold text-center"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                style={{
-                  fontSize: "clamp(2.5rem, 8vw, 6rem)",
+                  className="text-center"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontWeight: 900,
+                    letterSpacing: "-0.02em",
+                    fontSize: "clamp(2.5rem, 8vw, 6rem)",
                   color: "#ffffff",
                   textShadow: "0 0 30px rgba(61,112,183,0.4), 0 0 60px rgba(61,112,183,0.2)",
                 }}
@@ -190,8 +193,11 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
 
               <div
                 data-testid="text-company-name"
-                className="font-bold text-center"
+                className="text-center"
                 style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 900,
+                  letterSpacing: "-0.02em",
                   fontSize: "clamp(3rem, 10vw, 8rem)",
                   color: "rgba(255,255,255,0.9)",
                   textShadow: "0 0 20px #42BA90, 0 0 40px #3D70B7",

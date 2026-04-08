@@ -328,10 +328,10 @@ export function HorizonHeroSection() {
       if (!refs.scene) return;
       
       const bodies = [
-        { x: -400, y: 100, z: -800, radius: 30, color: 0x0a0520, glowColor: 0x9D4EDD },
-        { x: 350, y: -50, z: -900, radius: 20, color: 0x0a0520, glowColor: 0x7B2FE0 },
-        { x: -200, y: -80, z: -700, radius: 15, color: 0x0a0520, glowColor: 0x3A0CA3 },
-        { x: 500, y: 150, z: -1000, radius: 40, color: 0x0a0520, glowColor: 0x9D4EDD }
+        { x: -400, y: 100, z: -800, radius: 30, color: 0x0a0520, glowColor: 0x42BA90 },
+        { x: 350, y: -50, z: -900, radius: 20, color: 0x0a0520, glowColor: 0x3D9E78 },
+        { x: -200, y: -80, z: -700, radius: 15, color: 0x0a0520, glowColor: 0x2D8B6A },
+        { x: 500, y: 150, z: -1000, radius: 40, color: 0x0a0520, glowColor: 0x42BA90 }
       ];
 
       bodies.forEach((body) => {
