@@ -747,9 +747,9 @@ export default function Certifications() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
+            className="flex flex-col items-center mb-12"
           >
-            <Link href="/experience" className="inline-flex items-center gap-2 text-[#3D70B7] hover:text-[#3D70B7]/80 transition-colors mb-8" data-testid="link-back-experience">
+            <Link href="/experience" className="inline-flex items-center gap-2 text-[#3D70B7] hover:text-[#3D70B7]/80 transition-colors mb-8 self-start" data-testid="link-back-experience">
               <ArrowLeft className="w-4 h-4" />
               Back to Experience
             </Link>
@@ -760,7 +760,7 @@ export default function Certifications() {
                 Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#FFB800]">Certifications</span>
               </h1>
             </div>
-            <p className="text-xl text-slate-400 max-w-2xl mx-auto">
+            <p className="text-xl text-slate-400 max-w-2xl text-center">
               Industry-recognized certifications demonstrating our commitment to security excellence
             </p>
           </motion.div>

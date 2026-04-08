@@ -8,7 +8,7 @@ import { HyperspaceTransitionProvider } from "@/components/ui/hyperspace-transit
 import { SiteFooter } from "@/components/ui/site-footer";
 import { CookieConsent } from "@/components/CookieConsent";
 
-const FULLSCREEN_ROUTES = ["/experience", "/attack-globe"];
+const FULLSCREEN_ROUTES = ["/experience"];
 
 // Eager-load home page for fast initial render
 import Home from "@/pages/Home";
