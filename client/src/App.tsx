@@ -1,40 +1,54 @@
 import { Switch, Route, useLocation } from "wouter";
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { HyperspaceTransitionProvider } from "@/components/ui/hyperspace-transition";
 import { SiteFooter } from "@/components/ui/site-footer";
+import { CookieConsent } from "@/components/CookieConsent";
 
 const FULLSCREEN_ROUTES = ["/experience", "/attack-globe"];
-import NotFound from "@/pages/not-found";
+
+// Eager-load home page for fast initial render
 import Home from "@/pages/Home";
-import About from "@/pages/About";
-import ServicesPage from "@/pages/ServicesPage";
-import Contact from "@/pages/Contact";
-import CaseStudies from "@/pages/CaseStudies";
-import Experience from "@/pages/Experience";
-import AttackGlobe from "@/pages/AttackGlobe";
-import VulnerabilityScanner from "@/pages/VulnerabilityScanner";
-import ComplianceDashboard from "@/pages/ComplianceDashboard";
-import DevSecOpsPipeline from "@/pages/DevSecOpsPipeline";
-import DevSecOps from "@/pages/DevSecOps";
-import ApiSecurityLab from "@/pages/ApiSecurityLab";
-import CloudSecurityCenter from "@/pages/CloudSecurityCenter";
-import MobileSecurity from "@/pages/MobileSecurity";
-import RiskAssessment from "@/pages/RiskAssessment";
-import SecurityPolicies from "@/pages/SecurityPolicies";
-import SecurityArchitecture from "@/pages/SecurityArchitecture";
-import CodeReview from "@/pages/CodeReview";
-import Certifications from "@/pages/Certifications";
-import SecurityTraining from "@/pages/SecurityTraining";
-import OngoingSupport from "@/pages/OngoingSupport";
-import SecurityImplementation from "@/pages/SecurityImplementation";
-import TeamDirectors from "@/pages/TeamDirectors";
+import NotFound from "@/pages/not-found";
+
+// Lazy-load secondary pages for faster initial bundle
+const About = lazy(() => import("@/pages/About"));
+const ServicesPage = lazy(() => import("@/pages/ServicesPage"));
+const Contact = lazy(() => import("@/pages/Contact"));
+const CaseStudies = lazy(() => import("@/pages/CaseStudies"));
+const Experience = lazy(() => import("@/pages/Experience"));
+const AttackGlobe = lazy(() => import("@/pages/AttackGlobe"));
+const VulnerabilityScanner = lazy(() => import("@/pages/VulnerabilityScanner"));
+const ComplianceDashboard = lazy(() => import("@/pages/ComplianceDashboard"));
+const DevSecOpsPipeline = lazy(() => import("@/pages/DevSecOpsPipeline"));
+const DevSecOps = lazy(() => import("@/pages/DevSecOps"));
+const ApiSecurityLab = lazy(() => import("@/pages/ApiSecurityLab"));
+const CloudSecurityCenter = lazy(() => import("@/pages/CloudSecurityCenter"));
+const MobileSecurity = lazy(() => import("@/pages/MobileSecurity"));
+const RiskAssessment = lazy(() => import("@/pages/RiskAssessment"));
+const SecurityPolicies = lazy(() => import("@/pages/SecurityPolicies"));
+const SecurityArchitecture = lazy(() => import("@/pages/SecurityArchitecture"));
+const CodeReview = lazy(() => import("@/pages/CodeReview"));
+const Certifications = lazy(() => import("@/pages/Certifications"));
+const SecurityTraining = lazy(() => import("@/pages/SecurityTraining"));
+const OngoingSupport = lazy(() => import("@/pages/OngoingSupport"));
+const SecurityImplementation = lazy(() => import("@/pages/SecurityImplementation"));
+const TeamDirectors = lazy(() => import("@/pages/TeamDirectors"));
+
+function PageLoader() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="w-8 h-8 border-2 border-[#42BA90]/30 border-t-[#42BA90] rounded-full animate-spin" />
+    </div>
+  );
+}
 
 function Router() {
   return (
+    <Suspense fallback={<PageLoader />}>
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/about" component={About} />
@@ -64,6 +78,7 @@ function Router() {
       <Route path="/portal" component={Contact} />
       <Route component={NotFound} />
     </Switch>
+    </Suspense>
   );
 }
 
@@ -89,6 +104,7 @@ function AppContent() {
       )}
       <Router />
       {!isFullscreenRoute && <SiteFooter />}
+      <CookieConsent />
     </>
   );
 }
