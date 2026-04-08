@@ -481,6 +481,8 @@ export default function ServicesPage() {
               <Typewriter 
                 words={["VAPT Services", "ISO 27001 Audit", "Custom Development", "Enterprise Security"]}
                 className="text-gradient"
+                speed={180}
+                delayBetweenWords={3000}
               />
             </h1>
             <p className="text-xl text-muted-foreground leading-relaxed">
@@ -488,6 +490,36 @@ export default function ServicesPage() {
               ISO compliance, and secure software development tailored to protect your business.
             </p>
           </motion.div>
+
+          {/* Table of Contents */}
+          <motion.nav
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-14 flex flex-wrap gap-4"
+          >
+            {services.map((service, i) => (
+              <motion.a
+                key={service.id}
+                href={`#${service.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById(service.id)?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="group flex items-center gap-3 px-5 py-3 rounded-xl border border-white/10 bg-card/40 backdrop-blur-sm hover:border-[#42BA90]/40 hover:bg-card/60 transition-all duration-300"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.4 + i * 0.1 }}
+                whileHover={{ y: -2 }}
+              >
+                <service.icon className="w-5 h-5 text-[#42BA90] opacity-70 group-hover:opacity-100 transition-opacity" />
+                <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+                  {service.title}
+                </span>
+                <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-[#42BA90] group-hover:translate-x-0.5 transition-all" />
+              </motion.a>
+            ))}
+          </motion.nav>
         </div>
       </section>
 
