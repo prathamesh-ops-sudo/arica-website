@@ -79,11 +79,11 @@ function AppContent() {
   return (
     <>
       {!isExperiencePage && (
-        <a href="/" className="fixed top-4 left-4 md:top-6 md:left-6 z-[9999]" aria-label="Arica Tech Security LLP Home">
+        <a href="/" className="fixed z-[9999]" style={{ top: "calc(1rem - 1px)", left: "calc(1rem - 3px)" }} aria-label="Arica Tech Security LLP Home">
           <img
             src="/arica-logo.png"
             alt="Arica Tech Security LLP"
-            className="h-8 md:h-10 w-auto"
+            className="h-12 md:h-14 w-auto"
           />
         </a>
       )}
