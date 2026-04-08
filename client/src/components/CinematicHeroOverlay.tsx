@@ -229,11 +229,11 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
               <AnimatePresence>
                 {showTagline && (
                   <motion.div
-                    className="mt-4 text-sm md:text-lg tracking-[0.2em]"
+                    className="mt-6 text-xl md:text-3xl font-bold tracking-wide"
                     initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 0.8, y: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
-                    style={{ color: "rgba(255,255,255,0.7)" }}
+                    style={{ color: "#42BA90" }}
                   >
                     Securing Your Digital Future
                   </motion.div>

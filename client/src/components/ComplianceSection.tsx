@@ -38,73 +38,37 @@ export function ComplianceSection() {
       <FloatingCyberThreats variant="purple" density="low" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-              ISO 27001
-              <br />
-              <span className="text-gradient">Audit & Certification</span>
-            </h2>
+        {/* Centered header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
+            ISO 27001
+            <br />
+            <span className="text-gradient">Audit & Certification</span>
+          </h2>
 
-            <p className="text-muted-foreground mb-8 leading-relaxed max-w-lg">
-              Achieve ISO 27001 certification with our expert audit services. We guide
-              your organization through the entire certification process, from initial
-              gap analysis to successful certification and ongoing compliance.
-            </p>
+          <p className="text-muted-foreground mb-8 leading-relaxed max-w-2xl mx-auto">
+            Achieve ISO 27001 certification with our expert audit services. We guide
+            your organization through the entire certification process, from initial
+            gap analysis to successful certification and ongoing compliance.
+          </p>
+        </motion.div>
 
-            <div className="grid grid-cols-2 gap-4 mb-8">
-              <div className="p-5 rounded-xl border border-white/10 bg-card/50">
-                <ClipboardCheck className="w-6 h-6 text-primary mb-3" />
-                <h3 className="font-semibold mb-1">ISMS Development</h3>
-                <p className="text-xs text-muted-foreground">
-                  Complete Information Security Management System design and implementation.
-                </p>
-              </div>
-              <div className="p-5 rounded-xl border border-white/10 bg-card/50">
-                <Bot className="w-6 h-6 text-primary mb-3" />
-                <h3 className="font-semibold mb-1">Certification Audit</h3>
-                <p className="text-xs text-muted-foreground">
-                  Expert guidance through Stage 1 and Stage 2 certification audits.
-                </p>
-              </div>
-            </div>
-
-            <ul className="space-y-4 mb-8">
-              {complianceItems.map((item) => (
-                <li key={item.text} className="flex items-center gap-3 text-sm">
-                  <div className="p-1.5 rounded-md bg-primary/10 text-primary">
-                    <item.icon className="w-4 h-4" />
-                  </div>
-                  <span className="text-muted-foreground">{item.text}</span>
-                </li>
-              ))}
-            </ul>
-
-            <Link href="/contact">
-              <Button
-                data-testid="button-get-compliant"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 group"
-              >
-                Start ISO 27001 Certification
-                <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </Link>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="relative"
-          >
+        {/* Centered shield */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="relative mb-16"
+        >
             <div className="absolute -inset-4 bg-gradient-to-l from-primary/10 to-transparent rounded-3xl blur-2xl" />
-            <div className="relative flex flex-col items-center">
+            <div className="relative flex flex-col items-center mx-auto" style={{ maxWidth: '400px' }}>
               {/* Animated Shield */}
               <div className="relative w-64 h-72 md:w-80 md:h-[360px]">
                 {/* Light rays behind shield */}
@@ -284,6 +248,48 @@ export function ComplianceSection() {
               </div>
             </div>
           </motion.div>
+
+        {/* Centered cards and items */}
+        <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto mb-8">
+          <div className="p-5 rounded-xl border border-white/10 bg-card/50 text-center">
+            <ClipboardCheck className="w-6 h-6 text-primary mb-3 mx-auto" />
+            <h3 className="font-semibold mb-1">ISMS Development</h3>
+            <p className="text-xs text-muted-foreground">
+              Complete Information Security Management System design and implementation.
+            </p>
+          </div>
+          <div className="p-5 rounded-xl border border-white/10 bg-card/50 text-center">
+            <Bot className="w-6 h-6 text-primary mb-3 mx-auto" />
+            <h3 className="font-semibold mb-1">Certification Audit</h3>
+            <p className="text-xs text-muted-foreground">
+              Expert guidance through Stage 1 and Stage 2 certification audits.
+            </p>
+          </div>
+        </div>
+
+        <div className="max-w-2xl mx-auto mb-8">
+          <ul className="grid md:grid-cols-3 gap-4">
+            {complianceItems.map((item) => (
+              <li key={item.text} className="flex flex-col items-center gap-2 text-sm text-center p-4 rounded-xl border border-white/10 bg-card/50">
+                <div className="p-1.5 rounded-md bg-primary/10 text-primary">
+                  <item.icon className="w-4 h-4" />
+                </div>
+                <span className="text-muted-foreground">{item.text}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="text-center">
+          <Link href="/contact">
+            <Button
+              data-testid="button-get-compliant"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 group"
+            >
+              Start ISO 27001 Certification
+              <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
