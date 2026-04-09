@@ -791,7 +791,7 @@ export default function AttackGlobe() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a1e] relative overflow-hidden">
+    <div className="min-h-screen bg-[#0a0a1e] relative overflow-x-hidden">
       <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#0a0a1e]/80 border-b border-[#3D70B7]/10">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <Link 

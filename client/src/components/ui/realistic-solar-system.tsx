@@ -2380,12 +2380,12 @@ export function RealisticSolarSystem() {
           )}
         </AnimatePresence>
         
-        <div className="absolute top-6 left-1/2 -translate-x-1/2 z-20 pointer-events-auto">
-          <div className="flex items-center gap-1 backdrop-blur-xl bg-white/5 rounded-full px-2 py-1.5 border border-white/10 text-xs">
+        <div className="absolute top-6 left-1/2 -translate-x-1/2 z-20 pointer-events-auto max-w-[calc(100vw-2rem)]">
+          <div className="flex items-center flex-wrap justify-center gap-1 backdrop-blur-xl bg-white/5 rounded-full px-2 py-1.5 border border-white/10 text-xs">
             {galaxies.map((galaxy) => (
               <div
                 key={galaxy.id}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all duration-500 cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all duration-500 cursor-pointer whitespace-nowrap ${
                   activeGalaxy.id === galaxy.id 
                     ? 'bg-[#42BA90]/15 border border-[#42BA90]/30 text-white' 
                     : 'text-white/40 hover:text-white/60 border border-transparent'
@@ -2398,12 +2398,12 @@ export function RealisticSolarSystem() {
           </div>
         </div>
         
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-auto">
-          <div className="flex items-center gap-1 backdrop-blur-xl bg-white/5 rounded-full px-3 py-2 border border-white/10 text-[10px]">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-auto max-w-[calc(100vw-2rem)]">
+          <div className="flex items-center flex-wrap justify-center gap-1.5 sm:gap-1 backdrop-blur-xl bg-white/5 rounded-2xl sm:rounded-full px-3 py-2 border border-white/10 text-[10px]">
             {activeGalaxy.planets.map((planet, idx) => (
               <div
                 key={planet.id}
-                className={`flex items-center gap-1 px-2 py-1 rounded-full transition-all duration-500 cursor-pointer ${
+                className={`flex items-center gap-1 px-2.5 sm:px-2 py-1.5 sm:py-1 rounded-full transition-all duration-500 cursor-pointer whitespace-nowrap ${
                   activePlanet?.id === planet.id ? 'bg-[#42BA90]/15 border border-[#42BA90]/30' : 'opacity-40 hover:opacity-70 border border-transparent'
                 }`}
                 title={planet.name}
