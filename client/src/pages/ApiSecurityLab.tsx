@@ -1088,7 +1088,7 @@ export default function ApiSecurityLab() {
                           <motion.span 
                             animate={{ boxShadow: ['0 0 10px rgba(66,186,144,0.3)', '0 0 20px rgba(66,186,144,0.5)', '0 0 10px rgba(66,186,144,0.3)'] }}
                             transition={{ duration: 2, repeat: Infinity }}
-                            className={`px-2 py-1 rounded text-xs font-mono ${requestResponse.status === 200 ? 'bg-[#42BA90]/10/50 text-[#42BA90] border border-[#42BA90]/50' : 'bg-red-950/50 text-red-400 border border-red-500/50'}`}
+                            className={`px-2 py-1 rounded text-xs font-mono ${requestResponse.status === 200 ? 'bg-[#42BA90]/50 text-[#42BA90] border border-[#42BA90]/50' : 'bg-red-950/50 text-red-400 border border-red-500/50'}`}
                           >
                             {requestResponse.status}
                           </motion.span>
@@ -1123,7 +1123,7 @@ export default function ApiSecurityLab() {
                             transition={{ delay: i * 0.1 }}
                             whileHover={{ scale: 1.02 }}
                             className={`p-4 rounded-lg border transition-all ${
-                              test.status === 'pass' ? 'bg-[#42BA90]/10/20 border-[#42BA90]/30 hover:border-[#42BA90]/50' :
+                              test.status === 'pass' ? 'bg-[#42BA90]/20 border-[#42BA90]/30 hover:border-[#42BA90]/50' :
                               test.status === 'fail' ? 'bg-red-950/20 border-red-500/30 hover:border-red-500/50' :
                               'bg-slate-900/40 border-slate-800/50'
                             }`}
@@ -1187,7 +1187,7 @@ export default function ApiSecurityLab() {
                               } : {}}
                               transition={{ duration: 1, repeat: step.status === 'active' ? Infinity : 0 }}
                               className={`w-10 h-10 rounded-lg flex items-center justify-center text-xs font-medium transition-all ${
-                                step.status === 'success' ? 'bg-[#42BA90]/10/50 text-[#42BA90] border border-[#42BA90]/50' :
+                                step.status === 'success' ? 'bg-[#42BA90]/50 text-[#42BA90] border border-[#42BA90]/50' :
                                 step.status === 'warning' ? 'bg-amber-950/50 text-amber-400 border border-amber-500/50' :
                                 step.status === 'error' ? 'bg-red-950/50 text-red-400 border border-red-500/50' :
                                 step.status === 'active' ? 'bg-[#3D70B7]/20 text-[#3D70B7] border border-[#3D70B7]/50' :

@@ -963,7 +963,7 @@ export default function Certifications() {
                 }}
               >
                 <motion.div
-                  className="w-6 h-6 rounded-full bg-[#42BA90] shadow-[0_0_20px_rgba(255,184,0,0.6)]"
+                  className="w-6 h-6 rounded-full bg-[#42BA90] shadow-[0_0_20px_rgba(66,186,144,0.6)]"
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
