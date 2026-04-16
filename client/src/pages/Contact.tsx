@@ -339,7 +339,7 @@ export default function Contact() {
             >
               <iframe
                 title="Arica Tech Security LLP Office Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3783.5!2d73.8077!3d18.5074!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bf8a2f4bffff%3A0x0!2sKothrud%2C%20Pune%2C%20Maharashtra%20411038!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3783.5683192726074!2d73.821124!3d18.5032028!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bf27b58ff65f%3A0x5765fa0aa36e28e!2sMahati%20Residency!5e0!3m2!1sen!2sin!4v1776345725727!5m2!1sen!2sin"
                 className="absolute inset-0 w-full h-full border-0 grayscale-[40%] contrast-[1.1]"
                 allowFullScreen
                 loading="lazy"
