@@ -9,24 +9,27 @@ const values = [
     icon: Shield,
     title: "Security First",
     description: "We approach every engagement with a defense-in-depth mindset, ensuring comprehensive protection.",
+    accent: "blue" as const,
   },
   {
     icon: Target,
     title: "Precision",
     description: "Our assessments are thorough and methodical, leaving no vulnerability uncovered.",
+    accent: "green" as const,
   },
   {
     icon: Eye,
     title: "Transparency",
     description: "Clear reporting and honest communication throughout every security assessment and audit.",
+    accent: "blue" as const,
   },
 ];
 
 const stats = [
-  { icon: Users, value: 100, suffix: "+", label: "Brands Associated" },
-  { icon: Globe, value: 200, suffix: "+", label: "Professionals Trained" },
-  { icon: Award, value: 9, suffix: "", label: "Expert Team Members" },
-  { icon: Shield, value: 100, suffix: "%", label: "Audit Success Rate" },
+  { icon: Users, value: 100, suffix: "+", label: "Brands Associated", accent: "blue" as const },
+  { icon: Globe, value: 200, suffix: "+", label: "Professionals Trained", accent: "green" as const },
+  { icon: Award, value: 9, suffix: "", label: "Expert Team Members", accent: "blue" as const },
+  { icon: Shield, value: 100, suffix: "%", label: "Audit Success Rate", accent: "green" as const },
 ];
 
 
@@ -58,6 +61,8 @@ function useCountUp(end: number, duration: number = 2000, startOnView: boolean =
 
 function AnimatedStat({ stat, index }: { stat: typeof stats[0]; index: number }) {
   const { count, ref } = useCountUp(stat.value, 2000);
+  const isGreen = stat.accent === "green";
+  const accentRgba = isGreen ? "66, 186, 144" : "61, 112, 183";
   
   return (
     <motion.div
@@ -69,13 +74,15 @@ function AnimatedStat({ stat, index }: { stat: typeof stats[0]; index: number })
       transition={{ duration: 0.5, delay: index * 0.1 }}
       whileHover={{ 
         scale: 1.05,
-        boxShadow: "0 0 30px rgba(61, 112, 183, 0.3)",
+        boxShadow: `0 0 30px rgba(${accentRgba}, 0.3)`,
       }}
       data-testid={`stat-${index}`}
-      className="rounded-xl p-6 border border-white/10 bg-card/50 text-center cursor-pointer transition-all duration-300 hover:border-primary/50 hover:bg-card/80"
+      className={`rounded-xl p-6 border border-white/10 bg-card/50 text-center cursor-pointer transition-all duration-300 hover:bg-card/80 ${
+        isGreen ? "hover:border-[#42BA90]/50" : "hover:border-primary/50"
+      }`}
     >
-      <stat.icon className="w-6 h-6 text-primary mx-auto mb-3" />
-      <p className="font-display text-3xl font-bold text-primary mb-1">
+      <stat.icon className={`w-6 h-6 mx-auto mb-3 ${isGreen ? "text-[#42BA90]" : "text-primary"}`} />
+      <p className={`font-display text-3xl font-bold mb-1 ${isGreen ? "text-[#42BA90]" : "text-primary"}`}>
         {count}{stat.suffix}
       </p>
       <p className="text-sm text-muted-foreground">{stat.label}</p>
@@ -155,6 +162,17 @@ export default function About() {
             opacity: [0.1, 0.15, 0.1],
           }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-10 left-10 w-48 h-48 rounded-full opacity-10"
+          style={{
+            background: "radial-gradient(circle, rgba(66, 186, 144, 0.4) 0%, transparent 70%)",
+          }}
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.1, 0.18, 0.1],
+          }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -240,12 +258,12 @@ export default function About() {
                 className="rounded-xl p-6 border border-white/10 bg-card/80 col-span-2"
                 whileHover={{ 
                   scale: 1.02,
-                  borderColor: "rgba(61, 112, 183, 0.4)",
-                  boxShadow: "0 0 30px rgba(61, 112, 183, 0.15)",
+                  borderColor: "rgba(66, 186, 144, 0.4)",
+                  boxShadow: "0 0 30px rgba(66, 186, 144, 0.15)",
                 }}
                 transition={{ duration: 0.3 }}
               >
-                <h3 className="font-display text-lg font-bold mb-2 text-halo-white">
+                <h3 className="font-display text-lg font-bold mb-2 text-[#42BA90]">
                   Our Mission
                 </h3>
                 <p className="text-sm text-muted-foreground">
@@ -262,7 +280,7 @@ export default function About() {
                 }}
                 transition={{ duration: 0.3 }}
               >
-                <h3 className="font-display font-bold mb-2 text-halo-white">Vision</h3>
+                <h3 className="font-display font-bold mb-2 text-primary">Vision</h3>
                 <p className="text-xs text-muted-foreground">
                   Built to protect, investigate, and comply — keeping you
                   prepared for what others react to.
@@ -272,12 +290,12 @@ export default function About() {
                 className="rounded-xl p-5 border border-white/10 bg-card/80"
                 whileHover={{ 
                   scale: 1.05,
-                  borderColor: "rgba(61, 112, 183, 0.4)",
-                  boxShadow: "0 0 25px rgba(61, 112, 183, 0.15)",
+                  borderColor: "rgba(66, 186, 144, 0.4)",
+                  boxShadow: "0 0 25px rgba(66, 186, 144, 0.15)",
                 }}
                 transition={{ duration: 0.3 }}
               >
-                <h3 className="font-display font-bold mb-2 text-halo-white">Values</h3>
+                <h3 className="font-display font-bold mb-2 text-[#42BA90]">Values</h3>
                 <p className="text-xs text-muted-foreground">
                   Security first, precision, and transparency in every engagement.
                 </p>
@@ -311,12 +329,16 @@ export default function About() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
                 <TiltCard className="h-full">
-                  <div className="rounded-xl p-8 border border-white/10 bg-card/50 text-center h-full transition-colors duration-300 hover:bg-card/70 hover:border-primary/30">
+                  <div className={`rounded-xl p-8 border border-white/10 bg-card/50 text-center h-full transition-colors duration-300 hover:bg-card/70 ${
+                    value.accent === "green" ? "hover:border-[#42BA90]/30" : "hover:border-primary/30"
+                  }`}>
                     <motion.div 
-                      className="inline-flex p-3 rounded-xl bg-primary/10 text-primary mb-6"
+                      className={`inline-flex p-3 rounded-xl mb-6 ${
+                        value.accent === "green" ? "bg-[#42BA90]/10 text-[#42BA90]" : "bg-primary/10 text-primary"
+                      }`}
                       whileHover={{ 
                         scale: 1.1,
-                        boxShadow: "0 0 25px rgba(61, 112, 183, 0.4)",
+                        boxShadow: value.accent === "green" ? "0 0 25px rgba(66, 186, 144, 0.4)" : "0 0 25px rgba(61, 112, 183, 0.4)",
                       }}
                       transition={{ duration: 0.3 }}
                     >
