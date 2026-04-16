@@ -186,12 +186,12 @@ function SuccessAnimation() {
         animate={{ opacity: [0, 0.3, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
         style={{
-          background: 'radial-gradient(circle at center, rgba(34, 197, 94, 0.2) 0%, transparent 70%)'
+          background: 'radial-gradient(circle at center, rgba(66, 186, 144, 0.2) 0%, transparent 70%)'
         }}
       />
       
       <motion.div 
-        className="inline-flex p-4 rounded-full bg-green-500/10 text-green-500 mb-6 relative"
+        className="inline-flex p-4 rounded-full bg-[#42BA90]/10 text-[#42BA90] mb-6 relative"
         initial={{ scale: 0, rotate: -180 }}
         animate={{ scale: 1, rotate: 0 }}
         transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
@@ -200,8 +200,8 @@ function SuccessAnimation() {
           className="absolute inset-0 rounded-full"
           animate={{
             boxShadow: [
-              '0 0 0 0 rgba(34, 197, 94, 0.4)',
-              '0 0 0 20px rgba(34, 197, 94, 0)',
+              '0 0 0 0 rgba(66, 186, 144, 0.4)',
+              '0 0 0 20px rgba(66, 186, 144, 0)',
             ],
           }}
           transition={{ duration: 1.5, repeat: Infinity }}
@@ -230,7 +230,7 @@ function SuccessAnimation() {
       {[...Array(6)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-2 h-2 bg-green-500/50 rounded-full"
+          className="absolute w-2 h-2 bg-[#42BA90]/50 rounded-full"
           initial={{ 
             x: "50%", 
             y: "50%",

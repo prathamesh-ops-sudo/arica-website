@@ -18,7 +18,7 @@ const NEUTRAL_MID = '#ACACAC';
 const NEUTRAL_DARK = '#1C2C5A';
 const ACCENT_BLUE = '#42BA90';
 const NAVY = 'hsl(222, 47%, 5%)';
-const GREEN = '#00FF88';
+const GREEN = '#42BA90';
 const RED = '#FF4444';
 const YELLOW = '#FFD93D';
 const PURPLE = '#3D70B7';
@@ -793,7 +793,7 @@ function ServiceCard({ service, index }: { service: typeof supportServices[0]; i
                       transition={{ delay: i * 0.1 }}
                       className="flex items-center gap-2 text-sm text-[#3D70B7]/70"
                     >
-                      <CheckCircle className="w-3 h-3 text-green-400 flex-shrink-0" />
+                      <CheckCircle className="w-3 h-3 text-[#42BA90] flex-shrink-0" />
                       {detail}
                     </motion.li>
                   ))}
@@ -879,11 +879,11 @@ function LiveSecurityEventsFeed() {
           </motion.div>
           <h3 className="font-mono text-lg font-bold text-white">Live Security Feed</h3>
           <motion.span
-            className="flex items-center gap-1 text-xs font-mono px-2 py-1 rounded bg-green-500/20 text-green-400"
+            className="flex items-center gap-1 text-xs font-mono px-2 py-1 rounded bg-[#42BA90]/20 text-[#42BA90]"
             animate={{ opacity: [1, 0.5, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#42BA90]" />
             LIVE
           </motion.span>
         </div>
@@ -1178,7 +1178,7 @@ function EmergencyContactSection() {
         >
           <div className="flex items-center gap-2">
             <motion.div
-              className="w-2 h-2 rounded-full bg-green-400"
+              className="w-2 h-2 rounded-full bg-[#42BA90]"
               animate={{ scale: [1, 1.3, 1] }}
               transition={{ duration: 1, repeat: Infinity }}
             />
@@ -1234,7 +1234,7 @@ export default function OngoingSupport() {
             <div className="flex items-center gap-4">
               <div className="hidden md:flex items-center gap-4 font-mono text-xs">
                 <motion.div 
-                  className="flex items-center gap-2 text-green-400"
+                  className="flex items-center gap-2 text-[#42BA90]"
                   animate={{ opacity: [1, 0.7, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
@@ -1251,7 +1251,7 @@ export default function OngoingSupport() {
                 transition={{ duration: 2, repeat: Infinity }}
               >
                 <motion.div 
-                  className="w-2 h-2 rounded-full bg-green-400"
+                  className="w-2 h-2 rounded-full bg-[#42BA90]"
                   animate={{ scale: [1, 1.3, 1] }}
                   transition={{ duration: 1, repeat: Infinity }}
                 />

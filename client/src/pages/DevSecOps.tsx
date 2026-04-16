@@ -20,10 +20,10 @@ const NAVY = 'hsl(222, 47%, 5%)';
 
 const pipelineStages = [
   { id: 'code', name: 'Code', position: [-12, 0, 0], color: CYAN, icon: Code },
-  { id: 'build', name: 'Build', position: [-6, 0, 0], color: '#00FF88', icon: Package },
-  { id: 'test', name: 'Test', position: [0, 0, 0], color: '#FFD700', icon: Activity },
+  { id: 'build', name: 'Build', position: [-6, 0, 0], color: '#42BA90', icon: Package },
+  { id: 'test', name: 'Test', position: [0, 0, 0], color: '#42BA90', icon: Activity },
   { id: 'security', name: 'Security Scan', position: [6, 0, 0], color: PURPLE, icon: Shield },
-  { id: 'deploy', name: 'Deploy', position: [12, 0, 0], color: '#FF6B6B', icon: Server },
+  { id: 'deploy', name: 'Deploy', position: [12, 0, 0], color: '#3D70B7', icon: Server },
   { id: 'monitor', name: 'Monitor', position: [18, 0, 0], color: '#3D70B7', icon: Eye },
 ];
 
@@ -363,8 +363,8 @@ function FlowingPackage({ packageData, onStageComplete }: {
 
   const color = useMemo(() => {
     switch (localStatus) {
-      case 'scanning': return '#FFD700';
-      case 'passed': return '#00FF88';
+      case 'scanning': return '#42BA90';
+      case 'passed': return '#42BA90';
       case 'failed': return '#FF4444';
       default: return CYAN;
     }
@@ -531,7 +531,7 @@ const securityIntegrations = [
     fullName: 'Dynamic Analysis',
     icon: Eye,
     description: 'Test running applications for runtime vulnerabilities',
-    color: '#FF6B6B',
+    color: '#3D70B7',
     stats: { scansToday: 156, issuesFound: 8 }
   },
   { 
@@ -540,7 +540,7 @@ const securityIntegrations = [
     fullName: 'Software Composition',
     icon: Package,
     description: 'Scan dependencies for known CVEs and license issues',
-    color: '#00FF88',
+    color: '#42BA90',
     stats: { scansToday: 2341, issuesFound: 67 }
   },
   { 
@@ -549,7 +549,7 @@ const securityIntegrations = [
     fullName: 'Container Scanning',
     icon: Container,
     description: 'Analyze container images for vulnerabilities and misconfigurations',
-    color: '#FFD700',
+    color: '#42BA90',
     stats: { scansToday: 432, issuesFound: 12 }
   },
   { 
@@ -651,7 +651,7 @@ function LiveMetric({ value, label, icon: Icon, color, trend, trendLabel }: {
           <AnimatedCounter value={value} />
         </div>
         {trendLabel && (
-          <div className={`mt-2 text-xs flex items-center gap-1 ${trend === 'up' ? 'text-green-400' : 'text-red-400'}`}>
+          <div className={`mt-2 text-xs flex items-center gap-1 ${trend === 'up' ? 'text-[#42BA90]' : 'text-red-400'}`}>
             {trend === 'up' ? '↑' : '↓'} {trendLabel}
           </div>
         )}
@@ -822,7 +822,7 @@ function BuildStatusIndicator({ isRunning, passedCount, blockedCount }: {
           <motion.div
             className="h-full rounded-full"
             style={{
-              background: `linear-gradient(90deg, ${CYAN}, #00FF88)`,
+              background: `linear-gradient(90deg, ${CYAN}, #42BA90)`,
             }}
             initial={{ width: 0 }}
             animate={{ width: `${successRate}%` }}
@@ -835,7 +835,7 @@ function BuildStatusIndicator({ isRunning, passedCount, blockedCount }: {
       </div>
       
       <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2 text-green-400">
+        <div className="flex items-center gap-2 text-[#42BA90]">
           <CheckCircle className="w-4 h-4" />
           <span>{passedCount}</span>
         </div>
@@ -947,7 +947,7 @@ export default function DevSecOps() {
               <motion.span
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="ml-2 px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 text-xs"
+                className="ml-2 px-2 py-0.5 rounded-full bg-[#42BA90]/20 text-[#42BA90] text-xs"
               >
                 LIVE
               </motion.span>
@@ -1089,7 +1089,7 @@ export default function DevSecOps() {
               value={Math.round(metrics.successRate)}
               label="Success Rate %"
               icon={CheckCircle}
-              color="#00FF88"
+              color="#42BA90"
               trend="up"
               trendLabel="+2.3% this week"
             />
@@ -1097,7 +1097,7 @@ export default function DevSecOps() {
               value={metrics.issuesBlocked}
               label="Issues Blocked"
               icon={Shield}
-              color="#FF6B6B"
+              color="#3D70B7"
               trend="down"
               trendLabel="-15% (good!)"
             />
@@ -1123,7 +1123,7 @@ export default function DevSecOps() {
               <div className="text-3xl font-bold text-yellow-400">
                 {metrics.mttr}h
               </div>
-              <div className="mt-2 text-xs text-green-400">
+              <div className="mt-2 text-xs text-[#42BA90]">
                 ↓ -23% from last month
               </div>
             </motion.div>

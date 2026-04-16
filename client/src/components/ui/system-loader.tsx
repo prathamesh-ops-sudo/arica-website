@@ -48,7 +48,7 @@ function MatrixRain() {
           style={{
             left: column.left,
             fontFamily: 'monospace',
-            color: '#00ff00',
+            color: '#42BA90',
             opacity: column.opacity,
             writingMode: 'vertical-rl',
             textOrientation: 'upright'
@@ -67,7 +67,7 @@ function MatrixRain() {
               key={idx}
               style={{
                 opacity: 1 - (idx / column.chars.length) * 0.7,
-                textShadow: idx === 0 ? '0 0 10px #00ff00, 0 0 20px #00ff00' : 'none'
+                textShadow: idx === 0 ? '0 0 10px #42BA90, 0 0 20px #42BA90' : 'none'
               }}
             >
               {char}
@@ -252,8 +252,8 @@ export function SystemLoader({ onComplete, duration = 4000 }: SystemLoaderProps)
                 <span style={{ color: '#3D70B7', marginRight: '8px' }}>&gt;</span>
                 <span
                   style={{
-                    color: '#00ff00',
-                    textShadow: '0 0 5px #00ff00'
+                    color: '#42BA90',
+                    textShadow: '0 0 5px #42BA90'
                   }}
                   data-testid="loader-boot-message"
                 >
@@ -262,7 +262,7 @@ export function SystemLoader({ onComplete, duration = 4000 }: SystemLoaderProps)
                 <motion.span
                   animate={{ opacity: [1, 0, 1] }}
                   transition={{ duration: 0.5, repeat: Infinity }}
-                  style={{ color: '#00ff00' }}
+                  style={{ color: '#42BA90' }}
                 >
                   █
                 </motion.span>

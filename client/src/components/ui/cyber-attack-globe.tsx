@@ -569,7 +569,7 @@ export function CyberAttackGlobe({
       case 'CRITICAL': return 'text-red-500 bg-red-500';
       case 'HIGH': return 'text-orange-500 bg-orange-500';
       case 'MEDIUM': return 'text-yellow-500 bg-yellow-500';
-      default: return 'text-green-500 bg-green-500';
+      default: return 'text-[#42BA90] bg-[#42BA90]';
     }
   };
 

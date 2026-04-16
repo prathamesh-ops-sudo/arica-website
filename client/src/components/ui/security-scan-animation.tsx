@@ -111,7 +111,7 @@ export function SecurityScanAnimation() {
               ? "#7a1214"
               : point.type === "warning"
               ? "#f59e0b"
-              : "#22c55e";
+              : "#42BA90";
 
           return (
             <g key={i}>
@@ -207,8 +207,8 @@ export function SecurityScanAnimation() {
               <span className="text-yellow-400">{vulnerabilities.warning} Warning</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-green-500" />
-              <span className="text-green-400">{vulnerabilities.safe} Safe</span>
+              <span className="w-2 h-2 rounded-full bg-[#42BA90]" />
+              <span className="text-[#42BA90]">{vulnerabilities.safe} Safe</span>
             </div>
           </div>
           <div className="text-primary">

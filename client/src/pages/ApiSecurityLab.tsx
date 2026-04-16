@@ -316,9 +316,9 @@ function LiveRequestPanel({ isActive, method, endpoint }: { isActive: boolean; m
           <motion.div
             animate={{ opacity: [1, 0.3, 1] }}
             transition={{ duration: 1, repeat: Infinity }}
-            className="w-2 h-2 rounded-full bg-emerald-500"
+            className="w-2 h-2 rounded-full bg-[#42BA90]"
           />
-          <span className="text-emerald-400 text-[10px]">LIVE</span>
+          <span className="text-[#42BA90] text-[10px]">LIVE</span>
         </div>
       </div>
       <div className="space-y-1 max-h-48 overflow-y-auto">
@@ -327,7 +327,7 @@ function LiveRequestPanel({ isActive, method, endpoint }: { isActive: boolean; m
             key={i}
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
-            className={`${line.startsWith('$') ? 'text-emerald-400' : line.startsWith('>') ? 'text-[#3D70B7]' : 'text-slate-400'}`}
+            className={`${line.startsWith('$') ? 'text-[#42BA90]' : line.startsWith('>') ? 'text-[#3D70B7]' : 'text-slate-400'}`}
           >
             {line}
           </motion.div>
@@ -1086,9 +1086,9 @@ export default function ApiSecurityLab() {
                       >
                         <div className="flex items-center gap-2 mb-3">
                           <motion.span 
-                            animate={{ boxShadow: ['0 0 10px rgba(0,255,136,0.3)', '0 0 20px rgba(0,255,136,0.5)', '0 0 10px rgba(0,255,136,0.3)'] }}
+                            animate={{ boxShadow: ['0 0 10px rgba(66,186,144,0.3)', '0 0 20px rgba(66,186,144,0.5)', '0 0 10px rgba(66,186,144,0.3)'] }}
                             transition={{ duration: 2, repeat: Infinity }}
-                            className={`px-2 py-1 rounded text-xs font-mono ${requestResponse.status === 200 ? 'bg-emerald-950/50 text-emerald-400 border border-emerald-500/50' : 'bg-red-950/50 text-red-400 border border-red-500/50'}`}
+                            className={`px-2 py-1 rounded text-xs font-mono ${requestResponse.status === 200 ? 'bg-[#42BA90]/10/50 text-[#42BA90] border border-[#42BA90]/50' : 'bg-red-950/50 text-red-400 border border-red-500/50'}`}
                           >
                             {requestResponse.status}
                           </motion.span>
@@ -1123,7 +1123,7 @@ export default function ApiSecurityLab() {
                             transition={{ delay: i * 0.1 }}
                             whileHover={{ scale: 1.02 }}
                             className={`p-4 rounded-lg border transition-all ${
-                              test.status === 'pass' ? 'bg-emerald-950/20 border-emerald-500/30 hover:border-emerald-500/50' :
+                              test.status === 'pass' ? 'bg-[#42BA90]/10/20 border-[#42BA90]/30 hover:border-[#42BA90]/50' :
                               test.status === 'fail' ? 'bg-red-950/20 border-red-500/30 hover:border-red-500/50' :
                               'bg-slate-900/40 border-slate-800/50'
                             }`}
@@ -1135,7 +1135,7 @@ export default function ApiSecurityLab() {
                                   transition={{ duration: 0.3 }}
                                 >
                                   <Icon className={`w-5 h-5 ${
-                                    test.status === 'pass' ? 'text-emerald-400' :
+                                    test.status === 'pass' ? 'text-[#42BA90]' :
                                     test.status === 'fail' ? 'text-red-400' :
                                     'text-slate-500'
                                   }`} />
@@ -1150,7 +1150,7 @@ export default function ApiSecurityLab() {
                                     animate={{ scale: 1, rotate: 0 }}
                                     exit={{ scale: 0 }}
                                   >
-                                    <CheckCircle className="w-5 h-5 text-emerald-400" />
+                                    <CheckCircle className="w-5 h-5 text-[#42BA90]" />
                                   </motion.div>
                                 ) : test.status === 'fail' ? (
                                   <motion.div
@@ -1187,7 +1187,7 @@ export default function ApiSecurityLab() {
                               } : {}}
                               transition={{ duration: 1, repeat: step.status === 'active' ? Infinity : 0 }}
                               className={`w-10 h-10 rounded-lg flex items-center justify-center text-xs font-medium transition-all ${
-                                step.status === 'success' ? 'bg-emerald-950/50 text-emerald-400 border border-emerald-500/50' :
+                                step.status === 'success' ? 'bg-[#42BA90]/10/50 text-[#42BA90] border border-[#42BA90]/50' :
                                 step.status === 'warning' ? 'bg-amber-950/50 text-amber-400 border border-amber-500/50' :
                                 step.status === 'error' ? 'bg-red-950/50 text-red-400 border border-red-500/50' :
                                 step.status === 'active' ? 'bg-[#3D70B7]/20 text-[#3D70B7] border border-[#3D70B7]/50' :
@@ -1335,7 +1335,7 @@ export default function ApiSecurityLab() {
                             animate={{ scale: [1, 1.1, 1] }}
                             transition={{ duration: 2, repeat: Infinity }}
                           >
-                            <CheckCircle className="w-10 h-10 text-emerald-500/70 mx-auto mb-3" />
+                            <CheckCircle className="w-10 h-10 text-[#42BA90]/70 mx-auto mb-3" />
                           </motion.div>
                           <p className="text-slate-400 text-sm">No data exposure vulnerabilities detected</p>
                         </motion.div>
@@ -1394,7 +1394,7 @@ export default function ApiSecurityLab() {
                         animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
                         transition={{ duration: 2, repeat: Infinity }}
                       >
-                        <CheckCircle className="w-12 h-12 text-emerald-500/70 mx-auto mb-4" />
+                        <CheckCircle className="w-12 h-12 text-[#42BA90]/70 mx-auto mb-4" />
                       </motion.div>
                       <p className="text-slate-400">No vulnerabilities detected</p>
                     </motion.div>

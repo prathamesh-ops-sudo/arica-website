@@ -524,7 +524,7 @@ export function ThreatVortex() {
                   boxShadow: phase === "fighting"
                     ? '0 0 30px rgba(61,112,183,0.9), 0 0 60px rgba(61,112,183,0.6), 0 0 90px rgba(28,44,90,0.4)'
                     : phase === "victory"
-                    ? '0 0 30px rgba(0,255,65,0.6), 0 0 60px rgba(0,204,51,0.3)'
+                    ? '0 0 30px rgba(66,186,144,0.6), 0 0 60px rgba(66,186,144,0.3)'
                     : '0 0 20px rgba(61,112,183,0.5), 0 0 40px rgba(61,112,183,0.2)',
                 }}
                 animate={{

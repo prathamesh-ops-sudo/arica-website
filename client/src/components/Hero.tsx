@@ -41,8 +41,8 @@ export function Hero() {
               </div>
               <div className="w-px h-12 bg-white/10" />
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-green-500/10 backdrop-blur-sm">
-                  <Users className="w-5 h-5 text-green-500" />
+                <div className="p-2 rounded-lg bg-[#42BA90]/10 backdrop-blur-sm">
+                  <Users className="w-5 h-5 text-[#42BA90]" />
                 </div>
                 <div className="text-left">
                   <p className="text-xs text-muted-foreground uppercase tracking-wider">Enterprise</p>
@@ -57,8 +57,8 @@ export function Hero() {
       </div>
 
       <div className="absolute bottom-4 right-6 flex items-center gap-2 px-3 py-2 rounded-lg bg-black/60 backdrop-blur-sm border border-white/10 z-10">
-        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-        <span className="text-xs font-mono text-green-400">SYSTEM ACTIVE</span>
+        <span className="w-2 h-2 bg-[#42BA90] rounded-full animate-pulse" />
+        <span className="text-xs font-mono text-[#42BA90]">SYSTEM ACTIVE</span>
       </div>
     </section>
   );
