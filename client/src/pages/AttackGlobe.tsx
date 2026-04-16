@@ -11,7 +11,7 @@ const attackTypes = [
   { id: 'bruteforce', name: 'Brute Force', color: '#3D70B7' },
   { id: 'malware', name: 'Malware', color: '#42BA90' },
   { id: 'phishing', name: 'Phishing', color: '#ff6666' },
-  { id: 'ransomware', name: 'Ransomware', color: '#1C2C5A' },
+  { id: 'ransomware', name: 'Ransomware', color: '#5A8FD4' },
 ];
 
 const cityCoordinates: Record<string, { lat: number; lng: number }> = {
