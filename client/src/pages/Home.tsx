@@ -1,6 +1,5 @@
 import { Navbar } from "@/components/Navbar";
 import { HorizonHeroSection } from "@/components/ui/horizon-hero-section";
-import { ClientsSlider } from "@/components/ClientsSlider";
 import { ForensicsSection } from "@/components/ForensicsSection";
 import { AsciiHeroSection } from "@/components/AsciiHeroSection";
 import { ComplianceSection } from "@/components/ComplianceSection";
@@ -25,7 +24,6 @@ export default function Home() {
       <div className="relative z-10">
         <Navbar />
         <HorizonHeroSection />
-        <ClientsSlider />
         <ForensicsSection />
         <ThreatVortex />
         <AsciiHeroSection />
