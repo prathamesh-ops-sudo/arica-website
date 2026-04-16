@@ -9,9 +9,9 @@ const attackTypes = [
   { id: 'sql', name: 'SQL Injection', color: '#ff9900' },
   { id: 'xss', name: 'XSS Attack', color: '#ffcc00' },
   { id: 'bruteforce', name: 'Brute Force', color: '#3D70B7' },
-  { id: 'malware', name: 'Malware', color: '#3D70B7' },
+  { id: 'malware', name: 'Malware', color: '#42BA90' },
   { id: 'phishing', name: 'Phishing', color: '#ff6666' },
-  { id: 'ransomware', name: 'Ransomware', color: '#3D70B7' },
+  { id: 'ransomware', name: 'Ransomware', color: '#5A8FD4' },
 ];
 
 const cityCoordinates: Record<string, { lat: number; lng: number }> = {
