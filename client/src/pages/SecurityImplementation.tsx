@@ -39,15 +39,15 @@ interface Particle {
 const securityControls = [
   { name: 'Identity & Access', phase: 0, color: CYAN },
   { name: 'Network Security', phase: 0, color: CYAN },
-  { name: 'Firewall Rules', phase: 1, color: '#00FF88' },
-  { name: 'Encryption Layer', phase: 1, color: '#00FF88' },
-  { name: 'SIEM Integration', phase: 2, color: '#FFD700' },
-  { name: 'DLP Controls', phase: 2, color: '#FFD700' },
-  { name: 'Endpoint Protection', phase: 2, color: '#FFD700' },
+  { name: 'Firewall Rules', phase: 1, color: '#42BA90' },
+  { name: 'Encryption Layer', phase: 1, color: '#42BA90' },
+  { name: 'SIEM Integration', phase: 2, color: '#42BA90' },
+  { name: 'DLP Controls', phase: 2, color: '#42BA90' },
+  { name: 'Endpoint Protection', phase: 2, color: '#42BA90' },
   { name: 'API Gateway', phase: 3, color: PURPLE },
   { name: 'WAF Config', phase: 3, color: PURPLE },
-  { name: 'MFA System', phase: 4, color: '#FF6B6B' },
-  { name: 'Security Training', phase: 4, color: '#FF6B6B' },
+  { name: 'MFA System', phase: 4, color: '#3D70B7' },
+  { name: 'Security Training', phase: 4, color: '#3D70B7' },
   { name: 'Monitoring Dashboard', phase: 5, color: '#3D70B7' },
 ];
 
@@ -133,13 +133,13 @@ function Crane({ position, isActive }: { position: [number, number, number]; isA
       
       <mesh position={[0, 3, 0]}>
         <boxGeometry args={[0.4, 6, 0.4]} />
-        <meshStandardMaterial color="#FFD700" metalness={0.6} roughness={0.4} transparent opacity={0.6} />
+        <meshStandardMaterial color="#42BA90" metalness={0.6} roughness={0.4} transparent opacity={0.6} />
       </mesh>
       
       <group ref={armRef} position={[0, 6, 0]}>
         <mesh position={[2, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
           <boxGeometry args={[0.3, 4, 0.3]} />
-          <meshStandardMaterial color="#FFD700" metalness={0.6} roughness={0.4} transparent opacity={0.6} />
+          <meshStandardMaterial color="#42BA90" metalness={0.6} roughness={0.4} transparent opacity={0.6} />
         </mesh>
         
         <mesh ref={cableRef} position={[3.5, -1.5, 0]}>
@@ -434,7 +434,7 @@ const implementationPhases = [
     deliverables: ['Security Architecture Doc', 'Network Diagrams', 'Data Flow Maps', 'Tool Selection'],
     dependencies: ['Assessment Completion', 'Budget Approval'],
     tasks: ['Zero-trust design', 'Network segmentation', 'Encryption strategy', 'Vendor evaluation'],
-    color: '#00FF88',
+    color: '#42BA90',
   },
   {
     id: 'deployment',
@@ -445,7 +445,7 @@ const implementationPhases = [
     deliverables: ['IAM Implementation', 'Firewall Configuration', 'Encryption Setup', 'SIEM Deployment'],
     dependencies: ['Architecture Sign-off', 'Infrastructure Ready'],
     tasks: ['SSO configuration', 'Firewall rules', 'Certificate management', 'Log aggregation'],
-    color: '#FFD700',
+    color: '#42BA90',
   },
   {
     id: 'integration',
@@ -467,7 +467,7 @@ const implementationPhases = [
     deliverables: ['Training Materials', 'User Documentation', 'Rollout Plan', 'Support Procedures'],
     dependencies: ['Testing Complete', 'Training Schedule'],
     tasks: ['Training sessions', 'Documentation', 'Phased deployment', 'Support setup'],
-    color: '#FF6B6B',
+    color: '#3D70B7',
   },
   {
     id: 'improvement',
@@ -621,7 +621,7 @@ function PhaseProgressIndicator({ phases, currentPhase, buildProgress }: {
             <motion.div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                 isComplete
-                  ? 'bg-green-500 text-white'
+                  ? 'bg-[#42BA90] text-white'
                   : isActive
                   ? 'bg-gradient-to-r from-[#42BA90] to-[#42BA90] text-white'
                   : 'bg-white/10 text-white/40'
@@ -635,7 +635,7 @@ function PhaseProgressIndicator({ phases, currentPhase, buildProgress }: {
             {index < phases.length - 1 && (
               <div className="w-8 h-1 bg-white/10 rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-[#42BA90] to-green-500"
+                  className="h-full bg-gradient-to-r from-[#42BA90] to-[#42BA90]"
                   initial={{ width: 0 }}
                   animate={{ width: `${isComplete ? 100 : isActive ? phaseProgress : 0}%` }}
                   transition={{ duration: 0.5 }}
@@ -781,7 +781,7 @@ export default function SecurityImplementation() {
               icon={Bug}
               label="Vulnerabilities Fixed"
               value={vulnerabilitiesFixed}
-              color="#22c55e"
+              color="#42BA90"
               delay={0.1}
             />
             <MetricCard
@@ -926,7 +926,7 @@ export default function SecurityImplementation() {
                     isActive
                       ? 'bg-gradient-to-br from-[#42BA90]/20 to-[#42BA90]/20 border-[#42BA90]/50 shadow-lg shadow-[#42BA90]/10'
                       : isComplete
-                      ? 'bg-green-500/10 border-green-500/30'
+                      ? 'bg-[#42BA90]/10 border-[#42BA90]/30'
                       : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
                   }`}
                   data-testid={`phase-card-${phase.id}`}
@@ -946,7 +946,7 @@ export default function SecurityImplementation() {
                           animate={{ scale: 1 }}
                           transition={{ type: 'spring', stiffness: 500 }}
                         >
-                          <CheckCircle2 className="w-6 h-6 text-green-400" />
+                          <CheckCircle2 className="w-6 h-6 text-[#42BA90]" />
                         </motion.div>
                       ) : isActive ? (
                         <div className="flex items-center gap-2">
@@ -1104,7 +1104,7 @@ export default function SecurityImplementation() {
                       isActive
                         ? 'bg-gradient-to-r from-[#42BA90]/20 to-[#42BA90]/20 border-[#42BA90]/50'
                         : isComplete
-                        ? 'bg-green-500/10 border-green-500/30'
+                        ? 'bg-[#42BA90]/10 border-[#42BA90]/30'
                         : 'bg-white/5 border-white/10'
                     }`}
                     data-testid={`timeline-row-${phase.id}`}
@@ -1118,7 +1118,7 @@ export default function SecurityImplementation() {
                         <span className="text-xs text-white/50">{phase.duration}</span>
                       </div>
                       {isComplete ? (
-                        <CheckCircle2 className="w-5 h-5 text-green-400" />
+                        <CheckCircle2 className="w-5 h-5 text-[#42BA90]" />
                       ) : isActive ? (
                         <Sparkles className="w-5 h-5 text-[#3D70B7] animate-pulse" />
                       ) : (
@@ -1160,7 +1160,7 @@ export default function SecurityImplementation() {
                     <div key={phase.id} className="flex items-center mb-3" data-testid={`timeline-row-${phase.id}`}>
                       <div className="w-48 flex-shrink-0 flex items-center gap-2">
                         {isComplete ? (
-                          <CheckCircle2 className="w-4 h-4 text-green-400" />
+                          <CheckCircle2 className="w-4 h-4 text-[#42BA90]" />
                         ) : isActive ? (
                           <Sparkles className="w-4 h-4 text-[#3D70B7]" />
                         ) : (
@@ -1176,8 +1176,8 @@ export default function SecurityImplementation() {
                           style={{
                             left: `${(startWeek / 12) * 100}%`,
                             width: `${(duration / 12) * 100}%`,
-                            backgroundColor: isComplete ? '#22c55e40' : isActive ? `${phase.color}40` : '#ffffff10',
-                            borderLeft: `3px solid ${isComplete ? '#22c55e' : phase.color}`,
+                            backgroundColor: isComplete ? '#42BA9040' : isActive ? `${phase.color}40` : '#ffffff10',
+                            borderLeft: `3px solid ${isComplete ? '#42BA90' : phase.color}`,
                           }}
                           initial={{ scaleX: 0, opacity: 0 }}
                           animate={{ scaleX: 1, opacity: 1 }}
@@ -1188,7 +1188,7 @@ export default function SecurityImplementation() {
 
                         {isComplete && (
                           <motion.div
-                            className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-green-500 border-2 border-green-400 flex items-center justify-center"
+                            className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-[#42BA90] border-2 border-[#42BA90] flex items-center justify-center"
                             style={{ left: `${((startWeek + duration) / 12) * 100}%` }}
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
@@ -1234,7 +1234,7 @@ export default function SecurityImplementation() {
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 10 }}
-                    className="flex items-center gap-1 text-xs text-green-400"
+                    className="flex items-center gap-1 text-xs text-[#42BA90]"
                   >
                     <Save className="w-3 h-3" />
                     Saved
@@ -1259,14 +1259,14 @@ export default function SecurityImplementation() {
                   whileTap={{ scale: 0.99 }}
                   className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
                     item.completed
-                      ? 'bg-green-500/10 border-green-500/30 hover:bg-green-500/20'
+                      ? 'bg-[#42BA90]/10 border-[#42BA90]/30 hover:bg-[#42BA90]/20'
                       : 'bg-white/5 border-white/10 hover:bg-white/10'
                   }`}
                   data-testid={`deliverable-${item.id}`}
                 >
                   <motion.div
                     className={`w-6 h-6 rounded-lg flex items-center justify-center ${
-                      item.completed ? 'bg-green-500' : 'bg-white/10'
+                      item.completed ? 'bg-[#42BA90]' : 'bg-white/10'
                     }`}
                     whileTap={{ scale: 0.9 }}
                     animate={item.completed ? { scale: [1, 1.2, 1] } : {}}

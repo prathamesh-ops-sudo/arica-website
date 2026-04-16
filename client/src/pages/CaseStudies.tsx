@@ -408,7 +408,7 @@ function FlipCard({ study, index }: { study: typeof caseStudies[0]; index: numbe
           <div className="flex items-center gap-2 mb-4">
             <span className={`w-1.5 h-1.5 rounded-full ${
               study.category === "VAPT" ? "bg-red-500" :
-              study.category === "ISO Audit" ? "bg-green-500" :
+              study.category === "ISO Audit" ? "bg-[#42BA90]" :
               study.category === "Software" ? "bg-blue-500" :
               study.category === "Enterprise" ? "bg-[#3D70B7]" :
               "bg-[#3D70B7]"
@@ -457,8 +457,8 @@ function FlipCard({ study, index }: { study: typeof caseStudies[0]; index: numbe
               <p className="text-[10px] text-red-400 uppercase tracking-wider mb-1 font-semibold">Challenge</p>
               <p className="text-sm text-foreground">{study.challenge}</p>
             </div>
-            <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20">
-              <p className="text-[10px] text-green-400 uppercase tracking-wider mb-1 font-semibold">Solution</p>
+            <div className="p-3 rounded-lg bg-[#42BA90]/10 border border-[#42BA90]/20">
+              <p className="text-[10px] text-[#42BA90] uppercase tracking-wider mb-1 font-semibold">Solution</p>
               <p className="text-sm text-foreground">{study.solution}</p>
             </div>
           </div>
@@ -533,7 +533,7 @@ export default function CaseStudies() {
                 </div>
                 <div>
                   <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Post-Remediation</p>
-                  <p className="font-display text-3xl font-bold text-green-500">
+                  <p className="font-display text-3xl font-bold text-[#42BA90]">
                     <AnimatedCounter value={0} /> <span className="text-sm text-muted-foreground">critical</span>
                   </p>
                 </div>
@@ -565,9 +565,9 @@ export default function CaseStudies() {
                     <AnimatedCounter value={100} suffix="%" />
                   </p>
                 </div>
-                <div className="p-4 rounded-lg bg-green-500/5 border border-green-500/10">
-                  <p className="text-[10px] text-green-400 uppercase tracking-wider mb-2 font-semibold">Global Offices</p>
-                  <p className="font-display text-2xl font-bold text-green-500">
+                <div className="p-4 rounded-lg bg-[#42BA90]/5 border border-[#42BA90]/10">
+                  <p className="text-[10px] text-[#42BA90] uppercase tracking-wider mb-2 font-semibold">Global Offices</p>
+                  <p className="font-display text-2xl font-bold text-[#42BA90]">
                     <AnimatedCounter value={15} />
                   </p>
                 </div>

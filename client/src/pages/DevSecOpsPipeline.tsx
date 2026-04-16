@@ -165,7 +165,7 @@ export default function DevSecOpsPipeline() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'success': return 'border-green-500 bg-green-500/20 text-green-400';
+      case 'success': return 'border-[#42BA90] bg-[#42BA90]/20 text-[#42BA90]';
       case 'running': return 'border-[#3D70B7] bg-[#3D70B7]/20 text-[#3D70B7] animate-pulse';
       case 'failed': return 'border-red-500 bg-red-500/20 text-red-400';
       case 'warning': return 'border-yellow-500 bg-yellow-500/20 text-yellow-400';
@@ -175,7 +175,7 @@ export default function DevSecOpsPipeline() {
 
   const getCheckIcon = (status: string) => {
     switch (status) {
-      case 'pass': return <CheckCircle className="w-4 h-4 text-green-400" />;
+      case 'pass': return <CheckCircle className="w-4 h-4 text-[#42BA90]" />;
       case 'fail': return <XCircle className="w-4 h-4 text-red-400" />;
       case 'warn': return <AlertTriangle className="w-4 h-4 text-yellow-400" />;
       default: return null;
@@ -250,7 +250,7 @@ export default function DevSecOpsPipeline() {
                   <span className="font-mono">{(totalTime / 1000).toFixed(1)}s</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-400" />
+                  <CheckCircle className="w-4 h-4 text-[#42BA90]" />
                   <span>{completedStages}/{stages.length}</span>
                 </div>
                 {warnings > 0 && (
@@ -339,7 +339,7 @@ export default function DevSecOpsPipeline() {
                                         initial={{ opacity: 0, x: -10 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: i * 0.1 }}
-                                        className="text-green-400"
+                                        className="text-[#42BA90]"
                                       >
                                         → {detail}
                                       </motion.div>

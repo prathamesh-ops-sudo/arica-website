@@ -16,7 +16,7 @@ import { WebGLFallback } from '@/components/ui/webgl-fallback';
 const CYAN = '#3D70B7';
 const PURPLE = '#42BA90';
 const NAVY = 'hsl(222, 47%, 5%)';
-const GREEN = '#00FF88';
+const GREEN = '#42BA90';
 
 const trainingModules = [
   { 
@@ -154,8 +154,8 @@ const teamProgress = [
   { team: 'Engineering', progress: 87, members: 45, color: CYAN },
   { team: 'Marketing', progress: 72, members: 28, color: PURPLE },
   { team: 'Sales', progress: 91, members: 52, color: GREEN },
-  { team: 'Operations', progress: 68, members: 31, color: '#FFD700' },
-  { team: 'HR', progress: 95, members: 12, color: '#FF6B6B' },
+  { team: 'Operations', progress: 68, members: 31, color: '#42BA90' },
+  { team: 'HR', progress: 95, members: 12, color: '#3D70B7' },
 ];
 
 function AnimatedCounter({ value, duration = 2000, prefix = '', suffix = '' }: { 
@@ -375,8 +375,8 @@ function LearningNode({
           <mesh ref={meshRef}>
             <octahedronGeometry args={[0.6, 0]} />
             <meshStandardMaterial 
-              color={'#FFD700'} 
-              emissive={'#FFD700'} 
+              color={'#42BA90'} 
+              emissive={'#42BA90'} 
               emissiveIntensity={0.6} 
               metalness={0.9}
               roughness={0.1}
@@ -384,7 +384,7 @@ function LearningNode({
           </mesh>
           <mesh ref={ringRef} rotation={[Math.PI / 2, 0, 0]}>
             <torusGeometry args={[0.9, 0.05, 8, 32]} />
-            <meshBasicMaterial color={'#FFD700'} transparent opacity={0.6} />
+            <meshBasicMaterial color={'#42BA90'} transparent opacity={0.6} />
           </mesh>
         </Float>
       ) : (
@@ -558,8 +558,8 @@ function AchievementTrophy({ position }: { position: [number, number, number] })
         <mesh position={[0, 0.3, 0]}>
           <cylinderGeometry args={[0.2, 0.3, 0.4, 16]} />
           <meshStandardMaterial 
-            color="#FFD700" 
-            emissive="#FFD700" 
+            color="#42BA90" 
+            emissive="#42BA90" 
             emissiveIntensity={0.4}
             metalness={0.9}
             roughness={0.1}
@@ -567,13 +567,13 @@ function AchievementTrophy({ position }: { position: [number, number, number] })
         </mesh>
         <mesh position={[0, 0, 0]}>
           <cylinderGeometry args={[0.15, 0.15, 0.2, 16]} />
-          <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.1} />
+          <meshStandardMaterial color="#42BA90" metalness={0.9} roughness={0.1} />
         </mesh>
         <mesh position={[0, -0.15, 0]}>
           <cylinderGeometry args={[0.25, 0.2, 0.1, 16]} />
-          <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.1} />
+          <meshStandardMaterial color="#42BA90" metalness={0.9} roughness={0.1} />
         </mesh>
-        <pointLight color="#FFD700" intensity={1} distance={3} />
+        <pointLight color="#42BA90" intensity={1} distance={3} />
       </group>
     </Float>
   );
@@ -786,7 +786,7 @@ function ConfettiEffect({ active }: { active: boolean }) {
     x: Math.random() * 100,
     delay: Math.random() * 0.5,
     duration: 1 + Math.random(),
-    color: [GREEN, CYAN, '#FFD700', PURPLE][Math.floor(Math.random() * 4)],
+    color: [GREEN, CYAN, '#42BA90', PURPLE][Math.floor(Math.random() * 4)],
   }));
 
   return (
@@ -961,7 +961,7 @@ export default function SecurityTraining() {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'Beginner': return 'text-green-400 bg-green-500/20 border-green-500/30';
+      case 'Beginner': return 'text-[#42BA90] bg-[#42BA90]/20 border-[#42BA90]/30';
       case 'Intermediate': return 'text-yellow-400 bg-yellow-500/20 border-yellow-500/30';
       case 'Advanced': return 'text-red-400 bg-red-500/20 border-red-500/30';
       default: return 'text-gray-400 bg-gray-500/20 border-gray-500/30';
@@ -1039,7 +1039,7 @@ export default function SecurityTraining() {
             icon={Activity} 
             label="Training Hours" 
             value={3542} 
-            color="#FFD700"
+            color="#42BA90"
             increment={1}
           />
         </motion.div>
@@ -1073,7 +1073,7 @@ export default function SecurityTraining() {
               <TrendingUp className="w-5 h-5 text-[#3D70B7]" />
               Team Training Progress
               <motion.span 
-                className="ml-auto text-xs px-2 py-1 rounded-full bg-green-500/20 text-green-400"
+                className="ml-auto text-xs px-2 py-1 rounded-full bg-[#42BA90]/20 text-[#42BA90]"
                 animate={{ opacity: [1, 0.5, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
@@ -1174,7 +1174,7 @@ export default function SecurityTraining() {
                   whileHover={{ scale: 1.02, y: -5 }}
                   className={`relative bg-white/5 backdrop-blur-xl rounded-xl border p-4 cursor-pointer transition-all ${
                     index < completedModules 
-                      ? 'border-green-500/30' 
+                      ? 'border-[#42BA90]/30' 
                       : index === activeModule 
                         ? 'border-[#3D70B7]/50' 
                         : 'border-white/10'
@@ -1189,15 +1189,15 @@ export default function SecurityTraining() {
                 >
                   {index < completedModules && (
                     <div className="absolute top-2 right-2">
-                      <CheckCircle className="w-5 h-5 text-green-400" />
+                      <CheckCircle className="w-5 h-5 text-[#42BA90]" />
                     </div>
                   )}
                   
                   <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${
-                    index < completedModules ? 'bg-green-500/20' : 'bg-[#3D70B7]/20'
+                    index < completedModules ? 'bg-[#42BA90]/20' : 'bg-[#3D70B7]/20'
                   }`}>
                     <module.icon className={`w-5 h-5 ${
-                      index < completedModules ? 'text-green-400' : 'text-[#3D70B7]'
+                      index < completedModules ? 'text-[#42BA90]' : 'text-[#3D70B7]'
                     }`} />
                   </div>
                   
@@ -1320,7 +1320,7 @@ export default function SecurityTraining() {
                     <motion.div
                       key={i}
                       className={`w-3 h-3 rounded-full ${
-                        i < currentQuestion ? 'bg-green-500' : 
+                        i < currentQuestion ? 'bg-[#42BA90]' : 
                         i === currentQuestion ? 'bg-[#3D70B7]' : 'bg-white/20'
                       }`}
                       animate={i === currentQuestion ? { scale: [1, 1.2, 1] } : {}}
@@ -1346,7 +1346,7 @@ export default function SecurityTraining() {
                     className={`p-4 rounded-xl text-left transition-all border relative overflow-hidden ${
                       showResult
                         ? index === quizQuestions[currentQuestion].correctAnswer
-                          ? 'bg-green-500/20 border-green-500/50 text-green-400'
+                          ? 'bg-[#42BA90]/20 border-[#42BA90]/50 text-[#42BA90]'
                           : selectedAnswer === index
                             ? 'bg-red-500/20 border-red-500/50 text-red-400'
                             : 'bg-white/5 border-white/10'
@@ -1368,7 +1368,7 @@ export default function SecurityTraining() {
                       </span>
                       <span>{option}</span>
                       {showResult && index === quizQuestions[currentQuestion].correctAnswer && (
-                        <CheckCircle className="w-5 h-5 text-green-400 ml-auto" />
+                        <CheckCircle className="w-5 h-5 text-[#42BA90] ml-auto" />
                       )}
                       {showResult && selectedAnswer === index && index !== quizQuestions[currentQuestion].correctAnswer && (
                         <XCircle className="w-5 h-5 text-red-400 ml-auto" />
@@ -1386,7 +1386,7 @@ export default function SecurityTraining() {
                     exit={{ opacity: 0, y: -10, height: 0 }}
                     className={`mb-4 p-4 rounded-xl border ${
                       lastAnswerCorrect 
-                        ? 'bg-green-500/20 border-green-500/50 text-green-400' 
+                        ? 'bg-[#42BA90]/20 border-[#42BA90]/50 text-[#42BA90]' 
                         : 'bg-red-500/20 border-red-500/50 text-red-400'
                     }`}
                   >

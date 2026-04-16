@@ -150,7 +150,7 @@ function AnimatedSecurityGauge({ score, isAnimating }: { score: number; isAnimat
   const strokeDashoffset = circumference - (score / 100) * circumference;
   
   const getScoreColor = (s: number) => {
-    if (s >= 80) return '#22c55e';
+    if (s >= 80) return '#42BA90';
     if (s >= 60) return '#3D70B7';
     if (s >= 40) return '#eab308';
     return '#ef4444';
@@ -319,25 +319,25 @@ function LiveThreatCounter({ threats, isScanning }: { threats: ThreatCount; isSc
       </motion.div>
       
       <motion.div
-        className="p-3 rounded-xl bg-green-500/10 border border-green-500/30 relative overflow-hidden"
+        className="p-3 rounded-xl bg-[#42BA90]/10 border border-[#42BA90]/30 relative overflow-hidden"
         animate={threats.blocked > 0 ? { scale: [1, 1.05, 1] } : {}}
         transition={{ duration: 0.2 }}
       >
         <div className="flex items-center gap-2 mb-1">
-          <ShieldCheck className="w-4 h-4 text-green-400" />
-          <span className="text-xs text-green-400 uppercase">Blocked</span>
+          <ShieldCheck className="w-4 h-4 text-[#42BA90]" />
+          <span className="text-xs text-[#42BA90] uppercase">Blocked</span>
         </div>
         <motion.span
           key={threats.blocked}
           initial={{ scale: 1.5, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="text-2xl font-bold text-green-400"
+          className="text-2xl font-bold text-[#42BA90]"
         >
           {threats.blocked}
         </motion.span>
         {threats.blocked > 0 && (
           <motion.div
-            className="absolute inset-0 bg-green-500/20"
+            className="absolute inset-0 bg-[#42BA90]/20"
             initial={{ opacity: 1 }}
             animate={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
@@ -584,7 +584,7 @@ export default function MobileSecurity() {
     switch (risk) {
       case 'dangerous': return 'bg-red-500/20 border-red-500/50 text-red-400 hover:bg-red-500/30';
       case 'normal': return 'bg-yellow-500/20 border-yellow-500/50 text-yellow-400 hover:bg-yellow-500/30';
-      case 'safe': return 'bg-green-500/20 border-green-500/50 text-green-400 hover:bg-green-500/30';
+      case 'safe': return 'bg-[#42BA90]/20 border-[#42BA90]/50 text-[#42BA90] hover:bg-[#42BA90]/30';
       default: return 'bg-gray-400/20 border-gray-400/50 text-gray-400';
     }
   };
@@ -692,9 +692,9 @@ export default function MobileSecurity() {
                       transition={{ duration: 0.3 }}
                     >
                       {device.type === 'phone' ? (
-                        <Smartphone className={`w-10 h-10 ${device.os === 'ios' ? 'text-gray-300' : 'text-green-400'}`} />
+                        <Smartphone className={`w-10 h-10 ${device.os === 'ios' ? 'text-gray-300' : 'text-[#42BA90]'}`} />
                       ) : (
-                        <Tablet className={`w-10 h-10 ${device.os === 'ios' ? 'text-gray-300' : 'text-green-400'}`} />
+                        <Tablet className={`w-10 h-10 ${device.os === 'ios' ? 'text-gray-300' : 'text-[#42BA90]'}`} />
                       )}
                     </motion.div>
                     <p className="text-sm font-medium text-center truncate">{device.name}</p>
@@ -874,7 +874,7 @@ export default function MobileSecurity() {
                               i === currentPhase
                                 ? 'bg-[#3D70B7]/20 border border-[#3D70B7]/50 text-[#3D70B7]'
                                 : i < currentPhase
-                                ? 'bg-green-500/20 border border-green-500/50 text-green-400'
+                                ? 'bg-[#42BA90]/20 border border-[#42BA90]/50 text-[#42BA90]'
                                 : 'bg-white/5 border border-white/10 text-gray-500'
                             }`}
                             animate={i === currentPhase ? {
@@ -898,7 +898,7 @@ export default function MobileSecurity() {
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
                               >
-                                <CheckCircle className="w-3 h-3 text-green-400" />
+                                <CheckCircle className="w-3 h-3 text-[#42BA90]" />
                               </motion.div>
                             )}
                           </motion.div>
@@ -1063,13 +1063,13 @@ export default function MobileSecurity() {
                                   initial={{ opacity: 0, y: -10 }}
                                   animate={{ opacity: 1, y: 0 }}
                                   transition={{ delay: 0.2 }}
-                                  className="p-3 rounded-lg bg-green-500/10 border border-green-500/30"
+                                  className="p-3 rounded-lg bg-[#42BA90]/10 border border-[#42BA90]/30"
                                 >
-                                  <p className="text-xs uppercase tracking-wide text-green-400 mb-1 flex items-center gap-1">
+                                  <p className="text-xs uppercase tracking-wide text-[#42BA90] mb-1 flex items-center gap-1">
                                     <CheckCircle className="w-3 h-3" />
                                     Recommendation
                                   </p>
-                                  <p className="text-sm text-green-300">{vuln.recommendation}</p>
+                                  <p className="text-sm text-[#42BA90]">{vuln.recommendation}</p>
                                 </motion.div>
                               </div>
                             </motion.div>
@@ -1079,7 +1079,7 @@ export default function MobileSecurity() {
                     ))}
                     {vulnerabilities.length === 0 && (
                       <motion.div 
-                        className="p-8 rounded-xl bg-green-500/10 border border-green-500/30 text-center"
+                        className="p-8 rounded-xl bg-[#42BA90]/10 border border-[#42BA90]/30 text-center"
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                       >
@@ -1088,9 +1088,9 @@ export default function MobileSecurity() {
                           animate={{ scale: 1 }}
                           transition={{ type: "spring", delay: 0.2 }}
                         >
-                          <CheckCircle className="w-12 h-12 text-green-400 mx-auto mb-2" />
+                          <CheckCircle className="w-12 h-12 text-[#42BA90] mx-auto mb-2" />
                         </motion.div>
-                        <p className="text-green-400">No critical vulnerabilities detected</p>
+                        <p className="text-[#42BA90]">No critical vulnerabilities detected</p>
                       </motion.div>
                     )}
                   </div>
@@ -1116,7 +1116,7 @@ export default function MobileSecurity() {
                         key={compliancePercentage}
                         initial={{ scale: 1.5, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        className={`font-bold ${compliancePercentage >= 70 ? 'text-green-400' : compliancePercentage >= 40 ? 'text-yellow-400' : 'text-red-400'}`}
+                        className={`font-bold ${compliancePercentage >= 70 ? 'text-[#42BA90]' : compliancePercentage >= 40 ? 'text-yellow-400' : 'text-red-400'}`}
                       >
                         {compliancePercentage}%
                       </motion.span>
@@ -1134,7 +1134,7 @@ export default function MobileSecurity() {
                           item.passed === null
                             ? 'bg-white/5 border-white/10'
                             : item.passed
-                            ? 'bg-green-500/10 border-green-500/30'
+                            ? 'bg-[#42BA90]/10 border-[#42BA90]/30'
                             : 'bg-red-500/10 border-red-500/30'
                         }`}
                         whileHover={{ scale: 1.01, y: -2 }}
@@ -1147,7 +1147,7 @@ export default function MobileSecurity() {
                               item.passed === null
                                 ? 'bg-white/10'
                                 : item.passed
-                                ? 'bg-green-500'
+                                ? 'bg-[#42BA90]'
                                 : 'bg-red-500'
                             }`}
                             initial={{ scale: 0 }}
@@ -1206,7 +1206,7 @@ export default function MobileSecurity() {
                           <p className="text-[10px] opacity-70 capitalize mt-1">{perm.risk}</p>
                           {perm.granted && (
                             <motion.div
-                              className="absolute top-1 right-1 w-2 h-2 rounded-full bg-green-400"
+                              className="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#42BA90]"
                               animate={{ scale: [1, 1.2, 1] }}
                               transition={{ duration: 2, repeat: Infinity }}
                             />
@@ -1237,7 +1237,7 @@ export default function MobileSecurity() {
                             <span className="font-semibold">{selectedPermission.name} Permission</span>
                             <motion.span 
                               className={`text-xs px-2 py-0.5 rounded capitalize ${
-                                selectedPermission.granted ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                                selectedPermission.granted ? 'bg-[#42BA90]/20 text-[#42BA90]' : 'bg-red-500/20 text-red-400'
                               }`}
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}

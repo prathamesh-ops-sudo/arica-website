@@ -2595,24 +2595,24 @@ export function RealisticSolarSystem() {
                   )}
                   {modalPlanet.modalContent?.type === 'checker' && (
                     <div className="space-y-2">
-                      <div className="flex justify-between text-white/70"><span>S3 Bucket Encryption</span><span className="text-emerald-400">PASS</span></div>
-                      <div className="flex justify-between text-white/70"><span>IAM MFA Enabled</span><span className="text-emerald-400">PASS</span></div>
+                      <div className="flex justify-between text-white/70"><span>S3 Bucket Encryption</span><span className="text-[#42BA90]">PASS</span></div>
+                      <div className="flex justify-between text-white/70"><span>IAM MFA Enabled</span><span className="text-[#42BA90]">PASS</span></div>
                       <div className="flex justify-between text-white/70"><span>Public Access Blocked</span><span className="text-red-400">FAIL</span></div>
                       <div className="flex justify-between text-white/70"><span>CloudTrail Logging</span><span className="text-yellow-400">WARN</span></div>
                     </div>
                   )}
                   {modalPlanet.modalContent?.type === 'checklist' && (
                     <div className="space-y-2 text-white/70">
-                      <div className="flex items-center gap-2"><span className="text-emerald-400">✓</span> Information Security Policy</div>
-                      <div className="flex items-center gap-2"><span className="text-emerald-400">✓</span> Risk Assessment Framework</div>
+                      <div className="flex items-center gap-2"><span className="text-[#42BA90]">✓</span> Information Security Policy</div>
+                      <div className="flex items-center gap-2"><span className="text-[#42BA90]">✓</span> Risk Assessment Framework</div>
                       <div className="flex items-center gap-2"><span className="text-white/30">○</span> Access Control Policy</div>
                       <div className="flex items-center gap-2"><span className="text-white/30">○</span> Incident Response Plan</div>
                     </div>
                   )}
                   {modalPlanet.modalContent?.type === 'pipeline' && (
                     <div className="space-y-2 text-white/70">
-                      <div className="flex items-center gap-2"><span className="text-emerald-400">✓</span> Build → <span className="text-white/50">2.3s</span></div>
-                      <div className="flex items-center gap-2"><span className="text-emerald-400">✓</span> SAST Scan → <span className="text-white/50">12.1s</span></div>
+                      <div className="flex items-center gap-2"><span className="text-[#42BA90]">✓</span> Build → <span className="text-white/50">2.3s</span></div>
+                      <div className="flex items-center gap-2"><span className="text-[#42BA90]">✓</span> SAST Scan → <span className="text-white/50">12.1s</span></div>
                       <div className="flex items-center gap-2"><span className="text-[#3D70B7] animate-pulse">●</span> Container Scan → <span className="text-white/50">running...</span></div>
                       <div className="flex items-center gap-2"><span className="text-white/30">○</span> Deploy to Staging</div>
                     </div>

@@ -220,7 +220,7 @@ function AnimatedRiskGauge({
   const circumference = radius * 2 * Math.PI;
   
   const getColorByValue = (v: number) => {
-    if (v <= 33) return { color: '#22c55e', name: 'green' };
+    if (v <= 33) return { color: '#42BA90', name: 'green' };
     if (v <= 66) return { color: '#f59e0b', name: 'amber' };
     return { color: '#ef4444', name: 'red' };
   };
@@ -351,7 +351,7 @@ function ThreatGridBackground({ riskLevel }: { riskLevel: number }) {
   }, [riskLevel]);
 
   const getColor = () => {
-    if (riskLevel <= 33) return '#22c55e';
+    if (riskLevel <= 33) return '#42BA90';
     if (riskLevel <= 66) return '#f59e0b';
     return '#ef4444';
   };
@@ -424,7 +424,7 @@ function LiveThreatMatrix({
       case 'critical': return '#ef4444';
       case 'high': return '#f97316';
       case 'medium': return '#eab308';
-      case 'low': return '#22c55e';
+      case 'low': return '#42BA90';
       default: return '#6b7280';
     }
   };
@@ -434,7 +434,7 @@ function LiveThreatMatrix({
       <div className="absolute left-0 top-0 bottom-12 w-12 flex flex-col justify-between items-center text-xs text-muted-foreground">
         {[5, 4, 3, 2, 1].map(n => (
           <span key={n} className={`px-1 rounded ${
-            n >= 4 ? 'bg-red-500/20' : n >= 3 ? 'bg-orange-500/20' : 'bg-green-500/20'
+            n >= 4 ? 'bg-red-500/20' : n >= 3 ? 'bg-orange-500/20' : 'bg-[#42BA90]/20'
           }`}>{n}</span>
         ))}
       </div>
@@ -448,7 +448,7 @@ function LiveThreatMatrix({
               const cellThreats = threats.filter(t => t.likelihood === likelihood && t.impact === impact);
               const riskLevel = likelihood * impact;
               const isPulsing = pulsingCells.has(`${likelihood}-${impact}`);
-              let bgColor = 'bg-green-500/20';
+              let bgColor = 'bg-[#42BA90]/20';
               if (riskLevel >= 15) bgColor = 'bg-red-500/30';
               else if (riskLevel >= 8) bgColor = 'bg-orange-500/25';
               else if (riskLevel >= 4) bgColor = 'bg-yellow-500/20';
@@ -506,7 +506,7 @@ function LiveThreatMatrix({
         <div className="flex justify-between mt-2 text-xs text-muted-foreground max-w-lg mx-auto px-1">
           {[1, 2, 3, 4, 5].map(n => (
             <span key={n} className={`px-1 rounded ${
-              n >= 4 ? 'bg-red-500/20' : n >= 3 ? 'bg-orange-500/20' : 'bg-green-500/20'
+              n >= 4 ? 'bg-red-500/20' : n >= 3 ? 'bg-orange-500/20' : 'bg-[#42BA90]/20'
             }`}>{n}</span>
           ))}
         </div>
@@ -559,7 +559,7 @@ function RealTimeRiskFeed({ events }: { events: RiskEvent[] }) {
       case 'critical': return { bg: 'bg-red-500/20', text: 'text-red-400', border: 'border-red-500/50', glow: 'rgba(239,68,68,0.3)' };
       case 'high': return { bg: 'bg-orange-500/20', text: 'text-orange-400', border: 'border-orange-500/50', glow: 'rgba(249,115,22,0.3)' };
       case 'medium': return { bg: 'bg-yellow-500/20', text: 'text-yellow-400', border: 'border-yellow-500/50', glow: 'rgba(234,179,8,0.3)' };
-      case 'low': return { bg: 'bg-green-500/20', text: 'text-green-400', border: 'border-green-500/50', glow: 'rgba(34,197,94,0.3)' };
+      case 'low': return { bg: 'bg-[#42BA90]/20', text: 'text-[#42BA90]', border: 'border-[#42BA90]/50', glow: 'rgba(66,186,144,0.3)' };
       default: return { bg: 'bg-gray-500/20', text: 'text-gray-400', border: 'border-gray-500/50', glow: 'rgba(107,114,128,0.3)' };
     }
   };
@@ -638,7 +638,7 @@ function InteractiveRiskCard({
       case 'critical': return '#ef4444';
       case 'high': return '#f97316';
       case 'medium': return '#f59e0b';
-      case 'low': return '#22c55e';
+      case 'low': return '#42BA90';
       default: return '#3D70B7';
     }
   };
@@ -816,12 +816,12 @@ function AnimatedTrendChart({ data, animatedData }: { data: number[]; animatedDa
             animate={isInView ? { height: `${(value / 100) * 100}%`, opacity: 1 } : {}}
             transition={{ duration: 0.5, delay: index * 0.08 }}
             className={`flex-1 rounded-t-lg relative overflow-hidden ${
-              value <= 33 ? 'bg-green-500/60' : value <= 66 ? 'bg-yellow-500/60' : 'bg-red-500/60'
+              value <= 33 ? 'bg-[#42BA90]/60' : value <= 66 ? 'bg-yellow-500/60' : 'bg-red-500/60'
             }`}
             style={{
               boxShadow: pulsingPoint === index 
-                ? `0 0 30px ${value <= 33 ? 'rgba(34,197,94,0.6)' : value <= 66 ? 'rgba(234,179,8,0.6)' : 'rgba(239,68,68,0.6)'}`
-                : `0 0 10px ${value <= 33 ? 'rgba(34,197,94,0.3)' : value <= 66 ? 'rgba(234,179,8,0.3)' : 'rgba(239,68,68,0.3)'}`
+                ? `0 0 30px ${value <= 33 ? 'rgba(66,186,144,0.6)' : value <= 66 ? 'rgba(234,179,8,0.6)' : 'rgba(239,68,68,0.6)'}`
+                : `0 0 10px ${value <= 33 ? 'rgba(66,186,144,0.3)' : value <= 66 ? 'rgba(234,179,8,0.3)' : 'rgba(239,68,68,0.3)'}`
             }}
           >
             {pulsingPoint === index && (
@@ -848,7 +848,7 @@ function AnimatedTrendChart({ data, animatedData }: { data: number[]; animatedDa
           <linearGradient id="trendGradientEnhanced" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#3D70B7" />
             <stop offset="50%" stopColor="#3D70B7" />
-            <stop offset="100%" stopColor="#22c55e" />
+            <stop offset="100%" stopColor="#42BA90" />
           </linearGradient>
         </defs>
         {isInView && animatedData.length > 1 && (
@@ -873,7 +873,7 @@ function AnimatedTrendChart({ data, animatedData }: { data: number[]; animatedDa
                   cx={`${(index / (data.length - 1)) * 100}%`}
                   cy={`${100 - value}%`}
                   r={pulsingPoint === index ? 10 : 6}
-                  fill={value <= 40 ? '#22c55e' : '#3D70B7'}
+                  fill={value <= 40 ? '#42BA90' : '#3D70B7'}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ 
                     scale: 1, 
@@ -885,7 +885,7 @@ function AnimatedTrendChart({ data, animatedData }: { data: number[]; animatedDa
                     r: { duration: 1, repeat: pulsingPoint === index ? Infinity : 0 }
                   }}
                   style={{
-                    filter: `drop-shadow(0 0 ${pulsingPoint === index ? 15 : 8}px ${value <= 40 ? '#22c55e' : '#3D70B7'})`
+                    filter: `drop-shadow(0 0 ${pulsingPoint === index ? 15 : 8}px ${value <= 40 ? '#42BA90' : '#3D70B7'})`
                   }}
                 />
               </motion.g>
@@ -1047,7 +1047,7 @@ export default function RiskAssessment() {
               </motion.div>
               <span className="text-[#3D70B7] text-sm font-medium">Live Risk Assessment</span>
               <motion.div
-                className="w-2 h-2 rounded-full bg-green-500"
+                className="w-2 h-2 rounded-full bg-[#42BA90]"
                 animate={{ opacity: [1, 0.3, 1] }}
                 transition={{ duration: 1, repeat: Infinity }}
               />
@@ -1085,12 +1085,12 @@ export default function RiskAssessment() {
               <div className="text-center mt-6">
                 <h3 className="text-xl font-bold mb-2">Overall Risk Level</h3>
                 <motion.div 
-                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-green-400 bg-green-500/10 border border-green-500/30"
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[#42BA90] bg-[#42BA90]/10 border border-[#42BA90]/30"
                   animate={{
                     boxShadow: [
-                      '0 0 10px rgba(34,197,94,0.2)',
-                      '0 0 20px rgba(34,197,94,0.4)',
-                      '0 0 10px rgba(34,197,94,0.2)'
+                      '0 0 10px rgba(66,186,144,0.2)',
+                      '0 0 20px rgba(66,186,144,0.4)',
+                      '0 0 10px rgba(66,186,144,0.2)'
                     ]
                   }}
                   transition={{ duration: 2, repeat: Infinity }}
@@ -1104,8 +1104,8 @@ export default function RiskAssessment() {
                   <span className="text-sm font-medium">Low Risk</span>
                 </motion.div>
                 <div className="flex items-center justify-center gap-2 mt-4 text-sm">
-                  <TrendingDown className="w-4 h-4 text-green-400" />
-                  <span className="text-green-400">-{improvement} pts</span>
+                  <TrendingDown className="w-4 h-4 text-[#42BA90]" />
+                  <span className="text-[#42BA90]">-{improvement} pts</span>
                   <span className="text-muted-foreground">from last month</span>
                 </div>
               </div>
@@ -1126,7 +1126,7 @@ export default function RiskAssessment() {
                     <Activity className="w-5 h-5 text-[#3D70B7]" />
                   </motion.div>
                 </h3>
-                <div className="flex items-center gap-2 text-green-400 text-sm">
+                <div className="flex items-center gap-2 text-[#42BA90] text-sm">
                   <TrendingDown className="w-4 h-4" />
                   <span>Improving</span>
                 </div>
@@ -1221,7 +1221,7 @@ export default function RiskAssessment() {
                 { severity: 'Critical', color: '#ef4444' },
                 { severity: 'High', color: '#f97316' },
                 { severity: 'Medium', color: '#eab308' },
-                { severity: 'Low', color: '#22c55e' },
+                { severity: 'Low', color: '#42BA90' },
               ].map(({ severity, color }) => (
                 <div key={severity} className="flex items-center gap-2">
                   <motion.div 
@@ -1250,7 +1250,7 @@ export default function RiskAssessment() {
               </div>
               {addressedImpact > 0 && (
                 <motion.div 
-                  className="mb-4 p-3 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm"
+                  className="mb-4 p-3 rounded-xl bg-[#42BA90]/10 border border-[#42BA90]/30 text-[#42BA90] text-sm"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
@@ -1301,7 +1301,7 @@ export default function RiskAssessment() {
                                   layout
                                   className={`p-3 rounded-lg border transition-all ${
                                     item.addressed 
-                                      ? 'bg-green-500/10 border-green-500/30 opacity-60' 
+                                      ? 'bg-[#42BA90]/10 border-[#42BA90]/30 opacity-60' 
                                       : 'bg-white/5 border-white/10 hover:border-[#3D70B7]/50'
                                   }`}
                                   whileHover={{ scale: 1.02 }}
@@ -1315,7 +1315,7 @@ export default function RiskAssessment() {
                                       }}
                                       className={`mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
                                         item.addressed 
-                                          ? 'bg-green-500 border-green-500' 
+                                          ? 'bg-[#42BA90] border-[#42BA90]' 
                                           : 'border-white/30 hover:border-[#3D70B7]'
                                       }`}
                                       data-testid={`checkbox-${item.id}`}
@@ -1391,11 +1391,11 @@ export default function RiskAssessment() {
                                   <motion.div 
                                     className={`w-2 h-2 rounded-full ${
                                       i < Math.ceil(framework.requirements.length * (framework.progress / 100))
-                                        ? 'bg-green-500'
+                                        ? 'bg-[#42BA90]'
                                         : 'bg-white/20'
                                     }`}
                                     animate={i < Math.ceil(framework.requirements.length * (framework.progress / 100)) ? {
-                                      boxShadow: ['0 0 0 rgba(34,197,94,0)', '0 0 8px rgba(34,197,94,0.6)', '0 0 0 rgba(34,197,94,0)']
+                                      boxShadow: ['0 0 0 rgba(66,186,144,0)', '0 0 8px rgba(66,186,144,0.6)', '0 0 0 rgba(66,186,144,0)']
                                     } : {}}
                                     transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
                                   />

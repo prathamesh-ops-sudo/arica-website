@@ -34,7 +34,7 @@ const certifications: Certification[] = [
     status: 'Active',
     lastAudit: 'October 2025',
     nextRenewal: 'October 2028',
-    color: '#FFB800',
+    color: '#42BA90',
     badgeShape: 'hexagon',
     details: [
       'Risk assessment and treatment',
@@ -72,7 +72,7 @@ const certifications: Certification[] = [
     status: 'Active',
     lastAudit: 'July 2025',
     nextRenewal: 'July 2026',
-    color: '#8B5CF6',
+    color: '#3D70B7',
     badgeShape: 'circle',
     details: [
       'Data subject rights management',
@@ -91,7 +91,7 @@ const certifications: Certification[] = [
     status: 'Active',
     lastAudit: 'September 2025',
     nextRenewal: 'September 2026',
-    color: '#10B981',
+    color: '#42BA90',
     badgeShape: 'hexagon',
     details: [
       'Cardholder data protection',
@@ -626,7 +626,7 @@ function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: strin
   }, [value]);
 
   return (
-    <div ref={ref} className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#FFB800]">
+    <div ref={ref} className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#42BA90]">
       {count.toLocaleString()}{suffix}
     </div>
   );
@@ -702,7 +702,7 @@ function CertificationModal({
           <ul className="space-y-2">
             {certification.details.map((detail, idx) => (
               <li key={idx} className="flex items-center gap-2 text-slate-300">
-                <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                <CheckCircle className="w-4 h-4 text-[#42BA90] flex-shrink-0" />
                 {detail}
               </li>
             ))}
@@ -713,13 +713,13 @@ function CertificationModal({
           <span 
             className="px-3 py-1 rounded-full text-sm font-medium"
             style={{ 
-              backgroundColor: certification.status === 'Active' ? '#10B98120' : '#F59E0B20',
-              color: certification.status === 'Active' ? '#10B981' : '#F59E0B'
+              backgroundColor: certification.status === 'Active' ? '#42BA9020' : '#F59E0B20',
+              color: certification.status === 'Active' ? '#42BA90' : '#F59E0B'
             }}
           >
             {certification.status}
           </span>
-          <Sparkles className="w-4 h-4 text-[#FFB800]" />
+          <Sparkles className="w-4 h-4 text-[#42BA90]" />
           <span className="text-sm text-slate-400">Verified & Compliant</span>
         </div>
       </motion.div>
@@ -740,7 +740,7 @@ export default function Certifications() {
       <div className="relative pt-24 pb-16 overflow-hidden">
         <div className="absolute inset-0 opacity-30">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#3D70B7] rounded-full blur-[150px]" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#FFB800] rounded-full blur-[150px]" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#42BA90] rounded-full blur-[150px]" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -755,9 +755,9 @@ export default function Certifications() {
             </Link>
             
             <div className="flex items-center justify-center gap-3 mb-4">
-              <Award className="w-10 h-10 text-[#FFB800]" />
+              <Award className="w-10 h-10 text-[#42BA90]" />
               <h1 className="text-4xl md:text-5xl font-bold text-white">
-                Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#FFB800]">Certifications</span>
+                Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#42BA90]">Certifications</span>
               </h1>
             </div>
             <p className="text-xl text-slate-400 max-w-2xl text-center">
@@ -772,9 +772,9 @@ export default function Certifications() {
             className="mb-16"
           >
             <div className="relative bg-gradient-to-br from-slate-900/80 to-slate-800/50 rounded-3xl border border-slate-700/50 p-6 backdrop-blur-sm">
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#3D70B7]/5 to-[#FFB800]/5" />
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#3D70B7]/5 to-[#42BA90]/5" />
               <h2 className="text-2xl font-bold text-white text-center mb-4 relative z-10">
-                <Star className="w-6 h-6 inline-block mr-2 text-[#FFB800]" />
+                <Star className="w-6 h-6 inline-block mr-2 text-[#42BA90]" />
                 Interactive 3D Badge Showcase
               </h2>
               <p className="text-center text-slate-400 mb-6 relative z-10">
@@ -848,8 +848,8 @@ export default function Certifications() {
                           <span 
                             className="px-3 py-1 rounded-full text-xs font-medium"
                             style={{ 
-                              backgroundColor: cert.status === 'Active' ? '#10B98120' : '#F59E0B20',
-                              color: cert.status === 'Active' ? '#10B981' : '#F59E0B'
+                              backgroundColor: cert.status === 'Active' ? '#42BA9020' : '#F59E0B20',
+                              color: cert.status === 'Active' ? '#42BA90' : '#F59E0B'
                             }}
                           >
                             {cert.status}
@@ -943,7 +943,7 @@ export default function Certifications() {
               {/* Animated path line */}
               <div className="absolute top-1/2 left-0 right-0 h-1 bg-slate-700 -translate-y-1/2 hidden md:block overflow-hidden">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-[#3D70B7] via-[#FFB800] to-[#10B981]"
+                  className="h-full bg-gradient-to-r from-[#3D70B7] via-[#42BA90] to-[#42BA90]"
                   initial={{ width: 0 }}
                   animate={{ width: '83%' }}
                   transition={{ duration: 2, delay: 0.5, ease: 'easeOut' }}
@@ -963,7 +963,7 @@ export default function Certifications() {
                 }}
               >
                 <motion.div
-                  className="w-6 h-6 rounded-full bg-[#FFB800] shadow-[0_0_20px_rgba(255,184,0,0.6)]"
+                  className="w-6 h-6 rounded-full bg-[#42BA90] shadow-[0_0_20px_rgba(66,186,144,0.6)]"
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
@@ -985,15 +985,15 @@ export default function Certifications() {
                       animate={{
                         scale: [1, 1.1, 1],
                         boxShadow: [
-                          `0 0 20px ${step.progress === 100 ? '#10B98150' : '#F59E0B50'}`,
-                          `0 0 30px ${step.progress === 100 ? '#10B98180' : '#F59E0B80'}`,
-                          `0 0 20px ${step.progress === 100 ? '#10B98150' : '#F59E0B50'}`
+                          `0 0 20px ${step.progress === 100 ? '#42BA9050' : '#F59E0B50'}`,
+                          `0 0 30px ${step.progress === 100 ? '#42BA9080' : '#F59E0B80'}`,
+                          `0 0 20px ${step.progress === 100 ? '#42BA9050' : '#F59E0B50'}`
                         ]
                       }}
                       transition={{ duration: 2, repeat: Infinity, delay: 0.2 * index + 0.5 }}
                       style={{
-                        backgroundColor: step.progress === 100 ? '#10B981' : '#F59E0B',
-                        boxShadow: `0 0 20px ${step.progress === 100 ? '#10B98150' : '#F59E0B50'}`
+                        backgroundColor: step.progress === 100 ? '#42BA90' : '#F59E0B',
+                        boxShadow: `0 0 20px ${step.progress === 100 ? '#42BA9050' : '#F59E0B50'}`
                       }}
                     >
                       {step.progress === 100 ? (

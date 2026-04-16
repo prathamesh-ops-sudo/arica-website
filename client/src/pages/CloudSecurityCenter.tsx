@@ -257,7 +257,7 @@ function InfrastructureNode({ region, isSelected, onClick }: {
   const [isHovered, setIsHovered] = useState(false);
 
   const statusColors = {
-    healthy: { bg: 'bg-green-500', glow: '#22c55e' },
+    healthy: { bg: 'bg-[#42BA90]', glow: '#42BA90' },
     warning: { bg: 'bg-yellow-500', glow: '#eab308' },
     critical: { bg: 'bg-red-500', glow: '#ef4444' },
   };
@@ -320,7 +320,7 @@ function InfrastructureNode({ region, isSelected, onClick }: {
                 <div className="flex items-center justify-between gap-4 text-xs">
                   <div className="flex items-center gap-1">
                     <Server className="w-3 h-3 text-[#3D70B7]" />
-                    <span className="text-green-400">{region.resources}</span>
+                    <span className="text-[#42BA90]">{region.resources}</span>
                   </div>
                   {region.threats > 0 && (
                     <div className="flex items-center gap-1">
@@ -331,7 +331,7 @@ function InfrastructureNode({ region, isSelected, onClick }: {
                 </div>
                 <div className="mt-2 pt-2 border-t border-white/10">
                   <div className={`text-[10px] uppercase tracking-wider ${
-                    region.status === 'healthy' ? 'text-green-400' :
+                    region.status === 'healthy' ? 'text-[#42BA90]' :
                     region.status === 'warning' ? 'text-yellow-400' : 'text-red-400'
                   }`}>
                     Status: {region.status}
@@ -495,7 +495,7 @@ function SecurityEventItem({ event, index }: { event: SecurityEvent; index: numb
             event.severity === 'critical' ? 'bg-red-500/20 text-red-400 animate-pulse' :
             event.severity === 'high' ? 'bg-orange-500/20 text-orange-400' :
             event.severity === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
-            'bg-green-500/20 text-green-400'
+            'bg-[#42BA90]/20 text-[#42BA90]'
           }`}>
             {event.severity}
           </span>
@@ -626,7 +626,7 @@ export default function CloudSecurityCenter() {
   const getRiskColor = (score: number) => {
     if (score >= 70) return 'text-red-400';
     if (score >= 40) return 'text-yellow-400';
-    return 'text-green-400';
+    return 'text-[#42BA90]';
   };
 
   const getStatusColor = (status: string) => {
@@ -634,7 +634,7 @@ export default function CloudSecurityCenter() {
       case 'healthy':
       case 'running':
       case 'compliant':
-        return 'bg-green-500';
+        return 'bg-[#42BA90]';
       case 'warning':
       case 'review':
         return 'bg-yellow-500';
@@ -793,17 +793,17 @@ export default function CloudSecurityCenter() {
               </Interactive3DCard>
 
               <Interactive3DCard 
-                className="bg-gradient-to-br from-green-500/20 to-green-500/5 backdrop-blur-sm border border-green-500/40 rounded-2xl p-4 relative overflow-hidden group hover:border-green-500 cursor-pointer" 
+                className="bg-gradient-to-br from-[#42BA90]/20 to-[#42BA90]/5 backdrop-blur-sm border border-[#42BA90]/40 rounded-2xl p-4 relative overflow-hidden group hover:border-[#42BA90] cursor-pointer" 
                 dataTestId="metric-card-containers"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-green-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#42BA90]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                 <div className="relative">
                   <div className="flex items-center gap-2 mb-2">
-                    <Container className="w-5 h-5 text-green-400" />
-                    <span className="font-mono text-xs text-green-400/70 uppercase">Running Containers</span>
+                    <Container className="w-5 h-5 text-[#42BA90]" />
+                    <span className="font-mono text-xs text-[#42BA90]/70 uppercase">Running Containers</span>
                   </div>
-                  <div className="text-3xl font-bold font-mono text-green-400">{animatedMetrics.containers}</div>
-                  <div className="text-xs text-green-400/50 mt-1">{containers.length} total deployed</div>
+                  <div className="text-3xl font-bold font-mono text-[#42BA90]">{animatedMetrics.containers}</div>
+                  <div className="text-xs text-[#42BA90]/50 mt-1">{containers.length} total deployed</div>
                 </div>
               </Interactive3DCard>
 
@@ -962,11 +962,11 @@ export default function CloudSecurityCenter() {
               <div className="absolute top-3 left-3 flex items-center gap-4 font-mono text-[10px]">
                 <div className="flex items-center gap-1">
                   <motion.div 
-                    className="w-2 h-2 rounded-full bg-green-500"
+                    className="w-2 h-2 rounded-full bg-[#42BA90]"
                     animate={{ scale: [1, 1.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   />
-                  <span className="text-green-400">Healthy</span>
+                  <span className="text-[#42BA90]">Healthy</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <motion.div 
@@ -1061,12 +1061,12 @@ export default function CloudSecurityCenter() {
                               animate={{ width: `${policy.riskScore}%` }}
                               transition={{ duration: 1, delay: 0.5 }}
                               className={`h-full rounded-full ${
-                                policy.riskScore >= 70 ? 'bg-red-500' : policy.riskScore >= 40 ? 'bg-yellow-500' : 'bg-green-500'
+                                policy.riskScore >= 70 ? 'bg-red-500' : policy.riskScore >= 40 ? 'bg-yellow-500' : 'bg-[#42BA90]'
                               }`}
                             />
                           </div>
                           <div className={`px-2 py-0.5 rounded text-[10px] font-mono ${
-                            policy.status === 'compliant' ? 'bg-green-500/20 text-green-400' :
+                            policy.status === 'compliant' ? 'bg-[#42BA90]/20 text-[#42BA90]' :
                             policy.status === 'review' ? 'bg-yellow-500/20 text-yellow-400' :
                             'bg-red-500/20 text-red-400'
                           }`}>
@@ -1218,7 +1218,7 @@ export default function CloudSecurityCenter() {
                           transition={{ duration: 1, repeat: Infinity }}
                         >
                           {check.compliant ? (
-                            <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
+                            <CheckCircle className="w-4 h-4 text-[#42BA90] flex-shrink-0" />
                           ) : (
                             <XCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
                           )}
@@ -1300,26 +1300,26 @@ export default function CloudSecurityCenter() {
                       value={overallRiskScore} 
                       size={100} 
                       strokeWidth={8}
-                      color={overallRiskScore >= 70 ? '#ef4444' : overallRiskScore >= 40 ? '#eab308' : '#22c55e'}
+                      color={overallRiskScore >= 70 ? '#ef4444' : overallRiskScore >= 40 ? '#eab308' : '#42BA90'}
                       label="RISK"
                     />
                   </div>
                 </Interactive3DCard>
 
                 <Interactive3DCard 
-                  className="bg-[#000510]/80 backdrop-blur-sm border border-green-500/30 rounded-2xl p-5"
+                  className="bg-[#000510]/80 backdrop-blur-sm border border-[#42BA90]/30 rounded-2xl p-5"
                   dataTestId="metric-compliance"
                 >
                   <div className="flex items-center gap-2 mb-3">
-                    <FileCheck className="w-5 h-5 text-green-400" />
-                    <span className="font-mono text-sm text-green-400/70">Compliance</span>
+                    <FileCheck className="w-5 h-5 text-[#42BA90]" />
+                    <span className="font-mono text-sm text-[#42BA90]/70">Compliance</span>
                   </div>
                   <div className="flex items-center justify-center">
                     <CircularProgress 
                       value={complianceScore} 
                       size={100} 
                       strokeWidth={8}
-                      color="#22c55e"
+                      color="#42BA90"
                       label="SCORE"
                     />
                   </div>

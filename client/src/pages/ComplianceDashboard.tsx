@@ -60,7 +60,7 @@ export default function ComplianceDashboard() {
   }, []);
 
   const getComplianceColor = (percentage: number) => {
-    if (percentage >= 80) return 'text-green-400';
+    if (percentage >= 80) return 'text-[#42BA90]';
     if (percentage >= 50) return 'text-yellow-400';
     return 'text-red-400';
   };
@@ -133,9 +133,9 @@ export default function ComplianceDashboard() {
 
             <div className="lg:col-span-2 grid grid-cols-3 gap-4">
               <GlassCard glowColor="green" className="p-6">
-                <CheckCircle className="w-8 h-8 text-green-400 mb-4" />
-                <div className="text-4xl font-bold text-green-400 mb-1">{totalCompliant}</div>
-                <div className="text-sm text-green-400/70">Controls Implemented</div>
+                <CheckCircle className="w-8 h-8 text-[#42BA90] mb-4" />
+                <div className="text-4xl font-bold text-[#42BA90] mb-1">{totalCompliant}</div>
+                <div className="text-sm text-[#42BA90]/70">Controls Implemented</div>
                 <AnimatedProgress
                   value={(totalCompliant / totalControls) * 100}
                   color="green"
@@ -194,12 +194,12 @@ export default function ComplianceDashboard() {
                         <div className="flex items-center gap-2 w-32 flex-shrink-0">
                           <motion.div
                             className={`w-2 h-2 rounded-full ${
-                              isComplete ? 'bg-green-500' : isActive ? 'bg-amber-500' : 'bg-gray-500'
+                              isComplete ? 'bg-[#42BA90]' : isActive ? 'bg-amber-500' : 'bg-gray-500'
                             }`}
                             animate={isAnimated && isActive ? {
                               boxShadow: ['0 0 0 0 rgba(245,158,11,0.4)', '0 0 0 8px rgba(245,158,11,0)', '0 0 0 0 rgba(245,158,11,0.4)']
                             } : isComplete ? {
-                              boxShadow: '0 0 8px rgba(34,197,94,0.6)'
+                              boxShadow: '0 0 8px rgba(66,186,144,0.6)'
                             } : {}}
                             transition={{ duration: 2, repeat: isActive ? Infinity : 0 }}
                           />
@@ -221,7 +221,7 @@ export default function ComplianceDashboard() {
                               animate={{ scale: 1 }}
                               transition={{ delay: 0.2, type: 'spring' }}
                             >
-                              <CheckCircle className="w-4 h-4 text-green-400" />
+                              <CheckCircle className="w-4 h-4 text-[#42BA90]" />
                             </motion.div>
                           )}
                         </div>
@@ -248,7 +248,7 @@ export default function ComplianceDashboard() {
                   </button>
                 )}
                 <div className="hidden md:flex items-center gap-4 text-sm">
-                  <span className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-green-500" /> Compliant</span>
+                  <span className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-[#42BA90]" /> Compliant</span>
                   <span className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-yellow-500" /> In Progress</span>
                   <span className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-red-500" /> Gap</span>
                 </div>
@@ -294,7 +294,7 @@ export default function ComplianceDashboard() {
                               initial={{ width: 0 }}
                               animate={{ width: `${(category.compliant / category.controls) * 100}%` }}
                               transition={{ duration: 1, delay: 0.1 * index }}
-                              className="h-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]"
+                              className="h-full bg-[#42BA90] shadow-[0_0_10px_rgba(66,186,144,0.5)]"
                             />
                             <motion.div
                               initial={{ width: 0 }}
@@ -311,7 +311,7 @@ export default function ComplianceDashboard() {
                           </div>
                         </div>
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                          <span className="text-green-400">{category.compliant} done</span>
+                          <span className="text-[#42BA90]">{category.compliant} done</span>
                           <span className="text-yellow-400">{category.inProgress} in progress</span>
                           <span className="text-red-400">{gaps} gaps</span>
                         </div>
@@ -326,8 +326,8 @@ export default function ComplianceDashboard() {
                           className="mt-4 pt-4 border-t border-white/10"
                         >
                           <div className="grid grid-cols-3 gap-2">
-                            <div className="text-center p-2 rounded-lg bg-green-500/10">
-                              <div className="text-lg font-bold text-green-400">{category.compliant}</div>
+                            <div className="text-center p-2 rounded-lg bg-[#42BA90]/10">
+                              <div className="text-lg font-bold text-[#42BA90]">{category.compliant}</div>
                               <div className="text-xs text-muted-foreground">Compliant</div>
                             </div>
                             <div className="text-center p-2 rounded-lg bg-yellow-500/10">

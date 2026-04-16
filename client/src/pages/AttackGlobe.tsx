@@ -8,10 +8,10 @@ const attackTypes = [
   { id: 'ddos', name: 'DDoS Attack', color: '#ff3344' },
   { id: 'sql', name: 'SQL Injection', color: '#ff9900' },
   { id: 'xss', name: 'XSS Attack', color: '#ffcc00' },
-  { id: 'bruteforce', name: 'Brute Force', color: '#ff00ff' },
-  { id: 'malware', name: 'Malware', color: '#00ffff' },
+  { id: 'bruteforce', name: 'Brute Force', color: '#3D70B7' },
+  { id: 'malware', name: 'Malware', color: '#3D70B7' },
   { id: 'phishing', name: 'Phishing', color: '#ff6666' },
-  { id: 'ransomware', name: 'Ransomware', color: '#cc00ff' },
+  { id: 'ransomware', name: 'Ransomware', color: '#3D70B7' },
 ];
 
 const cityCoordinates: Record<string, { lat: number; lng: number }> = {
@@ -785,7 +785,7 @@ export default function AttackGlobe() {
       case 'critical': return 'text-red-500 bg-red-500/20 border-red-500/50';
       case 'high': return 'text-orange-500 bg-orange-500/20 border-orange-500/50';
       case 'medium': return 'text-yellow-500 bg-yellow-500/20 border-yellow-500/50';
-      case 'low': return 'text-green-500 bg-green-500/20 border-green-500/50';
+      case 'low': return 'text-[#42BA90] bg-[#42BA90]/20 border-[#42BA90]/50';
       default: return 'text-white/50 bg-white/10 border-white/20';
     }
   };

@@ -47,7 +47,7 @@ const policyCategories: PolicyCategory[] = [
     description: 'Rules governing user access to systems and data',
     compliance: 87,
     requirements: ['Authentication protocols', 'Authorization levels', 'Privileged access management', 'Session management'],
-    color: '#8B5CF6'
+    color: '#3D70B7'
   },
   {
     id: 'data-classification',
@@ -74,7 +74,7 @@ const policyCategories: PolicyCategory[] = [
     description: 'Ensuring business operations during and after disruptions',
     compliance: 90,
     requirements: ['Risk assessment', 'Recovery objectives', 'Backup procedures', 'Testing schedules'],
-    color: '#10B981'
+    color: '#42BA90'
   },
   {
     id: 'acceptable-use',
@@ -83,7 +83,7 @@ const policyCategories: PolicyCategory[] = [
     description: 'Guidelines for appropriate use of organizational resources',
     compliance: 95,
     requirements: ['User responsibilities', 'Prohibited activities', 'Monitoring notice', 'Compliance enforcement'],
-    color: '#8B5CF6'
+    color: '#3D70B7'
   }
 ];
 
@@ -600,7 +600,7 @@ function ComplianceMeter({ value }: { value: number }) {
       
       const gradient = ctx.createLinearGradient(0, 0, width, height);
       gradient.addColorStop(0, '#3D70B7');
-      gradient.addColorStop(0.5, '#8B5CF6');
+      gradient.addColorStop(0.5, '#3D70B7');
       gradient.addColorStop(1, '#3D70B7');
       
       ctx.beginPath();
@@ -695,11 +695,11 @@ function PolicyBuilder() {
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
       foundation: '#3D70B7',
-      protection: '#8B5CF6',
+      protection: '#3D70B7',
       detection: '#F59E0B',
       response: '#EF4444',
-      recovery: '#10B981',
-      awareness: '#EC4899'
+      recovery: '#42BA90',
+      awareness: '#3D70B7'
     };
     return colors[category] || '#3D70B7';
   };
@@ -954,8 +954,8 @@ export default function SecurityPolicies() {
             className="mb-12"
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 rounded-lg bg-[#8B5CF6]/20">
-                <FileText className="w-5 h-5 text-[#8B5CF6]" />
+              <div className="p-2 rounded-lg bg-[#3D70B7]/20">
+                <FileText className="w-5 h-5 text-[#3D70B7]" />
               </div>
               <h2 className="text-2xl font-bold">Policy Categories</h2>
             </div>

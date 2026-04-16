@@ -218,7 +218,7 @@ function CodeBlock({
   if (exploded) return null;
 
   const color = highlighted 
-    ? (vulnerable ? '#ff3333' : '#33ff33')
+    ? (vulnerable ? '#ff3333' : '#42BA90')
     : (vulnerable ? '#ff6666' : CYAN);
 
   return (
@@ -230,7 +230,7 @@ function CodeBlock({
       <Text
         position={[position[0], position[1], position[2] + 0.1]}
         fontSize={0.15}
-        color={highlighted ? (vulnerable ? '#ff0000' : '#00ff00') : '#ffffff'}
+        color={highlighted ? (vulnerable ? '#ff0000' : '#42BA90') : '#ffffff'}
         anchorX="center"
         anchorY="middle"
         maxWidth={3.8}
@@ -376,8 +376,8 @@ const vulnerabilityCategories = [
   { id: 'sql', name: 'SQL Injection', icon: Bug, count: 12, critical: 3, color: '#ff4444' },
   { id: 'xss', name: 'XSS', icon: Code, count: 8, critical: 2, color: '#ff8844' },
   { id: 'buffer', name: 'Buffer Overflow', icon: AlertTriangle, count: 5, critical: 4, color: '#ffaa44' },
-  { id: 'auth', name: 'Auth Bypass', icon: Lock, count: 3, critical: 1, color: '#aa44ff' },
-  { id: 'deps', name: 'Insecure Dependencies', icon: Package, count: 15, critical: 2, color: '#4488ff' },
+  { id: 'auth', name: 'Auth Bypass', icon: Lock, count: 3, critical: 1, color: '#3D70B7' },
+  { id: 'deps', name: 'Insecure Dependencies', icon: Package, count: 15, critical: 2, color: '#3D70B7' },
   { id: 'secrets', name: 'Hardcoded Secrets', icon: Key, count: 7, critical: 5, color: '#ff44aa' },
 ];
 
@@ -505,7 +505,7 @@ function InteractiveVulnerabilityCard({
     critical: { bg: 'rgba(255, 68, 68, 0.15)', border: '#ff4444', text: '#ff6666', glow: '#ff4444' },
     high: { bg: 'rgba(255, 170, 68, 0.15)', border: '#ffaa44', text: '#ffcc66', glow: '#ffaa44' },
     medium: { bg: 'rgba(255, 255, 68, 0.15)', border: '#ffff44', text: '#ffff88', glow: '#ffff44' },
-    info: { bg: 'rgba(68, 255, 136, 0.15)', border: '#44ff88', text: '#88ffaa', glow: '#44ff88' },
+    info: { bg: 'rgba(66, 186, 144, 0.15)', border: '#42BA90', text: '#42BA90', glow: '#42BA90' },
   };
   
   const colors = severityColors[result.severity] || severityColors.info;
@@ -578,7 +578,7 @@ function InteractiveVulnerabilityCard({
                   {codeForSeverity[result.type].split('\n').map((line, i) => (
                     <div 
                       key={i} 
-                      className={line.includes('// Fix:') ? 'text-green-400' : line.includes('// Vulnerable') ? 'text-red-400' : ''}
+                      className={line.includes('// Fix:') ? 'text-[#42BA90]' : line.includes('// Vulnerable') ? 'text-red-400' : ''}
                     >
                       {line}
                     </div>
@@ -862,7 +862,7 @@ export default function CodeReview() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <AnimatedCounter value={linesScanned} label="Lines Scanned" icon={FileCode} color={CYAN} />
               <AnimatedCounter value={issuesFound} label="Issues Found" icon={Bug} color={RED} />
-              <AnimatedCounter value={securityScore} label="Security Score" icon={Shield} color={securityScore > 70 ? '#44ff88' : AMBER} suffix="%" />
+              <AnimatedCounter value={securityScore} label="Security Score" icon={Shield} color={securityScore > 70 ? '#42BA90' : AMBER} suffix="%" />
               <AnimatedCounter value={scanComplete ? 5 : 0} label="Stages Complete" icon={GitBranch} color={PURPLE} />
             </div>
           </motion.div>
@@ -936,7 +936,7 @@ export default function CodeReview() {
                 <div className="flex justify-around">
                   <AnimatedGauge value={78} max={100} label="Coverage" color={CYAN} />
                   <AnimatedGauge value={42} max={100} label="Complexity" color={PURPLE} />
-                  <AnimatedGauge value={15} max={100} label="Duplication" color="#44ff88" />
+                  <AnimatedGauge value={15} max={100} label="Duplication" color="#42BA90" />
                 </div>
               </div>
               
@@ -969,8 +969,8 @@ export default function CodeReview() {
                 </div>
                 <div className="flex items-center gap-4 mt-4">
                   <div className="flex items-center gap-2 text-sm">
-                    <TrendingDown className="w-4 h-4 text-green-400" />
-                    <span className="text-green-400">-23% issues</span>
+                    <TrendingDown className="w-4 h-4 text-[#42BA90]" />
+                    <span className="text-[#42BA90]">-23% issues</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <TrendingUp className="w-4 h-4 text-[#3D70B7]" />
@@ -998,7 +998,7 @@ export default function CodeReview() {
                       transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
                     />
                     <motion.div 
-                      className="w-3 h-3 rounded-full bg-green-500"
+                      className="w-3 h-3 rounded-full bg-[#42BA90]"
                       animate={isScanning ? { scale: [1, 1.2, 1] } : {}}
                       transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
                     />
@@ -1031,7 +1031,7 @@ export default function CodeReview() {
                             result 
                               ? result.severity === 'critical' ? 'bg-red-500/30 border-l-4 border-red-500' 
                               : result.severity === 'high' ? 'bg-orange-500/30 border-l-4 border-orange-500'
-                              : result.severity === 'info' ? 'bg-green-500/20 border-l-4 border-green-500'
+                              : result.severity === 'info' ? 'bg-[#42BA90]/20 border-l-4 border-[#42BA90]'
                               : '' 
                               : ''
                           }`}
@@ -1045,7 +1045,7 @@ export default function CodeReview() {
                           <span className="text-gray-600 w-8 select-none">{i + 1}</span>
                           <span className={
                             result && result.severity !== 'info' ? 'text-red-300' : 
-                            result?.severity === 'info' ? 'text-green-300' : 
+                            result?.severity === 'info' ? 'text-[#42BA90]' : 
                             isCurrentScanLine ? 'text-[#3D70B7]' : ''
                           }>
                             {line || ' '}
@@ -1178,7 +1178,7 @@ export default function CodeReview() {
                           <XCircle className="w-4 h-4" /> 2 Critical
                         </motion.span>
                         <span className="text-orange-400">1 High</span>
-                        <span className="text-green-400 flex items-center gap-1">
+                        <span className="text-[#42BA90] flex items-center gap-1">
                           <CheckCircle className="w-4 h-4" /> 2 Safe
                         </span>
                       </div>
@@ -1186,7 +1186,7 @@ export default function CodeReview() {
                         animate={{ scale: [1, 1.1, 1] }}
                         transition={{ duration: 1, repeat: Infinity }}
                       >
-                        <CheckCircle className="w-5 h-5 text-green-400" />
+                        <CheckCircle className="w-5 h-5 text-[#42BA90]" />
                       </motion.div>
                     </div>
                   </motion.div>

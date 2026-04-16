@@ -98,7 +98,7 @@ const securityLayers: SecurityLayer[] = [
     description: 'Application layer security and WAF',
     status: 'active',
     nodeTypes: ['server', 'cloud'],
-    color: '#44ff88',
+    color: '#42BA90',
   },
   {
     id: 'data',
@@ -107,7 +107,7 @@ const securityLayers: SecurityLayer[] = [
     description: 'Encryption and data loss prevention',
     status: 'active',
     nodeTypes: ['database'],
-    color: '#4488ff',
+    color: '#3D70B7',
   },
   {
     id: 'identity',
@@ -116,7 +116,7 @@ const securityLayers: SecurityLayer[] = [
     description: 'Authentication and authorization controls',
     status: 'active',
     nodeTypes: ['user', 'cloud'],
-    color: '#aa44ff',
+    color: '#3D70B7',
   },
 ];
 
@@ -568,7 +568,7 @@ export default function SecurityArchitecture() {
     switch (status) {
       case 'secure':
       case 'active':
-        return 'text-green-400';
+        return 'text-[#42BA90]';
       case 'warning':
         return 'text-yellow-400';
       case 'critical':
@@ -583,7 +583,7 @@ export default function SecurityArchitecture() {
     switch (status) {
       case 'secure':
       case 'active':
-        return 'bg-green-500/20 border-green-500/50';
+        return 'bg-[#42BA90]/20 border-[#42BA90]/50';
       case 'warning':
         return 'bg-yellow-500/20 border-yellow-500/50';
       case 'critical':
@@ -601,7 +601,7 @@ export default function SecurityArchitecture() {
         className="fixed inset-0 pointer-events-none z-[1]"
         style={{
           background:
-            'radial-gradient(ellipse at 50% 0%, rgba(61, 112, 183, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(170, 68, 255, 0.05) 0%, transparent 40%)',
+            'radial-gradient(ellipse at 50% 0%, rgba(61, 112, 183, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(61, 112, 183, 0.05) 0%, transparent 40%)',
         }}
       />
 
@@ -626,7 +626,7 @@ export default function SecurityArchitecture() {
 
             <div className="flex items-center gap-4">
               <div className="hidden md:flex items-center gap-4 font-mono text-xs">
-                <div className="flex items-center gap-2 text-green-400">
+                <div className="flex items-center gap-2 text-[#42BA90]">
                   <Shield className="w-3 h-3" />
                   <span>{sceneRef.current.nodes.size}</span>
                   <span className="text-[#3D70B7]/70">nodes</span>
@@ -659,7 +659,7 @@ export default function SecurityArchitecture() {
             <h1 className="font-mono text-3xl md:text-5xl font-bold mb-3 gsap-fade-in">
               <span className="text-[#3D70B7]">Network </span>
               <span className="text-white">Security</span>
-              <span className="text-[#aa44ff]"> Architecture</span>
+              <span className="text-[#3D70B7]"> Architecture</span>
             </h1>
 
             <p className="text-[#3D70B7]/60 font-mono text-sm max-w-2xl mx-auto gsap-fade-in">
@@ -696,7 +696,7 @@ export default function SecurityArchitecture() {
                         cy="64"
                         r="56"
                         fill="none"
-                        stroke={healthScore >= 80 ? '#44ff88' : healthScore >= 60 ? '#ffaa44' : '#ff4444'}
+                        stroke={healthScore >= 80 ? '#42BA90' : healthScore >= 60 ? '#ffaa44' : '#ff4444'}
                         strokeWidth="8"
                         strokeLinecap="round"
                         strokeDasharray={`${(healthScore / 100) * 352} 352`}
@@ -712,7 +712,7 @@ export default function SecurityArchitecture() {
                   <div className="space-y-2 text-xs font-mono">
                     <div className="flex justify-between">
                       <span className="text-[#3D70B7]/60">Secure Nodes</span>
-                      <span className="text-green-400">8/10</span>
+                      <span className="text-[#42BA90]">8/10</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-[#3D70B7]/60">Warnings</span>
@@ -758,11 +758,11 @@ export default function SecurityArchitecture() {
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="mt-4 p-3 bg-green-500/10 border border-green-500/30 rounded"
+                      className="mt-4 p-3 bg-[#42BA90]/10 border border-[#42BA90]/30 rounded"
                     >
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-green-400">{blockedAttacks}</div>
-                        <div className="text-xs text-green-400/70">Attacks Blocked</div>
+                        <div className="text-2xl font-bold text-[#42BA90]">{blockedAttacks}</div>
+                        <div className="text-xs text-[#42BA90]/70">Attacks Blocked</div>
                       </div>
                     </motion.div>
                   )}
@@ -1021,8 +1021,8 @@ export default function SecurityArchitecture() {
                       >
                         {index === securityLayers.length - 1 && (
                           <div className="text-center">
-                            <Lock className="w-6 h-6 text-[#aa44ff] mx-auto" />
-                            <span className="text-[10px] text-[#aa44ff] font-mono">CORE</span>
+                            <Lock className="w-6 h-6 text-[#3D70B7] mx-auto" />
+                            <span className="text-[10px] text-[#3D70B7] font-mono">CORE</span>
                           </div>
                         )}
                       </motion.div>
@@ -1109,7 +1109,7 @@ export default function SecurityArchitecture() {
                   >
                     {selectedNode.type === 'firewall' && <Flame className="w-5 h-5 text-red-400" />}
                     {selectedNode.type === 'server' && <Server className="w-5 h-5 text-blue-400" />}
-                    {selectedNode.type === 'database' && <Database className="w-5 h-5 text-green-400" />}
+                    {selectedNode.type === 'database' && <Database className="w-5 h-5 text-[#42BA90]" />}
                     {selectedNode.type === 'user' && <Users className="w-5 h-5 text-[#3D70B7]" />}
                     {selectedNode.type === 'cloud' && <Cloud className="w-5 h-5 text-[#3D70B7]" />}
                   </div>
@@ -1135,7 +1135,7 @@ export default function SecurityArchitecture() {
                       <motion.div
                         className={`h-full ${
                           selectedNode.securityLevel >= 90
-                            ? 'bg-green-400'
+                            ? 'bg-[#42BA90]'
                             : selectedNode.securityLevel >= 70
                             ? 'bg-yellow-400'
                             : 'bg-red-400'
@@ -1162,7 +1162,7 @@ export default function SecurityArchitecture() {
                     <span className="text-xs text-[#3D70B7]/50 font-mono">Vulnerabilities</span>
                     <p className={`text-sm font-mono mt-1 ${
                       selectedNode.details.vulnerabilities === 0
-                        ? 'text-green-400'
+                        ? 'text-[#42BA90]'
                         : selectedNode.details.vulnerabilities! <= 2
                         ? 'text-yellow-400'
                         : 'text-red-400'
@@ -1177,16 +1177,16 @@ export default function SecurityArchitecture() {
                 </div>
 
                 <div className="flex items-center gap-2 p-3 rounded-lg border" style={{
-                  backgroundColor: selectedNode.status === 'secure' ? 'rgba(68, 255, 136, 0.1)' : 'rgba(255, 170, 68, 0.1)',
-                  borderColor: selectedNode.status === 'secure' ? 'rgba(68, 255, 136, 0.3)' : 'rgba(255, 170, 68, 0.3)',
+                  backgroundColor: selectedNode.status === 'secure' ? 'rgba(66, 186, 144, 0.1)' : 'rgba(255, 170, 68, 0.1)',
+                  borderColor: selectedNode.status === 'secure' ? 'rgba(66, 186, 144, 0.3)' : 'rgba(255, 170, 68, 0.3)',
                 }}>
                   {selectedNode.status === 'secure' ? (
-                    <CheckCircle className="w-5 h-5 text-green-400" />
+                    <CheckCircle className="w-5 h-5 text-[#42BA90]" />
                   ) : (
                     <AlertTriangle className="w-5 h-5 text-yellow-400" />
                   )}
                   <span className={`text-sm font-mono ${
-                    selectedNode.status === 'secure' ? 'text-green-400' : 'text-yellow-400'
+                    selectedNode.status === 'secure' ? 'text-[#42BA90]' : 'text-yellow-400'
                   }`}>
                     Status: {selectedNode.status.charAt(0).toUpperCase() + selectedNode.status.slice(1)}
                   </span>

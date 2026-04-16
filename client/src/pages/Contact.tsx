@@ -24,7 +24,7 @@ function SuccessAnimation({ onReset }: { onReset: () => void }) {
       className="text-center py-16"
     >
       <motion.div
-        className="inline-flex p-4 rounded-full bg-green-500/10 text-green-500 mb-6"
+        className="inline-flex p-4 rounded-full bg-[#42BA90]/10 text-[#42BA90] mb-6"
         initial={{ scale: 0, rotate: -180 }}
         animate={{ scale: 1, rotate: 0 }}
         transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
