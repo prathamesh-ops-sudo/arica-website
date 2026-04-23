@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect, useState, useCallback, createContext, useContext, useMemo } from 'react';
-import TetrisLoading from '@/components/ui/tetris-loader';
+import { ThreeDEffectLoader } from '@/components/ui/3d-effect-loader';
 
 const TRANSITION_DURATION = 1800;
 
@@ -94,12 +94,7 @@ export function HyperspaceTransitionProvider({ children }: HyperspaceTransitionP
           }}
           data-testid="hyperspace-overlay"
         >
-          <TetrisLoading 
-            size="md" 
-            speed="fast" 
-            showLoadingText={true}
-            loadingText="Loading..."
-          />
+          <ThreeDEffectLoader text="Loading…" />
         </div>
       )}
     </HyperspaceContext.Provider>

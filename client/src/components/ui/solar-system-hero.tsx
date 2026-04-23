@@ -6,6 +6,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion, AnimatePresence } from 'framer-motion';
 import { isWebGLAvailable } from '@/lib/webgl-utils';
+import { ThreeDEffectLoader } from '@/components/ui/3d-effect-loader';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -87,10 +88,7 @@ function createPlanetMesh(
 function LoadingFallback() {
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-background">
-      <div className="text-center">
-        <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto mb-4" />
-        <p className="text-muted-foreground">Loading Experience...</p>
-      </div>
+      <ThreeDEffectLoader text="Loading…" />
     </div>
   );
 }

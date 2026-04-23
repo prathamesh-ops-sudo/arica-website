@@ -1,6 +1,7 @@
 'use client'
 
 import { Suspense, lazy } from 'react'
+import { ThreeDEffectLoader } from '@/components/ui/3d-effect-loader'
 const Spline = lazy(() => import('@splinetool/react-spline'))
 
 interface SplineSceneProps {
@@ -13,7 +14,7 @@ export function SplineScene({ scene, className }: SplineSceneProps) {
     <Suspense 
       fallback={
         <div className="w-full h-full flex items-center justify-center">
-          <span className="loader"></span>
+          <ThreeDEffectLoader />
         </div>
       }
     >

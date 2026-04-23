@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { HyperspaceTransitionProvider } from "@/components/ui/hyperspace-transition";
 import { SiteFooter } from "@/components/ui/site-footer";
 import { CookieConsent } from "@/components/CookieConsent";
+import { ThreeDEffectLoader } from "@/components/ui/3d-effect-loader";
 
 const FULLSCREEN_ROUTES = ["/experience"];
 
@@ -61,7 +62,7 @@ const TeamDirectors = lazy(() => import("@/pages/TeamDirectors"));
 function PageLoader() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="w-8 h-8 border-2 border-[#42BA90]/30 border-t-[#42BA90] rounded-full animate-spin" />
+      <ThreeDEffectLoader />
     </div>
   );
 }

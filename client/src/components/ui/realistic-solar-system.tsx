@@ -12,7 +12,6 @@ import { ChevronRight, Shield, FileCheck, Code, X } from 'lucide-react';
 import { isWebGLAvailable } from '@/lib/webgl-utils';
 import { useHyperspaceTransition } from '@/components/ui/hyperspace-transition';
 import EnergyBeam from '@/components/ui/energy-beam';
-import TetrisLoading from '@/components/ui/tetris-loader';
 
 interface ModalContent {
   title: string;

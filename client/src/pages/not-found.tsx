@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Shield, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Loading } from "@/components/ui/circle-unique-load";
+import { ThreeDEffectLoader } from "@/components/ui/3d-effect-loader";
 
 export default function NotFound() {
   return (
@@ -19,7 +19,7 @@ export default function NotFound() {
           className="text-center max-w-md"
         >
           <div className="mb-8">
-            <Loading screenHFull={false} />
+            <ThreeDEffectLoader />
           </div>
 
           <div className="flex items-center justify-center gap-2 mb-6">
