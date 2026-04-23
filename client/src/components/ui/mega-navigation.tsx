@@ -256,20 +256,6 @@ export function MegaNavigation() {
 
             <div className="hidden lg:flex items-center gap-2">
               <motion.button
-                onClick={() => handleNavigate("/case-studies")}
-                className={cn(
-                  "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3D70B7] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,10,30,0.85)]",
-                  location === "/case-studies"
-                    ? "text-[#3D70B7] bg-[#3D70B7]/10"
-                    : "text-white/70 hover:text-white hover:bg-white/5"
-                )}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                data-testid="nav-case-studies"
-              >
-                Case Studies
-              </motion.button>
-              <motion.button
                 onClick={() => handleNavigate("/contact")}
                 className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-gradient-to-r from-[#42BA90]/20 to-[#3D70B7]/20 border border-[#3D70B7]/40 text-[#3D70B7] hover:from-[#42BA90]/30 hover:to-[#3D70B7]/30 hover:border-[#3D70B7]/60 hover:shadow-[0_0_20px_rgba(61,112,183,0.3)] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3D70B7] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(10,10,30,0.85)]"
                 whileHover={{ scale: 1.02 }}
@@ -381,20 +367,6 @@ export function MegaNavigation() {
                     className="pt-4 border-t border-[#3D70B7]/20"
                   >
                     <div className="space-y-1">
-                      <motion.button
-                        onClick={() => handleNavigate("/case-studies")}
-                        className={cn(
-                          "w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-left transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3D70B7]",
-                          location === "/case-studies"
-                            ? "bg-[#3D70B7]/15 text-[#3D70B7]"
-                            : "text-white/70 hover:text-white hover:bg-white/5"
-                        )}
-                        whileTap={{ scale: 0.98 }}
-                        data-testid="mobile-link-case-studies"
-                      >
-                        <BookOpen size={18} />
-                        <span className="text-sm font-medium">Case Studies</span>
-                      </motion.button>
                       <motion.button
                         onClick={() => handleNavigate("/contact")}
                         className={cn(

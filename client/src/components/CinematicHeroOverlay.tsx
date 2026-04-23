@@ -26,7 +26,7 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
   }, []);
 
   useEffect(() => {
-    // Show box loader for ~3.5s, then reveal ARICA TECH SECURITY
+    // Show box loader for ~3.5s, then reveal logo
     addTimer(() => {
       setPhase("reveal");
     }, 3500);
@@ -49,10 +49,6 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
           25% { transform: translateY(-15px) translateX(8px); opacity: 0.5; }
           50% { transform: translateY(-5px) translateX(-5px); opacity: 0.2; }
           75% { transform: translateY(-20px) translateX(3px); opacity: 0.4; }
-        }
-        @keyframes logo-glow {
-          0%, 100% { text-shadow: 0 0 20px rgba(61,112,183,0.4), 0 0 40px rgba(66,186,144,0.2); }
-          50% { text-shadow: 0 0 30px rgba(61,112,183,0.6), 0 0 60px rgba(66,186,144,0.3), 0 0 80px rgba(61,112,183,0.15); }
         }
       `}</style>
 
@@ -87,7 +83,7 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
           )}
         </AnimatePresence>
 
-        {/* Reveal Phase - ARICA TECH SECURITY logo text */}
+        {/* Reveal Phase - Logo only, centered and bigger */}
         <AnimatePresence>
           {(phase === "reveal" || phase === "ambient") && (
             <motion.div
@@ -99,66 +95,15 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
               transition={{ duration: 1.5 }}
               style={{ pointerEvents: "none" }}
             >
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
+              <motion.img
+                src="/arica-logo.png"
+                alt="Arica Tech Security"
+                className="w-auto mx-auto"
+                style={{ height: "clamp(5rem, 15vw, 12rem)" }}
+                initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1, ease: "easeOut" }}
-                className="text-center"
-              >
-                {/* Logo image */}
-                <motion.img
-                  src="/arica-logo.png"
-                  alt="Arica Tech Security"
-                  className="h-20 md:h-28 w-auto mx-auto mb-6"
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                />
-
-                {/* ARICA TECH SECURITY text */}
-                <motion.h1
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 900,
-                    letterSpacing: "0.08em",
-                    fontSize: "clamp(2rem, 7vw, 5rem)",
-                    color: "#ffffff",
-                    animation: "logo-glow 3s ease-in-out infinite",
-                    lineHeight: 1.1,
-                  }}
-                >
-                  ARICA TECH
-                  <br />
-                  <span style={{ color: "#42BA90", letterSpacing: "0.15em", fontSize: "0.7em" }}>
-                    SECURITY
-                  </span>
-                </motion.h1>
-
-                {/* Gradient line */}
-                <motion.div
-                  className="mx-auto mt-4 h-[2px] rounded-full"
-                  initial={{ width: 0, opacity: 0 }}
-                  animate={{ width: "160px", opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.8 }}
-                  style={{
-                    background: "linear-gradient(90deg, transparent, #3D70B7, #42BA90, #3D70B7, transparent)",
-                  }}
-                />
-
-                {/* Tagline */}
-                <motion.p
-                  className="mt-4 text-base md:text-lg tracking-[0.2em] uppercase"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 0.6, y: 0 }}
-                  transition={{ duration: 0.6, delay: 1 }}
-                  style={{ color: "rgba(255,255,255,0.5)" }}
-                >
-                  Securing Your Digital Future
-                </motion.p>
-              </motion.div>
+              />
             </motion.div>
           )}
         </AnimatePresence>

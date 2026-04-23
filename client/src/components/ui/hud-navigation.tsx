@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Link, useLocation } from "wouter"
-import { Menu, X, Home, Briefcase, BookOpen, Users, Mail, Zap } from "lucide-react"
+import { Menu, X, Home, Briefcase, Users, Mail, Zap } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useHyperspaceTransition } from "./hyperspace-transition"
 
@@ -16,7 +16,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { name: "Home", url: "/", icon: Home },
   { name: "Services", url: "/services", icon: Briefcase },
-  { name: "Case Studies", url: "/case-studies", icon: BookOpen },
+
   { name: "About", url: "/about", icon: Users },
   { name: "Contact", url: "/contact", icon: Mail },
   { name: "Experience", url: "/experience", icon: Zap },
