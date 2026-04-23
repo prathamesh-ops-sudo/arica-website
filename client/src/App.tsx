@@ -10,6 +10,26 @@ import { CookieConsent } from "@/components/CookieConsent";
 
 const FULLSCREEN_ROUTES = ["/experience"];
 
+const EXPERIENCE_SUB_ROUTES = [
+  "/experience",
+  "/attack-globe",
+  "/vulnerability-scanner",
+  "/compliance-dashboard",
+  "/devsecops-pipeline",
+  "/devsecops",
+  "/api-security-lab",
+  "/cloud-security-center",
+  "/mobile-security",
+  "/risk-assessment",
+  "/security-policies",
+  "/security-architecture",
+  "/code-review",
+  "/certifications",
+  "/security-training",
+  "/ongoing-support",
+  "/security-implementation",
+];
+
 // Eager-load home page for fast initial render
 import Home from "@/pages/Home";
 import NotFound from "@/pages/not-found";
@@ -85,7 +105,7 @@ function Router() {
 function AppContent() {
   const [location] = useLocation();
   const isFullscreenRoute = FULLSCREEN_ROUTES.includes(location);
-  const isExperiencePage = location === "/experience";
+  const isExperienceSubRoute = EXPERIENCE_SUB_ROUTES.includes(location);
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -93,7 +113,7 @@ function AppContent() {
   
   return (
     <>
-      {!isExperiencePage && (
+      {!isExperienceSubRoute && (
         <a href="/" className="fixed z-[9999]" style={{ top: "calc(1rem - 1px)", left: "calc(1rem - 3px)" }} aria-label="Arica Tech Security LLP Home">
           <img
             src="/arica-logo.png"

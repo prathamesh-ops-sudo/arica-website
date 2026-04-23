@@ -1086,12 +1086,9 @@ export default function AttackGlobe() {
                 
                 <div className="relative z-10">
                   <div className="flex items-center justify-center gap-4 mb-6">
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    >
+                    <div>
                       <Shield className="w-10 h-10 text-[#3D70B7]" />
-                    </motion.div>
+                    </div>
                     <div className="text-left">
                       <h2 className="text-2xl md:text-3xl font-bold text-white">Don't Be a Statistic</h2>
                       <p className="text-[#3D70B7]/70 text-sm">95% of breaches are preventable with proper security</p>
