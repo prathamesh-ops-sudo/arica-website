@@ -30,7 +30,7 @@ export function SiteFooter() {
         style={{ height: "clamp(10rem, 22vw, 20rem)" }}
       >
         {/* DitheringShader wave background - full bleed */}
-        <div className="absolute inset-0 w-full h-full">
+        <div className="absolute inset-0 w-full h-full z-0">
           <DitheringShader
             shape="wave"
             type="8x8"
@@ -45,7 +45,7 @@ export function SiteFooter() {
         </div>
 
         {/* ARICA text overlay - white with gradient fade like original */}
-        <div className="absolute inset-0 flex items-end justify-center pointer-events-none select-none" aria-hidden="true">
+        <div className="absolute inset-0 flex items-end justify-center pointer-events-none select-none z-10" aria-hidden="true">
           <span
             className="block text-center leading-none w-full"
             style={{
