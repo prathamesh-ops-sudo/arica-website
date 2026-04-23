@@ -1027,8 +1027,8 @@ export default function AttackGlobe() {
                       transition={{ duration: 1, repeat: Infinity }}
                     />
                   </div>
-                  <div className="space-y-2 max-h-[400px] overflow-y-auto">
-                    <AnimatePresence mode="popLayout">
+                  <div className="space-y-2 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+                    <AnimatePresence initial={false}>
                       {filteredAttacks.length > 0 ? (
                         filteredAttacks.map((attack) => (
                           <motion.div
@@ -1045,7 +1045,6 @@ export default function AttackGlobe() {
                               duration: 0.3,
                               boxShadow: attack.isNew ? { duration: 0.5, times: [0, 0.5, 1] } : undefined
                             }}
-                            layout
                             className={`p-3 rounded-xl bg-black/40 border transition-all ${
                               attack.isNew ? 'border-[#ff3344]/50' : 'border-white/5 hover:border-[#ff3344]/30'
                             }`}
