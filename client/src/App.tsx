@@ -29,6 +29,7 @@ const EXPERIENCE_SUB_ROUTES = [
   "/security-training",
   "/ongoing-support",
   "/security-implementation",
+  "/test",
 ];
 
 // Eager-load home page for fast initial render
@@ -58,6 +59,7 @@ const SecurityTraining = lazy(() => import("@/pages/SecurityTraining"));
 const OngoingSupport = lazy(() => import("@/pages/OngoingSupport"));
 const SecurityImplementation = lazy(() => import("@/pages/SecurityImplementation"));
 const TeamDirectors = lazy(() => import("@/pages/TeamDirectors"));
+const Test = lazy(() => import("@/pages/Test"));
 
 function PageLoader() {
   return (
@@ -95,6 +97,7 @@ function Router() {
       <Route path="/security-training" component={SecurityTraining} />
       <Route path="/ongoing-support" component={OngoingSupport} />
       <Route path="/security-implementation" component={SecurityImplementation} />
+      <Route path="/test" component={Test} />
       <Route path="/team" component={TeamDirectors} />
       <Route path="/portal" component={Contact} />
       <Route component={NotFound} />
