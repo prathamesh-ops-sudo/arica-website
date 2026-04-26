@@ -583,37 +583,6 @@ export function ThreatVortex() {
               )}
             </div>
 
-            <AnimatePresence>
-              {phase === "victory" && (
-                <motion.div
-                  className="absolute bottom-4 left-1/2 text-center z-30"
-                  style={{ x: '-50%' }}
-                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                >
-                  <div className="px-8 py-4 rounded-xl border border-[#42BA90]/40 bg-background/90 backdrop-blur-md">
-                    <motion.p
-                      className="text-xs font-mono tracking-[0.3em] mb-1"
-                      style={{ color: '#3D70B7', textShadow: '0 0 10px rgba(61,112,183,0.5)' }}
-                    >
-                      MISSION COMPLETE
-                    </motion.p>
-                    <motion.p
-                      className="text-xl md:text-2xl font-bold"
-                      style={{
-                        color: '#3D70B7',
-                      }}
-                      animate={{ opacity: [0.8, 1, 0.8] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    >
-                      16/16 THREATS ELIMINATED
-                    </motion.p>
-                    <p className="text-[10px] text-[#ACACAC] font-mono mt-1">PERIMETER SECURE :: ZERO CASUALTIES</p>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
 
           <div className="lg:sticky lg:top-32 space-y-4">
@@ -699,6 +668,37 @@ export function ThreatVortex() {
             </div>
           </div>
         </div>
+
+        {/* Centralized Mission Complete overlay */}
+        <AnimatePresence>
+          {phase === "victory" && (
+            <motion.div
+              className="flex justify-center mt-8 z-30"
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
+              <div className="px-10 py-5 rounded-xl border border-[#42BA90]/40 bg-background/90 backdrop-blur-md text-center">
+                <motion.p
+                  className="text-xs font-mono tracking-[0.3em] mb-1"
+                  style={{ color: '#3D70B7', textShadow: '0 0 10px rgba(61,112,183,0.5)' }}
+                >
+                  MISSION COMPLETE
+                </motion.p>
+                <motion.p
+                  className="text-2xl md:text-3xl font-bold"
+                  style={{ color: '#3D70B7' }}
+                  animate={{ opacity: [0.8, 1, 0.8] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  16/16 THREATS ELIMINATED
+                </motion.p>
+                <p className="text-[10px] text-[#ACACAC] font-mono mt-1">PERIMETER SECURE :: ZERO CASUALTIES</p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <motion.div
           initial={{ opacity: 0 }}

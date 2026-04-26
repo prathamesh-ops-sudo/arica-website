@@ -122,9 +122,9 @@ export function ForensicsSection() {
         </div>
 
         <div className="text-center">
-          <Link href="/case-studies">
+          <Link href="/contact">
             <Button
-              data-testid="button-request-case-study"
+              data-testid="button-request-assessment"
               variant="outline"
               className="border-white/20 hover:bg-white/5 group"
             >

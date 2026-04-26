@@ -127,7 +127,19 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
             ))}
 
             {/* CTA Button */}
-            <div className="absolute inset-x-0 top-[20%] md:top-[25%] flex justify-center px-4" style={{ pointerEvents: isPastHero ? "none" : "auto" }}>
+            {/* Tagline */}
+            <div className="absolute inset-x-0 top-[14%] md:top-[17%] flex justify-center px-4">
+              <motion.p
+                className="text-white/70 text-base md:text-lg font-medium tracking-wide text-center max-w-md"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+              >
+                Security That Goes Beyond Prevention
+              </motion.p>
+            </div>
+
+            <div className="absolute inset-x-0 top-[22%] md:top-[27%] flex justify-center px-4" style={{ pointerEvents: isPastHero ? "none" : "auto" }}>
               <motion.button
                 data-testid="button-enter-experience"
                 onClick={onEnterExperience}
@@ -139,7 +151,7 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
                 whileTap={{ scale: 0.98 }}
               >
                 <ShieldCheck className="w-5 h-5" />
-                Explore Our Services
+                Explore Our Security Solutions
               </motion.button>
             </div>
           </div>

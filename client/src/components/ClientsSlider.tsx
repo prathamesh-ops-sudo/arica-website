@@ -32,10 +32,10 @@ export function ClientsSlider() {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1C2C5A]/5 to-transparent pointer-events-none" />
       
       <div className="container mx-auto px-4 mb-8">
-        <h3 className="text-center text-[#ACACAC] text-sm uppercase tracking-[0.3em] mb-2">
+        <h2 className="text-center text-white text-2xl md:text-3xl font-bold tracking-wide mb-3">
           Trusted By Industry Leaders
-        </h3>
-        <p className="text-center text-white/40 text-xs">
+        </h2>
+        <p className="text-center text-white/50 text-sm md:text-base">
           Protecting enterprises across all sectors
         </p>
       </div>

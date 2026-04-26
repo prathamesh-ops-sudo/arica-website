@@ -85,7 +85,7 @@ export function Services() {
               key={service.title}
               variants={item}
               data-testid={`card-service-${index}`}
-              className="group relative glass rounded-2xl p-8 hover:bg-card/80 transition-all duration-500 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/20"
+              className="group relative glass rounded-2xl p-8 hover:bg-card/80 transition-all duration-500 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/20 flex flex-col h-full"
               whileHover={{ y: -4 }}
             >
               <div
@@ -95,7 +95,7 @@ export function Services() {
                 style={{ background: "transparent" }}
               />
 
-              <div className="relative z-10">
+              <div className="relative z-10 flex flex-col h-full">
                 <div
                   className={`inline-flex p-4 rounded-xl mb-6 ${
                     service.color === "primary"
@@ -114,7 +114,7 @@ export function Services() {
                   {service.description}
                 </p>
 
-                <ul className="space-y-2 mb-6">
+                <ul className="space-y-2 mb-6 flex-grow">
                   {service.features.map((feature) => (
                     <li
                       key={feature}
@@ -132,15 +132,17 @@ export function Services() {
                   ))}
                 </ul>
 
-                <Link href="/services">
-                  <Button
-                    variant="ghost"
-                    className="group/btn p-0 h-auto font-semibold text-primary hover:bg-transparent"
-                  >
-                    Learn More
-                    <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
-                  </Button>
-                </Link>
+                <div className="mt-auto pt-4">
+                  <Link href="/services">
+                    <Button
+                      variant="ghost"
+                      className="group/btn p-0 h-auto font-semibold text-primary hover:bg-transparent"
+                    >
+                      Learn More
+                      <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </motion.div>
           ))}

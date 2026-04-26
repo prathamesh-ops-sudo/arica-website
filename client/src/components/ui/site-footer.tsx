@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Phone, Mail, MapPin } from "lucide-react";
 import { DitheringShader } from "@/components/ui/dithering-shader";
 
 export function SiteFooter() {
@@ -67,14 +68,43 @@ export function SiteFooter() {
         </div>
       </div>
 
-      {/* Tagline + Copyright bar */}
-      <div className="px-6 py-4 space-y-1">
-        <p className="text-center text-xs text-muted-foreground/60 italic">
-          Built to protect, investigate, and comply.
-        </p>
-        <p className="text-center text-xs text-muted-foreground">
-          &copy; {new Date().getFullYear()} Arica Tech Security LLP. All rights reserved.
-        </p>
+      {/* Contact info bar */}
+      <div className="px-6 py-6 border-t border-white/5">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          {/* Phone */}
+          <a href="tel:+917091175596" className="flex items-center gap-3 justify-center md:justify-start group">
+            <div className="p-2 rounded-lg bg-[#42BA90]/10 text-[#42BA90] group-hover:bg-[#42BA90]/20 transition-colors">
+              <Phone className="w-4 h-4" />
+            </div>
+            <span className="text-sm text-white/70 group-hover:text-white transition-colors">+91 70911 75596</span>
+          </a>
+          {/* Email */}
+          <a href="mailto:contact@aricatech.com" className="flex items-center gap-3 justify-center group">
+            <div className="p-2 rounded-lg bg-[#42BA90]/10 text-[#42BA90] group-hover:bg-[#42BA90]/20 transition-colors">
+              <Mail className="w-4 h-4" />
+            </div>
+            <span className="text-sm text-white/70 group-hover:text-white transition-colors">contact@aricatech.com</span>
+          </a>
+          {/* Address (below phone per meeting) */}
+          <div className="flex items-start gap-3 justify-center md:justify-end">
+            <div className="p-2 rounded-lg bg-[#42BA90]/10 text-[#42BA90] flex-shrink-0">
+              <MapPin className="w-4 h-4" />
+            </div>
+            <span className="text-sm text-white/70 leading-relaxed">
+              Office 1204, Kotibhaskar &amp; Mahati Residency,<br />
+              Kothrud, Pune, Maharashtra 411038
+            </span>
+          </div>
+        </div>
+
+        <div className="space-y-1">
+          <p className="text-center text-xs text-muted-foreground/60 italic">
+            Built to protect, investigate, and comply.
+          </p>
+          <p className="text-center text-xs text-muted-foreground">
+            &copy; {new Date().getFullYear()} Arica Tech Security LLP. All rights reserved.
+          </p>
+        </div>
       </div>
     </footer>
   );

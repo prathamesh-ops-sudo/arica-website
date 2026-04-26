@@ -263,7 +263,7 @@ export default function About() {
                 }}
                 transition={{ duration: 0.3 }}
               >
-                <h3 className="font-display text-lg font-bold mb-2 text-[#42BA90]">
+                <h3 className="font-display text-xl font-bold mb-2 text-[#42BA90]">
                   Our Mission
                 </h3>
                 <p className="text-sm text-muted-foreground">
@@ -280,7 +280,7 @@ export default function About() {
                 }}
                 transition={{ duration: 0.3 }}
               >
-                <h3 className="font-display font-bold mb-2 text-primary">Vision</h3>
+                <h3 className="font-display text-xl font-bold mb-2 text-primary">Vision</h3>
                 <p className="text-xs text-muted-foreground">
                   Built to protect, investigate, and comply — keeping you
                   prepared for what others react to.
@@ -295,7 +295,7 @@ export default function About() {
                 }}
                 transition={{ duration: 0.3 }}
               >
-                <h3 className="font-display font-bold mb-2 text-[#42BA90]">Values</h3>
+                <h3 className="font-display text-xl font-bold mb-2 text-[#42BA90]">Values</h3>
                 <p className="text-xs text-muted-foreground">
                   Security first, precision, and transparency in every engagement.
                 </p>
