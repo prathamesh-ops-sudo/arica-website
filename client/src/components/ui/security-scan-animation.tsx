@@ -108,9 +108,9 @@ export function SecurityScanAnimation() {
           const isVisible = point.y <= scanProgress;
           const color =
             point.type === "critical"
-              ? "#7a1214"
+              ? "#D94040"
               : point.type === "warning"
-              ? "#f59e0b"
+              ? "#C4880B"
               : "#42BA90";
 
           return (
@@ -199,12 +199,12 @@ export function SecurityScanAnimation() {
         <div className="flex items-center justify-between text-xs font-mono">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-red-500" />
-              <span className="text-red-400">{vulnerabilities.critical} Critical</span>
+              <span className="w-2 h-2 rounded-full bg-[#D94040]" />
+              <span className="text-[#D94040]">{vulnerabilities.critical} Critical</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-yellow-500" />
-              <span className="text-yellow-400">{vulnerabilities.warning} Warning</span>
+              <span className="w-2 h-2 rounded-full bg-[#C4880B]" />
+              <span className="text-[#C4880B]">{vulnerabilities.warning} Warning</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#42BA90]" />

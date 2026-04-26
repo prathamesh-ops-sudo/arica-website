@@ -8,22 +8,22 @@ import {
 import { useIsMobile, useIsMobileOrTablet } from "@/hooks/use-mobile";
 
 const threatItems = [
-  { icon: Bug, label: "MALWARE", color: "#ff4444", angle: 0 },
-  { icon: ShieldAlert, label: "BREACH", color: "#ff6b35", angle: 22.5 },
-  { icon: AlertTriangle, label: "ERROR 404", color: "#ffaa00", angle: 45 },
-  { icon: Skull, label: "RANSOMWARE", color: "#ff2222", angle: 67.5 },
-  { icon: Server, label: "SERVER DOWN", color: "#ff5555", angle: 90 },
-  { icon: HardDrive, label: "DISK CORRUPT", color: "#ff8800", angle: 112.5 },
-  { icon: Cloud, label: "CLOUD LEAK", color: "#ff6644", angle: 135 },
-  { icon: Router, label: "FIREWALL BYPASS", color: "#ff3333", angle: 157.5 },
-  { icon: Lock, label: "ENCRYPTION FAIL", color: "#ff7744", angle: 180 },
-  { icon: Binary, label: "0xDEADBEEF", color: "#ff5500", angle: 202.5 },
-  { icon: FileWarning, label: "CVE-2024-XXXX", color: "#ff4400", angle: 225 },
-  { icon: Flame, label: "DDoS ATTACK", color: "#ff2200", angle: 247.5 },
-  { icon: Wifi, label: "MitM ATTACK", color: "#ff6600", angle: 270 },
-  { icon: Database, label: "SQL INJECTION", color: "#ff3300", angle: 292.5 },
-  { icon: Monitor, label: "ZERO-DAY", color: "#ff5533", angle: 315 },
-  { icon: Cpu, label: "RAM OVERFLOW", color: "#ff4422", angle: 337.5 },
+  { icon: Bug, label: "MALWARE", color: "#D94040", angle: 0 },
+  { icon: ShieldAlert, label: "BREACH", color: "#D94040", angle: 22.5 },
+  { icon: AlertTriangle, label: "ERROR 404", color: "#D94040", angle: 45 },
+  { icon: Skull, label: "RANSOMWARE", color: "#D94040", angle: 67.5 },
+  { icon: Server, label: "SERVER DOWN", color: "#D94040", angle: 90 },
+  { icon: HardDrive, label: "DISK CORRUPT", color: "#D94040", angle: 112.5 },
+  { icon: Cloud, label: "CLOUD LEAK", color: "#D94040", angle: 135 },
+  { icon: Router, label: "FIREWALL BYPASS", color: "#D94040", angle: 157.5 },
+  { icon: Lock, label: "ENCRYPTION FAIL", color: "#D94040", angle: 180 },
+  { icon: Binary, label: "0xDEADBEEF", color: "#D94040", angle: 202.5 },
+  { icon: FileWarning, label: "CVE-2024-XXXX", color: "#D94040", angle: 225 },
+  { icon: Flame, label: "DDoS ATTACK", color: "#D94040", angle: 247.5 },
+  { icon: Wifi, label: "MitM ATTACK", color: "#D94040", angle: 270 },
+  { icon: Database, label: "SQL INJECTION", color: "#D94040", angle: 292.5 },
+  { icon: Monitor, label: "ZERO-DAY", color: "#D94040", angle: 315 },
+  { icon: Cpu, label: "RAM OVERFLOW", color: "#D94040", angle: 337.5 },
 ];
 
 type BattlePhase = "idle" | "incoming" | "alert" | "fighting" | "shockwave" | "victory";
@@ -141,7 +141,7 @@ export function ThreatVortex() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-24 md:py-32 overflow-hidden bg-background"
+      className="relative py-16 md:py-20 overflow-hidden bg-background"
       data-testid="section-threat-vortex"
     >
       <div className="absolute inset-0 opacity-[0.15]" style={{
@@ -156,7 +156,7 @@ export function ThreatVortex() {
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
-              backgroundColor: i % 3 === 0 ? '#ff4444' : i % 3 === 1 ? '#42BA90' : '#3D70B7',
+              backgroundColor: i % 3 === 0 ? '#D94040' : i % 3 === 1 ? '#42BA90' : '#3D70B7',
             }}
             animate={{
               opacity: [0, 0.4, 0],
@@ -177,18 +177,18 @@ export function ThreatVortex() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12 md:mb-16"
+          className="text-center mb-10 md:mb-12"
         >
           <motion.div
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-6"
             animate={{
               borderColor: phase === "fighting" || phase === "alert"
-                ? ["rgba(255,68,68,0.5)", "rgba(255,68,68,0.2)", "rgba(255,68,68,0.5)"]
+                ? ["rgba(217,64,64,0.5)", "rgba(217,64,64,0.2)", "rgba(217,64,64,0.5)"]
                 : phase === "victory"
                 ? "rgba(61,112,183,0.5)"
                 : "rgba(61,112,183,0.3)",
               backgroundColor: phase === "alert"
-                ? "rgba(255,68,68,0.08)"
+                ? "rgba(217,64,64,0.08)"
                 : phase === "victory"
                 ? "rgba(61,112,183,0.08)"
                 : "rgba(61,112,183,0.03)",
@@ -198,13 +198,13 @@ export function ThreatVortex() {
             <motion.div
               className="w-2 h-2 rounded-full"
               animate={{
-                backgroundColor: phase === "victory" ? "#3D70B7" : "#ff4444",
+                backgroundColor: phase === "victory" ? "#3D70B7" : "#D94040",
                 scale: phase === "fighting" ? [1, 1.5, 1] : 1,
               }}
               transition={{ duration: 0.5, repeat: phase === "fighting" ? Infinity : 0 }}
             />
             <span className="text-xs font-mono tracking-widest" style={{
-              color: phase === "victory" ? '#3D70B7' : phase === "fighting" ? '#ff4444' : '#3D70B7'
+              color: phase === "victory" ? '#3D70B7' : phase === "fighting" ? '#D94040' : '#3D70B7'
             }}>
               {phase === "idle" || phase === "incoming" ? "MONITORING ACTIVE" :
                phase === "alert" ? "⚠ INCOMING THREATS DETECTED" :
@@ -262,7 +262,7 @@ export function ThreatVortex() {
                 <linearGradient id="beamGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="#3D70B7" />
                   <stop offset="50%" stopColor="#42BA90" />
-                  <stop offset="100%" stopColor="#ff4444" />
+                  <stop offset="100%" stopColor="#D94040" />
                 </linearGradient>
                 <filter id="beamGlow">
                   <feGaussianBlur stdDeviation="3" result="blur" />
@@ -620,20 +620,20 @@ export function ThreatVortex() {
             <div
               className="rounded-xl border overflow-hidden"
               style={{
-                borderColor: phase === "fighting" ? 'rgba(255,68,68,0.3)' : 'rgba(61,112,183,0.2)',
+                borderColor: phase === "fighting" ? 'rgba(217,64,64,0.3)' : 'rgba(61,112,183,0.2)',
                 backgroundColor: 'rgba(5,5,5,0.9)',
               }}
             >
               <div className="flex items-center gap-2 px-3 py-2 border-b" style={{ borderColor: 'rgba(61,112,183,0.15)' }}>
                 <div className="flex gap-1">
-                  <div className="w-2 h-2 rounded-full bg-[#ff4444]" />
-                  <div className="w-2 h-2 rounded-full bg-[#ffaa00]" />
-                  <div className="w-2 h-2 rounded-full bg-[#00cc44]" />
+                  <div className="w-2 h-2 rounded-full bg-[#D94040]" />
+                  <div className="w-2 h-2 rounded-full bg-[#C4880B]" />
+                  <div className="w-2 h-2 rounded-full bg-[#42BA90]" />
                 </div>
                 <span className="text-[9px] font-mono text-[#ACACAC] tracking-wider">GUARDIAN_TERMINAL</span>
                 <motion.div
                   className="ml-auto w-1.5 h-1.5 rounded-full"
-                  style={{ backgroundColor: phase === "fighting" ? '#ff4444' : phase === "victory" ? '#00cc44' : '#ffaa00' }}
+                  style={{ backgroundColor: phase === "fighting" ? '#D94040' : phase === "victory" ? '#42BA90' : '#C4880B' }}
                   animate={{ opacity: [1, 0.3, 1] }}
                   transition={{ duration: 0.8, repeat: Infinity }}
                 />
@@ -660,9 +660,9 @@ export function ThreatVortex() {
                       transition={{ duration: 0.2 }}
                       className="font-mono text-[10px] leading-relaxed py-0.5"
                       style={{
-                        color: entry.type === "danger" ? '#ff4444' :
-                          entry.type === "warning" ? '#ffaa00' :
-                          entry.type === "action" ? '#3D70B7' : '#00cc44',
+                        color: entry.type === "danger" ? '#D94040' :
+                          entry.type === "warning" ? '#C4880B' :
+                          entry.type === "action" ? '#3D70B7' : '#42BA90',
                       }}
                     >
                       {entry.text}
@@ -677,7 +677,7 @@ export function ThreatVortex() {
                 <p className="text-[9px] font-mono text-[#ACACAC] tracking-wider mb-1">THREATS</p>
                 <motion.p
                   className="text-2xl font-bold font-mono"
-                  style={{ color: destroyedThreats.size < 16 ? '#ff4444' : '#00cc44' }}
+                  style={{ color: destroyedThreats.size < 16 ? '#D94040' : '#42BA90' }}
                   animate={phase === "fighting" ? { scale: [1, 1.1, 1] } : {}}
                   transition={{ duration: 0.3 }}
                 >

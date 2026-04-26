@@ -719,7 +719,7 @@
 }
 
 .text-terminal-amber {
-  color: #ffb000;
+  color: #C4880B;
   text-shadow: 0 0 8px rgba(255, 176, 0, 0.5), 0 0 16px rgba(255, 176, 0, 0.3);
 }
 
@@ -734,7 +734,7 @@
 }
 
 .bg-terminal-amber {
-  background-color: #ffb000;
+  background-color: #C4880B;
   box-shadow: 0 0 8px rgba(255, 176, 0, 0.8);
 }
 

@@ -27,7 +27,7 @@ const features = [
 
 export function ForensicsSection() {
   return (
-    <section className="py-32 relative overflow-hidden bg-card/30">
+    <section className="py-20 relative overflow-hidden bg-card/30">
       <div className="absolute inset-0 opacity-40" style={{
         background: `radial-gradient(ellipse at 20% 50%, rgba(61, 112, 183, 0.08) 0%, transparent 60%),
                      radial-gradient(ellipse at 80% 20%, rgba(61, 112, 183, 0.05) 0%, transparent 50%)`
@@ -41,7 +41,7 @@ export function ForensicsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
             Vulnerability Assessment &
@@ -85,13 +85,13 @@ export function ForensicsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative max-w-lg mx-auto mb-16"
+          className="relative max-w-lg mx-auto mb-12"
         >
           <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 to-transparent rounded-3xl blur-2xl" />
           <div className="relative">
             <NanobotParticles 
               particleCount={35} 
-              color="123, 47, 224" 
+              color="61, 112, 183" 
               maxDistance={100}
               className="opacity-40"
             />

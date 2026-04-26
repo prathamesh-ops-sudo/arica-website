@@ -6,6 +6,14 @@ import { AsciiHeroSection } from "@/components/AsciiHeroSection";
 import { ComplianceSection } from "@/components/ComplianceSection";
 import { ThreatVortex } from "@/components/ThreatVortex";
 
+function SectionDivider() {
+  return (
+    <div className="relative h-px w-full">
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#3D70B7]/20 to-transparent" />
+    </div>
+  );
+}
+
 function SubtleBackground() {
   return (
     <div className="fixed inset-0 -z-10">
@@ -26,9 +34,13 @@ export default function Home() {
         <Navbar />
         <HorizonHeroSection />
         <ClientsSlider />
+        <SectionDivider />
         <ForensicsSection />
+        <SectionDivider />
         <ThreatVortex />
+        <SectionDivider />
         <AsciiHeroSection />
+        <SectionDivider />
         <ComplianceSection />
       </div>
     </div>

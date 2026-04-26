@@ -30,7 +30,7 @@ export function ComplianceSection() {
   const svgId = useMemo(() => `shield-${Math.random().toString(36).slice(2, 8)}`, []);
 
   return (
-    <section className="py-32 relative overflow-hidden">
+    <section className="py-20 relative overflow-hidden">
       <div className="absolute inset-0 opacity-40" style={{
         background: `radial-gradient(ellipse at 70% 60%, rgba(61, 112, 183, 0.06) 0%, transparent 55%),
                      radial-gradient(ellipse at 30% 30%, rgba(28, 44, 90, 0.08) 0%, transparent 50%)`
@@ -44,7 +44,7 @@ export function ComplianceSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
             ISO 27001
@@ -65,7 +65,7 @@ export function ComplianceSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative mb-16"
+          className="relative mb-12"
         >
             <div className="absolute -inset-4 bg-gradient-to-l from-primary/10 to-transparent rounded-3xl blur-2xl" />
             <div className="relative flex flex-col items-center mx-auto" style={{ maxWidth: '400px' }}>
@@ -182,7 +182,7 @@ export function ComplianceSection() {
                     >
                       <motion.path
                         d="M25 52 L42 68 L75 32"
-                        stroke="#00d4ff"
+                        stroke="#42BA90"
                         strokeWidth="6"
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -200,9 +200,9 @@ export function ComplianceSection() {
                     className="absolute inset-0 flex items-center justify-center pointer-events-none"
                     animate={{
                       boxShadow: [
-                        "0 0 20px 0px rgba(0,212,255,0)",
-                        "0 0 40px 10px rgba(0,212,255,0.15)",
-                        "0 0 20px 0px rgba(0,212,255,0)",
+                        "0 0 20px 0px rgba(66,186,144,0)",
+                        "0 0 40px 10px rgba(66,186,144,0.15)",
+                        "0 0 20px 0px rgba(66,186,144,0)",
                       ],
                     }}
                     transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}

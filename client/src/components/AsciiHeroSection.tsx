@@ -21,7 +21,7 @@ export function AsciiHeroSection() {
   ];
 
   return (
-    <section className="relative py-24 lg:py-32 overflow-hidden bg-background">
+    <section className="relative py-16 lg:py-20 overflow-hidden bg-background">
       {/* Subtle gradient background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-background" />
@@ -38,7 +38,7 @@ export function AsciiHeroSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="w-10 h-10 rounded-xl bg-[#42BA90]/10 border border-[#42BA90]/20 flex items-center justify-center">
@@ -77,7 +77,7 @@ export function AsciiHeroSection() {
         </motion.div>
 
         {/* Stats row - centered */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto mb-16">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto mb-12">
           {stats.map((stat, i) => (
             <motion.div 
               key={i}
