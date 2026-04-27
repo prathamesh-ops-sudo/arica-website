@@ -32,49 +32,59 @@ export function AsciiHeroSection() {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-6">
-        {/* Centered header */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-[#42BA90]/10 border border-[#42BA90]/20 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-[#42BA90]" />
+        {/* Side-by-side: heading left, description right */}
+        <div className="grid md:grid-cols-2 gap-10 items-center mb-12">
+          {/* Heading on the left */}
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-[#42BA90]/10 border border-[#42BA90]/20 flex items-center justify-center">
+                <Shield className="w-5 h-5 text-[#42BA90]" />
+              </div>
+              <span className="text-[#ACACAC] text-sm tracking-widest uppercase">Security Excellence</span>
             </div>
-            <span className="text-[#ACACAC] text-sm tracking-widest uppercase">Security Excellence</span>
-          </div>
 
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-            Endless
-            <span className="block" style={{ color: '#3D70B7' }}>
-              Vigilance
-            </span>
-          </h2>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
+              Endless
+              <span className="block" style={{ color: '#3D70B7' }}>
+                Vigilance
+              </span>
+            </h2>
+          </motion.div>
 
-          <p className="text-lg text-[#ACACAC] mb-8 leading-relaxed max-w-2xl mx-auto">
-            In cybersecurity, there is no finish line. Every threat neutralized reveals another. 
-            Every vulnerability patched exposes new attack vectors. We embrace this eternal pursuit.
-          </p>
+          {/* Description and CTAs on the right */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <p className="text-lg text-[#ACACAC] mb-8 leading-relaxed">
+              In cybersecurity, there is no finish line. Every threat neutralized reveals another. 
+              Every vulnerability patched exposes new attack vectors. We embrace this eternal pursuit.
+            </p>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            <Link href="/services">
-              <Button className="bg-[#42BA90] hover:bg-[#42BA90]/90 text-white px-8 py-6 rounded-xl text-base group">
-                Begin Assessment
-                <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </Link>
-            
-            <Link href="/about">
-              <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 px-8 py-6 rounded-xl text-base">
-                Our Methodology
-              </Button>
-            </Link>
-          </div>
-        </motion.div>
+            {/* CTA Buttons */}
+            <div className="flex flex-wrap gap-4">
+              <Link href="/services">
+                <Button className="bg-[#42BA90] hover:bg-[#42BA90]/90 text-white px-8 py-6 rounded-xl text-base group">
+                  Begin Assessment
+                  <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
+              
+              <Link href="/about">
+                <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 px-8 py-6 rounded-xl text-base">
+                  Our Methodology
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
+        </div>
 
         {/* Stats row - centered */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto mb-12">

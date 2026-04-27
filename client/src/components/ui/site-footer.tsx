@@ -36,7 +36,7 @@ export function SiteFooter() {
             shape="wave"
             type="8x8"
             colorBack="#0a0a0a"
-            colorFront="#42BA90"
+            colorFront="#3D70B7"
             pxSize={3}
             speed={0.6}
             width={dimensions.width}
