@@ -675,10 +675,14 @@ export function HorizonHeroSection() {
               Enter Experience
             </button>
           </div>
-        ) : (
+        ) : currentSection === 0 ? (
           <h1 className="horizon-hero-title text-halo-white" style={{ whiteSpace: 'nowrap' }}>
-            {currentSection === 0 ? 'ARICA TECH SECURITY' : 'Security That Goes Beyond Prevention'}
+            ARICA TECH SECURITY
           </h1>
+        ) : (
+          <p className="text-white font-bold text-xl md:text-2xl lg:text-3xl tracking-wide text-center" style={{ textShadow: '0 0 40px rgba(255,255,255,0.3)' }}>
+            Security That Goes Beyond Prevention
+          </p>
         )}
       </div>
 
