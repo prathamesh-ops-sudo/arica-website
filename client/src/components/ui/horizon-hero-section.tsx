@@ -660,8 +660,8 @@ export function HorizonHeroSection() {
 
       {/* Parallax scroll-driven title */}
       <div className="horizon-hero-content z-[10]" style={{ opacity: isPastHero ? 0 : 1, transition: 'opacity 0.3s ease' }}>
-        <h1 className="horizon-hero-title text-halo-white">
-          {currentSection === 0 ? 'ARICA' : currentSection === 1 ? 'SECURITY' : 'SOLUTIONS'}
+        <h1 className="horizon-hero-title text-halo-white" style={{ whiteSpace: 'nowrap' }}>
+          {currentSection === 0 ? 'ARICA TECH SECURITY' : currentSection === 1 ? 'Security That Goes Beyond Prevention' : 'SOLUTIONS'}
         </h1>
       </div>
 
