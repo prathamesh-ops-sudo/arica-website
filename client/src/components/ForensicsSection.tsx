@@ -101,8 +101,8 @@ export function ForensicsSection() {
           </motion.div>
         </div>
 
-        {/* Feature cards - centered grid */}
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-10">
+        {/* Feature cards - aligned with above section */}
+        <div className="grid md:grid-cols-3 gap-6 mb-10">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
