@@ -226,10 +226,10 @@ export function ThreatVortex() {
           </p>
         </motion.div>
 
-        <div className={`grid ${isMobile ? 'grid-cols-1' : 'lg:grid-cols-[1fr_340px]'} gap-8 items-start`}>
-          <div className="relative mx-auto w-full" style={{ maxWidth: '800px', height: isMobile ? '400px' : isMobileOrTablet ? '500px' : '700px' }}>
+        <div className={`grid ${isMobile ? 'grid-cols-1' : 'lg:grid-cols-2'} gap-8 items-center`}>
+          <div className="relative mx-auto w-full" style={{ maxWidth: '500px', height: isMobile ? '350px' : isMobileOrTablet ? '400px' : '500px' }}>
             {[1, 2, 3, 4].map((ring) => {
-              const ringScale = isMobile ? 0.5 : isMobileOrTablet ? 0.7 : 1;
+              const ringScale = isMobile ? 0.5 : isMobileOrTablet ? 0.6 : 0.7;
               return (
               <motion.div
                 key={ring}
@@ -344,7 +344,7 @@ export function ThreatVortex() {
               const rad = (threat.angle * Math.PI) / 180;
               const isDestroyed = destroyedThreats.has(i);
               const isBeingHit = beamTargets.includes(i);
-              const distScale = isMobile ? 0.5 : isMobileOrTablet ? 0.7 : 1;
+              const distScale = isMobile ? 0.5 : isMobileOrTablet ? 0.6 : 0.7;
 
               const farDist = (320 + (i % 3) * 30) * distScale;
               const closeDist = (120 + (i % 3) * 40) * distScale;
@@ -585,7 +585,7 @@ export function ThreatVortex() {
 
           </div>
 
-          <div className="lg:sticky lg:top-32 space-y-4">
+          <div className="space-y-4">
             <div
               className="rounded-xl border overflow-hidden"
               style={{
