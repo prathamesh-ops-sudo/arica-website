@@ -1,51 +1,29 @@
-import { useEffect, useRef, useState } from "react";
 import { Phone, Mail, MapPin } from "lucide-react";
-import { DitheringShader } from "@/components/ui/dithering-shader";
 
 export function SiteFooter() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 1920, height: 400 });
-
-  useEffect(() => {
-    const updateDimensions = () => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        setDimensions({
-          width: Math.round(rect.width) || 1920,
-          height: Math.round(rect.height) || 400,
-        });
-      }
-    };
-
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions);
-    return () => window.removeEventListener("resize", updateDimensions);
-  }, []);
-
   return (
     <footer className="relative overflow-hidden bg-background">
-      {/* Wave shader background with ARICA text overlay */}
+      {/* ARICA text with blue glow/shadow effect */}
       <div
-        ref={containerRef}
         className="relative flex items-end justify-center overflow-hidden"
-        style={{ height: "clamp(10rem, 22vw, 20rem)" }}
+        style={{ height: "clamp(10rem, 22vw, 20rem)", background: "#0a0a0a" }}
       >
-        {/* DitheringShader wave background - full bleed */}
-        <div className="absolute inset-0 w-full h-full z-0">
-          <DitheringShader
-            shape="wave"
-            type="8x8"
-            colorBack="#0a0a0a"
-            colorFront="#3D70B7"
-            pxSize={3}
-            speed={0.6}
-            width={dimensions.width}
-            height={dimensions.height}
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
-          />
-        </div>
+        {/* Outer blue glow - 1:3 ratio blue on outer sides */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse 80% 60% at 50% 80%, rgba(61,112,183,0.25) 0%, rgba(61,112,183,0.08) 40%, transparent 70%)",
+          }}
+        />
+        {/* Side blue highlights */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "linear-gradient(to right, rgba(61,112,183,0.15) 0%, transparent 25%, transparent 75%, rgba(61,112,183,0.15) 100%)",
+          }}
+        />
 
-        {/* ARICA text overlay - white with gradient fade like original */}
+        {/* ARICA text with blue highlight, faded border, and shadow */}
         <div className="absolute inset-0 flex items-end justify-center pointer-events-none select-none z-10" aria-hidden="true">
           <span
             className="block text-center leading-none w-full"
@@ -54,13 +32,16 @@ export function SiteFooter() {
               fontWeight: 900,
               fontSize: "21vw",
               letterSpacing: "-0.04em",
-              background: "linear-gradient(to bottom, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.1) 100%)",
+              color: "transparent",
+              background: "linear-gradient(to bottom, rgba(61,112,183,0.9) 0%, rgba(61,112,183,0.5) 40%, rgba(61,112,183,0.15) 80%, transparent 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
               whiteSpace: "nowrap",
               lineHeight: "0.85",
               transform: "translateY(15%)",
+              filter: "drop-shadow(0 0 30px rgba(61,112,183,0.4)) drop-shadow(0 0 60px rgba(61,112,183,0.2)) drop-shadow(0 4px 12px rgba(0,0,0,0.5))",
+              WebkitTextStroke: "1px rgba(61,112,183,0.2)",
             }}
           >
             ARICA
