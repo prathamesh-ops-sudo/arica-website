@@ -30,13 +30,13 @@ export function SiteFooter() {
         className="relative flex items-end justify-center overflow-hidden"
         style={{ height: "clamp(10rem, 22vw, 20rem)" }}
       >
-        {/* DitheringShader wave background - 3 shades lighter than ARICA blue #3D70B7 → #8AABE0 */}
+        {/* DitheringShader wave background - 1 shade lighter than ARICA blue #3D70B7 → #4F82C9 */}
         <div className="absolute inset-0 w-full h-full z-0">
           <DitheringShader
             shape="wave"
             type="8x8"
             colorBack="#0a0a0a"
-            colorFront="#8AABE0"
+            colorFront="#4F82C9"
             pxSize={3}
             speed={0.6}
             width={dimensions.width}
@@ -55,15 +55,14 @@ export function SiteFooter() {
               fontSize: "21vw",
               letterSpacing: "-0.04em",
               color: "transparent",
-              background: "linear-gradient(to bottom, rgba(61,112,183,0.9) 0%, rgba(61,112,183,0.5) 40%, rgba(61,112,183,0.15) 80%, transparent 100%)",
+              background: "linear-gradient(to bottom, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.1) 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
               whiteSpace: "nowrap",
               lineHeight: "0.85",
               transform: "translateY(15%)",
-              filter: "drop-shadow(0 0 30px rgba(61,112,183,0.4)) drop-shadow(0 0 60px rgba(61,112,183,0.2)) drop-shadow(0 4px 12px rgba(0,0,0,0.5))",
-              WebkitTextStroke: "1px rgba(61,112,183,0.2)",
+              filter: "drop-shadow(0 0 30px rgba(255,255,255,0.15)) drop-shadow(0 4px 12px rgba(0,0,0,0.5))",
             }}
           >
             ARICA
