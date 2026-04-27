@@ -661,28 +661,18 @@ export function HorizonHeroSection() {
 
       {/* Parallax scroll-driven title */}
       <div className="horizon-hero-content z-[10]" style={{ opacity: isPastHero ? 0 : 1, transition: 'opacity 0.3s ease' }}>
-        {currentSection === 2 ? (
-          <div className="flex flex-col items-center gap-6">
-            <h1 className="horizon-hero-title text-halo-white" style={{ whiteSpace: 'nowrap' }}>
-              EXPLORE OUR SERVICES
-            </h1>
-            <button
-              onClick={handleEnterExperience}
-              className="bg-white/10 backdrop-blur-xl border border-white/20 text-white font-semibold px-8 py-4 rounded-full hover:bg-white/15 transition-all hover:scale-105 flex items-center gap-3"
-              style={{ pointerEvents: 'auto' }}
-            >
-              <ShieldCheck className="w-5 h-5" />
-              Enter Experience
-            </button>
-          </div>
-        ) : currentSection === 0 ? (
+        {currentSection === 0 ? (
           <h1 className="horizon-hero-title text-halo-white" style={{ whiteSpace: 'nowrap' }}>
             ARICA TECH SECURITY
           </h1>
-        ) : (
-          <p className="text-white font-bold text-xl md:text-2xl lg:text-3xl tracking-wide text-center" style={{ textShadow: '0 0 40px rgba(255,255,255,0.3)' }}>
+        ) : currentSection === 1 ? (
+          <h2 className="horizon-hero-title text-halo-white" style={{ whiteSpace: 'nowrap', fontSize: 'clamp(1.8rem, 5.5vw, 5.5rem)' }}>
             Security That Goes Beyond Prevention
-          </p>
+          </h2>
+        ) : (
+          <h1 className="horizon-hero-title text-halo-white" style={{ whiteSpace: 'nowrap' }}>
+            EXPLORE OUR SERVICES
+          </h1>
         )}
       </div>
 

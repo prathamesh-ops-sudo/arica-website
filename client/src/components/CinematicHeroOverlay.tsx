@@ -126,22 +126,7 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
               />
             ))}
 
-            {/* CTA Button - below center text */}
-            <div className="absolute inset-x-0 top-[58%] md:top-[60%] flex justify-center px-4" style={{ pointerEvents: isPastHero ? "none" : "auto" }}>
-              <motion.button
-                data-testid="button-enter-experience"
-                onClick={onEnterExperience}
-                className="bg-white/10 backdrop-blur-xl border border-white/20 text-white font-semibold px-8 py-4 rounded-full hover:bg-white/15 transition-all hover:scale-105 flex items-center gap-3"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <ShieldCheck className="w-5 h-5" />
-                Explore Our Security Solutions
-              </motion.button>
-            </div>
+
           </div>
         )}
       </div>
