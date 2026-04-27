@@ -35,69 +35,71 @@ export function ForensicsSection() {
       <FloatingCyberThreats variant="mixed" density="low" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Centered header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-            Vulnerability Assessment &
-            <br />
-            <span className="text-gradient">Penetration Testing</span>
-          </h2>
+        {/* Side-by-side: Scanner left, heading/description right */}
+        <div className="grid md:grid-cols-2 gap-10 items-center mb-12">
+          {/* Scanner on the left */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative"
+          >
+            <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 to-transparent rounded-3xl blur-2xl" />
+            <div className="relative">
+              <NanobotParticles 
+                particleCount={35} 
+                color="61, 112, 183" 
+                maxDistance={100}
+                className="opacity-40"
+              />
+              <SecurityScanAnimation />
+            </div>
+          </motion.div>
 
-          <p className="text-muted-foreground mb-6 leading-relaxed max-w-2xl mx-auto text-lg">
-            Our security experts follow{" "}
-            <LinkPreview
-              url="https://owasp.org/www-project-web-security-testing-guide/"
-              className="font-bold bg-clip-text text-transparent bg-gradient-to-br from-[#42BA90] to-[#3D70B7]"
-            >
-              OWASP Testing Guidelines
-            </LinkPreview>{" "}
-            to identify vulnerabilities across your networks, applications, and infrastructure.
-          </p>
+          {/* Heading and description on the right */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
+              Vulnerability Assessment &
+              <br />
+              <span className="text-gradient">Penetration Testing</span>
+            </h2>
 
-          <p className="text-muted-foreground mb-10 leading-relaxed max-w-2xl mx-auto">
-            We utilize industry-leading tools from{" "}
-            <LinkPreview
-              url="https://www.tenable.com/products/nessus"
-              className="font-semibold text-primary hover:text-primary/80 transition-colors"
-            >
-              Tenable Nessus
-            </LinkPreview>{" "}
-            and{" "}
-            <LinkPreview
-              url="https://portswigger.net/burp"
-              className="font-semibold text-primary hover:text-primary/80 transition-colors"
-            >
-              Burp Suite
-            </LinkPreview>{" "}
-            to provide comprehensive security assessments with actionable remediation guidance.
-          </p>
-        </motion.div>
+            <p className="text-muted-foreground mb-6 leading-relaxed text-lg">
+              Our security experts follow{" "}
+              <LinkPreview
+                url="https://owasp.org/www-project-web-security-testing-guide/"
+                className="font-bold bg-clip-text text-transparent bg-gradient-to-br from-[#42BA90] to-[#3D70B7]"
+              >
+                OWASP Testing Guidelines
+              </LinkPreview>{" "}
+              to identify vulnerabilities across your networks, applications, and infrastructure.
+            </p>
 
-        {/* Centered animation */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="relative max-w-lg mx-auto mb-12"
-        >
-          <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 to-transparent rounded-3xl blur-2xl" />
-          <div className="relative">
-            <NanobotParticles 
-              particleCount={35} 
-              color="61, 112, 183" 
-              maxDistance={100}
-              className="opacity-40"
-            />
-            <SecurityScanAnimation />
-          </div>
-        </motion.div>
+            <p className="text-muted-foreground leading-relaxed">
+              We utilize industry-leading tools from{" "}
+              <LinkPreview
+                url="https://www.tenable.com/products/nessus"
+                className="font-semibold text-primary hover:text-primary/80 transition-colors"
+              >
+                Tenable Nessus
+              </LinkPreview>{" "}
+              and{" "}
+              <LinkPreview
+                url="https://portswigger.net/burp"
+                className="font-semibold text-primary hover:text-primary/80 transition-colors"
+              >
+                Burp Suite
+              </LinkPreview>{" "}
+              to provide comprehensive security assessments with actionable remediation guidance.
+            </p>
+          </motion.div>
+        </div>
 
         {/* Feature cards - centered grid */}
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-10">
