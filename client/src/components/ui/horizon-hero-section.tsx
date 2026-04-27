@@ -11,6 +11,7 @@ import EnergyBeam from './energy-beam';
 import { TubesBackground } from './neon-flow';
 import { CinematicHeroOverlay } from '@/components/CinematicHeroOverlay';
 import { useIsMobileOrTablet } from '@/hooks/use-mobile';
+import { ShieldCheck } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -660,9 +661,25 @@ export function HorizonHeroSection() {
 
       {/* Parallax scroll-driven title */}
       <div className="horizon-hero-content z-[10]" style={{ opacity: isPastHero ? 0 : 1, transition: 'opacity 0.3s ease' }}>
-        <h1 className="horizon-hero-title text-halo-white" style={{ whiteSpace: 'nowrap' }}>
-          {currentSection === 0 ? 'ARICA TECH SECURITY' : currentSection === 1 ? 'Security That Goes Beyond Prevention' : 'SOLUTIONS'}
-        </h1>
+        {currentSection === 2 ? (
+          <div className="flex flex-col items-center gap-6">
+            <h1 className="horizon-hero-title text-halo-white" style={{ whiteSpace: 'nowrap' }}>
+              EXPLORE OUR SERVICES
+            </h1>
+            <button
+              onClick={handleEnterExperience}
+              className="bg-white/10 backdrop-blur-xl border border-white/20 text-white font-semibold px-8 py-4 rounded-full hover:bg-white/15 transition-all hover:scale-105 flex items-center gap-3"
+              style={{ pointerEvents: 'auto' }}
+            >
+              <ShieldCheck className="w-5 h-5" />
+              Enter Experience
+            </button>
+          </div>
+        ) : (
+          <h1 className="horizon-hero-title text-halo-white" style={{ whiteSpace: 'nowrap' }}>
+            {currentSection === 0 ? 'ARICA TECH SECURITY' : 'Security That Goes Beyond Prevention'}
+          </h1>
+        )}
       </div>
 
       <div ref={scrollProgressRef} className="horizon-scroll-progress" style={{ visibility: 'hidden', opacity: isPastHero ? 0 : 1, pointerEvents: isPastHero ? 'none' : 'auto', transition: 'opacity 0.5s ease' }}>
