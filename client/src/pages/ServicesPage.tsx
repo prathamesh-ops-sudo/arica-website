@@ -593,8 +593,8 @@ export default function ServicesPage() {
                       Success Rate
                     </h4>
                     <AnimatedProgressBar
-                      value={service.stats[1]?.value || 95}
-                      label={service.stats[1]?.label || "Success Rate"}
+                      value={service.stats[2]?.value || service.stats[1]?.value || 95}
+                      label={service.stats[2]?.label || service.stats[1]?.label || "Success Rate"}
                       color={service.color}
                     />
                   </div>
