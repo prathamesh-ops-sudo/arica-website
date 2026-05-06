@@ -60,6 +60,7 @@ const OngoingSupport = lazy(() => import("@/pages/OngoingSupport"));
 const SecurityImplementation = lazy(() => import("@/pages/SecurityImplementation"));
 const TeamDirectors = lazy(() => import("@/pages/TeamDirectors"));
 const Test = lazy(() => import("@/pages/Test"));
+const ThankYou = lazy(() => import("@/pages/ThankYou"));
 
 function PageLoader() {
   return (
@@ -98,6 +99,7 @@ function Router() {
       <Route path="/ongoing-support" component={OngoingSupport} />
       <Route path="/security-implementation" component={SecurityImplementation} />
       <Route path="/test" component={Test} />
+      <Route path="/thank-you" component={ThankYou} />
       <Route path="/team" component={TeamDirectors} />
       <Route path="/portal" component={Contact} />
       <Route component={NotFound} />
