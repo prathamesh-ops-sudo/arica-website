@@ -477,7 +477,7 @@ export default function ServicesPage() {
                 Our Services
               </span>
             </span>
-            <h1 className="font-display text-5xl md:text-6xl font-bold mb-6">
+            <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold mb-6">
               <Typewriter 
                 words={["VAPT Services", "ISO 27001 Audit", "Custom Development", "Enterprise Security"]}
                 className="text-gradient"
@@ -548,7 +548,7 @@ export default function ServicesPage() {
                   {service.description}
                 </p>
                 
-                <div className="grid grid-cols-3 gap-4 mb-8 p-4 rounded-xl bg-card/50 border border-white/5">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 p-4 rounded-xl bg-card/50 border border-white/5">
                   {service.stats.map((stat) => (
                     <CountUpStat
                       key={stat.label}

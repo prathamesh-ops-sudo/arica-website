@@ -135,7 +135,7 @@ function TeamMemberRow({
           style={{
             fontFamily: "'Inter', sans-serif",
             fontWeight: 900,
-            fontSize: "clamp(1.8rem, 5vw, 5rem)",
+            fontSize: "clamp(1.2rem, 4vw, 5rem)",
             color: isExpanded ? "hsl(var(--primary))" : "hsl(var(--foreground))",
           }}
         >

@@ -57,6 +57,11 @@
   --color-bulgarian-rose: hsl(var(--bulgarian-rose));
 }
 
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 :root {
   --button-outline: rgba(255,255,255, .08);
   --badge-outline: rgba(255,255,255, .05);
@@ -496,6 +501,8 @@
   z-index: 10;
   text-align: center;
   pointer-events: none;
+  width: 90%;
+  max-width: 1200px;
 }
 
 .horizon-hero-title {
@@ -595,7 +602,14 @@
   }
 
   .horizon-hero-title {
-    font-size: clamp(1.5rem, 6vw, 3rem);
+    font-size: clamp(1.5rem, 7vw, 3rem);
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .horizon-hero-content {
+    width: 92%;
+    padding: 0 1rem;
   }
 }
 

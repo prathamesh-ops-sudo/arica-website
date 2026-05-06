@@ -46,7 +46,7 @@ export function ComplianceSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
+          <h2 className="font-display text-2xl md:text-4xl lg:text-5xl font-bold mb-4">
             ISO 27001
             <br />
             <span className="text-gradient">Audit & Certification</span>

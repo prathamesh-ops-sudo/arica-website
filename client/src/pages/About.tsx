@@ -192,7 +192,7 @@ export default function About() {
                 About Us
               </span>
             </span>
-            <h1 className="font-display text-5xl md:text-6xl font-bold mb-6">
+            <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold mb-6">
               Security That Goes{" "}
               <span className="text-gradient">Beyond Prevention</span>
             </h1>
@@ -207,7 +207,7 @@ export default function About() {
 
       <section className="py-16 relative">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {stats.map((stat, index) => (
               <AnimatedStat key={stat.label} stat={stat} index={index} />
             ))}

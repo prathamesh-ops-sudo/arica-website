@@ -214,7 +214,7 @@ export function ThreatVortex() {
             </span>
           </motion.div>
 
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+          <h2 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-4">
             We Don't Just Defend.
             <span className="block" style={{ color: '#3D70B7' }}>
               We Fight Back.
@@ -226,8 +226,8 @@ export function ThreatVortex() {
           </p>
         </motion.div>
 
-        <div className={`grid ${isMobile ? 'grid-cols-1' : 'lg:grid-cols-2'} gap-8 items-center`}>
-          <div className="relative mx-auto w-full" style={{ maxWidth: '500px', height: isMobile ? '350px' : isMobileOrTablet ? '400px' : '500px' }}>
+        <div className={`grid ${isMobile ? 'grid-cols-1' : 'lg:grid-cols-2'} gap-6 md:gap-8 items-center`}>
+          <div className="relative mx-auto w-full" style={{ maxWidth: isMobile ? '320px' : '500px', height: isMobile ? '300px' : isMobileOrTablet ? '400px' : '500px' }}>
             {[1, 2, 3, 4].map((ring) => {
               const ringScale = isMobile ? 0.5 : isMobileOrTablet ? 0.6 : 0.7;
               return (

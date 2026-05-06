@@ -39,7 +39,7 @@ export function AnimeNavBar({ items, className, defaultActive = "Home" }: NavBar
 
   return (
     <div className={cn("fixed top-0 left-0 right-0 z-[9999]", className)}>
-      <div className="flex justify-center pt-4 md:pt-6">
+      <div className="flex justify-center pt-4 md:pt-6 pl-0 md:pl-0">
         <motion.div 
           className="flex items-center gap-1 md:gap-2 bg-[rgba(28,28,30,0.72)] border border-white/8 backdrop-blur-[20px] backdrop-saturate-[180%] py-1.5 md:py-2 px-2 md:px-3 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.25)]"
           initial={{ y: -20, opacity: 0 }}
@@ -63,7 +63,7 @@ export function AnimeNavBar({ items, className, defaultActive = "Home" }: NavBar
                 onMouseEnter={() => setHoveredTab(item.name)}
                 onMouseLeave={() => setHoveredTab(null)}
                 className={cn(
-                  "relative cursor-pointer text-xs md:text-sm font-medium px-3 md:px-5 py-2 md:py-2.5 rounded-full transition-all duration-300",
+                  "relative cursor-pointer text-xs md:text-sm font-medium px-4 md:px-5 py-3 md:py-2.5 rounded-full transition-all duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center",
                   "text-white/60 hover:text-white",
                   isActive && "text-white"
                 )}

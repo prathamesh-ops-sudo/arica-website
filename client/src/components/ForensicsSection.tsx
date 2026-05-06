@@ -64,7 +64,7 @@ export function ForensicsSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
+            <h2 className="font-display text-2xl md:text-4xl lg:text-5xl font-bold mb-4">
               Vulnerability Assessment &
               <br />
               <span className="text-gradient">Penetration Testing</span>
