@@ -5,7 +5,15 @@ import { insertContactInquirySchema } from "@shared/schema";
 import { fromZodError } from "zod-validation-error";
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 
-const sesClient = new SESClient({ region: "us-east-1" });
+const sesClient = new SESClient({ 
+  region: "us-east-1",
+  ...(process.env.SES_ACCESS_KEY_ID && process.env.SES_SECRET_ACCESS_KEY ? {
+    credentials: {
+      accessKeyId: process.env.SES_ACCESS_KEY_ID,
+      secretAccessKey: process.env.SES_SECRET_ACCESS_KEY,
+    }
+  } : {})
+});
 
 const RECIPIENT_EMAILS = [
   "sohom.niyogi@aricatech.com",
@@ -64,6 +72,8 @@ async function sendContactEmail(data: {
     },
   });
 
+  // SES calls in App Runner can take 20-30s due to credential resolution latency.
+  // No timeout — this runs fire-and-forget so the user isn't blocked.
   await sesClient.send(command);
 }
 
@@ -100,8 +110,10 @@ export async function registerRoutes(
         phone,
         message,
         preferredDate,
+      }).then(() => {
+        console.log("SES email sent successfully to:", RECIPIENT_EMAILS.join(", "));
       }).catch((err) => {
-        console.error("Failed to send SES email:", err);
+        console.error("Failed to send SES email:", err?.message || err);
       });
 
       res.status(201).json({ success: true, data: inquiry });
