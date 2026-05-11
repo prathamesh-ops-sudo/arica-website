@@ -27,8 +27,8 @@ export function SiteFooter() {
       {/* Wave shader background with ARICA text overlay */}
       <div
         ref={containerRef}
-        className="relative flex items-end justify-center overflow-hidden"
-        style={{ height: "clamp(10rem, 22vw, 20rem)" }}
+        className="relative flex items-center justify-center"
+        style={{ height: "clamp(14rem, 28vw, 26rem)" }}
       >
         {/* DitheringShader wave background - 1 shade lighter than ARICA blue #3D70B7 → #4F82C9 */}
         <div className="absolute inset-0 w-full h-full z-0">
@@ -46,7 +46,7 @@ export function SiteFooter() {
         </div>
 
         {/* ARICA text with blue highlight, faded border, and shadow - in front of wave */}
-        <div className="absolute inset-0 flex items-end justify-center pointer-events-none select-none z-10" aria-hidden="true">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-10" aria-hidden="true">
           <span
             className="block text-center leading-none w-full"
             style={{
@@ -60,8 +60,7 @@ export function SiteFooter() {
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
               whiteSpace: "nowrap",
-              lineHeight: "0.85",
-              transform: "translateY(15%)",
+              lineHeight: "1",
               filter: "drop-shadow(0 0 30px rgba(255,255,255,0.15)) drop-shadow(0 4px 12px rgba(0,0,0,0.5))",
             }}
           >
