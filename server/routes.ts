@@ -24,15 +24,17 @@ const SENDER_EMAIL = "noreply@aricatech.com";
 async function sendContactEmail(data: {
   name: string;
   email: string;
+  company: string;
   department: string;
   phone?: string;
   message?: string;
   preferredDate?: string;
 }) {
-  const subject = `New Contact Form Submission from ${data.name}`;
+  const subject = `New Contact Form Submission from ${data.name} — ${data.company}`;
 
   const bodyLines = [
     `Name: ${data.name}`,
+    `Company: ${data.company}`,
     `Department: ${data.department}`,
     `Email: ${data.email}`,
   ];
@@ -44,6 +46,7 @@ async function sendContactEmail(data: {
     `<h2>New Contact Form Submission</h2>`,
     `<table style="border-collapse:collapse;width:100%;max-width:600px;">`,
     `<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Name</td><td style="padding:8px;border:1px solid #ddd;">${data.name}</td></tr>`,
+    `<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Company</td><td style="padding:8px;border:1px solid #ddd;">${data.company}</td></tr>`,
     `<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Department</td><td style="padding:8px;border:1px solid #ddd;">${data.department}</td></tr>`,
     `<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Email</td><td style="padding:8px;border:1px solid #ddd;"><a href="mailto:${data.email}">${data.email}</a></td></tr>`,
   ];
@@ -84,12 +87,12 @@ export async function registerRoutes(
   
   app.post("/api/contact", async (req, res) => {
     try {
-      const { name, email, company, service, message, phone, preferredDate } = req.body;
+      const { name, email, company, department, service, message, phone, preferredDate } = req.body;
 
       if (!name || !email || !company) {
         return res.status(400).json({
           success: false,
-          error: "Name, Department, and Email are required.",
+          error: "Name, Company Name, and Email are required.",
         });
       }
 
@@ -106,7 +109,8 @@ export async function registerRoutes(
       sendContactEmail({
         name,
         email,
-        department: company,
+        company: company || "",
+        department: department || "",
         phone,
         message,
         preferredDate,

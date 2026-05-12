@@ -14,6 +14,7 @@ const monthNames = ["January", "February", "March", "April", "May", "June", "Jul
 
 type FormData = {
   name: string;
+  companyName: string;
   department: string;
   email: string;
   phone: string;
@@ -212,6 +213,7 @@ export default function Contact() {
 
   const [formData, setFormData] = useState<FormData>({
     name: "",
+    companyName: "",
     department: "",
     email: "",
     phone: "",
@@ -243,7 +245,8 @@ export default function Contact() {
         body: JSON.stringify({
           name: formData.name.trim(),
           email: formData.email.trim(),
-          company: formData.department.trim(),
+          company: formData.companyName.trim(),
+          department: formData.department.trim(),
           service: "",
           message: messageParts.join("\n\n") || "Contact form submission",
           phone: formData.phone.trim() || undefined,
@@ -353,6 +356,21 @@ export default function Contact() {
                         placeholder="Your full name"
                         value={formData.name}
                         onChange={(e) => handleInputChange("name", e.target.value)}
+                        required
+                        className="bg-background border-[#3D70B7]/20 focus:border-[#3D70B7]"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="companyName" className="text-sm font-medium">
+                        Company Name <span className="text-red-500">*</span>
+                      </Label>
+                      <Input
+                        id="companyName"
+                        type="text"
+                        placeholder="Your company name"
+                        value={formData.companyName}
+                        onChange={(e) => handleInputChange("companyName", e.target.value)}
                         required
                         className="bg-background border-[#3D70B7]/20 focus:border-[#3D70B7]"
                       />
