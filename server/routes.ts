@@ -4,9 +4,24 @@ import { storage } from "./storage";
 import { insertContactInquirySchema } from "@shared/schema";
 import { fromZodError } from "zod-validation-error";
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+import { NodeHttpHandler } from "@smithy/node-http-handler";
 
-const sesClient = new SESClient({ 
+// SES SendEmail from App Runner has been hitting OS-level TCP timeouts
+// (ETIMEDOUT after ~2 min) when DNS returns an SES IP that's unreachable
+// from App Runner's egress. We bound each TCP connect to 5s and rely on
+// the SDK's standard retry strategy (5 attempts) so a bad IP fails fast
+// and the next attempt is likely to resolve to a different healthy IP.
+const SES_CONNECT_TIMEOUT_MS = 5_000;
+const SES_SOCKET_TIMEOUT_MS = 30_000;
+const SES_MAX_ATTEMPTS = 5;
+
+const sesClient = new SESClient({
   region: "us-east-1",
+  maxAttempts: SES_MAX_ATTEMPTS,
+  requestHandler: new NodeHttpHandler({
+    connectionTimeout: SES_CONNECT_TIMEOUT_MS,
+    socketTimeout: SES_SOCKET_TIMEOUT_MS,
+  }),
   ...(process.env.SES_ACCESS_KEY_ID && process.env.SES_SECRET_ACCESS_KEY ? {
     credentials: {
       accessKeyId: process.env.SES_ACCESS_KEY_ID,
@@ -75,9 +90,28 @@ async function sendContactEmail(data: {
     },
   });
 
-  // SES calls in App Runner can take 20-30s due to credential resolution latency.
-  // No timeout — this runs fire-and-forget so the user isn't blocked.
-  await sesClient.send(command);
+  const startedAt = Date.now();
+  console.log(
+    `[ses] sendContactEmail starting (to=${RECIPIENT_EMAILS.join(",")}, ` +
+      `maxAttempts=${SES_MAX_ATTEMPTS}, connectTimeoutMs=${SES_CONNECT_TIMEOUT_MS})`,
+  );
+  try {
+    const result = await sesClient.send(command);
+    console.log(
+      `[ses] sendContactEmail OK in ${Date.now() - startedAt}ms ` +
+        `(MessageId=${result.MessageId ?? "unknown"}, ` +
+        `attempts=${result.$metadata?.attempts ?? 1})`,
+    );
+    return result;
+  } catch (err: any) {
+    console.error(
+      `[ses] sendContactEmail FAILED in ${Date.now() - startedAt}ms ` +
+        `(attempts=${err?.$metadata?.attempts ?? "?"}, ` +
+        `name=${err?.name}, code=${err?.code ?? err?.Code}, ` +
+        `errno=${err?.errno}, address=${err?.address}): ${err?.message ?? err}`,
+    );
+    throw err;
+  }
 }
 
 export async function registerRoutes(
