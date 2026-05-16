@@ -6,17 +6,21 @@ import { fromZodError } from "zod-validation-error";
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import { NodeHttpHandler } from "@smithy/node-http-handler";
 
-// SES SendEmail from App Runner has been hitting OS-level TCP timeouts
-// (ETIMEDOUT after ~2 min) when DNS returns an SES IP that's unreachable
-// from App Runner's egress. We bound each TCP connect to 5s and rely on
-// the SDK's standard retry strategy (5 attempts) so a bad IP fails fast
-// and the next attempt is likely to resolve to a different healthy IP.
+// App Runner's shared-NAT egress to the public SES endpoint
+// (email.us-east-1.amazonaws.com) was timing out 100% of the time, so we
+// route SES traffic through a VPC Interface Endpoint instead. The endpoint
+// publishes private DNS for email.us-east-1.api.aws (SES's v2 hostname),
+// which the v1 SDK is happy to call against; the previously-set
+// connect/socket timeouts and retries are kept as a safety net.
 const SES_CONNECT_TIMEOUT_MS = 5_000;
 const SES_SOCKET_TIMEOUT_MS = 30_000;
 const SES_MAX_ATTEMPTS = 5;
+const SES_ENDPOINT_URL =
+  process.env.SES_ENDPOINT_URL ?? "https://email.us-east-1.api.aws";
 
 const sesClient = new SESClient({
   region: "us-east-1",
+  endpoint: SES_ENDPOINT_URL,
   maxAttempts: SES_MAX_ATTEMPTS,
   requestHandler: new NodeHttpHandler({
     connectionTimeout: SES_CONNECT_TIMEOUT_MS,
