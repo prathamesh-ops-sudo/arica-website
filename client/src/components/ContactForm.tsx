@@ -12,6 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+
+const TURNSTILE_SITE_KEY: string = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "";
 
 function AnimatedInput({ 
   id, 
@@ -268,7 +271,9 @@ export function ContactForm() {
     message: "",
     website: "", // honeypot — kept empty by real users
   });
+  const [captchaToken, setCaptchaToken] = useState<string>("");
   const formStartTs = useRef<number>(Date.now());
+  const captchaRequired = TURNSTILE_SITE_KEY.length > 0;
 
   const handleInputChange = (field: string, value: string) => {
     setFormData({ ...formData, [field]: value });
@@ -304,6 +309,7 @@ export function ContactForm() {
         body: JSON.stringify({
           ...formData,
           formStartTs: formStartTs.current,
+          captchaToken: captchaToken || undefined,
         }),
       });
 
@@ -478,10 +484,19 @@ export function ContactForm() {
         isTyping={typingFields.message}
       />
 
+      {captchaRequired && (
+        <div className="flex justify-center">
+          <TurnstileWidget
+            siteKey={TURNSTILE_SITE_KEY}
+            onToken={setCaptchaToken}
+          />
+        </div>
+      )}
+
       <motion.button
         type="submit"
         data-testid="button-submit-contact"
-        disabled={submitting}
+        disabled={submitting || (captchaRequired && !captchaToken)}
         className="w-full relative overflow-hidden rounded-lg py-3 px-6 font-semibold text-white bg-gradient-to-r from-[#1C2C5A] to-[#010101] transition-all duration-300 disabled:opacity-50"
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}

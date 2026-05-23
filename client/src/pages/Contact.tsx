@@ -8,6 +8,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { ContactCard } from "@/components/ui/contact-card";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+
+// Build-time public site key. When unset the captcha layer stays dormant
+// (the server treats requests without a token as OK if no secret is set).
+const TURNSTILE_SITE_KEY: string = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "";
 
 const dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -221,7 +226,9 @@ export default function Contact() {
     message: "",
     website: "",
   });
+  const [captchaToken, setCaptchaToken] = useState<string>("");
   const formStartTs = useRef<number>(Date.now());
+  const captchaRequired = TURNSTILE_SITE_KEY.length > 0;
 
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -256,6 +263,7 @@ export default function Contact() {
           preferredDate: preferredDate || undefined,
           website: formData.website,
           formStartTs: formStartTs.current,
+          captchaToken: captchaToken || undefined,
         }),
       });
 
@@ -467,9 +475,19 @@ export default function Contact() {
                       />
                     </div>
 
+                    {captchaRequired && (
+                      <div className="flex justify-center">
+                        <TurnstileWidget
+                          siteKey={TURNSTILE_SITE_KEY}
+                          onToken={setCaptchaToken}
+                        />
+                      </div>
+                    )}
+
                     <Button
                       className="w-full bg-[#3D70B7] hover:bg-[#3D70B7]/90 text-white rounded-lg py-3 font-medium gap-2"
                       type="submit"
+                      disabled={captchaRequired && !captchaToken}
                     >
                       <Send className="w-4 h-4" />
                       Next: Schedule a Call
