@@ -662,7 +662,13 @@ export function HorizonHeroSection() {
       {/* Parallax scroll-driven title */}
       <div className="horizon-hero-content z-[10]" style={{ opacity: isPastHero ? 0 : 1, transition: 'opacity 0.3s ease' }}>
         {currentSection === 0 ? (
-          <h1 className="horizon-hero-title text-halo-white">
+          // "ARICA TECH SECURITY" is the brand line — must stay on one line at
+          // every viewport. We size it off the viewport width directly so it
+          // shrinks before it would wrap, instead of breaking into two lines.
+          <h1
+            className="horizon-hero-title text-halo-white"
+            style={{ fontSize: 'clamp(1.5rem, 7.2vw, 7rem)', whiteSpace: 'nowrap' }}
+          >
             ARICA TECH SECURITY
           </h1>
         ) : currentSection === 1 ? (
@@ -671,7 +677,10 @@ export function HorizonHeroSection() {
           </h2>
         ) : (
           <div className="flex flex-col items-center gap-4 md:gap-6 px-4">
-            <h1 className="horizon-hero-title text-halo-white">
+            <h1
+              className="horizon-hero-title text-halo-white"
+              style={{ fontSize: 'clamp(1.5rem, 7.2vw, 7rem)', whiteSpace: 'nowrap' }}
+            >
               EXPLORE OUR SERVICES
             </h1>
             <button

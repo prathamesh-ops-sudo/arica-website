@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Phone, MapPin, AlertCircle, Send, CalendarDays, ArrowRight, SkipForward } from "lucide-react";
 import { useLocation } from "wouter";
@@ -19,6 +19,7 @@ type FormData = {
   email: string;
   phone: string;
   message: string;
+  website: string; // honeypot — kept empty by real users
 };
 
 function CalendarStep({
@@ -218,7 +219,9 @@ export default function Contact() {
     email: "",
     phone: "",
     message: "",
+    website: "",
   });
+  const formStartTs = useRef<number>(Date.now());
 
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -251,6 +254,8 @@ export default function Contact() {
           message: messageParts.join("\n\n") || "Contact form submission",
           phone: formData.phone.trim() || undefined,
           preferredDate: preferredDate || undefined,
+          website: formData.website,
+          formStartTs: formStartTs.current,
         }),
       });
 
@@ -332,6 +337,34 @@ export default function Contact() {
                   ]}
                 >
                   <form onSubmit={handleFormSubmit} className="w-full space-y-4">
+                    {/*
+                     * Honeypot: hidden from humans (off-screen, no focus, no a11y),
+                     * but bots that walk the DOM and fill every input will set it.
+                     * The server rejects any submission where `website` is non-empty.
+                     */}
+                    <div
+                      aria-hidden="true"
+                      style={{
+                        position: "absolute",
+                        left: "-10000px",
+                        top: "auto",
+                        width: "1px",
+                        height: "1px",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <label htmlFor="contact-website">Website</label>
+                      <input
+                        id="contact-website"
+                        type="text"
+                        name="website"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={formData.website}
+                        onChange={(e) => handleInputChange("website", e.target.value)}
+                      />
+                    </div>
+
                     <AnimatePresence>
                       {error && (
                         <motion.div

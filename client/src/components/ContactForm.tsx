@@ -266,7 +266,9 @@ export function ContactForm() {
     company: "",
     service: "",
     message: "",
+    website: "", // honeypot — kept empty by real users
   });
+  const formStartTs = useRef<number>(Date.now());
 
   const handleInputChange = (field: string, value: string) => {
     setFormData({ ...formData, [field]: value });
@@ -299,7 +301,10 @@ export function ContactForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          formStartTs: formStartTs.current,
+        }),
       });
 
       const data = await response.json();
@@ -327,10 +332,11 @@ export function ContactForm() {
           transition={{ delay: 0.8 }}
         >
           <Button
-            onClick={() => {
-              setSubmitted(false);
-              setFormData({ name: "", email: "", company: "", service: "", message: "" });
-            }}
+              onClick={() => {
+                setSubmitted(false);
+                setFormData({ name: "", email: "", company: "", service: "", message: "", website: "" });
+                formStartTs.current = Date.now();
+              }}
             variant="outline"
           >
             Send Another Message
@@ -359,6 +365,34 @@ export function ContactForm() {
         }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
+
+      {/*
+       * Honeypot: hidden from humans (off-screen, no focus, no a11y),
+       * but bots that walk the DOM and fill every input will set it.
+       * The server rejects any submission where `website` is non-empty.
+       */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: "-10000px",
+          top: "auto",
+          width: "1px",
+          height: "1px",
+          overflow: "hidden",
+        }}
+      >
+        <label htmlFor="cf-website">Website</label>
+        <input
+          id="cf-website"
+          type="text"
+          name="website"
+          tabIndex={-1}
+          autoComplete="off"
+          value={formData.website}
+          onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+        />
+      </div>
 
       <AnimatePresence>
         {error && (

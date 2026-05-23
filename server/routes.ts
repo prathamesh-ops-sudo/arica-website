@@ -1,5 +1,6 @@
-import type { Express } from "express";
+import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
+import rateLimit from "express-rate-limit";
 import { storage } from "./storage";
 import { insertContactInquirySchema } from "@shared/schema";
 import { fromZodError } from "zod-validation-error";
@@ -39,6 +40,187 @@ const RECIPIENT_EMAILS = [
   "prathamesh@aricatech.com",
 ];
 const SENDER_EMAIL = "noreply@aricatech.com";
+
+// --- Anti-spam helpers ----------------------------------------------------
+// The contact form was being abused by drive-by spam bots (gibberish names,
+// random "Bbbb" departments, "Pass" messages, throwaway gmail addresses).
+// We layer three cheap defences before anything reaches SES / the DB:
+//   1. Honeypot field `website` — invisible to humans, auto-filled by bots.
+//   2. Minimum fill time — submissions faster than 1.5s are bots.
+//   3. Content shape checks — must have an alphabetic name, message length
+//      must be reasonable, and the email/phone (when provided) must look real.
+// A captcha layer can be added on top via env vars (see verifyCaptchaToken).
+const MIN_FORM_FILL_MS = 1_500;
+const ALPHA_RATIO_THRESHOLD = 0.5; // ≥50% letters in `name`
+const MIN_MESSAGE_LENGTH = 10;
+const SPAM_MESSAGE_TOKENS = new Set([
+  "pass",
+  "test",
+  "abc",
+  "asdf",
+  "aaa",
+  "xxx",
+  ".",
+  "-",
+  "1",
+  "n/a",
+  "na",
+]);
+
+function alphaRatio(value: string): number {
+  if (!value) return 0;
+  const letters = value.replace(/[^A-Za-z]/g, "").length;
+  return letters / value.length;
+}
+
+function looksLikeRealEmail(email: string): boolean {
+  // Block obviously fake patterns like a@a.com / x@x.com / test@test.com.
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return false;
+  const [local, domain] = email.toLowerCase().split("@");
+  if (local.length < 2 || domain.length < 4) return false;
+  const domainRoot = domain.split(".")[0];
+  if (local === domainRoot && domainRoot.length <= 3) return false;
+  return true;
+}
+
+function looksLikePhone(phone: string): boolean {
+  // Optional field — when present, must look like a real phone number.
+  const digits = phone.replace(/\D/g, "");
+  if (digits.length < 7 || digits.length > 15) return false;
+  if (/^(\d)\1+$/.test(digits)) return false; // 1111111, 0000000, …
+  return true;
+}
+
+type SpamCheckResult = { ok: true } | { ok: false; reason: string };
+
+function detectSpam(body: {
+  name?: unknown;
+  email?: unknown;
+  company?: unknown;
+  department?: unknown;
+  message?: unknown;
+  phone?: unknown;
+  website?: unknown;
+  formStartTs?: unknown;
+}): SpamCheckResult {
+  if (typeof body.website === "string" && body.website.trim().length > 0) {
+    return { ok: false, reason: "honeypot_filled" };
+  }
+
+  if (typeof body.formStartTs === "number" && Number.isFinite(body.formStartTs)) {
+    const elapsed = Date.now() - body.formStartTs;
+    if (elapsed >= 0 && elapsed < MIN_FORM_FILL_MS) {
+      return { ok: false, reason: `too_fast(${elapsed}ms)` };
+    }
+  }
+
+  const name = typeof body.name === "string" ? body.name.trim() : "";
+  const email = typeof body.email === "string" ? body.email.trim() : "";
+  const company = typeof body.company === "string" ? body.company.trim() : "";
+  const department = typeof body.department === "string" ? body.department.trim() : "";
+  const message = typeof body.message === "string" ? body.message.trim() : "";
+  const phone = typeof body.phone === "string" ? body.phone.trim() : "";
+
+  if (name.length < 2) return { ok: false, reason: "name_too_short" };
+  if (alphaRatio(name) < ALPHA_RATIO_THRESHOLD) {
+    return { ok: false, reason: "name_not_alpha" };
+  }
+  if (!looksLikeRealEmail(email)) return { ok: false, reason: "email_invalid" };
+  if (company.length < 2) return { ok: false, reason: "company_too_short" };
+  if (
+    department.length >= 2 &&
+    department.toLowerCase() === company.toLowerCase()
+  ) {
+    return { ok: false, reason: "company_equals_department" };
+  }
+  if (phone && !looksLikePhone(phone)) {
+    return { ok: false, reason: "phone_invalid" };
+  }
+
+  // Message is optional in the schema but when present it should be
+  // either obviously absent (server default) or a real message — not a
+  // 1-character bot payload.
+  const phonePrefix = `Phone: ${phone}`;
+  const messageBody = phone && message.startsWith(phonePrefix)
+    ? message.slice(phonePrefix.length).trim()
+    : message;
+  const isDefaultMessage = messageBody === "Contact form submission" || messageBody === "";
+  if (!isDefaultMessage) {
+    if (messageBody.length < MIN_MESSAGE_LENGTH) {
+      return { ok: false, reason: "message_too_short" };
+    }
+    if (SPAM_MESSAGE_TOKENS.has(messageBody.toLowerCase())) {
+      return { ok: false, reason: "message_spam_token" };
+    }
+  }
+
+  return { ok: true };
+}
+
+// Captcha verification scaffold — disabled until a provider key is set.
+// Set `TURNSTILE_SECRET_KEY` (Cloudflare Turnstile) or `RECAPTCHA_SECRET_KEY`
+// (Google reCAPTCHA v3) to turn it on. The client sends the token as
+// `captchaToken` in the JSON body; with no key configured this is a no-op
+// so we can ship the honeypot/rate-limit defences first and layer captcha
+// in once the user picks a provider.
+async function verifyCaptchaToken(token: unknown, remoteIp: string | undefined): Promise<boolean> {
+  const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+  const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY;
+  if (!turnstileSecret && !recaptchaSecret) return true; // captcha not enforced yet
+  if (typeof token !== "string" || token.length === 0) return false;
+
+  const provider = turnstileSecret ? "turnstile" : "recaptcha";
+  const endpoint = turnstileSecret
+    ? "https://challenges.cloudflare.com/turnstile/v0/siteverify"
+    : "https://www.google.com/recaptcha/api/siteverify";
+  const secret = (turnstileSecret ?? recaptchaSecret)!;
+
+  const params = new URLSearchParams({ secret, response: token });
+  if (remoteIp) params.set("remoteip", remoteIp);
+
+  try {
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: params.toString(),
+    });
+    const data = (await res.json()) as { success?: boolean; score?: number };
+    if (!data.success) return false;
+    if (provider === "recaptcha" && typeof data.score === "number" && data.score < 0.5) {
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.warn(`[captcha] ${provider} verify failed:`, (err as Error)?.message ?? err);
+    return false;
+  }
+}
+
+function clientIp(req: Request): string | undefined {
+  const forwarded = req.headers["x-forwarded-for"];
+  if (typeof forwarded === "string" && forwarded.length > 0) {
+    return forwarded.split(",")[0]!.trim();
+  }
+  return req.socket?.remoteAddress ?? undefined;
+}
+
+// Cap: 5 successful-or-failed contact submissions per IP per 15 minutes.
+// App Runner sits behind CloudFront, so we read X-Forwarded-For via
+// `keyGenerator` to get the actual client IP rather than the edge IP.
+const contactRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => clientIp(req as Request) ?? "unknown",
+  handler: (req, res) => {
+    console.warn(`[contact] rate limited ip=${clientIp(req as Request) ?? "unknown"}`);
+    res.status(429).json({
+      success: false,
+      error: "Too many submissions from this network. Please try again later.",
+    });
+  },
+});
 
 async function sendContactEmail(data: {
   name: string;
@@ -123,14 +305,35 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
   
-  app.post("/api/contact", async (req, res) => {
+  app.post("/api/contact", contactRateLimiter, async (req, res) => {
     try {
-      const { name, email, company, department, service, message, phone, preferredDate } = req.body;
+      const { name, email, company, department, service, message, phone, preferredDate, website, formStartTs, captchaToken } = req.body;
 
       if (!name || !email || !company) {
         return res.status(400).json({
           success: false,
           error: "Name, Company Name, and Email are required.",
+        });
+      }
+
+      const spam = detectSpam({ name, email, company, department, message, phone, website, formStartTs });
+      if (!spam.ok) {
+        const ip = clientIp(req) ?? "unknown";
+        console.warn(`[contact] dropped spam ip=${ip} reason=${spam.reason} name=${String(name).slice(0, 40)} email=${String(email).slice(0, 60)}`);
+        // Return a generic 400 — don't tell bots which check caught them.
+        return res.status(400).json({
+          success: false,
+          error: "Submission rejected. Please review the form and try again.",
+        });
+      }
+
+      const captchaOk = await verifyCaptchaToken(captchaToken, clientIp(req));
+      if (!captchaOk) {
+        const ip = clientIp(req) ?? "unknown";
+        console.warn(`[contact] captcha failed ip=${ip} email=${String(email).slice(0, 60)}`);
+        return res.status(400).json({
+          success: false,
+          error: "Captcha verification failed. Please refresh the page and try again.",
         });
       }
 
