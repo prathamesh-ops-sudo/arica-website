@@ -148,6 +148,9 @@ export default function Contact() {
                         name="website"
                         tabIndex={-1}
                         autoComplete="off"
+                        data-1p-ignore
+                        data-lpignore="true"
+                        data-form-type="other"
                         value={formData.website}
                         onChange={(e) => handleInputChange("website", e.target.value)}
                       />

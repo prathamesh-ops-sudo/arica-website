@@ -44,15 +44,16 @@ const SENDER_EMAIL = "noreply@aricatech.com";
 // --- Anti-spam helpers ----------------------------------------------------
 // The contact form was being abused by drive-by spam bots (gibberish names,
 // random "Bbbb" departments, "Pass" messages, throwaway gmail addresses).
-// We layer three cheap defences before anything reaches SES / the DB:
+// We layer cheap defences before anything reaches SES / the DB:
 //   1. Honeypot field `website` — invisible to humans, auto-filled by bots.
 //   2. Minimum fill time — submissions faster than 1.5s are bots.
-//   3. Content shape checks — must have an alphabetic name, message length
-//      must be reasonable, and the email/phone (when provided) must look real.
-// A captcha layer can be added on top via env vars (see verifyCaptchaToken).
+//   3. Content shape checks — must have an alphabetic name, and the
+//      email/phone (when provided) must look real.
+// Cloudflare Turnstile (see verifyCaptchaToken) is the primary bot defence;
+// the content-shape checks above are intentionally conservative so they do
+// not reject legitimate humans.
 const MIN_FORM_FILL_MS = 1_500;
 const ALPHA_RATIO_THRESHOLD = 0.5; // ≥50% letters in `name`
-const MIN_MESSAGE_LENGTH = 10;
 const SPAM_MESSAGE_TOKENS = new Set([
   "pass",
   "test",
@@ -117,7 +118,6 @@ function detectSpam(body: {
   const name = typeof body.name === "string" ? body.name.trim() : "";
   const email = typeof body.email === "string" ? body.email.trim() : "";
   const company = typeof body.company === "string" ? body.company.trim() : "";
-  const department = typeof body.department === "string" ? body.department.trim() : "";
   const message = typeof body.message === "string" ? body.message.trim() : "";
   const phone = typeof body.phone === "string" ? body.phone.trim() : "";
 
@@ -127,31 +127,20 @@ function detectSpam(body: {
   }
   if (!looksLikeRealEmail(email)) return { ok: false, reason: "email_invalid" };
   if (company.length < 2) return { ok: false, reason: "company_too_short" };
-  if (
-    department.length >= 2 &&
-    department.toLowerCase() === company.toLowerCase()
-  ) {
-    return { ok: false, reason: "company_equals_department" };
-  }
   if (phone && !looksLikePhone(phone)) {
     return { ok: false, reason: "phone_invalid" };
   }
 
-  // Message is optional in the schema but when present it should be
-  // either obviously absent (server default) or a real message — not a
-  // 1-character bot payload.
+  // Message is optional. We don't gate on its length (real humans send short
+  // messages like "Call me"); we only drop the handful of exact 1-token bot
+  // payloads we've actually seen ("pass", "test", "asdf", …).
   const phonePrefix = `Phone: ${phone}`;
   const messageBody = phone && message.startsWith(phonePrefix)
     ? message.slice(phonePrefix.length).trim()
     : message;
   const isDefaultMessage = messageBody === "Contact form submission" || messageBody === "";
-  if (!isDefaultMessage) {
-    if (messageBody.length < MIN_MESSAGE_LENGTH) {
-      return { ok: false, reason: "message_too_short" };
-    }
-    if (SPAM_MESSAGE_TOKENS.has(messageBody.toLowerCase())) {
-      return { ok: false, reason: "message_spam_token" };
-    }
+  if (!isDefaultMessage && SPAM_MESSAGE_TOKENS.has(messageBody.toLowerCase())) {
+    return { ok: false, reason: "message_spam_token" };
   }
 
   return { ok: true };

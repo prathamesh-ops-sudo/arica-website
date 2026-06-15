@@ -395,6 +395,9 @@ export function ContactForm() {
           name="website"
           tabIndex={-1}
           autoComplete="off"
+          data-1p-ignore
+          data-lpignore="true"
+          data-form-type="other"
           value={formData.website}
           onChange={(e) => setFormData({ ...formData, website: e.target.value })}
         />
