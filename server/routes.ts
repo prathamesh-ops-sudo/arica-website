@@ -412,6 +412,7 @@ export async function registerRoutes(
     try {
       const data = insertBlogPostSchema.parse(req.body);
       const post = await storage.createBlogPost(data);
+      if (post.published) notifySearchEngines([post.slug]);
       res.status(201).json({ success: true, post });
     } catch (error: any) {
       if (error.name === "ZodError") {
@@ -430,6 +431,7 @@ export async function registerRoutes(
       const data = updateBlogPostSchema.parse(req.body);
       const post = await storage.updateBlogPost(id, data);
       if (!post) return res.status(404).json({ success: false, error: "Post not found" });
+      if (post.published) notifySearchEngines([post.slug]);
       res.json({ success: true, post });
     } catch (error: any) {
       if (error.name === "ZodError") {
@@ -467,8 +469,52 @@ export async function registerRoutes(
     }
   });
 
-  // --- Sitemap ---
+  // --- IndexNow (instant Bing/Yandex indexing) ---
+  const INDEXNOW_KEY = "e3246e8591479b789c7cdb1948750009";
   const SITE_URL = "https://www.aricatech.com";
+
+  async function pingIndexNow(urls: string[]) {
+    try {
+      const payload = {
+        host: "www.aricatech.com",
+        key: INDEXNOW_KEY,
+        keyLocation: `${SITE_URL}/${INDEXNOW_KEY}.txt`,
+        urlList: urls,
+      };
+      const res = await fetch("https://api.indexnow.org/indexnow", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      console.log(`[indexnow] pinged ${urls.length} URLs, status=${res.status}`);
+    } catch (err) {
+      console.warn("[indexnow] ping failed:", (err as Error)?.message);
+    }
+  }
+
+  async function pingGoogle(urls: string[]) {
+    try {
+      for (const url of urls) {
+        await fetch(
+          `https://www.google.com/ping?sitemap=${encodeURIComponent(SITE_URL + "/sitemap.xml")}`
+        );
+      }
+      console.log(`[google-ping] sitemap ping sent for ${urls.length} URLs`);
+    } catch (err) {
+      console.warn("[google-ping] failed:", (err as Error)?.message);
+    }
+  }
+
+  // Hook: after blog create/update, ping search engines
+  function notifySearchEngines(slugs: string[]) {
+    const urls = slugs.map((s) => `${SITE_URL}/blog/${s}`);
+    urls.push(`${SITE_URL}/blog`);
+    urls.push(`${SITE_URL}/sitemap.xml`);
+    pingIndexNow(urls);
+    pingGoogle(urls);
+  }
+
+  // --- Sitemap (enhanced with news namespace) ---
   const STATIC_PAGES = [
     { loc: "/", priority: "1.0", changefreq: "weekly" },
     { loc: "/about", priority: "0.8", changefreq: "monthly" },
@@ -482,10 +528,12 @@ export async function registerRoutes(
   app.get("/sitemap.xml", async (_req, res) => {
     try {
       const slugs = await storage.getAllPublishedSlugs();
-      const now = new Date().toISOString().split("T")[0];
+      const now = new Date().toISOString();
 
       let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-      xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+      xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n`;
+      xml += `        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"\n`;
+      xml += `        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n`;
 
       for (const page of STATIC_PAGES) {
         xml += `  <url>\n`;
@@ -499,15 +547,15 @@ export async function registerRoutes(
       for (const { slug, updatedAt } of slugs) {
         xml += `  <url>\n`;
         xml += `    <loc>${SITE_URL}/blog/${slug}</loc>\n`;
-        xml += `    <lastmod>${updatedAt.toISOString().split("T")[0]}</lastmod>\n`;
+        xml += `    <lastmod>${updatedAt.toISOString()}</lastmod>\n`;
         xml += `    <changefreq>weekly</changefreq>\n`;
-        xml += `    <priority>0.7</priority>\n`;
+        xml += `    <priority>0.8</priority>\n`;
         xml += `  </url>\n`;
       }
 
       xml += `</urlset>`;
       res.setHeader("Content-Type", "application/xml");
-      res.setHeader("Cache-Control", "public, max-age=3600");
+      res.setHeader("Cache-Control", "public, max-age=1800");
       res.send(xml);
     } catch (err) {
       console.error("[sitemap] error:", err);
@@ -515,10 +563,37 @@ export async function registerRoutes(
     }
   });
 
-  // --- robots.txt ---
+  // --- robots.txt (enhanced with crawl directives) ---
   app.get("/robots.txt", (_req, res) => {
     res.setHeader("Content-Type", "text/plain");
-    res.send(`User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    res.send([
+      "User-agent: *",
+      "Allow: /",
+      "",
+      "# Sitemaps",
+      `Sitemap: ${SITE_URL}/sitemap.xml`,
+      "",
+      "# AI/LLM crawlers",
+      "User-agent: GPTBot",
+      "Allow: /",
+      "",
+      "User-agent: Google-Extended",
+      "Allow: /",
+      "",
+      "User-agent: ChatGPT-User",
+      "Allow: /",
+      "",
+      "User-agent: anthropic-ai",
+      "Allow: /",
+      "",
+      "User-agent: CCBot",
+      "Allow: /",
+      "",
+      "User-agent: PerplexityBot",
+      "Allow: /",
+      "",
+    ].join("\n"));
   });
 
   return httpServer;

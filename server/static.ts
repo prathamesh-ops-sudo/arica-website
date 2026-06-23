@@ -51,18 +51,53 @@ export function serveStatic(app: Express) {
       const ogImage = post.coverImage || `${SITE_URL}/opengraph.jpg`;
       const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
 
-      const articleSchema = JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "BlogPosting",
-        "headline": post.title,
-        "description": post.excerpt,
-        "author": { "@type": "Person", "name": post.author },
-        "datePublished": post.publishedAt?.toISOString(),
-        "dateModified": post.updatedAt.toISOString(),
-        "publisher": { "@type": "Organization", "name": "Arica Tech Security LLP", "url": SITE_URL },
-        "mainEntityOfPage": canonicalUrl,
-        ...(post.coverImage ? { "image": post.coverImage } : {}),
-      });
+      // Extract FAQ sections from markdown for FAQ schema
+      const faqItems: { question: string; answer: string }[] = [];
+      const faqRegex = /###\s+(.+?)\n\n([\s\S]*?)(?=\n###|\n## |$)/g;
+      let faqMatch;
+      while ((faqMatch = faqRegex.exec(post.content)) !== null) {
+        const q = faqMatch[1].trim();
+        const a = faqMatch[2].trim().replace(/\n/g, " ").slice(0, 500);
+        if (q.endsWith("?")) faqItems.push({ question: q, answer: a });
+      }
+
+      const schemaGraph: Record<string, unknown>[] = [
+        {
+          "@type": "BlogPosting",
+          "headline": post.title,
+          "description": post.excerpt,
+          "author": { "@type": "Person", "name": post.author, "jobTitle": "Security Operations & Threat Intelligence", "worksFor": { "@type": "Organization", "name": "Arica Tech Security LLP" } },
+          "datePublished": post.publishedAt?.toISOString(),
+          "dateModified": post.updatedAt.toISOString(),
+          "publisher": { "@type": "Organization", "name": "Arica Tech Security LLP", "url": SITE_URL, "logo": { "@type": "ImageObject", "url": `${SITE_URL}/arica-logo.png` } },
+          "mainEntityOfPage": { "@type": "WebPage", "@id": canonicalUrl },
+          ...(post.coverImage ? { "image": post.coverImage } : {}),
+          ...(post.tags ? { "keywords": post.tags.join(", ") } : {}),
+          "wordCount": post.content.split(/\s+/).length,
+          "timeRequired": `PT${post.readingTime || 5}M`,
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL },
+            { "@type": "ListItem", "position": 2, "name": "Blog", "item": `${SITE_URL}/blog` },
+            { "@type": "ListItem", "position": 3, "name": post.title, "item": canonicalUrl },
+          ],
+        },
+      ];
+
+      if (faqItems.length > 0) {
+        schemaGraph.push({
+          "@type": "FAQPage",
+          "mainEntity": faqItems.map((f) => ({
+            "@type": "Question",
+            "name": f.question,
+            "acceptedAnswer": { "@type": "Answer", "text": f.answer },
+          })),
+        });
+      }
+
+      const structuredData = JSON.stringify({ "@context": "https://schema.org", "@graph": schemaGraph });
 
       const metaTags = `
     <title>${escapedTitle}</title>
@@ -73,11 +108,16 @@ export function serveStatic(app: Express) {
     <meta property="og:type" content="article" />
     <meta property="og:url" content="${canonicalUrl}" />
     <meta property="og:image" content="${ogImage}" />
+    <meta property="og:site_name" content="Arica Tech Security" />
+    <meta property="article:published_time" content="${post.publishedAt?.toISOString() || ""}" />
+    <meta property="article:modified_time" content="${post.updatedAt.toISOString()}" />
+    <meta property="article:author" content="${post.author}" />
+    ${(post.tags || []).map(t => `<meta property="article:tag" content="${escapeHtml(t)}" />`).join("\n    ")}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escapedTitle}" />
     <meta name="twitter:description" content="${escapedExcerpt}" />
     <meta name="twitter:image" content="${ogImage}" />
-    <script type="application/ld+json">${articleSchema}</script>`;
+    <script type="application/ld+json">${structuredData}</script>`;
 
       // Inject after <head> opening tag (before existing meta)
       const injectedHtml = indexHtml.replace(
@@ -97,6 +137,16 @@ export function serveStatic(app: Express) {
   // Blog listing page also gets custom meta
   app.use("/blog", (_req, res, next) => {
     if (_req.originalUrl !== "/blog" && _req.originalUrl !== "/blog/") return next();
+
+    const breadcrumb = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL },
+        { "@type": "ListItem", "position": 2, "name": "Blog", "item": `${SITE_URL}/blog` },
+      ],
+    });
+
     const metaTags = `
     <title>Blog | Arica Tech Security LLP</title>
     <meta name="description" content="Cybersecurity insights, threat intelligence updates, and industry best practices from the Arica Tech Security team." />
@@ -104,7 +154,9 @@ export function serveStatic(app: Express) {
     <meta property="og:title" content="Blog | Arica Tech Security LLP" />
     <meta property="og:description" content="Cybersecurity insights, threat intelligence updates, and industry best practices." />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="${SITE_URL}/blog" />`;
+    <meta property="og:url" content="${SITE_URL}/blog" />
+    <meta property="og:site_name" content="Arica Tech Security" />
+    <script type="application/ld+json">${breadcrumb}</script>`;
 
     const injectedHtml = indexHtml.replace(
       '<meta charset="UTF-8" />',

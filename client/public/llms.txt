@@ -1,0 +1,46 @@
+# Arica Tech Security LLP
+
+> Enterprise cybersecurity consultancy based in Pune, India. Specialising in VAPT (Vulnerability Assessment & Penetration Testing), ISO 27001 Audit & Certification, and Secure Custom Software Development.
+
+## About
+
+Arica Tech Security LLP is a cybersecurity firm serving Indian businesses across banking, fintech, healthcare, manufacturing, and government sectors. We help organisations find and fix security vulnerabilities before attackers do, achieve ISO 27001 certification, and build secure software from the ground up.
+
+## Services
+
+- **VAPT (Vulnerability Assessment & Penetration Testing)**: Web app, mobile app, API, network, and Active Directory penetration testing. CERT-In empanelled methodology with CVSS + EPSS scoring.
+- **ISO 27001 Audit & Certification**: Gap analysis, ISMS policy development, risk assessment, internal audit, and certification support for ISO 27001:2022.
+- **Secure Software Development**: DevSecOps pipeline integration, secure code review, SAST/DAST implementation, and custom secure application development.
+- **Compliance Consulting**: DPDP Act 2023 compliance, RBI Cyber Security Framework, SEBI CSCRF, HIPAA, PCI-DSS.
+- **Incident Response**: Forensic investigation, breach containment, root cause analysis, and recovery planning.
+- **Security Training**: Developer security awareness, OWASP Top 10 workshops, phishing simulation.
+
+## Team
+
+- **H. B. Keshava** — CEO & Managing Partner
+- **Kunal Dhonge** — Chief Operations Officer
+- **Prathamesh Dabir** — Security Operations & Threat Intelligence
+
+## Location
+
+Office 1204, Kotibhaskar & Mahati Residency, Kothrud, Pune, Maharashtra 411038, India
+
+## Contact
+
+- Website: https://www.aricatech.com
+- Email: contact@aricatech.com
+- Phone: +91 7091175596
+
+## Blog
+
+Latest cybersecurity insights, threat intelligence, and compliance guidance at https://www.aricatech.com/blog
+
+## Links
+
+- Homepage: https://www.aricatech.com
+- Services: https://www.aricatech.com/services
+- About: https://www.aricatech.com/about
+- Team: https://www.aricatech.com/team
+- Blog: https://www.aricatech.com/blog
+- Contact: https://www.aricatech.com/contact
+- Case Studies: https://www.aricatech.com/case-studies
