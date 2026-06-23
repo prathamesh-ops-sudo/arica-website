@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="What is VAPT — the 2026 guide for Indian businesses, by Arica Tech Security">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1220"/>
+      <stop offset="0.55" stop-color="#0e1b33"/>
+      <stop offset="1" stop-color="#102a4c"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#22d3a6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <g opacity="0.08" stroke="#7dd3fc" stroke-width="1">
+    <path d="M0 160 H1200 M0 320 H1200 M0 480 H1200"/>
+    <path d="M240 0 V630 M480 0 V630 M720 0 V630 M960 0 V630"/>
+  </g>
+  <rect x="80" y="92" width="78" height="8" rx="4" fill="url(#accent)"/>
+  <text x="80" y="150" font-family="Segoe UI, Arial, sans-serif" font-size="30" letter-spacing="3" fill="#7dd3fc">CYBERSECURITY · INDIA · 2026</text>
+  <text x="78" y="262" font-family="Segoe UI, Arial, sans-serif" font-size="104" font-weight="800" fill="#f8fafc">What Is VAPT?</text>
+  <text x="80" y="340" font-family="Segoe UI, Arial, sans-serif" font-size="46" font-weight="500" fill="#cbd5e1">The 2026 Guide for Indian Businesses</text>
+  <text x="80" y="398" font-family="Segoe UI, Arial, sans-serif" font-size="30" fill="#94a3b8">Process · Compliance (RBI · SEBI · CERT-In · DPDP) · Cost</text>
+  <line x1="80" y1="470" x2="1120" y2="470" stroke="#1e3a5f" stroke-width="2"/>
+  <text x="80" y="528" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#e2e8f0">Prathamesh Dabir</text>
+  <text x="80" y="566" font-family="Segoe UI, Arial, sans-serif" font-size="25" fill="#94a3b8">Security Operations &amp; Threat Intelligence · Arica Tech Security</text>
+  <g transform="translate(980,150)">
+    <circle cx="60" cy="60" r="58" fill="none" stroke="url(#accent)" stroke-width="4"/>
+    <path d="M60 18 L98 36 V66 C98 92 80 108 60 116 C40 108 22 92 22 66 V36 Z" fill="none" stroke="#7dd3fc" stroke-width="4"/>
+    <path d="M44 62 L56 74 L80 48" fill="none" stroke="#22d3a6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
