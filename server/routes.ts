@@ -2,7 +2,7 @@ import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import rateLimit from "express-rate-limit";
 import { storage } from "./storage";
-import { insertContactInquirySchema } from "@shared/schema";
+import { insertContactInquirySchema, insertBlogPostSchema, updateBlogPostSchema } from "@shared/schema";
 import { fromZodError } from "zod-validation-error";
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import { NodeHttpHandler } from "@smithy/node-http-handler";
@@ -365,6 +365,160 @@ export async function registerRoutes(
         error: "Failed to submit contact form" 
       });
     }
+  });
+
+  // --- Blog API ---
+  const BLOG_API_KEY = process.env.BLOG_API_KEY || "";
+
+  function requireBlogAuth(req: Request, res: any, next: () => void) {
+    const key = req.headers["x-api-key"] || req.headers["authorization"]?.replace("Bearer ", "");
+    if (!BLOG_API_KEY || key !== BLOG_API_KEY) {
+      return res.status(401).json({ success: false, error: "Unauthorized" });
+    }
+    next();
+  }
+
+  // Public: list published posts
+  app.get("/api/blog", async (req, res) => {
+    try {
+      const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
+      const offset = parseInt(req.query.offset as string) || 0;
+      const tag = req.query.tag as string | undefined;
+      const { posts, total } = await storage.getBlogPosts({ published: true, limit, offset });
+      const filtered = tag ? posts.filter(p => p.tags?.includes(tag)) : posts;
+      res.json({ success: true, posts: filtered, total, limit, offset });
+    } catch (err) {
+      console.error("[blog] list error:", err);
+      res.status(500).json({ success: false, error: "Failed to fetch posts" });
+    }
+  });
+
+  // Public: get single post by slug
+  app.get("/api/blog/:slug", async (req, res) => {
+    try {
+      const post = await storage.getBlogPostBySlug(req.params.slug);
+      if (!post || !post.published) {
+        return res.status(404).json({ success: false, error: "Post not found" });
+      }
+      res.json({ success: true, post });
+    } catch (err) {
+      console.error("[blog] get error:", err);
+      res.status(500).json({ success: false, error: "Failed to fetch post" });
+    }
+  });
+
+  // Admin: create post
+  app.post("/api/blog", requireBlogAuth, async (req, res) => {
+    try {
+      const data = insertBlogPostSchema.parse(req.body);
+      const post = await storage.createBlogPost(data);
+      res.status(201).json({ success: true, post });
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return res.status(400).json({ success: false, error: fromZodError(error).message });
+      }
+      console.error("[blog] create error:", error);
+      res.status(500).json({ success: false, error: "Failed to create post" });
+    }
+  });
+
+  // Admin: update post
+  app.put("/api/blog/:id", requireBlogAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ success: false, error: "Invalid ID" });
+      const data = updateBlogPostSchema.parse(req.body);
+      const post = await storage.updateBlogPost(id, data);
+      if (!post) return res.status(404).json({ success: false, error: "Post not found" });
+      res.json({ success: true, post });
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return res.status(400).json({ success: false, error: fromZodError(error).message });
+      }
+      console.error("[blog] update error:", error);
+      res.status(500).json({ success: false, error: "Failed to update post" });
+    }
+  });
+
+  // Admin: delete post
+  app.delete("/api/blog/:id", requireBlogAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ success: false, error: "Invalid ID" });
+      const deleted = await storage.deleteBlogPost(id);
+      if (!deleted) return res.status(404).json({ success: false, error: "Post not found" });
+      res.json({ success: true });
+    } catch (err) {
+      console.error("[blog] delete error:", err);
+      res.status(500).json({ success: false, error: "Failed to delete post" });
+    }
+  });
+
+  // Admin: list all posts (including drafts)
+  app.get("/api/blog-admin", requireBlogAuth, async (req, res) => {
+    try {
+      const limit = Math.min(parseInt(req.query.limit as string) || 50, 200);
+      const offset = parseInt(req.query.offset as string) || 0;
+      const { posts, total } = await storage.getBlogPosts({ limit, offset });
+      res.json({ success: true, posts, total, limit, offset });
+    } catch (err) {
+      console.error("[blog] admin list error:", err);
+      res.status(500).json({ success: false, error: "Failed to fetch posts" });
+    }
+  });
+
+  // --- Sitemap ---
+  const SITE_URL = "https://www.aricatech.com";
+  const STATIC_PAGES = [
+    { loc: "/", priority: "1.0", changefreq: "weekly" },
+    { loc: "/about", priority: "0.8", changefreq: "monthly" },
+    { loc: "/services", priority: "0.9", changefreq: "monthly" },
+    { loc: "/contact", priority: "0.7", changefreq: "monthly" },
+    { loc: "/case-studies", priority: "0.7", changefreq: "monthly" },
+    { loc: "/team", priority: "0.6", changefreq: "monthly" },
+    { loc: "/blog", priority: "0.9", changefreq: "daily" },
+  ];
+
+  app.get("/sitemap.xml", async (_req, res) => {
+    try {
+      const slugs = await storage.getAllPublishedSlugs();
+      const now = new Date().toISOString().split("T")[0];
+
+      let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+      xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
+      for (const page of STATIC_PAGES) {
+        xml += `  <url>\n`;
+        xml += `    <loc>${SITE_URL}${page.loc}</loc>\n`;
+        xml += `    <lastmod>${now}</lastmod>\n`;
+        xml += `    <changefreq>${page.changefreq}</changefreq>\n`;
+        xml += `    <priority>${page.priority}</priority>\n`;
+        xml += `  </url>\n`;
+      }
+
+      for (const { slug, updatedAt } of slugs) {
+        xml += `  <url>\n`;
+        xml += `    <loc>${SITE_URL}/blog/${slug}</loc>\n`;
+        xml += `    <lastmod>${updatedAt.toISOString().split("T")[0]}</lastmod>\n`;
+        xml += `    <changefreq>weekly</changefreq>\n`;
+        xml += `    <priority>0.7</priority>\n`;
+        xml += `  </url>\n`;
+      }
+
+      xml += `</urlset>`;
+      res.setHeader("Content-Type", "application/xml");
+      res.setHeader("Cache-Control", "public, max-age=3600");
+      res.send(xml);
+    } catch (err) {
+      console.error("[sitemap] error:", err);
+      res.status(500).send("Error generating sitemap");
+    }
+  });
+
+  // --- robots.txt ---
+  app.get("/robots.txt", (_req, res) => {
+    res.setHeader("Content-Type", "text/plain");
+    res.send(`User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
   });
 
   return httpServer;

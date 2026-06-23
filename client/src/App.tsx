@@ -61,6 +61,8 @@ const SecurityImplementation = lazy(() => import("@/pages/SecurityImplementation
 const TeamDirectors = lazy(() => import("@/pages/TeamDirectors"));
 const Test = lazy(() => import("@/pages/Test"));
 const ThankYou = lazy(() => import("@/pages/ThankYou"));
+const Blog = lazy(() => import("@/pages/Blog"));
+const BlogPost = lazy(() => import("@/pages/BlogPost"));
 
 function PageLoader() {
   return (
@@ -102,6 +104,8 @@ function Router() {
       <Route path="/thank-you" component={ThankYou} />
       <Route path="/team" component={TeamDirectors} />
       <Route path="/portal" component={Contact} />
+      <Route path="/blog" component={Blog} />
+      <Route path="/blog/:slug" component={BlogPost} />
       <Route component={NotFound} />
     </Switch>
     </Suspense>
