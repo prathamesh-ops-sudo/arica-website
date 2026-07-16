@@ -52,6 +52,7 @@ const CloudSecurityCenter = lazy(() => import("@/pages/CloudSecurityCenter"));
 const MobileSecurity = lazy(() => import("@/pages/MobileSecurity"));
 const RiskAssessment = lazy(() => import("@/pages/RiskAssessment"));
 const SecurityPolicies = lazy(() => import("@/pages/SecurityPolicies"));
+const Legal = lazy(() => import("@/pages/Legal"));
 const SecurityArchitecture = lazy(() => import("@/pages/SecurityArchitecture"));
 const CodeReview = lazy(() => import("@/pages/CodeReview"));
 const Certifications = lazy(() => import("@/pages/Certifications"));
@@ -106,6 +107,7 @@ function Router() {
       <Route path="/portal" component={Contact} />
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:slug" component={BlogPost} />
+      <Route path="/legal/:slug" component={Legal} />
       <Route component={NotFound} />
     </Switch>
     </Suspense>

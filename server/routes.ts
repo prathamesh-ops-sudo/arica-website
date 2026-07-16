@@ -532,6 +532,10 @@ export async function registerRoutes(
     { loc: "/case-studies", priority: "0.7", changefreq: "monthly" },
     { loc: "/team", priority: "0.6", changefreq: "monthly" },
     { loc: "/blog", priority: "0.9", changefreq: "daily" },
+    { loc: "/legal/privacy-policy", priority: "0.3", changefreq: "yearly" },
+    { loc: "/legal/cookies-policy", priority: "0.3", changefreq: "yearly" },
+    { loc: "/legal/information-security-policy", priority: "0.3", changefreq: "yearly" },
+    { loc: "/legal/third-party-data-vendor-policy", priority: "0.3", changefreq: "yearly" },
   ];
 
   app.get("/sitemap.xml", async (_req, res) => {

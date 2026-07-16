@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "wouter";
 import { Phone, Mail, MapPin } from "lucide-react";
+import { LEGAL_POLICIES } from "@/content/legal";
 import { DitheringShader } from "@/components/ui/dithering-shader";
 
 export function SiteFooter() {
@@ -96,6 +98,16 @@ export function SiteFooter() {
               Kothrud, Pune, Maharashtra 411038
             </span>
           </div>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 mb-4">
+          {LEGAL_POLICIES.map((p) => (
+            <Link key={p.slug} href={`/legal/${p.slug}`}>
+              <span className="text-xs text-muted-foreground hover:text-white transition-colors cursor-pointer">
+                {p.title}
+              </span>
+            </Link>
+          ))}
         </div>
 
         <div className="space-y-1">
