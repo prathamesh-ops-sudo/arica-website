@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { ContactCard } from "@/components/ui/contact-card";
-import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { TurnstileWidget, type TurnstileWidgetHandle } from "@/components/TurnstileWidget";
 
 // Build-time public site key. When unset the captcha layer stays dormant
 // (the server treats requests without a token as OK if no secret is set).
@@ -39,6 +39,7 @@ export default function Contact() {
     website: "",
   });
   const [captchaToken, setCaptchaToken] = useState<string>("");
+  const captchaRef = useRef<TurnstileWidgetHandle>(null);
   const formStartTs = useRef<number>(Date.now());
   const captchaRequired = TURNSTILE_SITE_KEY.length > 0;
 
@@ -87,6 +88,8 @@ export default function Contact() {
           : "Something went wrong. Please try again.";
       setError(message);
     } finally {
+      // Turnstile tokens are single-use: reset so a retry gets a fresh token.
+      captchaRef.current?.reset();
       setSubmitting(false);
     }
   };
@@ -261,6 +264,7 @@ export default function Contact() {
                     {captchaRequired && (
                       <div className="flex justify-center">
                         <TurnstileWidget
+                          ref={captchaRef}
                           siteKey={TURNSTILE_SITE_KEY}
                           onToken={setCaptchaToken}
                         />

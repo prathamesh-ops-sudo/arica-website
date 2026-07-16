@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { TurnstileWidget, type TurnstileWidgetHandle } from "@/components/TurnstileWidget";
 
 const TURNSTILE_SITE_KEY: string = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "";
 
@@ -272,6 +272,7 @@ export function ContactForm() {
     website: "", // honeypot — kept empty by real users
   });
   const [captchaToken, setCaptchaToken] = useState<string>("");
+  const captchaRef = useRef<TurnstileWidgetHandle>(null);
   const formStartTs = useRef<number>(Date.now());
   const captchaRequired = TURNSTILE_SITE_KEY.length > 0;
 
@@ -323,6 +324,8 @@ export function ContactForm() {
     } catch (err: any) {
       setError(err.message || "Something went wrong. Please try again.");
     } finally {
+      // Turnstile tokens are single-use: reset so a retry gets a fresh token.
+      captchaRef.current?.reset();
       setSubmitting(false);
     }
   };
@@ -490,6 +493,7 @@ export function ContactForm() {
       {captchaRequired && (
         <div className="flex justify-center">
           <TurnstileWidget
+            ref={captchaRef}
             siteKey={TURNSTILE_SITE_KEY}
             onToken={setCaptchaToken}
           />

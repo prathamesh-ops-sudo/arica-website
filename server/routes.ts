@@ -173,8 +173,17 @@ async function verifyCaptchaToken(token: unknown, remoteIp: string | undefined):
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: params.toString(),
     });
-    const data = (await res.json()) as { success?: boolean; score?: number };
-    if (!data.success) return false;
+    const data = (await res.json()) as {
+      success?: boolean;
+      score?: number;
+      "error-codes"?: string[];
+    };
+    if (!data.success) {
+      console.warn(
+        `[captcha] ${provider} rejected token: ${(data["error-codes"] ?? []).join(",") || "no error codes"}`,
+      );
+      return false;
+    }
     if (provider === "recaptcha" && typeof data.score === "number" && data.score < 0.5) {
       return false;
     }

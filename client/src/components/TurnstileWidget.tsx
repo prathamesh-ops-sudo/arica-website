@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 
 /**
  * Cloudflare Turnstile widget loader.
@@ -40,6 +40,11 @@ interface TurnstileWidgetProps {
   theme?: "light" | "dark" | "auto";
 }
 
+export interface TurnstileWidgetHandle {
+  /** Tokens are single-use; call after every submit attempt to issue a fresh one. */
+  reset: () => void;
+}
+
 const SCRIPT_SRC =
   "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
 const SCRIPT_MARKER = "data-arica-turnstile";
@@ -73,9 +78,23 @@ function loadTurnstileScript(): Promise<void> {
   return scriptLoadingPromise;
 }
 
-export function TurnstileWidget({ siteKey, onToken, theme = "auto" }: TurnstileWidgetProps) {
+export const TurnstileWidget = forwardRef<TurnstileWidgetHandle, TurnstileWidgetProps>(
+  function TurnstileWidget({ siteKey, onToken, theme = "auto" }, ref) {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
+
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      onToken("");
+      if (widgetIdRef.current && window.turnstile) {
+        try {
+          window.turnstile.reset(widgetIdRef.current);
+        } catch {
+          // ignore
+        }
+      }
+    },
+  }));
 
   useEffect(() => {
     if (!siteKey) return;
@@ -113,4 +132,4 @@ export function TurnstileWidget({ siteKey, onToken, theme = "auto" }: TurnstileW
   if (!siteKey) return null;
 
   return <div ref={containerRef} className="cf-turnstile mt-2" />;
-}
+});
