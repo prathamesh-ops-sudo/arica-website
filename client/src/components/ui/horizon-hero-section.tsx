@@ -11,6 +11,7 @@ import EnergyBeam from './energy-beam';
 import { TubesBackground } from './neon-flow';
 import { CinematicHeroOverlay } from '@/components/CinematicHeroOverlay';
 import { useIsMobileOrTablet } from '@/hooks/use-mobile';
+import { ShieldCheck } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -675,15 +676,22 @@ export function HorizonHeroSection() {
             Security That Goes Beyond Prevention
           </h2>
         ) : (
-          // The "Enter Experience" CTA used to live here; removed per stakeholder
-          // feedback so this section just announces the services without a
-          // duplicate nav action (navbar already links to /services).
-          <h1
-            className="horizon-hero-title text-halo-white"
-            style={{ fontSize: 'clamp(1.5rem, 7.2vw, 7rem)', whiteSpace: 'nowrap' }}
-          >
-            EXPLORE OUR SERVICES
-          </h1>
+          <div className="flex flex-col items-center gap-4 md:gap-6 px-4">
+            <h1
+              className="horizon-hero-title text-halo-white"
+              style={{ fontSize: 'clamp(1.5rem, 7.2vw, 7rem)', whiteSpace: 'nowrap' }}
+            >
+              EXPLORE OUR SERVICES
+            </h1>
+            <button
+              onClick={handleEnterExperience}
+              className="bg-white/10 backdrop-blur-xl border border-white/20 text-white font-semibold px-8 py-4 rounded-full hover:bg-white/15 transition-all hover:scale-105 flex items-center gap-3"
+              style={{ pointerEvents: 'auto' }}
+            >
+              <ShieldCheck className="w-5 h-5" />
+              Enter Experience
+            </button>
+          </div>
         )}
       </div>
 
