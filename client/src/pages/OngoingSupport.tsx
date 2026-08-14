@@ -506,7 +506,7 @@ function GlowingMetricCard({
           } : {}}
           transition={{ duration: 0.8, repeat: Infinity }}
         >
-          {children || value}
+          {value || children}
         </motion.div>
         
         <div className="text-xs text-[#3D70B7]/60 font-mono uppercase tracking-wider">{label}</div>
@@ -981,7 +981,10 @@ function SystemStatusDashboard() {
       data-testid="system-status-dashboard"
     >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="font-mono text-lg font-bold text-white">System Health</h3>
+        <div>
+          <h3 className="font-mono text-lg font-bold text-white">Illustrative System Health</h3>
+          <p className="text-[10px] text-[#3D70B7]/50 font-mono mt-1">Example client view for a retained-support engagement</p>
+        </div>
         <div className="flex items-center gap-2">
           <motion.div
             className="text-2xl font-bold font-mono"
@@ -991,7 +994,7 @@ function SystemStatusDashboard() {
           >
             {overallHealth.toFixed(0)}%
           </motion.div>
-          <span className="text-xs text-[#3D70B7]/50 font-mono">HEALTH</span>
+          <span className="text-xs text-[#3D70B7]/50 font-mono">EXAMPLE HEALTH</span>
         </div>
       </div>
       
@@ -1104,28 +1107,28 @@ function EmergencyContactSection() {
           >
             <AlertOctagon className="w-5 h-5 text-red-400" />
           </motion.div>
-          <span className="text-sm font-mono font-bold text-red-400">EMERGENCY RESPONSE READY</span>
+          <span className="text-sm font-mono font-bold text-red-400">RESPONSE SUPPORT EXAMPLE</span>
         </motion.div>
         
         <h2 className="font-mono text-2xl md:text-3xl font-bold mb-4">
-          Need <motion.span 
+          Discuss <motion.span
             className="text-[#3D70B7]"
             animate={{ 
               textShadow: ['0 0 10px #3D70B740', '0 0 30px #3D70B780', '0 0 10px #3D70B740']
             }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            Immediate Assistance
-          </motion.span>?
+            Response Support
+          </motion.span>
         </h2>
         
         <p className="text-[#3D70B7]/60 font-mono text-sm mb-8 max-w-xl mx-auto">
-          Our security operations center is available around the clock for emergency response
+          Explore a retained-support engagement with scheduled reviews and agreed response workflows
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <motion.a
-            href="tel:+1-800-SECURITY"
+            href="/contact"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             animate={{
@@ -1150,7 +1153,7 @@ function EmergencyContactSection() {
             >
               <Phone className="w-5 h-5 relative z-10" />
             </motion.div>
-            <span className="relative z-10">Emergency Hotline</span>
+            <span className="relative z-10">Discuss Response Support</span>
           </motion.a>
           
           <motion.a
@@ -1182,12 +1185,12 @@ function EmergencyContactSection() {
               animate={{ scale: [1, 1.3, 1] }}
               transition={{ duration: 1, repeat: Infinity }}
             />
-            <span>Response Team Online</span>
+            <span>Support engagement example</span>
           </div>
           <div className="w-px h-4 bg-[#3D70B7]/30" />
           <div className="flex items-center gap-2">
             <Clock className="w-3 h-3" />
-            <span>Avg Response: &lt;5 min</span>
+            <span>Agreed response workflows</span>
           </div>
         </motion.div>
       </div>
@@ -1232,7 +1235,7 @@ export default function OngoingSupport() {
                   transition={{ duration: 2, repeat: Infinity }}
                 >
                   <Activity className="w-3 h-3" />
-                  <span>ALL SYSTEMS OPERATIONAL</span>
+                  <span>ILLUSTRATIVE STATUS</span>
                 </motion.div>
               </div>
               <motion.div 
@@ -1248,7 +1251,7 @@ export default function OngoingSupport() {
                   animate={{ scale: [1, 1.3, 1] }}
                   transition={{ duration: 1, repeat: Infinity }}
                 />
-                <span className="text-xs text-[#3D70B7] font-mono font-bold">SUPPORT AVAILABLE</span>
+                <span className="text-xs text-[#3D70B7] font-mono font-bold">RETAINED SUPPORT VIEW</span>
               </motion.div>
             </div>
           </div>
@@ -1256,7 +1259,7 @@ export default function OngoingSupport() {
 
         <main className="pt-20">
           <section className="relative h-[60vh] min-h-[500px]">
-            <div className="absolute inset-0">
+            <div className="absolute inset-0 opacity-35">
               <WebGLFallback>
                 <Canvas
                   camera={{ position: [0, 2, 8], fov: 60 }}
@@ -1268,11 +1271,11 @@ export default function OngoingSupport() {
               </WebGLFallback>
             </div>
             
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-6">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-center"
+                className="relative z-10 w-full max-w-3xl rounded-2xl border border-[#3D70B7]/30 bg-[#000510]/85 px-8 py-10 text-center backdrop-blur-md"
               >
                 <motion.div 
                   className="inline-flex items-center gap-2 bg-[#3D70B7]/10 border border-[#3D70B7]/30 rounded px-4 py-2 mb-4 font-mono text-xs backdrop-blur-sm"
@@ -1287,7 +1290,7 @@ export default function OngoingSupport() {
                   >
                     <Headphones className="w-4 h-4 text-[#3D70B7]" />
                   </motion.div>
-                  <span className="text-[#3D70B7]">SECURITY OPERATIONS CENTER</span>
+                  <span className="text-[#3D70B7]">ILLUSTRATIVE SUPPORT VIEW</span>
                 </motion.div>
                 <h1 className="font-mono text-4xl md:text-6xl font-bold mb-4">
                   <motion.span 
@@ -1316,21 +1319,13 @@ export default function OngoingSupport() {
                 viewport={{ once: true }}
                 className="grid grid-cols-2 md:grid-cols-4 gap-4"
               >
-                <GlowingMetricCard icon={TrendingUp} value="" label="MONITORING" color={GREEN} glowColor={GREEN} data-testid="metric-monitoring">
-                  <span className="text-lg font-mono font-bold text-white">Scheduled</span>
-                </GlowingMetricCard>
+                <GlowingMetricCard icon={TrendingUp} value="Scheduled" label="MONITORING" color={GREEN} glowColor={GREEN} data-testid="metric-monitoring" />
                 
-                <GlowingMetricCard icon={Clock} value="" label="RESPONSE" color={ACCENT_BLUE} glowColor={ACCENT_BLUE} data-testid="metric-response">
-                  <span className="text-lg font-mono font-bold text-white">Agreed window</span>
-                </GlowingMetricCard>
+                <GlowingMetricCard icon={Clock} value="Agreed" label="RESPONSE WINDOW" color={ACCENT_BLUE} glowColor={ACCENT_BLUE} data-testid="metric-response" />
                 
-                <GlowingMetricCard icon={Shield} value="" label="SUPPORT MODEL" color={ACCENT_BLUE} glowColor={ACCENT_BLUE} data-testid="metric-support-model">
-                  <span className="text-lg font-mono font-bold text-white">Retained</span>
-                </GlowingMetricCard>
+                <GlowingMetricCard icon={Shield} value="Retained" label="SUPPORT MODEL" color={ACCENT_BLUE} glowColor={ACCENT_BLUE} data-testid="metric-support-model" />
                 
-                <GlowingMetricCard icon={Server} value="" label="REVIEWS" color={ACCENT_BLUE} glowColor={ACCENT_BLUE} data-testid="metric-reviews">
-                  <span className="text-lg font-mono font-bold text-white">Scheduled</span>
-                </GlowingMetricCard>
+                <GlowingMetricCard icon={Server} value="Scheduled" label="REVIEWS" color={ACCENT_BLUE} glowColor={ACCENT_BLUE} data-testid="metric-reviews" />
               </motion.div>
             </div>
           </section>

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'wouter';
 import * as THREE from 'three';
+import { Text as TroikaText } from 'troika-three-text';
 import {
   ArrowLeft, Shield, Server, Database, Users, Cloud, Flame,
   Lock, Eye, AlertTriangle, CheckCircle, Activity, Zap,
@@ -157,6 +158,7 @@ export default function SecurityArchitecture() {
     camera: THREE.PerspectiveCamera | null;
     renderer: THREE.WebGLRenderer | null;
     nodes: Map<string, NetworkNode>;
+    labels: Map<string, TroikaText>;
     packets: DataPacket[];
     connections: THREE.Line[];
     defenseRings: THREE.Mesh[];
@@ -182,6 +184,7 @@ export default function SecurityArchitecture() {
     targetRotation: { x: 0, y: 0 },
     currentRotation: { x: 0, y: 0 },
     attackParticles: null,
+    labels: new Map(),
   });
 
   useEffect(() => {
@@ -287,6 +290,20 @@ export default function SecurityArchitecture() {
         mesh,
       };
       sceneRef.current.nodes.set(nodeData.id, node);
+
+      const label = new TroikaText();
+      label.text = nodeData.label;
+      label.fontSize = 0.32;
+      label.color = '#ffffff';
+      label.anchorX = 'center';
+      label.anchorY = 'top';
+      label.outlineWidth = 0.02;
+      label.outlineColor = '#000510';
+      label.position.copy(nodeData.position).add(new THREE.Vector3(0, -0.75, 0));
+      label.renderOrder = 2;
+      label.sync();
+      scene.add(label);
+      sceneRef.current.labels.set(nodeData.id, label);
     });
   };
 
@@ -537,6 +554,7 @@ export default function SecurityArchitecture() {
       }
 
       sceneRef.current.nodes.clear();
+      sceneRef.current.labels.clear();
       sceneRef.current.packets = [];
       sceneRef.current.connections = [];
       sceneRef.current.defenseRings = [];
@@ -673,7 +691,7 @@ export default function SecurityArchitecture() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
-                className="lg:col-span-1 space-y-4"
+                className="lg:col-span-1 space-y-2"
               >
                 <div className="bg-[#000510]/80 backdrop-blur-sm border border-[#3D70B7]/30 rounded-xl p-4 gsap-fade-in">
                   <h3 className="font-mono text-sm text-[#3D70B7] mb-4 flex items-center gap-2">
