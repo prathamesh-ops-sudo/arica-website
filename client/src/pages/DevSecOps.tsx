@@ -949,7 +949,7 @@ export default function DevSecOps() {
                 animate={{ opacity: 1 }}
                 className="ml-2 px-2 py-0.5 rounded-full bg-[#42BA90]/20 text-[#42BA90] text-xs"
               >
-                LIVE
+                DEMO
               </motion.span>
             )}
           </div>
@@ -1075,7 +1075,7 @@ export default function DevSecOps() {
           transition={{ delay: 0.4 }}
           className="mb-12"
         >
-          <h2 className="text-2xl font-bold mb-6 text-center gsap-fade-in">Live Pipeline Metrics</h2>
+          <h2 className="text-2xl font-bold mb-6 text-center gsap-fade-in">Simulated Pipeline Metrics</h2>
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-6">
             <LiveMetric
               value={metrics.buildsToday}

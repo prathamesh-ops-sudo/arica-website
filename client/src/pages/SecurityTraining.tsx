@@ -98,7 +98,7 @@ const quizQuestions = [
       "Physical access"
     ],
     correctAnswer: 1,
-    explanation: "Phishing emails remain the #1 initial attack vector, accounting for over 90% of successful breaches."
+    explanation: "Phishing remains a common initial attack vector and is a key focus of security awareness training."
   },
   {
     id: 2,
@@ -1077,7 +1077,7 @@ export default function SecurityTraining() {
                 animate={{ opacity: [1, 0.5, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                LIVE
+                DEMO
               </motion.span>
             </h3>
             {teamProgress.map((team, index) => (

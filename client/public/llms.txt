@@ -1,14 +1,14 @@
 # Arica Tech Security LLP
 
-> Enterprise cybersecurity consultancy based in Pune, India. Specialising in VAPT (Vulnerability Assessment & Penetration Testing), ISO 27001 Audit & Certification, and Secure Custom Software Development.
+> Enterprise cybersecurity consultancy based in Pune, India. Specialising in VAPT (Vulnerability Assessment & Penetration Testing), ISO 27001 audit and certification support, and Secure Custom Software Development.
 
 ## About
 
-Arica Tech Security LLP is a cybersecurity firm serving Indian businesses across banking, fintech, healthcare, manufacturing, and government sectors. We help organisations find and fix security vulnerabilities before attackers do, achieve ISO 27001 certification, and build secure software from the ground up.
+Arica Tech Security LLP is a cybersecurity firm serving Indian businesses across banking, fintech, healthcare, manufacturing, and government sectors. We help organisations find and fix security vulnerabilities before attackers do, prepare for ISO 27001 certification, and build secure software from the ground up.
 
 ## Services
 
-- **VAPT (Vulnerability Assessment & Penetration Testing)**: Web app, mobile app, API, network, and Active Directory penetration testing. CERT-In empanelled methodology with CVSS + EPSS scoring.
+- **VAPT (Vulnerability Assessment & Penetration Testing)**: Web app, mobile app, API, network, and Active Directory penetration testing. Methodology aligned with CERT-In audit guidelines, with CVSS + EPSS scoring.
 - **ISO 27001 Audit & Certification**: Gap analysis, ISMS policy development, risk assessment, internal audit, and certification support for ISO 27001:2022.
 - **Secure Software Development**: DevSecOps pipeline integration, secure code review, SAST/DAST implementation, and custom secure application development.
 - **Compliance Consulting**: DPDP Act 2023 compliance, RBI Cyber Security Framework, SEBI CSCRF, HIPAA, PCI-DSS.

@@ -877,14 +877,14 @@ function LiveSecurityEventsFeed() {
           >
             <Radio className="w-5 h-5 text-[#3D70B7]" />
           </motion.div>
-          <h3 className="font-mono text-lg font-bold text-white">Live Security Feed</h3>
+          <h3 className="font-mono text-lg font-bold text-white">Simulated Security Feed</h3>
           <motion.span
             className="flex items-center gap-1 text-xs font-mono px-2 py-1 rounded bg-[#42BA90]/20 text-[#42BA90]"
             animate={{ opacity: [1, 0.5, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[#42BA90]" />
-            LIVE
+            DEMO
           </motion.span>
         </div>
         

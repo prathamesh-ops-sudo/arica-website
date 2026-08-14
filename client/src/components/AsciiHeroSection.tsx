@@ -5,13 +5,15 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, Shield, Eye, Lock, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { FloatingCyberThreats } from '@/components/FloatingCyberThreats';
+import { COMPANY_STATS } from '@/content/company-stats';
 
 export function AsciiHeroSection() {
   const stats = [
     { value: "24/7", label: "Threat Detection" },
-    { value: "100+", label: "Brands Associated" },
-    { value: "200+", label: "Professionals Trained" },
-    { value: "9", label: "Expert Team Members" },
+    ...COMPANY_STATS.map(({ value, suffix, label }) => ({
+      value: `${value}${suffix}`,
+      label,
+    })),
   ];
 
   const features = [

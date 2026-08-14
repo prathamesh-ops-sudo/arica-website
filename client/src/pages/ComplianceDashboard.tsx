@@ -97,16 +97,16 @@ export default function ComplianceDashboard() {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/30 mb-6">
               <Shield className="w-4 h-4 text-amber-400" />
-              <span className="text-amber-400 text-sm font-medium">ISO 27001 Compliance</span>
+              <span className="text-amber-400 text-sm font-medium">Illustrative Client Dashboard · Demo</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              Compliance
+              ISMS Readiness
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">
                 Dashboard
               </span>
             </h1>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Track your organization's path to ISO 27001 certification with our comprehensive compliance monitoring system.
+              An illustrative example of the readiness dashboard a client may use during an ISO 27001 implementation engagement. The figures shown are example data, not Arica Tech's certification status or live customer telemetry.
             </p>
           </motion.div>
 
@@ -126,8 +126,8 @@ export default function ComplianceDashboard() {
                 data-testid="compliance-circular-progress"
               />
               <div className="text-center">
-                <h3 className="text-xl font-bold mb-2">Overall Compliance Score</h3>
-                <p className="text-sm text-muted-foreground">Based on 114 Annex A controls</p>
+                <h3 className="text-xl font-bold mb-2">Illustrative Readiness Snapshot</h3>
+                <p className="text-sm text-muted-foreground">Example Annex A control data for demonstration</p>
               </div>
             </GlassCard>
 
@@ -171,7 +171,7 @@ export default function ComplianceDashboard() {
 
               <GlassCard glowColor="cyan" className="col-span-3 p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-medium">Certification Timeline</h4>
+                  <h4 className="font-medium">Example Engagement Stages</h4>
                   <span className="text-sm text-amber-400">Stage 2 Audit</span>
                 </div>
                 <div className="space-y-3">
@@ -363,7 +363,7 @@ export default function ComplianceDashboard() {
               data-testid="link-get-certified"
             >
               <TrendingUp className="w-5 h-5" />
-              Start Your Certification Process
+              Explore Certification Support
             </Link>
             <p className="text-sm text-muted-foreground mt-4">
               Our ISO 27001 experts will guide you through every step of the certification process.

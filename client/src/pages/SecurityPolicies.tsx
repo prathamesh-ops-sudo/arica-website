@@ -18,7 +18,6 @@ interface PolicyCategory {
   name: string;
   icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   description: string;
-  compliance: number;
   requirements: string[];
   color: string;
 }
@@ -36,7 +35,6 @@ const policyCategories: PolicyCategory[] = [
     name: 'Information Security Policy',
     icon: Shield,
     description: 'Comprehensive framework for protecting organizational information assets',
-    compliance: 92,
     requirements: ['Data encryption standards', 'Access controls', 'Security monitoring', 'Incident response'],
     color: '#3D70B7'
   },
@@ -45,7 +43,6 @@ const policyCategories: PolicyCategory[] = [
     name: 'Access Control Policy',
     icon: Lock,
     description: 'Rules governing user access to systems and data',
-    compliance: 87,
     requirements: ['Authentication protocols', 'Authorization levels', 'Privileged access management', 'Session management'],
     color: '#3D70B7'
   },
@@ -54,7 +51,6 @@ const policyCategories: PolicyCategory[] = [
     name: 'Data Classification Policy',
     icon: Database,
     description: 'Standards for categorizing and handling sensitive data',
-    compliance: 78,
     requirements: ['Classification levels', 'Handling procedures', 'Labeling requirements', 'Storage guidelines'],
     color: '#3D70B7'
   },
@@ -63,7 +59,6 @@ const policyCategories: PolicyCategory[] = [
     name: 'Incident Response Policy',
     icon: AlertTriangle,
     description: 'Procedures for detecting, responding to, and recovering from security incidents',
-    compliance: 85,
     requirements: ['Detection mechanisms', 'Response procedures', 'Communication protocols', 'Recovery plans'],
     color: '#F59E0B'
   },
@@ -72,7 +67,6 @@ const policyCategories: PolicyCategory[] = [
     name: 'Business Continuity Policy',
     icon: Briefcase,
     description: 'Ensuring business operations during and after disruptions',
-    compliance: 90,
     requirements: ['Risk assessment', 'Recovery objectives', 'Backup procedures', 'Testing schedules'],
     color: '#42BA90'
   },
@@ -81,7 +75,6 @@ const policyCategories: PolicyCategory[] = [
     name: 'Acceptable Use Policy',
     icon: Users,
     description: 'Guidelines for appropriate use of organizational resources',
-    compliance: 95,
     requirements: ['User responsibilities', 'Prohibited activities', 'Monitoring notice', 'Compliance enforcement'],
     color: '#3D70B7'
   }
@@ -799,10 +792,6 @@ export default function SecurityPolicies() {
   const { progress, scrollY } = useScrollProgress();
   const isMobile = useIsMobile();
   
-  const overallCompliance = Math.round(
-    policyCategories.reduce((sum, cat) => sum + cat.compliance, 0) / policyCategories.length
-  );
-
   const handlePolicyClick = useCallback((id: string) => {
     setSelectedPolicy(prev => prev === id ? null : id);
   }, []);
@@ -924,20 +913,6 @@ export default function SecurityPolicies() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-              className="lg:col-span-1 p-6 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10 flex flex-col items-center justify-center"
-            >
-              <h3 className="text-xl font-bold mb-4">Overall Compliance</h3>
-              <ComplianceMeter value={overallCompliance} />
-              <div className="mt-4 flex items-center gap-2 text-sm">
-                <Zap className="w-4 h-4 text-[#3D70B7]" />
-                <span className="text-muted-foreground">Continuously monitored</span>
-              </div>
-            </motion.div>
-
-            <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
@@ -1006,14 +981,6 @@ export default function SecurityPolicies() {
                           return <IconComponent className="w-6 h-6 transition-all duration-300" style={{ color: category.color }} />;
                         })()}
                       </div>
-                      <div className="flex items-center gap-1">
-                        <span 
-                          className="text-sm font-bold"
-                          style={{ color: category.color }}
-                        >
-                          {category.compliance}%
-                        </span>
-                      </div>
                     </div>
 
                     <h3 className="text-lg font-bold mb-2 group-hover:text-white transition-colors">
@@ -1022,19 +989,6 @@ export default function SecurityPolicies() {
                     <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
                       {category.description}
                     </p>
-
-                    <div className="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${category.compliance}%` }}
-                        transition={{ duration: 1, delay: 0.5 + index * 0.1 }}
-                        className="h-full rounded-full"
-                        style={{ 
-                          backgroundColor: category.color,
-                          boxShadow: `0 0 10px ${category.color}`
-                        }}
-                      />
-                    </div>
 
                     <AnimatePresence>
                       {selectedPolicy === category.id && (

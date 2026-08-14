@@ -910,7 +910,7 @@ export default function MobileSecurity() {
                       <div className="space-y-2">
                         <p className="text-xs text-gray-400 uppercase tracking-wide flex items-center gap-2">
                           <Zap className="w-3 h-3 text-yellow-400" />
-                          Live Findings
+                          Simulated Findings
                         </p>
                         {phaseFindings.map((finding, i) => (
                           <motion.div

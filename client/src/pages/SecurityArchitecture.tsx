@@ -639,7 +639,7 @@ export default function SecurityArchitecture() {
               </div>
               <div className="flex items-center gap-2 bg-[#3D70B7]/10 px-3 py-1.5 rounded border border-[#3D70B7]/30">
                 <div className="w-2 h-2 rounded-full bg-[#3D70B7] animate-pulse" />
-                <span className="text-xs text-[#3D70B7] font-mono font-bold">LIVE TOPOLOGY</span>
+                <span className="text-xs text-[#3D70B7] font-mono font-bold">DEMO TOPOLOGY</span>
               </div>
             </div>
           </div>

@@ -6,7 +6,7 @@ import { ArrowLeft, GitBranch, CheckCircle, XCircle, AlertTriangle, Play, Pause,
 interface PipelineStage {
   id: string;
   name: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   duration: number;
   status: 'pending' | 'running' | 'success' | 'failed' | 'warning';
   details: string[];

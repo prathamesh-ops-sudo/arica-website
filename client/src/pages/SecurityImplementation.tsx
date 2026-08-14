@@ -766,7 +766,7 @@ export default function SecurityImplementation() {
         >
           <h2 className="text-xl font-bold mb-4 flex items-center gap-3">
             <Activity className="w-5 h-5 text-[#3D70B7]" />
-            Live Metrics Dashboard
+            Simulated Metrics Dashboard
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <MetricCard

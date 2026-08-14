@@ -33,11 +33,6 @@ const services = [
       "API Security Testing",
       "Social Engineering Assessments",
     ],
-    stats: [
-      { label: "VAPT Assessments", value: 500, suffix: "+" },
-      { label: "Vulnerabilities Found", value: 12500, suffix: "+" },
-      { label: "Client Satisfaction", value: 99, suffix: "%" },
-    ],
     color: "neutral" as const,
   },
   {
@@ -54,11 +49,6 @@ const services = [
       "Certification Support",
       "Continuous Compliance Monitoring",
     ],
-    stats: [
-      { label: "Successful Audits", value: 150, suffix: "+" },
-      { label: "Certifications Achieved", value: 98, suffix: "%" },
-      { label: "Compliance Rate", value: 100, suffix: "%" },
-    ],
     color: "neutral" as const,
   },
   {
@@ -74,11 +64,6 @@ const services = [
       "Code Review and Analysis",
       "Secure API Development",
       "Enterprise Solutions",
-    ],
-    stats: [
-      { label: "Projects Delivered", value: 200, suffix: "+" },
-      { label: "Lines of Secure Code", value: 2, suffix: "M+" },
-      { label: "On-Time Delivery", value: 95, suffix: "%" },
     ],
     color: "neutral" as const,
   },
@@ -291,64 +276,6 @@ function AnimatedIcon({
   );
 }
 
-function CountUpStat({ 
-  value, 
-  suffix = "", 
-  label,
-  color = "neutral"
-}: { 
-  value: number; 
-  suffix?: string; 
-  label: string;
-  color?: "neutral" | "purple";
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [displayValue, setDisplayValue] = useState(0);
-  
-  const springValue = useSpring(0, {
-    stiffness: 50,
-    damping: 20,
-  });
-
-  useEffect(() => {
-    if (isInView) {
-      springValue.set(value);
-    }
-  }, [isInView, value, springValue]);
-
-  useEffect(() => {
-    const unsubscribe = springValue.on("change", (latest) => {
-      setDisplayValue(Math.round(latest));
-    });
-    return unsubscribe;
-  }, [springValue]);
-
-  const textColor = color === "neutral" ? "text-[#42BA90]" : "text-[#3D70B7]";
-  const glowColor = color === "neutral" ? "drop-shadow-[0_0_8px_rgba(66,186,144,0.5)]" : "drop-shadow-[0_0_8px_rgba(61,112,183,0.5)]";
-
-  return (
-    <div ref={ref} className="text-center">
-      <motion.div
-        className={`text-3xl md:text-4xl font-bold ${textColor} ${glowColor} tabular-nums`}
-        initial={{ opacity: 0, y: 20 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.5 }}
-      >
-        {displayValue.toLocaleString()}{suffix}
-      </motion.div>
-      <motion.div
-        className="text-sm text-muted-foreground mt-1"
-        initial={{ opacity: 0 }}
-        animate={isInView ? { opacity: 1 } : {}}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        {label}
-      </motion.div>
-    </div>
-  );
-}
-
 function StaggeredFeatures({ 
   features, 
   color = "neutral" 
@@ -389,61 +316,6 @@ function StaggeredFeatures({
         </motion.li>
       ))}
     </ul>
-  );
-}
-
-function AnimatedProgressBar({
-  value,
-  label,
-  color = "neutral"
-}: {
-  value: number;
-  label: string;
-  color?: "neutral" | "purple";
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
-  const [displayValue, setDisplayValue] = useState(0);
-  
-  const springValue = useSpring(0, { stiffness: 50, damping: 20 });
-
-  useEffect(() => {
-    if (isInView) {
-      springValue.set(value);
-    }
-  }, [isInView, value, springValue]);
-
-  useEffect(() => {
-    const unsubscribe = springValue.on("change", (latest) => {
-      setDisplayValue(Math.round(latest));
-    });
-    return unsubscribe;
-  }, [springValue]);
-
-  const animatedWidth = useTransform(springValue, (val) => `${val}%`);
-  
-  const barColor = color === "neutral" 
-    ? "bg-gradient-to-r from-[#42BA90] to-[#3D70B7]" 
-    : "bg-gradient-to-r from-[#3D70B7] to-[#42BA90]";
-  const glowColor = color === "neutral"
-        ? "shadow-[0_0_20px_rgba(66,186,144,0.6)]"
-        : "shadow-[0_0_20px_rgba(61,112,183,0.6)]";
-
-  return (
-    <div ref={ref} className="mb-4">
-      <div className="flex justify-between mb-2">
-        <span className="text-sm text-muted-foreground">{label}</span>
-        <span className={`text-sm font-bold ${color === "neutral" ? "text-[#42BA90]" : "text-[#3D70B7]"}`}>
-          {displayValue}%
-        </span>
-      </div>
-      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-        <motion.div
-          className={`h-full rounded-full ${barColor} ${glowColor}`}
-          style={{ width: animatedWidth }}
-        />
-      </div>
-    </div>
   );
 }
 
@@ -548,18 +420,6 @@ export default function ServicesPage() {
                   {service.description}
                 </p>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 p-4 rounded-xl bg-card/50 border border-white/5">
-                  {service.stats.map((stat) => (
-                    <CountUpStat
-                      key={stat.label}
-                      value={stat.value}
-                      suffix={stat.suffix}
-                      label={stat.label}
-                      color={service.color}
-                    />
-                  ))}
-                </div>
-
                 <Link href="/contact">
                   <Button
                     data-testid={`button-service-${service.id}`}
@@ -588,16 +448,6 @@ export default function ServicesPage() {
                   </h3>
                   <StaggeredFeatures features={service.features} color={service.color} />
                   
-                  <div className="mt-8 pt-6 border-t border-white/10">
-                    <h4 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wider">
-                      Success Rate
-                    </h4>
-                    <AnimatedProgressBar
-                      value={service.stats[2]?.value || service.stats[1]?.value || 95}
-                      label={service.stats[2]?.label || service.stats[1]?.label || "Success Rate"}
-                      color={service.color}
-                    />
-                  </div>
                 </div>
               </Card3D>
             </motion.div>

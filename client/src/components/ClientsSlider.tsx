@@ -2,6 +2,7 @@ import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { 
   Shield, 
   Building2, 
+  Banknote,
   Landmark, 
   Briefcase, 
   Factory, 
@@ -9,20 +10,19 @@ import {
   ShoppingCart, 
   GraduationCap,
   Heart,
-  Banknote
 } from "lucide-react";
 
 const industries = [
-  { name: "Fortune 500 Banks", icon: Banknote },
-  { name: "Healthcare Systems", icon: Heart },
-  { name: "Government Agencies", icon: Landmark },
-  { name: "Tech Enterprises", icon: Building2 },
+  { name: "Banking & Finance", icon: Banknote },
+  { name: "Healthcare", icon: Heart },
+  { name: "Public Sector", icon: Landmark },
+  { name: "Technology", icon: Building2 },
   { name: "Manufacturing", icon: Factory },
-  { name: "Aviation & Defense", icon: Plane },
-  { name: "E-Commerce Giants", icon: ShoppingCart },
-  { name: "Educational Institutions", icon: GraduationCap },
-  { name: "Financial Services", icon: Briefcase },
-  { name: "Security Firms", icon: Shield },
+  { name: "Aviation & Transport", icon: Plane },
+  { name: "E-Commerce", icon: ShoppingCart },
+  { name: "Education", icon: GraduationCap },
+  { name: "Professional Services", icon: Briefcase },
+  { name: "Security & Technology", icon: Shield },
 ];
 
 
@@ -33,10 +33,10 @@ export function ClientsSlider() {
       
       <div className="container mx-auto px-4 mb-8">
         <h2 className="text-center text-white text-2xl md:text-3xl font-bold tracking-wide mb-3">
-          Trusted By Industry Leaders
+          Sectors We Serve
         </h2>
         <p className="text-center text-white/50 text-sm md:text-base">
-          Protecting enterprises across all sectors
+          Cybersecurity support across a range of industries
         </p>
       </div>
       

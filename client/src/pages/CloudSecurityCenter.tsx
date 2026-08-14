@@ -1256,8 +1256,8 @@ export default function CloudSecurityCenter() {
                     <Activity className="w-5 h-5 text-red-400" />
                   </div>
                   <div>
-                    <h3 className="font-mono font-bold text-white">Live Security Events</h3>
-                    <p className="text-xs text-[#3D70B7]/60">Real-time threat detection</p>
+                    <h3 className="font-mono font-bold text-white">Simulated Security Events</h3>
+                    <p className="text-xs text-[#3D70B7]/60">Interactive threat detection demo</p>
                   </div>
                   <div className="ml-auto flex items-center gap-1">
                     <motion.div 
@@ -1265,7 +1265,7 @@ export default function CloudSecurityCenter() {
                       animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
                       transition={{ duration: 1, repeat: Infinity }}
                     />
-                    <span className="text-[10px] text-red-400 font-mono">LIVE</span>
+                    <span className="text-[10px] text-red-400 font-mono">DEMO</span>
                   </div>
                 </div>
 

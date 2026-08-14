@@ -1,9 +1,9 @@
 import { motion, useInView, useSpring, useTransform } from "framer-motion";
-import { Shield, Target, Eye, Award, Users, Globe, ArrowRight } from "lucide-react";
+import { Shield, Target, Eye, ArrowRight } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Link } from "wouter";
 import { useRef, useState, useEffect, useCallback } from "react";
-
+import { COMPANY_STATS } from "@/content/company-stats";
 const values = [
   {
     icon: Shield,
@@ -24,14 +24,6 @@ const values = [
     accent: "blue" as const,
   },
 ];
-
-const stats = [
-  { icon: Users, value: 100, suffix: "+", label: "Brands Associated", accent: "blue" as const },
-  { icon: Globe, value: 200, suffix: "+", label: "Professionals Trained", accent: "green" as const },
-  { icon: Award, value: 9, suffix: "", label: "Expert Team Members", accent: "blue" as const },
-  { icon: Shield, value: 100, suffix: "%", label: "Audit Success Rate", accent: "green" as const },
-];
-
 
 function useCountUp(end: number, duration: number = 2000, startOnView: boolean = true) {
   const [count, setCount] = useState(0);
@@ -59,7 +51,7 @@ function useCountUp(end: number, duration: number = 2000, startOnView: boolean =
   return { count, ref };
 }
 
-function AnimatedStat({ stat, index }: { stat: typeof stats[0]; index: number }) {
+function AnimatedStat({ stat, index }: { stat: typeof COMPANY_STATS[number]; index: number }) {
   const { count, ref } = useCountUp(stat.value, 2000);
   const isGreen = stat.accent === "green";
   const accentRgba = isGreen ? "66, 186, 144" : "61, 112, 183";
@@ -208,7 +200,7 @@ export default function About() {
       <section className="py-16 relative">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {stats.map((stat, index) => (
+            {COMPANY_STATS.map((stat, index) => (
               <AnimatedStat key={stat.label} stat={stat} index={index} />
             ))}
           </div>

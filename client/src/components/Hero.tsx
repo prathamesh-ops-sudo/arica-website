@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Users, Activity } from "lucide-react";
+import { Activity } from "lucide-react";
 import { AnimatedHero } from "@/components/ui/animated-hero";
 import { SplineScene } from "@/components/ui/splite";
 
@@ -37,16 +37,6 @@ export function Hero() {
                 <div className="text-left">
                   <p className="text-xs text-muted-foreground uppercase tracking-wider">Real-Time Threats</p>
                   <p className="font-display text-2xl font-bold text-primary">1,204<span className="text-sm text-muted-foreground ml-1">blocked</span></p>
-                </div>
-              </div>
-              <div className="w-px h-12 bg-white/10" />
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-[#42BA90]/10 backdrop-blur-sm">
-                  <Users className="w-5 h-5 text-[#42BA90]" />
-                </div>
-                <div className="text-left">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider">Enterprise</p>
-                  <p className="font-display text-2xl font-bold">50+<span className="text-sm text-muted-foreground ml-1">clients</span></p>
                 </div>
               </div>
             </motion.div>

@@ -1045,7 +1045,7 @@ export default function RiskAssessment() {
               >
                 <Target className="w-4 h-4 text-[#3D70B7]" />
               </motion.div>
-              <span className="text-[#3D70B7] text-sm font-medium">Live Risk Assessment</span>
+              <span className="text-[#3D70B7] text-sm font-medium">Interactive Risk Assessment Demo</span>
               <motion.div
                 className="w-2 h-2 rounded-full bg-[#42BA90]"
                 animate={{ opacity: [1, 0.3, 1] }}
@@ -1172,7 +1172,7 @@ export default function RiskAssessment() {
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-bold flex items-center gap-2">
-                  Live Risk Feed
+                  Simulated Risk Feed
                   <motion.div
                     className="w-2 h-2 rounded-full bg-red-500"
                     animate={{ scale: [1, 1.3, 1], opacity: [1, 0.5, 1] }}
@@ -1192,7 +1192,7 @@ export default function RiskAssessment() {
           >
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-2xl font-bold flex items-center gap-2">
-                Live Threat Matrix
+                Simulated Threat Matrix
                 <motion.div
                   animate={{ rotate: [0, 360] }}
                   transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}

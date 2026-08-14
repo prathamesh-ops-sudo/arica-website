@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
-import { ChevronLeft, Shield, AlertTriangle, Clock, Zap, Target, Globe2, Activity, ShieldCheck, ShieldAlert, ArrowRight, Search, Filter, X } from "lucide-react";
+import { ChevronLeft, Shield, AlertTriangle, Clock, Zap, Target, Globe2, Activity, ShieldCheck, ArrowRight, Search, Filter, X } from "lucide-react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import * as THREE from "three";
 
@@ -806,7 +806,7 @@ export default function AttackGlobe() {
           <div className="flex items-center gap-4">
             <div className="hidden md:flex items-center gap-2 text-white/60 text-sm">
               <Activity className="w-4 h-4 text-[#3D70B7]" />
-              <span>Live Monitoring</span>
+              <span>Interactive Simulation</span>
             </div>
             <motion.div 
               className="flex items-center gap-2 bg-[#ff3344]/10 px-4 py-2 rounded-full border border-[#ff3344]/30"
@@ -820,7 +820,7 @@ export default function AttackGlobe() {
                 animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
                 transition={{ duration: 1, repeat: Infinity }}
               />
-              <span className="text-xs text-[#ff3344] font-bold uppercase tracking-wider">Live</span>
+              <span className="text-xs text-[#ff3344] font-bold uppercase tracking-wider">Demo</span>
             </motion.div>
           </div>
         </div>
@@ -842,13 +842,13 @@ export default function AttackGlobe() {
               transition={{ duration: 3, repeat: Infinity }}
             >
               <AlertTriangle className="w-4 h-4 text-[#ff3344]" />
-              <span className="text-[#ff3344] font-medium text-sm">Global Threat Intelligence Active</span>
+              <span className="text-[#ff3344] font-medium text-sm">Simulated Threat Intelligence</span>
             </motion.div>
             
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-3 tracking-tight">
-              <span className="text-white drop-shadow-lg">Real-Time </span>
+              <span className="text-white drop-shadow-lg">Interactive </span>
               <span style={{ color: '#3D70B7' }}>Cyber Attack</span>
-              <span className="text-white drop-shadow-lg"> Monitoring</span>
+              <span className="text-white drop-shadow-lg"> Simulation</span>
             </h1>
             
             <p className="text-white/70 text-base md:text-lg max-w-2xl mx-auto drop-shadow-lg">
@@ -894,23 +894,6 @@ export default function AttackGlobe() {
               <p className="text-white/40 text-xs">Attacks Detected Today</p>
             </div>
             
-            <div className="backdrop-blur-xl bg-[#0a0a1e]/70 border border-white/10 rounded-2xl p-4 group hover:border-yellow-500/30 transition-all duration-500">
-              <div className="flex items-center justify-between mb-2">
-                <ShieldAlert className="w-4 h-4 text-yellow-500" />
-                <span className="text-[10px] text-yellow-500/70 uppercase font-medium">2025</span>
-              </div>
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-1">$4.45M</h3>
-              <p className="text-white/40 text-xs">Avg. Breach Cost</p>
-            </div>
-            
-            <div className="backdrop-blur-xl bg-[#0a0a1e]/70 border border-white/10 rounded-2xl p-4 group hover:border-[#3D70B7]/30 transition-all duration-500">
-              <div className="flex items-center justify-between mb-2">
-                <Globe2 className="w-4 h-4 text-[#3D70B7]" />
-                <span className="text-[10px] text-[#3D70B7]/70 uppercase font-medium">Global</span>
-              </div>
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-1">$10.5T</h3>
-              <p className="text-white/40 text-xs">Annual Cybercrime Cost</p>
-            </div>
           </motion.div>
 
           <motion.div
@@ -1019,7 +1002,7 @@ export default function AttackGlobe() {
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                       <Activity className="w-4 h-4 text-[#ff3344]" />
-                      Live Attack Feed
+                      Simulated Attack Feed
                     </h3>
                     <motion.div 
                       className="w-2 h-2 rounded-full bg-[#ff3344]"
@@ -1089,14 +1072,14 @@ export default function AttackGlobe() {
                       <Shield className="w-10 h-10 text-[#3D70B7]" />
                     </div>
                     <div className="text-left">
-                      <h2 className="text-2xl md:text-3xl font-bold text-white">Don't Be a Statistic</h2>
-                      <p className="text-[#3D70B7]/70 text-sm">95% of breaches are preventable with proper security</p>
+                      <h2 className="text-2xl md:text-3xl font-bold text-white">Strengthen Your Security Posture</h2>
+                      <p className="text-[#3D70B7]/70 text-sm">Identify and prioritise your security gaps</p>
                     </div>
                   </div>
                   
                   <p className="text-white/60 max-w-2xl mx-auto mb-8 text-lg">
                     Our <span className="text-[#3D70B7] font-semibold">Vulnerability Assessment & Penetration Testing (VAPT)</span> identifies 
-                    your security gaps before attackers do. Get a comprehensive security audit from certified experts.
+                    your security gaps before attackers do with a focused Vulnerability Assessment & Penetration Testing engagement.
                   </p>
                   
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -1121,14 +1104,6 @@ export default function AttackGlobe() {
                   
                   <div className="grid grid-cols-3 gap-6 mt-10 max-w-2xl mx-auto">
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-[#3D70B7]">500+</div>
-                      <p className="text-white/40 text-sm mt-1">Audits Completed</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-[#3D70B7]">99.9%</div>
-                      <p className="text-white/40 text-sm mt-1">Client Satisfaction</p>
-                    </div>
-                    <div className="text-center">
                       <div className="text-3xl font-bold text-[#3D70B7]">24/7</div>
                       <p className="text-white/40 text-sm mt-1">Monitoring Available</p>
                     </div>
@@ -1144,7 +1119,7 @@ export default function AttackGlobe() {
               className="mt-8 text-center"
             >
               <p className="text-white/30 text-xs">
-                Data sources: IBM Security, University of Maryland, Cybersecurity Ventures (2025)
+                Interactive simulation for demonstration purposes. It does not display live customer telemetry.
               </p>
             </motion.div>
           </div>

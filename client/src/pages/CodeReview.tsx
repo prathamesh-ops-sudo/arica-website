@@ -849,7 +849,7 @@ export default function CodeReview() {
               </span>
             </h1>
             <p className="text-gray-400 max-w-2xl mx-auto gsap-fade-in">
-              Watch as our scanner beam analyzes code in real-time, detecting vulnerabilities and security issues with particle explosion effects.
+              Watch as our scanner beam analyzes code in an interactive demonstration, detecting vulnerabilities and security issues with particle explosion effects.
             </p>
           </motion.div>
 
@@ -982,7 +982,7 @@ export default function CodeReview() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mb-16">
-            <h2 className="text-2xl font-bold mb-6 text-center gsap-fade-in">Live Code Scanner</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center gsap-fade-in">Demo Code Scanner</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="rounded-3xl bg-black/60 backdrop-blur-xl border border-white/10 overflow-hidden">
                 <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-black/40">

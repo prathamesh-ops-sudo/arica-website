@@ -4,8 +4,7 @@ import { Link } from 'wouter';
 import * as THREE from 'three';
 import { 
   ArrowLeft, Shield, Lock, Database, CreditCard, Heart, Building2,
-  CheckCircle, Calendar, Award, Users, Clock, TrendingUp, X,
-  Sparkles, Star
+  CheckCircle, Award, X, Star
 } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { isWebGLAvailable } from '@/lib/webgl-utils';
@@ -14,11 +13,8 @@ interface Certification {
   id: string;
   name: string;
   fullName: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   description: string;
-  status: 'Active' | 'Pending' | 'Renewing';
-  lastAudit: string;
-  nextRenewal: string;
   color: string;
   badgeShape: 'hexagon' | 'shield' | 'circle';
   details: string[];
@@ -31,9 +27,6 @@ const certifications: Certification[] = [
     fullName: 'Information Security Management',
     icon: Shield,
     description: 'International standard for information security management systems',
-    status: 'Active',
-    lastAudit: 'October 2025',
-    nextRenewal: 'October 2028',
     color: '#42BA90',
     badgeShape: 'hexagon',
     details: [
@@ -50,9 +43,6 @@ const certifications: Certification[] = [
     fullName: 'Service Organization Control',
     icon: Lock,
     description: 'Trust service criteria for security, availability, and confidentiality',
-    status: 'Active',
-    lastAudit: 'August 2025',
-    nextRenewal: 'August 2026',
     color: '#3D70B7',
     badgeShape: 'shield',
     details: [
@@ -69,9 +59,6 @@ const certifications: Certification[] = [
     fullName: 'Data Protection Compliance',
     icon: Database,
     description: 'European Union General Data Protection Regulation compliance',
-    status: 'Active',
-    lastAudit: 'July 2025',
-    nextRenewal: 'July 2026',
     color: '#3D70B7',
     badgeShape: 'circle',
     details: [
@@ -88,9 +75,6 @@ const certifications: Certification[] = [
     fullName: 'Payment Card Industry Security',
     icon: CreditCard,
     description: 'Payment card industry data security standard compliance',
-    status: 'Active',
-    lastAudit: 'September 2025',
-    nextRenewal: 'September 2026',
     color: '#42BA90',
     badgeShape: 'hexagon',
     details: [
@@ -107,9 +91,6 @@ const certifications: Certification[] = [
     fullName: 'Healthcare Data Protection',
     icon: Heart,
     description: 'Health Insurance Portability and Accountability Act compliance',
-    status: 'Active',
-    lastAudit: 'June 2025',
-    nextRenewal: 'June 2026',
     color: '#F43F5E',
     badgeShape: 'shield',
     details: [
@@ -126,9 +107,6 @@ const certifications: Certification[] = [
     fullName: 'Business Continuity Management',
     icon: Building2,
     description: 'Business continuity management system standard',
-    status: 'Active',
-    lastAudit: 'November 2025',
-    nextRenewal: 'November 2028',
     color: '#F59E0B',
     badgeShape: 'circle',
     details: [
@@ -142,19 +120,12 @@ const certifications: Certification[] = [
 ];
 
 const timelineSteps = [
-  { id: 'assessment', name: 'Assessment', description: 'Initial security evaluation', progress: 100 },
-  { id: 'gap-analysis', name: 'Gap Analysis', description: 'Identify compliance gaps', progress: 100 },
-  { id: 'implementation', name: 'Implementation', description: 'Security controls deployment', progress: 100 },
-  { id: 'audit', name: 'Audit', description: 'Third-party verification', progress: 100 },
-  { id: 'certification', name: 'Certification', description: 'Official certification awarded', progress: 100 },
-  { id: 'maintenance', name: 'Maintenance', description: 'Ongoing compliance monitoring', progress: 85 }
-];
-
-const trustStats = [
-  { label: 'Years Certified', value: 8, suffix: '+', icon: Award },
-  { label: 'Audits Passed', value: 156, suffix: '', icon: CheckCircle },
-  { label: 'Controls Maintained', value: 2847, suffix: '+', icon: TrendingUp },
-  { label: 'Trusted Clients', value: 500, suffix: '+', icon: Users }
+  { id: 'assessment', name: 'Assessment', description: 'Initial security evaluation' },
+  { id: 'gap-analysis', name: 'Gap Analysis', description: 'Identify compliance gaps' },
+  { id: 'implementation', name: 'Implementation', description: 'Security controls deployment' },
+  { id: 'audit', name: 'Audit Support', description: 'Prepare evidence for independent review' },
+  { id: 'certification', name: 'Certification Support', description: 'Support the client certification process' },
+  { id: 'maintenance', name: 'Maintenance', description: 'Ongoing compliance monitoring' }
 ];
 
 function CertificationBadges3D({ 
@@ -592,46 +563,6 @@ function CertificationBadges3D({
   );
 }
 
-function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: string }) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  const hasAnimated = useRef(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !hasAnimated.current) {
-          hasAnimated.current = true;
-          const duration = 2000;
-          const startTime = Date.now();
-          
-          const animate = () => {
-            const elapsed = Date.now() - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            setCount(Math.round(value * eased));
-            
-            if (progress < 1) {
-              requestAnimationFrame(animate);
-            }
-          };
-          animate();
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [value]);
-
-  return (
-    <div ref={ref} className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#42BA90]">
-      {count.toLocaleString()}{suffix}
-    </div>
-  );
-}
-
 function CertificationModal({ 
   certification, 
   onClose 
@@ -680,23 +611,6 @@ function CertificationModal({
 
         <p className="text-slate-300 mb-6">{certification.description}</p>
 
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="bg-slate-800/50 rounded-lg p-4">
-            <div className="flex items-center gap-2 text-slate-400 mb-1">
-              <Calendar className="w-4 h-4" />
-              <span className="text-sm">Last Audit</span>
-            </div>
-            <p className="text-white font-medium">{certification.lastAudit}</p>
-          </div>
-          <div className="bg-slate-800/50 rounded-lg p-4">
-            <div className="flex items-center gap-2 text-slate-400 mb-1">
-              <Clock className="w-4 h-4" />
-              <span className="text-sm">Next Renewal</span>
-            </div>
-            <p className="text-white font-medium">{certification.nextRenewal}</p>
-          </div>
-        </div>
-
         <div className="mb-4">
           <h4 className="text-lg font-semibold text-white mb-3">Key Controls</h4>
           <ul className="space-y-2">
@@ -710,17 +624,7 @@ function CertificationModal({
         </div>
 
         <div className="flex items-center gap-2 pt-4 border-t border-slate-700">
-          <span 
-            className="px-3 py-1 rounded-full text-sm font-medium"
-            style={{ 
-              backgroundColor: certification.status === 'Active' ? '#42BA9020' : '#F59E0B20',
-              color: certification.status === 'Active' ? '#42BA90' : '#F59E0B'
-            }}
-          >
-            {certification.status}
-          </span>
-          <Sparkles className="w-4 h-4 text-[#42BA90]" />
-          <span className="text-sm text-slate-400">Verified & Compliant</span>
+          <span className="text-sm text-slate-400">Framework coverage and client certification support</span>
         </div>
       </motion.div>
     </motion.div>
@@ -757,11 +661,11 @@ export default function Certifications() {
             <div className="flex items-center justify-center gap-3 mb-4">
               <Award className="w-10 h-10 text-[#42BA90]" />
               <h1 className="text-4xl md:text-5xl font-bold text-white">
-                Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#42BA90]">Certifications</span>
+                Compliance <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#42BA90]">Frameworks</span>
               </h1>
             </div>
             <p className="text-xl text-slate-400 max-w-2xl text-center">
-              Industry-recognized certifications demonstrating our commitment to security excellence
+              Frameworks we help clients assess, implement, and maintain
             </p>
           </motion.div>
 
@@ -778,7 +682,7 @@ export default function Certifications() {
                 Interactive 3D Badge Showcase
               </h2>
               <p className="text-center text-slate-400 mb-6 relative z-10">
-                Click on any badge to view certification details
+                Click on any badge to view framework details
               </p>
               <CertificationBadges3D 
                 onBadgeClick={setSelectedCert}
@@ -806,7 +710,7 @@ export default function Certifications() {
             className="mb-16"
           >
             <h2 className="text-3xl font-bold text-white text-center mb-4">
-              Certification Cards
+              Framework Coverage
             </h2>
             <p className="text-center text-slate-400 mb-8">Click any card to flip and see details</p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -845,30 +749,12 @@ export default function Certifications() {
                           >
                             <Icon className="w-7 h-7" style={{ color: cert.color }} />
                           </div>
-                          <span 
-                            className="px-3 py-1 rounded-full text-xs font-medium"
-                            style={{ 
-                              backgroundColor: cert.status === 'Active' ? '#42BA9020' : '#F59E0B20',
-                              color: cert.status === 'Active' ? '#42BA90' : '#F59E0B'
-                            }}
-                          >
-                            {cert.status}
-                          </span>
                         </div>
 
                         <h3 className="text-xl font-bold text-white mb-1">{cert.name}</h3>
                         <p className="text-sm text-slate-400 mb-4">{cert.fullName}</p>
 
-                        <div className="space-y-2 text-sm">
-                          <div className="flex items-center justify-between">
-                            <span className="text-slate-500">Last Audit</span>
-                            <span className="text-slate-300">{cert.lastAudit}</span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-slate-500">Next Renewal</span>
-                            <span className="text-slate-300">{cert.nextRenewal}</span>
-                          </div>
-                        </div>
+                        <p className="text-sm text-slate-400">Client-focused framework guidance and implementation support</p>
                         
                         <div className="absolute bottom-4 left-0 right-0 text-center">
                           <span className="text-xs text-slate-500">Click to flip →</span>
@@ -937,7 +823,7 @@ export default function Certifications() {
             className="mb-16"
           >
             <h2 className="text-3xl font-bold text-white text-center mb-8">
-              Certification Roadmap
+              Client Implementation Process
             </h2>
             <div className="relative">
               {/* Animated path line */}
@@ -985,22 +871,18 @@ export default function Certifications() {
                       animate={{
                         scale: [1, 1.1, 1],
                         boxShadow: [
-                          `0 0 20px ${step.progress === 100 ? '#42BA9050' : '#F59E0B50'}`,
-                          `0 0 30px ${step.progress === 100 ? '#42BA9080' : '#F59E0B80'}`,
-                          `0 0 20px ${step.progress === 100 ? '#42BA9050' : '#F59E0B50'}`
+                          '0 0 20px #42BA9050',
+                          '0 0 30px #42BA9080',
+                          '0 0 20px #42BA9050'
                         ]
                       }}
                       transition={{ duration: 2, repeat: Infinity, delay: 0.2 * index + 0.5 }}
                       style={{
-                        backgroundColor: step.progress === 100 ? '#42BA90' : '#F59E0B',
-                        boxShadow: `0 0 20px ${step.progress === 100 ? '#42BA9050' : '#F59E0B50'}`
+                        backgroundColor: '#42BA90',
+                        boxShadow: '0 0 20px #42BA9050'
                       }}
                     >
-                      {step.progress === 100 ? (
-                        <CheckCircle className="w-6 h-6 text-white" />
-                      ) : (
-                        <span className="text-white font-bold text-sm">{step.progress}%</span>
-                      )}
+                      <CheckCircle className="w-6 h-6 text-white" />
                     </motion.div>
                     <h4 className="text-white font-semibold text-center mb-1">{step.name}</h4>
                     <p className="text-slate-400 text-xs text-center">{step.description}</p>
@@ -1013,45 +895,15 @@ export default function Certifications() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="mb-16"
-          >
-            <h2 className="text-3xl font-bold text-white text-center mb-8">
-              Trust Indicators
-            </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {trustStats.map((stat, index) => {
-                const Icon = stat.icon;
-                return (
-                  <motion.div
-                    key={stat.label}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.1 * index }}
-                    className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl border border-slate-700 p-6 text-center"
-                    data-testid={`trust-stat-${index}`}
-                  >
-                    <Icon className="w-10 h-10 mx-auto mb-4 text-[#3D70B7]" />
-                    <AnimatedCounter value={stat.value} suffix={stat.suffix} />
-                    <p className="text-slate-400 mt-2">{stat.label}</p>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
             className="text-center"
           >
-            <h2 className="text-3xl font-bold text-white mb-4">Trusted By Industry Leaders</h2>
+            <h2 className="text-3xl font-bold text-white mb-4">Frameworks Across Industries</h2>
             <p className="text-slate-400 mb-8 max-w-2xl mx-auto">
-              Our certifications are recognized by leading organizations worldwide
+              Our advisory and implementation work supports organisations across these sectors
             </p>
             <div className="flex flex-wrap justify-center gap-8 opacity-60">
-              {['Fortune 500', 'Healthcare', 'Finance', 'Government', 'Tech Giants'].map((sector, i) => (
+              {['Healthcare', 'Finance', 'Government', 'Technology', 'Manufacturing'].map((sector, i) => (
                 <motion.div
                   key={sector}
                   initial={{ opacity: 0 }}
