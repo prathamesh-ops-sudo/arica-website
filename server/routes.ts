@@ -538,6 +538,22 @@ export async function registerRoutes(
     { loc: "/case-studies", priority: "0.7", changefreq: "monthly" },
     { loc: "/team", priority: "0.6", changefreq: "monthly" },
     { loc: "/blog", priority: "0.9", changefreq: "daily" },
+    { loc: "/certifications", priority: "0.7", changefreq: "monthly" },
+    { loc: "/attack-globe", priority: "0.4", changefreq: "yearly" },
+    { loc: "/vulnerability-scanner", priority: "0.4", changefreq: "yearly" },
+    { loc: "/compliance-dashboard", priority: "0.4", changefreq: "yearly" },
+    { loc: "/devsecops", priority: "0.5", changefreq: "monthly" },
+    { loc: "/devsecops-pipeline", priority: "0.4", changefreq: "yearly" },
+    { loc: "/api-security-lab", priority: "0.4", changefreq: "yearly" },
+    { loc: "/cloud-security-center", priority: "0.4", changefreq: "yearly" },
+    { loc: "/mobile-security", priority: "0.4", changefreq: "yearly" },
+    { loc: "/risk-assessment", priority: "0.4", changefreq: "yearly" },
+    { loc: "/security-policies", priority: "0.5", changefreq: "monthly" },
+    { loc: "/security-architecture", priority: "0.4", changefreq: "yearly" },
+    { loc: "/code-review", priority: "0.4", changefreq: "yearly" },
+    { loc: "/security-training", priority: "0.4", changefreq: "yearly" },
+    { loc: "/ongoing-support", priority: "0.5", changefreq: "monthly" },
+    { loc: "/security-implementation", priority: "0.5", changefreq: "monthly" },
     { loc: "/legal/privacy-policy", priority: "0.3", changefreq: "yearly" },
     { loc: "/legal/cookies-policy", priority: "0.3", changefreq: "yearly" },
     { loc: "/legal/information-security-policy", priority: "0.3", changefreq: "yearly" },
@@ -546,7 +562,12 @@ export async function registerRoutes(
 
   app.get("/sitemap.xml", async (_req, res) => {
     try {
-      const slugs = await storage.getAllPublishedSlugs();
+      let slugs: { slug: string; updatedAt: Date }[] = [];
+      try {
+        slugs = await storage.getAllPublishedSlugs();
+      } catch (error) {
+        console.error("[sitemap] blog slug lookup failed:", error);
+      }
       const now = new Date().toISOString();
 
       let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;

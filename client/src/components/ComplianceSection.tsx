@@ -14,7 +14,7 @@ const complianceItems = [
 const certifications = [
   { id: "auditor", name: "ISO 27001", description: "Lead Auditor" },
   { id: "implementer", name: "ISO 27001", description: "Lead Implementer" },
-  { id: "certified", name: "ISO 27001", description: "Certification Ready" },
+  { id: "certified", name: "ISO 27001", description: "Client Certification Support" },
 ];
 
 const PARTICLE_POSITIONS = [

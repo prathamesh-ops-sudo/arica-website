@@ -4,6 +4,126 @@ import path from "path";
 import { storage } from "./storage";
 
 const SITE_URL = "https://www.aricatech.com";
+const STATIC_ALIASES: Record<string, string> = {
+  "/forensics": "/services",
+  "/compliance": "/services",
+  "/portal": "/contact",
+};
+
+const STATIC_METADATA: Record<string, { title: string; description: string }> = {
+  "/": {
+    title: "Cybersecurity Consulting & VAPT Services | Arica Tech",
+    description: "Arica Tech Security provides VAPT, ISO 27001 audit support, secure software development, and practical cybersecurity consulting.",
+  },
+  "/about": {
+    title: "About Arica Tech Security | Cybersecurity Consultancy",
+    description: "Learn about Arica Tech Security's defense-in-depth approach to vulnerability assessment, compliance support, and secure technology delivery.",
+  },
+  "/services": {
+    title: "Cybersecurity Services | VAPT, ISO Support & Secure Software",
+    description: "Explore VAPT, ISO 27001 audit support, and secure software development services designed to strengthen security throughout the technology lifecycle.",
+  },
+  "/contact": {
+    title: "Contact Arica Tech Security | Request Security Support",
+    description: "Contact Arica Tech Security to discuss VAPT, ISO 27001 audit support, secure software development, or a practical security assessment.",
+  },
+  "/case-studies": {
+    title: "Cybersecurity Case Studies | Arica Tech Security",
+    description: "Review anonymised cybersecurity engagement scenarios covering VAPT, ISO readiness, secure software, cloud environments, and security architecture.",
+  },
+  "/team": {
+    title: "Arica Tech Security Team | Security Professionals",
+    description: "Meet the Arica Tech Security team and learn about the experience behind our security assessments, consulting, and implementation work.",
+  },
+  "/certifications": {
+    title: "ISO 27001 & Security Framework Support | Arica Tech",
+    description: "Explore Arica Tech Security's framework expertise and client support for ISO 27001, privacy, payment, continuity, and related security programs.",
+  },
+  "/attack-globe": {
+    title: "Attack Surface Simulation | Arica Tech Security",
+    description: "Explore an interactive cybersecurity simulation illustrating attack-surface concepts and security assessment workflows. It is not live telemetry.",
+  },
+  "/vulnerability-scanner": {
+    title: "Vulnerability Scanner Demo | Arica Tech Security",
+    description: "Explore an interactive vulnerability-scanning demonstration covering common findings and assessment concepts. It is an illustrative lab, not live monitoring.",
+  },
+  "/compliance-dashboard": {
+    title: "ISMS Readiness Dashboard Demo | Arica Tech Security",
+    description: "Explore an illustrative client ISMS readiness dashboard showing example controls and engagement stages, not Arica Tech's certification status.",
+  },
+  "/devsecops": {
+    title: "DevSecOps Security Pipeline | Arica Tech Security",
+    description: "Explore an interactive DevSecOps demonstration showing security checks across source code, dependencies, containers, and delivery workflows.",
+  },
+  "/devsecops-pipeline": {
+    title: "DevSecOps Pipeline Demo | Arica Tech Security",
+    description: "Explore an illustrative DevSecOps pipeline with example security checks that can be integrated into modern software delivery workflows.",
+  },
+  "/api-security-lab": {
+    title: "API Security Lab Demo | Arica Tech Security",
+    description: "Explore an interactive API security lab covering authentication, exposure, injection, and endpoint assessment concepts.",
+  },
+  "/cloud-security-center": {
+    title: "Cloud Security Assessment Demo | Arica Tech Security",
+    description: "Explore an illustrative cloud security center covering identity, policy, configuration, and risk assessment concepts.",
+  },
+  "/mobile-security": {
+    title: "Mobile Application Security Lab | Arica Tech Security",
+    description: "Explore an interactive mobile security lab covering common application, storage, communication, authentication, and code risks.",
+  },
+  "/risk-assessment": {
+    title: "Cybersecurity Risk Assessment Demo | Arica Tech Security",
+    description: "Explore an illustrative risk assessment workflow for identifying threats, evaluating likelihood and impact, and prioritising security work.",
+  },
+  "/security-policies": {
+    title: "Information Security Policy Viewer | Arica Tech Security",
+    description: "Explore an interactive information security policy viewer covering governance, access, data handling, incident response, and continuity topics.",
+  },
+  "/security-architecture": {
+    title: "Security Architecture Assessment | Arica Tech Security",
+    description: "Explore an interactive security architecture model covering network, endpoint, application, identity, and data protection layers.",
+  },
+  "/code-review": {
+    title: "Secure Code Review Demo | Arica Tech Security",
+    description: "Explore an illustrative secure code review tool covering vulnerability categories, code quality considerations, and remediation workflows.",
+  },
+  "/security-training": {
+    title: "Cybersecurity Training Demo | Arica Tech Security",
+    description: "Explore an interactive cybersecurity training demonstration covering foundational security, phishing, passwords, data handling, and incident reporting.",
+  },
+  "/ongoing-support": {
+    title: "Ongoing Cybersecurity Support | Arica Tech Security",
+    description: "Explore ongoing security support concepts including monitoring, vulnerability management, threat intelligence, incident response, and advisory work.",
+  },
+  "/security-implementation": {
+    title: "Security Implementation Planning | Arica Tech Security",
+    description: "Explore an illustrative security implementation workflow from assessment and architecture through controls, testing, training, and optimisation.",
+  },
+  "/experience": {
+    title: "Security Experience | Arica Tech Security",
+    description: "Explore Arica Tech Security's interactive 3D cybersecurity experience and demonstrations.",
+  },
+  "/legal/privacy-policy": {
+    title: "Privacy Policy | Arica Tech Security LLP",
+    description: "Read Arica Tech Security's privacy policy covering personal data handling, purposes, rights, safeguards, and contact information.",
+  },
+  "/legal/cookies-policy": {
+    title: "Cookies Policy | Arica Tech Security LLP",
+    description: "Read Arica Tech Security's Cookies Policy covering necessary, performance and analytics, and targeting and marketing cookies.",
+  },
+  "/legal/information-security-policy": {
+    title: "Information Security Policy | Arica Tech Security LLP",
+    description: "Read Arica Tech Security's information security policy and the principles guiding protection of information and technology.",
+  },
+  "/legal/third-party-data-vendor-policy": {
+    title: "Third-Party Data & Vendor Policy | Arica Tech",
+    description: "Read Arica Tech Security's third-party data and vendor policy covering supplier safeguards, processing, oversight, and responsibilities.",
+  },
+  "/thank-you": {
+    title: "Thank You | Arica Tech Security LLP",
+    description: "Confirmation that your message was received by Arica Tech Security.",
+  },
+};
 
 export function serveStatic(app: Express) {
   const distPath = path.resolve(__dirname, "public");
@@ -27,6 +147,7 @@ export function serveStatic(app: Express) {
   // Static files (images, fonts, SW) get moderate cache (1 day) with revalidation
   app.use(
     express.static(distPath, {
+      index: false,
       maxAge: "1d",
       setHeaders: (res, filePath) => {
         // Service worker must not be cached aggressively
@@ -120,7 +241,7 @@ export function serveStatic(app: Express) {
     <script type="application/ld+json">${structuredData}</script>`;
 
       // Inject after <head> opening tag (before existing meta)
-      const injectedHtml = indexHtml.replace(
+      const injectedHtml = stripBaseMetadata(indexHtml).replace(
         '<meta charset="UTF-8" />',
         `<meta charset="UTF-8" />${metaTags}`
       );
@@ -156,12 +277,47 @@ export function serveStatic(app: Express) {
     <meta property="og:type" content="website" />
     <meta property="og:url" content="${SITE_URL}/blog" />
     <meta property="og:site_name" content="Arica Tech Security" />
+    <meta property="og:image" content="${SITE_URL}/opengraph.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Blog | Arica Tech Security LLP" />
+    <meta name="twitter:description" content="Cybersecurity insights, threat intelligence updates, and industry best practices." />
+    <meta name="twitter:image" content="${SITE_URL}/opengraph.jpg" />
     <script type="application/ld+json">${breadcrumb}</script>`;
 
-    const injectedHtml = indexHtml.replace(
+    const injectedHtml = stripBaseMetadata(indexHtml).replace(
       '<meta charset="UTF-8" />',
       `<meta charset="UTF-8" />${metaTags}`
     );
+    res.setHeader("Cache-Control", "public, max-age=300");
+    res.send(injectedHtml);
+  });
+
+  app.use("*", (req, res, next) => {
+    const routePath = new URL(req.originalUrl, "http://localhost").pathname.replace(/\/$/, "") || "/";
+    const canonicalPath = STATIC_ALIASES[routePath] || routePath;
+    const metadata = STATIC_METADATA[canonicalPath];
+    if (!metadata) return next();
+
+    const canonicalUrl = `${SITE_URL}${canonicalPath}`;
+    const escapedTitle = escapeHtml(metadata.title);
+    const escapedDescription = escapeHtml(metadata.description);
+    const noindex = routePath === "/thank-you"
+      ? '\n    <meta name="robots" content="noindex, nofollow" />'
+      : "";
+    const injectedHtml = indexHtml
+      .replace(/<title>[\s\S]*?<\/title>/, `<title>${escapedTitle}</title>`)
+      .replace(/<meta name="description"[^>]*\/?>/g, "")
+      .replace(/<link rel="canonical"[^>]*\/?>/g, "")
+      .replace(/<meta property="og:title"[^>]*\/?>/, `<meta property="og:title" content="${escapedTitle}" />`)
+      .replace(/<meta property="og:description"[^>]*\/?>/, `<meta property="og:description" content="${escapedDescription}" />`)
+      .replace(/<meta property="og:url"[^>]*\/?>/g, `<meta property="og:url" content="${canonicalUrl}" />`)
+      .replace(/<meta name="twitter:title"[^>]*\/?>/, `<meta name="twitter:title" content="${escapedTitle}" />`)
+      .replace(/<meta name="twitter:description"[^>]*\/?>/, `<meta name="twitter:description" content="${escapedDescription}" />`)
+      .replace(
+        '<meta charset="UTF-8" />',
+        `<meta charset="UTF-8" />\n    <meta name="description" content="${escapedDescription}" />\n    <link rel="canonical" href="${canonicalUrl}" />${noindex}`,
+      );
+
     res.setHeader("Cache-Control", "public, max-age=300");
     res.send(injectedHtml);
   });
@@ -179,4 +335,13 @@ function escapeHtml(str: string): string {
     .replace(/"/g, "&quot;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
+}
+
+function stripBaseMetadata(html: string): string {
+  return html
+    .replace(/<title>[\s\S]*?<\/title>/g, "")
+    .replace(/<meta name="description"[^>]*\/?>/g, "")
+    .replace(/<link rel="canonical"[^>]*\/?>/g, "")
+    .replace(/<meta property="og:[^"]+"[^>]*\/?>/g, "")
+    .replace(/<meta name="twitter:[^"]+"[^>]*\/?>/g, "");
 }

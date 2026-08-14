@@ -4,6 +4,51 @@ import { Phone, Mail, MapPin } from "lucide-react";
 import { LEGAL_POLICIES } from "@/content/legal";
 import { DitheringShader } from "@/components/ui/dithering-shader";
 
+const SEO_LINK_GROUPS = [
+  {
+    title: "Company",
+    links: [
+      ["/about", "About"],
+      ["/team", "Team"],
+      ["/blog", "Blog"],
+      ["/contact", "Contact"],
+      ["/case-studies", "Case Studies"],
+    ],
+  },
+  {
+    title: "Security Services",
+    links: [
+      ["/services", "Services"],
+      ["/certifications", "Framework Support"],
+      ["/risk-assessment", "Risk Assessment"],
+      ["/ongoing-support", "Ongoing Support"],
+      ["/security-implementation", "Security Implementation"],
+    ],
+  },
+  {
+    title: "Security Labs",
+    links: [
+      ["/attack-globe", "Attack Surface Simulation"],
+      ["/vulnerability-scanner", "Vulnerability Scanner"],
+      ["/compliance-dashboard", "ISMS Readiness Dashboard"],
+      ["/devsecops", "DevSecOps"],
+      ["/devsecops-pipeline", "DevSecOps Pipeline"],
+    ],
+  },
+  {
+    title: "Security Practice",
+    links: [
+      ["/api-security-lab", "API Security Lab"],
+      ["/cloud-security-center", "Cloud Security Center"],
+      ["/mobile-security", "Mobile Security"],
+      ["/security-policies", "Security Policies"],
+      ["/security-architecture", "Security Architecture"],
+      ["/code-review", "Secure Code Review"],
+      ["/security-training", "Security Training"],
+    ],
+  },
+] as const;
+
 export function SiteFooter() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 1920, height: 400 });
@@ -107,6 +152,23 @@ export function SiteFooter() {
                 {p.title}
               </span>
             </Link>
+          ))}
+        </div>
+
+        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 border-t border-white/5 pt-6 mb-6">
+          {SEO_LINK_GROUPS.map((group) => (
+            <div key={group.title} className="space-y-2">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-white/60">{group.title}</h2>
+              <div className="flex flex-col items-start gap-1.5">
+                {group.links.map(([href, label]) => (
+                  <Link key={href} href={href}>
+                    <span className="text-xs text-muted-foreground hover:text-white transition-colors cursor-pointer">
+                      {label}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
 
