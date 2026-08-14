@@ -8,13 +8,10 @@ import { FloatingCyberThreats } from '@/components/FloatingCyberThreats';
 import { COMPANY_STATS } from '@/content/company-stats';
 
 export function AsciiHeroSection() {
-  const stats = [
-    { value: "LAB", label: "Security Demonstrations" },
-    ...COMPANY_STATS.map(({ value, suffix, label }) => ({
-      value: `${value}${suffix}`,
-      label,
-    })),
-  ];
+  const stats = COMPANY_STATS.map(({ value, suffix, label }) => ({
+    value: `${value}${suffix}`,
+    label,
+  }));
 
   const features = [
     { icon: Eye, title: "Security Monitoring", desc: "Continuous oversight of your digital assets" },
@@ -89,7 +86,7 @@ export function AsciiHeroSection() {
         </div>
 
         {/* Stats row - centered */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto mb-12">
           {stats.map((stat, i) => (
             <motion.div 
               key={i}
