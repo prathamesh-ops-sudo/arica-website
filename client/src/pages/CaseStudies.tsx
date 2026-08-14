@@ -296,7 +296,7 @@ export default function CaseStudies() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="grid lg:grid-cols-2 gap-6 mb-20"
           >
-            <div className="rounded-2xl border border-white/10 bg-card/50 p-8">
+            <div className="rounded-2xl border border-white/10 bg-card/50 p-8 flex flex-col">
               <div className="flex items-center gap-2 mb-6">
                 <span className="text-xs font-medium text-primary uppercase tracking-wider px-2 py-1 rounded bg-primary/10">
                   Featured Engagement
@@ -307,7 +307,7 @@ export default function CaseStudies() {
                 Vulnerability Assessment & Remediation Planning
               </h2>
 
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <p className="text-muted-foreground text-sm leading-relaxed flex-1">
                 An engagement can combine attack-surface discovery, manual validation, evidence-led reporting, and a practical remediation roadmap for security teams.
               </p>
             </div>

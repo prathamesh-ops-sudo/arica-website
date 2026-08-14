@@ -8,13 +8,13 @@ const COOKIE_PREFERENCES_KEY = "arica_cookie_preferences";
 interface CookiePreferences {
   necessary: boolean;
   analytics: boolean;
-  performance: boolean;
+  marketing: boolean;
 }
 
 const DEFAULT_PREFERENCES: CookiePreferences = {
   necessary: true,
   analytics: false,
-  performance: false,
+  marketing: false,
 };
 
 function getStoredConsent(): string | null {
@@ -33,7 +33,7 @@ function getStoredPreferences(): CookiePreferences {
       return {
         necessary: true,
         analytics: typeof parsed.analytics === "boolean" ? parsed.analytics : false,
-        performance: typeof parsed.performance === "boolean" ? parsed.performance : false,
+        marketing: typeof parsed.marketing === "boolean" ? parsed.marketing : false,
       };
     }
   } catch {
@@ -49,6 +49,12 @@ function saveConsent(preferences: CookiePreferences) {
   } catch {
     // storage unavailable
   }
+}
+
+function applyConsent(preferences: CookiePreferences) {
+  window.dispatchEvent(new CustomEvent("arica-consent-update", {
+    detail: preferences,
+  }));
 }
 
 export function CookieConsent() {
@@ -70,15 +76,17 @@ export function CookieConsent() {
     const allAccepted: CookiePreferences = {
       necessary: true,
       analytics: true,
-      performance: true,
+      marketing: true,
     };
     saveConsent(allAccepted);
+    applyConsent(allAccepted);
     setPreferences(allAccepted);
     setVisible(false);
   }, []);
 
   const handleAcceptSelected = useCallback(() => {
     saveConsent(preferences);
+    applyConsent(preferences);
     setVisible(false);
   }, [preferences]);
 
@@ -86,9 +94,10 @@ export function CookieConsent() {
     const onlyNecessary: CookiePreferences = {
       necessary: true,
       analytics: false,
-      performance: false,
+      marketing: false,
     };
     saveConsent(onlyNecessary);
+    applyConsent(onlyNecessary);
     setPreferences(onlyNecessary);
     setVisible(false);
   }, []);
@@ -161,35 +170,35 @@ export function CookieConsent() {
                         </div>
                       </div>
 
-                      {/* Analytics */}
+                      {/* Performance and analytics */}
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-white text-sm font-medium">Analytics Cookies</p>
-                          <p className="text-white/40 text-xs">Help us understand how visitors interact with the site.</p>
+                          <p className="text-white text-sm font-medium">Performance &amp; Analytics</p>
+                          <p className="text-white/40 text-xs">Gather aggregated, non-identifiable usage statistics to help improve performance and interfaces.</p>
                         </div>
                         <button
                           onClick={() => togglePreference("analytics")}
                           className={`w-10 h-5 rounded-full flex items-center px-0.5 transition-colors ${
                             preferences.analytics ? "bg-[#42BA90] justify-end" : "bg-white/20 justify-start"
                           }`}
-                          aria-label="Toggle analytics cookies"
+                          aria-label="Toggle performance and analytics cookies"
                         >
                           <div className="w-4 h-4 rounded-full bg-white" />
                         </button>
                       </div>
 
-                      {/* Performance */}
+                      {/* Targeting and marketing */}
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-white text-sm font-medium">Performance Cookies</p>
-                          <p className="text-white/40 text-xs">Enable caching and faster page loads.</p>
+                          <p className="text-white text-sm font-medium">Targeting &amp; Marketing</p>
+                          <p className="text-white/40 text-xs">Support personalized promotional campaigns and attribution across external platforms.</p>
                         </div>
                         <button
-                          onClick={() => togglePreference("performance")}
+                          onClick={() => togglePreference("marketing")}
                           className={`w-10 h-5 rounded-full flex items-center px-0.5 transition-colors ${
-                            preferences.performance ? "bg-[#42BA90] justify-end" : "bg-white/20 justify-start"
+                            preferences.marketing ? "bg-[#42BA90] justify-end" : "bg-white/20 justify-start"
                           }`}
-                          aria-label="Toggle performance cookies"
+                          aria-label="Toggle targeting and marketing cookies"
                         >
                           <div className="w-4 h-4 rounded-full bg-white" />
                         </button>

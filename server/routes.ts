@@ -1,4 +1,5 @@
-import type { Express, Request } from "express";
+import type { Express, Request, Response } from "express";
+import { timingSafeEqual } from "crypto";
 import { createServer, type Server } from "http";
 import rateLimit from "express-rate-limit";
 import { storage } from "./storage";
@@ -146,16 +147,16 @@ function detectSpam(body: {
   return { ok: true };
 }
 
-// Captcha verification scaffold — disabled until a provider key is set.
-// Set `TURNSTILE_SECRET_KEY` (Cloudflare Turnstile) or `RECAPTCHA_SECRET_KEY`
-// (Google reCAPTCHA v3) to turn it on. The client sends the token as
-// `captchaToken` in the JSON body; with no key configured this is a no-op
-// so we can ship the honeypot/rate-limit defences first and layer captcha
-// in once the user picks a provider.
 async function verifyCaptchaToken(token: unknown, remoteIp: string | undefined): Promise<boolean> {
   const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
   const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY;
-  if (!turnstileSecret && !recaptchaSecret) return true; // captcha not enforced yet
+  if (!turnstileSecret && !recaptchaSecret) {
+    if (process.env.NODE_ENV === "production") {
+      console.error("[captcha] no verification secret configured in production");
+      return false;
+    }
+    return true;
+  }
   if (typeof token !== "string" || token.length === 0) return false;
 
   const provider = turnstileSecret ? "turnstile" : "recaptcha";
@@ -379,9 +380,14 @@ export async function registerRoutes(
   // --- Blog API ---
   const BLOG_API_KEY = process.env.BLOG_API_KEY || "";
 
-  function requireBlogAuth(req: Request, res: any, next: () => void) {
+  function requireBlogAuth(req: Request, res: Response, next: () => void) {
     const key = req.headers["x-api-key"] || req.headers["authorization"]?.replace("Bearer ", "");
-    if (!BLOG_API_KEY || key !== BLOG_API_KEY) {
+    const suppliedKey = Array.isArray(key) ? key[0] : key;
+    const keysMatch =
+      typeof suppliedKey === "string" &&
+      Buffer.byteLength(suppliedKey) === Buffer.byteLength(BLOG_API_KEY) &&
+      timingSafeEqual(Buffer.from(suppliedKey), Buffer.from(BLOG_API_KEY));
+    if (!BLOG_API_KEY || !keysMatch) {
       return res.status(401).json({ success: false, error: "Unauthorized" });
     }
     next();
