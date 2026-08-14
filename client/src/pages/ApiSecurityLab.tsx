@@ -311,14 +311,14 @@ function LiveRequestPanel({ isActive, method, endpoint }: { isActive: boolean; m
     >
       <div className="flex items-center gap-2 mb-3 pb-3 border-b border-slate-800">
         <Terminal className="w-4 h-4 text-[#3D70B7]" />
-        <span className="text-[#3D70B7]">Live Request Stream</span>
+        <span className="text-[#3D70B7]">Simulated Request Stream</span>
         <div className="ml-auto flex items-center gap-2">
           <motion.div
             animate={{ opacity: [1, 0.3, 1] }}
             transition={{ duration: 1, repeat: Infinity }}
             className="w-2 h-2 rounded-full bg-[#42BA90]"
           />
-          <span className="text-[#42BA90] text-[10px]">LIVE</span>
+          <span className="text-[#42BA90] text-[10px]">DEMO</span>
         </div>
       </div>
       <div className="space-y-1 max-h-48 overflow-y-auto">

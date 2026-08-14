@@ -379,7 +379,7 @@ const galaxies: GalaxyConfig[] = [
         name: 'Ongoing Support',
         description: 'Continuous security monitoring and maintenance for your applications.',
         features: [
-          '24/7 Security Monitoring',
+          'Scheduled Security Monitoring',
           'Incident Response',
           'Patch Management',
           'Security Updates',

@@ -1083,12 +1083,6 @@ export default function AttackGlobe() {
                     </Link>
                   </div>
                   
-                  <div className="grid grid-cols-3 gap-6 mt-10 max-w-2xl mx-auto">
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-[#3D70B7]">24/7</div>
-                      <p className="text-white/40 text-sm mt-1">Monitoring Available</p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </motion.div>

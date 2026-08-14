@@ -507,7 +507,14 @@ function SecurityEventItem({ event, index }: { event: SecurityEvent; index: numb
 
 export default function CloudSecurityCenter() {
   const [selectedProvider, setSelectedProvider] = useState<CloudProvider | 'all'>('all');
-  const [events, setEvents] = useState<SecurityEvent[]>([]);
+  const [events, setEvents] = useState<SecurityEvent[]>(() =>
+    eventMessages.slice(0, 6).map((event, index) => ({
+      ...event,
+      id: `seed-${index}`,
+      timestamp: '--:--:--',
+      provider: (['aws', 'azure', 'gcp'] as CloudProvider[])[index % 3],
+    }))
+  );
   const [configChecks, setConfigChecks] = useState(initialConfigChecks);
   const [overallRiskScore, setOverallRiskScore] = useState(0);
   const [animatedMetrics, setAnimatedMetrics] = useState({ resources: 0, threats: 0, containers: 0 });
@@ -713,7 +720,7 @@ export default function CloudSecurityCenter() {
                   animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
-                <span className="text-xs text-[#3D70B7] font-mono font-bold">MONITORING ACTIVE</span>
+                <span className="text-xs text-[#3D70B7] font-mono font-bold">SIMULATED VIEW</span>
               </div>
             </div>
           </div>
@@ -741,7 +748,7 @@ export default function CloudSecurityCenter() {
             </h1>
 
             <p className="text-[#3D70B7]/60 font-mono text-sm max-w-2xl mx-auto">
-              An interactive example of monitoring and threat detection across AWS, Azure, and GCP environments
+              An interactive example of cloud security scenarios across AWS, Azure, and GCP environments
             </p>
           </motion.div>
 
@@ -902,9 +909,12 @@ export default function CloudSecurityCenter() {
                           y1={region.y}
                           x2={target.x}
                           y2={target.y}
-                          stroke={isSelected ? '#3D70B7' : '#3D70B7'}
-                          strokeWidth={isSelected ? 0.3 : 0.15}
-                          opacity={isSelected ? 0.5 : 0.2}
+                          stroke={region.provider === target.provider ? (
+                            region.provider === 'aws' ? '#FF9900' :
+                            region.provider === 'azure' ? '#0078D4' : '#4285F4'
+                          ) : '#3D70B7'}
+                          strokeWidth={isSelected ? 0.45 : region.provider === target.provider ? 0.3 : 0.18}
+                          opacity={isSelected ? 0.7 : region.provider === target.provider ? 0.45 : 0.25}
                         />
                       </g>
                     );
@@ -1399,7 +1409,7 @@ export default function CloudSecurityCenter() {
                       animate={{ scale: [1, 1.05, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     >
-                      200+
+                      Example
                     </motion.div>
                     <div className="text-[10px] text-[#3D70B7]/50">SECURITY CHECKS</div>
                   </Interactive3DCard>
@@ -1409,13 +1419,13 @@ export default function CloudSecurityCenter() {
                       animate={{ opacity: [1, 0.7, 1] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
                     >
-                      24/7
+                      Scheduled
                     </motion.div>
-                    <div className="text-[10px] text-[#3D70B7]/50">MONITORING</div>
+                    <div className="text-[10px] text-[#3D70B7]/50">REVIEW CADENCE</div>
                   </Interactive3DCard>
                   <Interactive3DCard className="bg-[#000510]/60 rounded-lg p-3 border border-[#3D70B7]/20">
-                    <div className="text-2xl font-bold text-[#3D70B7]">48h</div>
-                    <div className="text-[10px] text-[#3D70B7]/50">RESPONSE TIME</div>
+                    <div className="text-2xl font-bold text-[#3D70B7]">Agreed</div>
+                    <div className="text-[10px] text-[#3D70B7]/50">RESPONSE WINDOW</div>
                   </Interactive3DCard>
                 </div>
 

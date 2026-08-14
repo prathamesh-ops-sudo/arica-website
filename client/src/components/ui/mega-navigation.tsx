@@ -37,7 +37,7 @@ const secureLinks: DropdownLink[] = [
   { name: "DevSecOps", url: "/devsecops", icon: GitBranch, description: "Secure CI/CD pipelines" },
   { name: "Code Review", url: "/code-review", icon: Code2, description: "Security code analysis" },
   { name: "Security Training", url: "/security-training", icon: GraduationCap, description: "Team education" },
-  { name: "Ongoing Support", url: "/ongoing-support", icon: HeadphonesIcon, description: "24/7 security support" },
+  { name: "Ongoing Support", url: "/ongoing-support", icon: HeadphonesIcon, description: "Engagement-based security support" },
 ]
 
 const servicesLinks: DropdownLink[] = [

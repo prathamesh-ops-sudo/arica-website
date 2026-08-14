@@ -26,25 +26,25 @@ const PURPLE = '#3D70B7';
 const supportServices = [
   {
     id: 1,
-    name: '24/7 Monitoring & Response',
+    name: 'Scheduled Monitoring & Response',
     icon: Eye,
-    sla: '< 15 min response',
-    description: 'Round-the-clock security monitoring with immediate threat response',
+    sla: 'Agreed response window',
+    description: 'Scheduled security monitoring with agreed response workflows',
     status: 'active',
     contactOptions: ['phone', 'email', 'chat'],
     details: [
-      'Real-time threat detection and alerting',
+      'Threat detection review and alerting',
       'Automated incident classification',
       'Human analyst escalation protocols',
       'Custom alert thresholds and rules'
     ],
-    stats: { eventsProcessed: 1247893, avgResponseTime: '4.2 min' }
+    stats: { engagement: 'Retained support' }
   },
   {
     id: 2,
     name: 'Patch Management',
     icon: RefreshCw,
-    sla: 'Critical: 24h, High: 72h',
+    sla: 'Planned patch cycle',
     description: 'Automated vulnerability patching and update management',
     status: 'active',
     contactOptions: ['email', 'portal'],
@@ -54,14 +54,14 @@ const supportServices = [
       'Compliance-aware patch scheduling',
       'Emergency patching protocols'
     ],
-    stats: { patchesDeployed: 3421, successRate: '99.8%' }
+    stats: { engagement: 'Scheduled maintenance' }
   },
   {
     id: 3,
     name: 'Threat Intelligence Updates',
     icon: AlertTriangle,
-    sla: 'Real-time feeds',
-    description: 'Continuous threat intelligence and early warning alerts',
+    sla: 'Scheduled updates',
+    description: 'Threat intelligence briefings and early warning guidance',
     status: 'active',
     contactOptions: ['email', 'portal'],
     details: [
@@ -70,7 +70,7 @@ const supportServices = [
       'IOC (Indicators of Compromise) feeds',
       'Predictive threat modeling'
     ],
-    stats: { feedsSources: 47, threatsIdentified: 892 }
+    stats: { engagement: 'Advisory updates' }
   },
   {
     id: 4,
@@ -86,7 +86,7 @@ const supportServices = [
       'Security roadmap development',
       'Executive risk briefings'
     ],
-    stats: { consultationsCompleted: 234, clientSatisfaction: '4.9/5' }
+    stats: { engagement: 'Advisory engagement' }
   },
   {
     id: 5,
@@ -102,14 +102,14 @@ const supportServices = [
       'Compliance status reporting',
       'Strategic recommendations'
     ],
-    stats: { reviewsCompleted: 156, issuesIdentified: 423 }
+    stats: { engagement: 'Scheduled review' }
   },
   {
     id: 6,
     name: 'Emergency Incident Response',
     icon: Zap,
-    sla: '< 5 min activation',
-    description: 'Rapid incident containment and forensic investigation',
+    sla: 'Retained response engagement',
+    description: 'Incident containment and forensic investigation support',
     status: 'standby',
     contactOptions: ['phone', 'hotline'],
     details: [
@@ -118,7 +118,7 @@ const supportServices = [
       'Digital forensics and evidence preservation',
       'Post-incident analysis and hardening'
     ],
-    stats: { incidentsHandled: 89, avgContainmentTime: '23 min' }
+    stats: { engagement: 'Retained response' }
   },
 ];
 
@@ -1196,13 +1196,6 @@ function EmergencyContactSection() {
 }
 
 export default function OngoingSupport() {
-  const [metrics] = useState({
-    uptime: 99.99,
-    responseTime: 12.5,
-    threatsBlocked: 15847,
-    activeSessions: 247,
-  });
-
   return (
     <div className="min-h-screen bg-[#000510] text-white relative overflow-hidden">
       <div 
@@ -1255,7 +1248,7 @@ export default function OngoingSupport() {
                   animate={{ scale: [1, 1.3, 1] }}
                   transition={{ duration: 1, repeat: Infinity }}
                 />
-                <span className="text-xs text-[#3D70B7] font-mono font-bold">24/7 ACTIVE</span>
+                <span className="text-xs text-[#3D70B7] font-mono font-bold">SUPPORT AVAILABLE</span>
               </motion.div>
             </div>
           </div>
@@ -1309,7 +1302,7 @@ export default function OngoingSupport() {
                   <span className="text-white">Support</span>
                 </h1>
                 <p className="text-[#3D70B7]/60 font-mono text-sm max-w-xl mx-auto backdrop-blur-sm">
-                  24/7 security monitoring and response with industry-leading SLA guarantees
+                  Scheduled monitoring, agreed response windows, and retained security support
                 </p>
               </motion.div>
             </div>
@@ -1323,48 +1316,20 @@ export default function OngoingSupport() {
                 viewport={{ once: true }}
                 className="grid grid-cols-2 md:grid-cols-4 gap-4"
               >
-                <GlowingMetricCard 
-                  icon={TrendingUp} 
-                  value="" 
-                  label="UPTIME" 
-                  color={GREEN}
-                  glowColor={GREEN}
-                  data-testid="metric-uptime"
-                >
-                  <DramaticCounter value={metrics.uptime} suffix="%" decimals={2} />
+                <GlowingMetricCard icon={TrendingUp} value="" label="MONITORING" color={GREEN} glowColor={GREEN} data-testid="metric-monitoring">
+                  <span className="text-lg font-mono font-bold text-white">Scheduled</span>
                 </GlowingMetricCard>
                 
-                <GlowingMetricCard 
-                  icon={Clock} 
-                  value="" 
-                  label="AVG RESPONSE" 
-                  color={ACCENT_BLUE}
-                  glowColor={ACCENT_BLUE}
-                  data-testid="metric-response"
-                >
-                  <PulsingLiveTicker baseValue={metrics.responseTime} maxVariation={5} />
+                <GlowingMetricCard icon={Clock} value="" label="RESPONSE" color={ACCENT_BLUE} glowColor={ACCENT_BLUE} data-testid="metric-response">
+                  <span className="text-lg font-mono font-bold text-white">Agreed window</span>
                 </GlowingMetricCard>
                 
-                <GlowingMetricCard 
-                  icon={Shield} 
-                  value="" 
-                  label="THREATS BLOCKED TODAY" 
-                  color={ACCENT_BLUE}
-                  glowColor={ACCENT_BLUE}
-                  data-testid="metric-threats"
-                >
-                  <ExplosiveIncrementCounter baseValue={metrics.threatsBlocked} incrementRate={5} />
+                <GlowingMetricCard icon={Shield} value="" label="SUPPORT MODEL" color={ACCENT_BLUE} glowColor={ACCENT_BLUE} data-testid="metric-support-model">
+                  <span className="text-lg font-mono font-bold text-white">Retained</span>
                 </GlowingMetricCard>
                 
-                <GlowingMetricCard 
-                  icon={Server} 
-                  value="" 
-                  label="ACTIVE SESSIONS" 
-                  color={ACCENT_BLUE}
-                  glowColor={ACCENT_BLUE}
-                  data-testid="metric-sessions"
-                >
-                  <DramaticCounter value={metrics.activeSessions} />
+                <GlowingMetricCard icon={Server} value="" label="REVIEWS" color={ACCENT_BLUE} glowColor={ACCENT_BLUE} data-testid="metric-reviews">
+                  <span className="text-lg font-mono font-bold text-white">Scheduled</span>
                 </GlowingMetricCard>
               </motion.div>
             </div>
@@ -1425,7 +1390,7 @@ export default function OngoingSupport() {
         <footer className="border-t border-[#3D70B7]/20 py-8 px-6">
           <div className="container mx-auto text-center">
             <p className="text-[#3D70B7]/40 font-mono text-xs">
-              © 2026 CyberSec. All rights reserved. 24/7 Security Operations Center.
+              © 2026 Arica Tech Security LLP. All rights reserved.
             </p>
           </div>
         </footer>

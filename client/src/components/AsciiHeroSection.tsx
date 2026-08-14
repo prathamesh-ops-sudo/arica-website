@@ -9,7 +9,7 @@ import { COMPANY_STATS } from '@/content/company-stats';
 
 export function AsciiHeroSection() {
   const stats = [
-    { value: "24/7", label: "Threat Detection" },
+    { value: "LAB", label: "Security Demonstrations" },
     ...COMPANY_STATS.map(({ value, suffix, label }) => ({
       value: `${value}${suffix}`,
       label,
