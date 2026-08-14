@@ -64,6 +64,16 @@ const nodeLabels = {
   cloud: 'Cloud',
 };
 
+const getCameraDistance = (width: number, height: number) => {
+  const aspect = width / height;
+  const horizontalHalfExtent = 7.2;
+  const verticalFieldOfView = THREE.MathUtils.degToRad(60);
+  return Math.max(
+    13,
+    horizontalHalfExtent / (Math.tan(verticalFieldOfView / 2) * aspect)
+  );
+};
+
 const securityLayers: SecurityLayer[] = [
   {
     id: 'perimeter',
@@ -220,7 +230,7 @@ export default function SecurityArchitecture() {
       scene.fog = new THREE.Fog(0x000510, 15, 35);
 
       const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 100);
-      camera.position.set(0, 0, 18);
+      camera.position.set(0, 0, getCameraDistance(width, height));
 
       const renderer = new THREE.WebGLRenderer({
         canvas: canvasRef.current,
@@ -427,7 +437,7 @@ export default function SecurityArchitecture() {
     sceneRef.current.currentRotation.x += (sceneRef.current.targetRotation.x - sceneRef.current.currentRotation.x) * 0.05;
     sceneRef.current.currentRotation.y += (sceneRef.current.targetRotation.y - sceneRef.current.currentRotation.y) * 0.05;
 
-    scene.rotation.y = sceneRef.current.currentRotation.y * 0.3 + time * 0.05;
+    scene.rotation.y = sceneRef.current.currentRotation.y * 0.3;
     scene.rotation.x = sceneRef.current.currentRotation.x * 0.2;
 
     const inverseSceneRotation = scene.quaternion.clone().invert();
@@ -518,9 +528,10 @@ export default function SecurityArchitecture() {
     const height = containerRef.current.clientHeight;
 
     sceneRef.current.camera.aspect = width / height;
+    sceneRef.current.camera.position.z = getCameraDistance(width, height) / zoomLevel;
     sceneRef.current.camera.updateProjectionMatrix();
     sceneRef.current.renderer.setSize(width, height);
-  }, []);
+  }, [zoomLevel]);
 
   useEffect(() => {
     initScene();
@@ -830,7 +841,11 @@ export default function SecurityArchitecture() {
                     const delta = e.deltaY > 0 ? -0.1 : 0.1;
                     setZoomLevel(prev => Math.max(0.5, Math.min(2, prev + delta)));
                     if (sceneRef.current.camera) {
-                      sceneRef.current.camera.position.z = 18 / Math.max(0.5, Math.min(2, zoomLevel + delta));
+                      const distance = getCameraDistance(
+                        containerRef.current?.clientWidth ?? 1,
+                        containerRef.current?.clientHeight ?? 1
+                      );
+                      sceneRef.current.camera.position.z = distance / Math.max(0.5, Math.min(2, zoomLevel + delta));
                     }
                   }}
                   onMouseDown={(e) => {
@@ -859,7 +874,11 @@ export default function SecurityArchitecture() {
                       onClick={() => {
                         setZoomLevel(prev => Math.min(2, prev + 0.2));
                         if (sceneRef.current.camera) {
-                          sceneRef.current.camera.position.z = 18 / Math.min(2, zoomLevel + 0.2);
+                          const distance = getCameraDistance(
+                            containerRef.current?.clientWidth ?? 1,
+                            containerRef.current?.clientHeight ?? 1
+                          );
+                          sceneRef.current.camera.position.z = distance / Math.min(2, zoomLevel + 0.2);
                         }
                       }}
                       className="w-8 h-8 rounded-lg bg-[#3D70B7]/20 border border-[#3D70B7]/30 flex items-center justify-center text-[#3D70B7] hover:bg-[#3D70B7]/30 font-bold"
@@ -873,7 +892,11 @@ export default function SecurityArchitecture() {
                       onClick={() => {
                         setZoomLevel(prev => Math.max(0.5, prev - 0.2));
                         if (sceneRef.current.camera) {
-                          sceneRef.current.camera.position.z = 18 / Math.max(0.5, zoomLevel - 0.2);
+                          const distance = getCameraDistance(
+                            containerRef.current?.clientWidth ?? 1,
+                            containerRef.current?.clientHeight ?? 1
+                          );
+                          sceneRef.current.camera.position.z = distance / Math.max(0.5, zoomLevel - 0.2);
                         }
                       }}
                       className="w-8 h-8 rounded-lg bg-[#3D70B7]/20 border border-[#3D70B7]/30 flex items-center justify-center text-[#3D70B7] hover:bg-[#3D70B7]/30 font-bold"
@@ -888,7 +911,14 @@ export default function SecurityArchitecture() {
                         setZoomLevel(1);
                         setPanOffset({ x: 0, y: 0 });
                         if (sceneRef.current.camera) {
-                          sceneRef.current.camera.position.set(0, 0, 18);
+                          sceneRef.current.camera.position.set(
+                            0,
+                            0,
+                            getCameraDistance(
+                              containerRef.current?.clientWidth ?? 1,
+                              containerRef.current?.clientHeight ?? 1
+                            )
+                          );
                         }
                       }}
                       className="w-8 h-8 rounded-lg bg-[#3D70B7]/20 border border-[#3D70B7]/30 flex items-center justify-center text-[#3D70B7] hover:bg-[#3D70B7]/30 text-xs"
