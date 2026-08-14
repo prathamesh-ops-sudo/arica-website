@@ -10,6 +10,7 @@ declare module 'troika-three-text' {
     outlineWidth: number | string;
     outlineColor: number | string;
     sync(callback?: () => void): void;
+    dispose(): void;
   }
 
   export function configureTextBuilder(config: { useWorker?: boolean }): void;

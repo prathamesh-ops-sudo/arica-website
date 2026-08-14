@@ -430,6 +430,11 @@ export default function SecurityArchitecture() {
     scene.rotation.y = sceneRef.current.currentRotation.y * 0.3 + time * 0.05;
     scene.rotation.x = sceneRef.current.currentRotation.x * 0.2;
 
+    const inverseSceneRotation = scene.quaternion.clone().invert();
+    sceneRef.current.labels.forEach((label) => {
+      label.quaternion.copy(inverseSceneRotation).multiply(camera.quaternion);
+    });
+
     nodes.forEach((node) => {
       if (node.mesh) {
         node.mesh.rotation.x = time * 0.5;
@@ -543,6 +548,10 @@ export default function SecurityArchitecture() {
       }
 
       if (sceneRef.current.scene) {
+        sceneRef.current.labels.forEach((label) => {
+          sceneRef.current.scene?.remove(label);
+          label.dispose();
+        });
         sceneRef.current.scene.traverse((object) => {
           if (object instanceof THREE.Mesh) {
             object.geometry.dispose();
