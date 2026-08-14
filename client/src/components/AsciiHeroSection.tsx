@@ -17,9 +17,9 @@ export function AsciiHeroSection() {
   ];
 
   const features = [
-    { icon: Eye, title: "Real-time Monitoring", desc: "Continuous surveillance of your digital assets" },
+    { icon: Eye, title: "Security Monitoring", desc: "Continuous oversight of your digital assets" },
     { icon: Lock, title: "Zero Trust Security", desc: "Never trust, always verify approach" },
-    { icon: Zap, title: "Instant Response", desc: "Automated threat neutralization" },
+    { icon: Zap, title: "Response Planning", desc: "Practical workflows for handling threats" },
   ];
 
   return (

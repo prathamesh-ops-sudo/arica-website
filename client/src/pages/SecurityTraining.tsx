@@ -1050,7 +1050,7 @@ export default function SecurityTraining() {
             className="w-full h-[300px] rounded-2xl overflow-hidden border border-white/10 bg-black/40 relative z-[5]"
             data-testid="learning-path-canvas"
           >
-            <WebGLFallback>
+            <WebGLFallback showMessage>
               <Canvas camera={{ position: [2, 5, 15], fov: 50 }}>
                 <CameraController />
                 <LearningPathScene 

@@ -19,12 +19,12 @@ const PURPLE = '#3D70B7';
 const NAVY = 'hsl(222, 47%, 5%)';
 
 const pipelineStages = [
-  { id: 'code', name: 'Code', position: [-12, 0, 0], color: CYAN, icon: Code },
+  { id: 'code', name: 'Code', position: [-10, 0, 0], color: CYAN, icon: Code },
   { id: 'build', name: 'Build', position: [-6, 0, 0], color: '#42BA90', icon: Package },
-  { id: 'test', name: 'Test', position: [0, 0, 0], color: '#42BA90', icon: Activity },
-  { id: 'security', name: 'Security Scan', position: [6, 0, 0], color: PURPLE, icon: Shield },
-  { id: 'deploy', name: 'Deploy', position: [12, 0, 0], color: '#3D70B7', icon: Server },
-  { id: 'monitor', name: 'Monitor', position: [18, 0, 0], color: '#3D70B7', icon: Eye },
+  { id: 'test', name: 'Test', position: [-2, 0, 0], color: '#42BA90', icon: Activity },
+  { id: 'security', name: 'Security Scan', position: [2, 0, 0], color: PURPLE, icon: Shield },
+  { id: 'deploy', name: 'Deploy', position: [6, 0, 0], color: '#3D70B7', icon: Server },
+  { id: 'monitor', name: 'Monitor', position: [10, 0, 0], color: '#3D70B7', icon: Eye },
 ];
 
 interface PackageData {
@@ -210,7 +210,7 @@ function PipelineStage({ position, name, color, isActive, isScanning, stageIndex
 
       <Text
         position={[0, -1.8, 0]}
-        fontSize={0.4}
+        fontSize={0.55}
         color="white"
         anchorX="center"
         anchorY="middle"
@@ -220,7 +220,7 @@ function PipelineStage({ position, name, color, isActive, isScanning, stageIndex
       
       <Text
         position={[0, 1.5, 0]}
-        fontSize={0.3}
+        fontSize={0.4}
         color={color}
         anchorX="center"
         anchorY="middle"
@@ -597,13 +597,14 @@ function AnimatedCounter({ value, duration = 2000, suffix = '' }: { value: numbe
   return <span>{displayValue.toLocaleString()}{suffix}</span>;
 }
 
-function LiveMetric({ value, label, icon: Icon, color, trend, trendLabel }: {
+function LiveMetric({ value, label, icon: Icon, color, trend, trendLabel, valueSuffix }: {
   value: number;
   label: string;
   icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   color: string;
   trend?: 'up' | 'down';
   trendLabel?: string;
+  valueSuffix?: string;
 }) {
   const [isUpdating, setIsUpdating] = useState(false);
   const prevValue = useRef(value);
@@ -648,7 +649,7 @@ function LiveMetric({ value, label, icon: Icon, color, trend, trendLabel }: {
           <span className="text-white/60 text-sm">{label}</span>
         </div>
         <div className="text-3xl font-bold" style={{ color }}>
-          <AnimatedCounter value={value} />
+          <AnimatedCounter value={value} />{valueSuffix}
         </div>
         {trendLabel && (
           <div className={`mt-2 text-xs flex items-center gap-1 ${trend === 'up' ? 'text-[#42BA90]' : 'text-red-400'}`}>
@@ -685,7 +686,7 @@ function InteractiveStageCard({
       style={{
         perspective: '1000px',
       }}
-      className="cursor-pointer"
+      className="cursor-pointer h-full"
       data-testid={`card-security-${stage.id}`}
     >
       <motion.div
@@ -696,7 +697,7 @@ function InteractiveStageCard({
           z: isHovered ? 50 : 0,
         }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-        className={`relative p-4 rounded-xl transition-colors ${
+        className={`relative h-full p-4 rounded-xl transition-colors flex flex-col ${
           isActive 
             ? 'bg-white/15 border-2' 
             : 'bg-black/40 border border-white/10 hover:border-white/30'
@@ -793,7 +794,7 @@ function BuildStatusIndicator({ isRunning, passedCount, blockedCount }: {
   blockedCount: number;
 }) {
   const total = passedCount + blockedCount;
-  const successRate = total > 0 ? (passedCount / total) * 100 : 100;
+  const successRate = total > 0 ? (passedCount / total) * 100 : null;
   
   return (
     <motion.div
@@ -818,32 +819,40 @@ function BuildStatusIndicator({ isRunning, passedCount, blockedCount }: {
       </div>
       
       <div className="flex items-center gap-3">
-        <div className="w-32 h-2 rounded-full bg-white/10 overflow-hidden">
-          <motion.div
-            className="h-full rounded-full"
-            style={{
-              background: `linear-gradient(90deg, ${CYAN}, #42BA90)`,
-            }}
-            initial={{ width: 0 }}
-            animate={{ width: `${successRate}%` }}
-            transition={{ duration: 0.5 }}
-          />
-        </div>
-        <span className="text-sm text-white/60">
-          {successRate.toFixed(0)}% pass
-        </span>
+        {successRate === null ? (
+          <span className="text-sm text-white/60">No results yet</span>
+        ) : (
+          <>
+            <div className="w-32 h-2 rounded-full bg-white/10 overflow-hidden">
+              <motion.div
+                className="h-full rounded-full"
+                style={{
+                  background: `linear-gradient(90deg, ${CYAN}, #42BA90)`,
+                }}
+                initial={{ width: 0 }}
+                animate={{ width: `${successRate}%` }}
+                transition={{ duration: 0.5 }}
+              />
+            </div>
+            <span className="text-sm text-white/60">
+              {successRate.toFixed(0)}% pass
+            </span>
+          </>
+        )}
       </div>
       
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2 text-[#42BA90]">
-          <CheckCircle className="w-4 h-4" />
-          <span>{passedCount}</span>
+      {total > 0 && (
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 text-[#42BA90]">
+            <CheckCircle className="w-4 h-4" />
+            <span>{passedCount}</span>
+          </div>
+          <div className="flex items-center gap-2 text-red-400">
+            <XCircle className="w-4 h-4" />
+            <span>{blockedCount}</span>
+          </div>
         </div>
-        <div className="flex items-center gap-2 text-red-400">
-          <XCircle className="w-4 h-4" />
-          <span>{blockedCount}</span>
-        </div>
-      </div>
+      )}
     </motion.div>
   );
 }
@@ -982,8 +991,8 @@ export default function DevSecOps() {
               />
             </div>
             
-            <WebGLFallback>
-              <Canvas camera={{ position: [3, 6, 18], fov: 50 }}>
+            <WebGLFallback showMessage>
+              <Canvas camera={{ position: [0, 4, 15], fov: 50 }}>
                 <CameraController />
                 <PipelineScene 
                   isRunning={isRunning} 
@@ -1087,11 +1096,12 @@ export default function DevSecOps() {
             />
             <LiveMetric
               value={Math.round(metrics.successRate)}
-              label="Success Rate %"
+              label="Success Rate"
               icon={CheckCircle}
               color="#42BA90"
               trend="up"
               trendLabel="+2.3% this week"
+              valueSuffix="%"
             />
             <LiveMetric
               value={metrics.issuesBlocked}
@@ -1099,7 +1109,7 @@ export default function DevSecOps() {
               icon={Shield}
               color="#3D70B7"
               trend="down"
-              trendLabel="-15% (good!)"
+              trendLabel="-15%"
             />
             <LiveMetric
               value={metrics.deployFrequency}
@@ -1136,26 +1146,31 @@ export default function DevSecOps() {
             transition={{ delay: 0.6 }}
           >
             <h3 className="text-lg font-semibold mb-4">Weekly Build Activity</h3>
-            <div className="flex items-end justify-between h-32 gap-2">
-              {[65, 82, 78, 91, 85, 94, 88].map((val, i) => (
-                <motion.div
-                  key={i}
-                  className="flex-1 rounded-t relative group"
-                  style={{
-                    background: `linear-gradient(to top, ${CYAN}, ${PURPLE})`,
-                  }}
-                  initial={{ height: 0 }}
-                  animate={{ height: `${val}%` }}
-                  transition={{ delay: 0.7 + i * 0.1, duration: 0.5 }}
-                >
+            <div className="relative h-40 pl-8">
+              <div className="absolute inset-0 left-8 flex items-end justify-between gap-2 border-l border-b border-white/20">
+                {[42, 68, 51, 84, 63, 77, 56].map((val, i) => (
                   <motion.div
-                    className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ color: CYAN }}
+                    key={i}
+                    className="flex-1 h-full rounded-t relative group"
+                    style={{
+                      background: `linear-gradient(to top, ${CYAN}, ${PURPLE})`,
+                    }}
+                    initial={{ height: 0 }}
+                    animate={{ height: `${val}%` }}
+                    transition={{ delay: 0.7 + i * 0.1, duration: 0.5 }}
                   >
-                    {val}%
+                    <motion.div
+                      className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity"
+                      style={{ color: CYAN }}
+                    >
+                      {val}%
+                    </motion.div>
                   </motion.div>
-                </motion.div>
-              ))}
+                ))}
+              </div>
+              <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-[10px] text-white/40">
+                {[100, 75, 50, 25, 0].map((value) => <span key={value}>{value}%</span>)}
+              </div>
             </div>
             <div className="flex justify-between text-xs text-white/40 mt-2">
               <span>Mon</span>

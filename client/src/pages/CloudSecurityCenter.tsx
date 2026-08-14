@@ -741,7 +741,7 @@ export default function CloudSecurityCenter() {
             </h1>
 
             <p className="text-[#3D70B7]/60 font-mono text-sm max-w-2xl mx-auto">
-              Real-time monitoring and threat detection across AWS, Azure, and GCP environments
+              An interactive example of monitoring and threat detection across AWS, Azure, and GCP environments
             </p>
           </motion.div>
 

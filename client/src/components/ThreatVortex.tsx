@@ -221,7 +221,7 @@ export function ThreatVortex() {
             </span>
           </h2>
           <p className="text-lg text-[#ACACAC] max-w-2xl mx-auto">
-            Watch as our defense systems detect, engage, and eliminate every cyber threat in real-time. 
+            Watch an illustrative defense scenario detect, engage, and contain simulated cyber threats.
             No breach survives. No malware escapes.
           </p>
         </motion.div>

@@ -1,6 +1,9 @@
 import { createRoot } from "react-dom/client";
+import { configureTextBuilder } from "troika-three-text";
 import App from "./App";
 import "./index.css";
+
+configureTextBuilder({ useWorker: false });
 
 // Register service worker for caching
 if ("serviceWorker" in navigator && import.meta.env.PROD) {

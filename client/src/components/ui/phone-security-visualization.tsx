@@ -2,7 +2,7 @@
 
 import React, { useRef, useMemo, useEffect, useState, useCallback } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Float, RoundedBox, Environment, ContactShadows } from '@react-three/drei';
+import { Float, RoundedBox, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
 
@@ -662,7 +662,6 @@ function Scene({ isScanning, onThreatBlocked, selectedDevice, onHotspotClick, at
         color="#000022"
       />
       
-      <Environment preset="night" />
     </>
   );
 }
@@ -696,7 +695,7 @@ export function PhoneSecurityVisualization({ isScanning, onThreatBlocked }: Phon
   
   return (
     <div className="relative w-full h-[500px] rounded-2xl overflow-hidden bg-gradient-to-b from-slate-900/80 to-slate-950/80 border border-[#42BA90]/20">
-      <WebGLFallback>
+      <WebGLFallback showMessage>
         <Canvas
           camera={{ position: [0, 0, 6], fov: 45 }}
           dpr={[1, 2]}

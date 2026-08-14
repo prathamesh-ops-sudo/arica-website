@@ -27,7 +27,7 @@ const contentSecurityPolicy = {
     "data:",
     "blob:",
     "https://www.aricatech.com",
-    "https://unpkg.com",
+    "https://api.microlink.io",
     "https://i.ibb.co",
     "https://images.unsplash.com",
     "https://framerusercontent.com",
@@ -45,6 +45,7 @@ const contentSecurityPolicy = {
     "https://challenges.cloudflare.com",
     "https://prod.spline.design",
     "https://api.microlink.io",
+    "https://cdn.jsdelivr.net",
   ],
   "frame-src": [
     "'self'",

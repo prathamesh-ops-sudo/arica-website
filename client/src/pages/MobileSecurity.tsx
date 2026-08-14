@@ -940,7 +940,7 @@ export default function MobileSecurity() {
                 >
                   <h3 className="text-sm font-semibold text-gray-400 mb-3 flex items-center gap-2">
                     <Activity className="w-4 h-4 text-[#3D70B7]" />
-                    Real-time Threat Detection
+                    Simulated Threat Detection
                   </h3>
                   <LiveThreatCounter threats={threatCounts} isScanning={isScanning} />
                 </motion.div>

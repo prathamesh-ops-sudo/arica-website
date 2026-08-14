@@ -41,7 +41,7 @@ const secureLinks: DropdownLink[] = [
 ]
 
 const servicesLinks: DropdownLink[] = [
-  { name: "Attack Globe", url: "/attack-globe", icon: Globe, description: "Real-time threat map" },
+  { name: "Attack Globe", url: "/attack-globe", icon: Globe, description: "Interactive threat simulation" },
   { name: "Vulnerability Scanner", url: "/vulnerability-scanner", icon: Search, description: "Automated scanning" },
   { name: "API Security Lab", url: "/api-security-lab", icon: Bug, description: "API penetration testing" },
   { name: "Mobile Security", url: "/mobile-security", icon: Smartphone, description: "Mobile app security" },

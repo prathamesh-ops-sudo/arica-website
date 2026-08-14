@@ -69,7 +69,7 @@ const riskCategories: RiskCategory[] = [
     name: 'Network Security', 
     icon: Network, 
     score: 72, 
-    status: 'medium',
+    status: 'high',
     findings: ['Unpatched firewall firmware', 'Open ports detected (22, 3389)', 'Missing network segmentation', 'Weak VPN configuration']
   },
   { 
@@ -77,7 +77,7 @@ const riskCategories: RiskCategory[] = [
     name: 'Application Security', 
     icon: Code, 
     score: 58, 
-    status: 'high',
+    status: 'medium',
     findings: ['SQL injection vulnerabilities', 'Cross-site scripting (XSS)', 'Outdated dependencies', 'Missing input validation', 'Insecure API endpoints']
   },
   { 
@@ -85,7 +85,7 @@ const riskCategories: RiskCategory[] = [
     name: 'Data Protection', 
     icon: Database, 
     score: 81, 
-    status: 'low',
+    status: 'critical',
     findings: ['Encryption at rest enabled', 'Backup procedures verified', 'Minor classification gaps']
   },
   { 
@@ -101,15 +101,15 @@ const riskCategories: RiskCategory[] = [
     name: 'Incident Response', 
     icon: AlertCircle, 
     score: 45, 
-    status: 'critical',
-    findings: ['No documented IR plan', 'Missing playbooks', 'Untested recovery procedures', 'No 24/7 monitoring', 'Communication gaps']
+    status: 'medium',
+    findings: ['No documented IR plan', 'Missing playbooks', 'Untested recovery procedures', 'No documented continuous monitoring process', 'Communication gaps']
   },
   { 
     id: 'compliance', 
     name: 'Compliance', 
     icon: FileCheck, 
     score: 78, 
-    status: 'low',
+    status: 'high',
     findings: ['Minor policy updates needed', 'Documentation current', 'Training records complete']
   },
 ];
@@ -198,7 +198,7 @@ const complianceFrameworks: ComplianceFramework[] = [
   },
 ];
 
-const trendData = [68, 65, 62, 64, 58, 55, 52, 48, 45, 42, 38, 35];
+const trendData = [68, 65, 62, 60, 57, 54, 51, 48, 45, 42, 38, 35];
 
 function AnimatedRiskGauge({ 
   value, 
@@ -565,7 +565,7 @@ function RealTimeRiskFeed({ events }: { events: RiskEvent[] }) {
   };
 
   return (
-    <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10">
+      <div className="space-y-2 pr-2 max-h-[34rem] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
       <AnimatePresence mode="popLayout">
         {events.map((event) => {
           const colors = getSeverityColor(event.severity);
@@ -739,7 +739,7 @@ function InteractiveRiskCard({
               boxShadow: `0 0 10px ${statusColor}`
             }}
             initial={{ width: 0 }}
-            animate={{ width: `${100 - category.score}%` }}
+            animate={{ width: `${category.score}%` }}
             transition={{ duration: 1, delay: index * 0.1 }}
           />
         </div>
@@ -807,18 +807,19 @@ function AnimatedTrendChart({ data, animatedData }: { data: number[]; animatedDa
   }, [isInView, animatedData.length]);
 
   return (
-    <div ref={chartRef} className="relative h-48">
-      <div className="absolute inset-0 flex items-end justify-between gap-1">
+    <div ref={chartRef} className="relative h-56 pl-10 pb-8">
+      <div className="absolute inset-0 left-10 bottom-8 flex items-end justify-between gap-1">
         {animatedData.map((value, index) => (
           <motion.div
             key={index}
-            initial={{ height: 0, opacity: 0 }}
-            animate={isInView ? { height: `${(value / 100) * 100}%`, opacity: 1 } : {}}
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
             transition={{ duration: 0.5, delay: index * 0.08 }}
-            className={`flex-1 rounded-t-lg relative overflow-hidden ${
-              value <= 33 ? 'bg-[#42BA90]/60' : value <= 66 ? 'bg-yellow-500/60' : 'bg-red-500/60'
+            className={`flex-1 rounded-t-lg relative overflow-hidden opacity-35 ${
+              value <= 45 ? 'bg-[#42BA90]/70' : value <= 60 ? 'bg-yellow-500/70' : 'bg-[#3D70B7]/70'
             }`}
             style={{
+              height: `${value}%`,
               boxShadow: pulsingPoint === index 
                 ? `0 0 30px ${value <= 33 ? 'rgba(66,186,144,0.6)' : value <= 66 ? 'rgba(234,179,8,0.6)' : 'rgba(239,68,68,0.6)'}`
                 : `0 0 10px ${value <= 33 ? 'rgba(66,186,144,0.3)' : value <= 66 ? 'rgba(234,179,8,0.3)' : 'rgba(239,68,68,0.3)'}`
@@ -835,16 +836,20 @@ function AnimatedTrendChart({ data, animatedData }: { data: number[]; animatedDa
           </motion.div>
         ))}
       </div>
-      <svg className="absolute inset-0 w-full h-full overflow-visible" preserveAspectRatio="none">
+      <div className="absolute left-10 right-0 top-0 bottom-8 pointer-events-none">
+        {[0, 25, 50, 75, 100].map((value) => (
+          <div
+            key={value}
+            className="absolute left-0 right-0 border-t border-white/10"
+            style={{ top: `${100 - value}%` }}
+          />
+        ))}
+      </div>
+      <div className="absolute left-0 top-0 bottom-8 w-8 flex flex-col justify-between text-[10px] text-muted-foreground">
+        {[100, 75, 50, 25, 0].map((value) => <span key={value}>{value}</span>)}
+      </div>
+      <svg className="absolute left-10 right-0 top-0 bottom-8 w-[calc(100%-2.5rem)] h-[calc(100%-2rem)] overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
         <defs>
-          <filter id="glow-line-enhanced" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
           <linearGradient id="trendGradientEnhanced" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#3D70B7" />
             <stop offset="50%" stopColor="#3D70B7" />
@@ -856,44 +861,45 @@ function AnimatedTrendChart({ data, animatedData }: { data: number[]; animatedDa
             <motion.polyline
               fill="none"
               stroke="url(#trendGradientEnhanced)"
-              strokeWidth="4"
+              strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
-              filter="url(#glow-line-enhanced)"
+              vectorEffect="non-scaling-stroke"
               initial={{ pathLength: 0, opacity: 0 }}
               animate={{ pathLength: 1, opacity: 1 }}
               transition={{ duration: 2, ease: 'easeOut' }}
               points={animatedData.map((value, index) => 
-                `${(index / (data.length - 1)) * 100}%,${100 - value}%`
+                `${(index / (data.length - 1)) * 100},${100 - value}`
               ).join(' ')}
             />
-            {animatedData.map((value, index) => (
-              <motion.g key={index}>
-                <motion.circle
-                  cx={`${(index / (data.length - 1)) * 100}%`}
-                  cy={`${100 - value}%`}
-                  r={pulsingPoint === index ? 10 : 6}
-                  fill={value <= 40 ? '#42BA90' : '#3D70B7'}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ 
-                    scale: 1, 
-                    opacity: 1,
-                    r: pulsingPoint === index ? [6, 10, 6] : 6
-                  }}
-                  transition={{ 
-                    delay: index * 0.1 + 0.5,
-                    r: { duration: 1, repeat: pulsingPoint === index ? Infinity : 0 }
-                  }}
-                  style={{
-                    filter: `drop-shadow(0 0 ${pulsingPoint === index ? 15 : 8}px ${value <= 40 ? '#42BA90' : '#3D70B7'})`
-                  }}
-                />
-              </motion.g>
-            ))}
           </>
         )}
       </svg>
-      <div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-muted-foreground pt-2">
+      <div className="absolute left-10 right-0 top-0 bottom-8 pointer-events-none">
+        {isInView && animatedData.map((value, index) => (
+          <motion.div
+            key={index}
+            className={`absolute w-2 h-2 rounded-full -translate-x-1/2 -translate-y-1/2 ${
+              value <= 40 ? 'bg-[#42BA90]' : 'bg-[#3D70B7]'
+            }`}
+            style={{
+              left: `${(index / (data.length - 1)) * 100}%`,
+              top: `${100 - value}%`,
+              boxShadow: `0 0 ${pulsingPoint === index ? 8 : 3}px ${value <= 40 ? '#42BA90' : '#3D70B7'}`
+            }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{
+              scale: pulsingPoint === index ? [1, 1.6, 1] : 1,
+              opacity: 1,
+            }}
+            transition={{
+              delay: index * 0.1 + 0.5,
+              scale: { duration: 1, repeat: pulsingPoint === index ? Infinity : 0 }
+            }}
+          />
+        ))}
+      </div>
+      <div className="absolute bottom-0 left-10 right-0 flex justify-between text-xs text-muted-foreground pt-2">
         <span>12 months ago</span>
         <span>Today</span>
       </div>
@@ -1066,7 +1072,7 @@ export default function RiskAssessment() {
               </motion.span>
             </h1>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Real-time analysis of your organization's security posture with live threat detection and actionable insights.
+              An interactive example of security posture analysis with simulated findings and actionable insights.
             </p>
           </motion.div>
 
@@ -1135,8 +1141,8 @@ export default function RiskAssessment() {
             </GlassCard>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-            <div className="lg:col-span-2">
+          <div className="grid grid-cols-1 gap-8 mb-12">
+            <div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1260,7 +1266,7 @@ export default function RiskAssessment() {
                   </div>
                 </motion.div>
               )}
-              <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+              <div className="space-y-4 pr-2">
                 {groupedActions.map((group) => {
                   const isExpanded = expandedPriorities.includes(group.priority);
                   const addressedCount = group.items.filter(i => i.addressed).length;

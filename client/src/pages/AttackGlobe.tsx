@@ -342,16 +342,14 @@ export default function AttackGlobe() {
     textureLoader.crossOrigin = 'anonymous';
     
     const earthTexture = textureLoader.load(
-      'https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg',
+      '/textures/earth-blue-marble.jpg',
       (texture) => {
         texture.colorSpace = THREE.SRGBColorSpace;
         earthMaterial.needsUpdate = true;
       }
     );
     
-    const bumpTexture = textureLoader.load(
-      'https://unpkg.com/three-globe@2.31.0/example/img/earth-topology.png'
-    );
+    const bumpTexture = textureLoader.load('/textures/earth-topology.png');
     
     const earthMaterial = new THREE.MeshPhongMaterial({
       map: earthTexture,
@@ -363,20 +361,6 @@ export default function AttackGlobe() {
     
     const sphere = new THREE.Mesh(sphereGeometry, earthMaterial);
     refs.globeGroup.add(sphere);
-    
-    const cloudsGeometry = new THREE.SphereGeometry(GLOBE_RADIUS * 1.01, 48, 48);
-    const cloudsTexture = textureLoader.load(
-      'https://unpkg.com/three-globe@2.31.0/example/img/earth-clouds.png'
-    );
-    const cloudsMaterial = new THREE.MeshPhongMaterial({
-      map: cloudsTexture,
-      transparent: true,
-      opacity: 0.4,
-      depthWrite: false,
-    });
-    const clouds = new THREE.Mesh(cloudsGeometry, cloudsMaterial);
-    refs.globeGroup.add(clouds);
-    (refs as any).clouds = clouds;
     
     const ambientLight = new THREE.AmbientLight(0x555555);
     refs.scene.add(ambientLight);
@@ -528,9 +512,6 @@ export default function AttackGlobe() {
         }
         refs.globeGroup.rotation.y += refs.rotationVelocityY;
         
-        if ((refs as any).clouds) {
-          (refs as any).clouds.rotation.y += 0.0001;
-        }
       }
 
       refs.cityMarkers.forEach((marker, i) => {

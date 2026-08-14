@@ -65,7 +65,6 @@ export function AnimatedProgress({
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: '-50px' });
   const [displayValue, setDisplayValue] = useState(0);
-  
   const percentage = Math.min((value / max) * 100, 100);
   const styles = colorStyles[color];
   

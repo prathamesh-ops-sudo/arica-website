@@ -35,8 +35,8 @@ export function Hero() {
                   <Activity className="w-5 h-5 text-primary" />
                 </div>
                 <div className="text-left">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider">Real-Time Threats</p>
-                  <p className="font-display text-2xl font-bold text-primary">1,204<span className="text-sm text-muted-foreground ml-1">blocked</span></p>
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider">Illustrative Threat Scenario</p>
+                  <p className="font-display text-2xl font-bold text-primary">Sample<span className="text-sm text-muted-foreground ml-1">activity</span></p>
                 </div>
               </div>
             </motion.div>

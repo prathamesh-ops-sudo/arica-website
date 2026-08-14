@@ -821,7 +821,7 @@ export default function CodeReview() {
       <MatrixCodeRain />
       
       <div className="fixed inset-0 z-[1]" data-testid="code-review-3d-scene">
-        <WebGLFallback>
+        <WebGLFallback showMessage>
           <Canvas camera={{ position: [0, 0, 15], fov: 60 }} gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }} dpr={[1, 2]}>
             <CodeAnalysisScene isScanning={isScanning} />
           </Canvas>

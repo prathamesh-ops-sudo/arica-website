@@ -779,7 +779,7 @@ export default function ApiSecurityLab() {
             </span>
           </h1>
           <p className="text-slate-400 max-w-2xl mx-auto text-sm">
-            Real-time API security testing and attack simulation. Monitor threats, analyze vulnerabilities, and secure your endpoints.
+            Interactive API security testing and attack simulation. Explore threats, analyze vulnerabilities, and practice securing your endpoints.
           </p>
         </motion.div>
 
