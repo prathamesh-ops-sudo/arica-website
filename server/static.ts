@@ -191,9 +191,7 @@ export function serveStatic(app: Express) {
       }
 
       const escapedTitle = escapeHtml(formatBlogTitle(post.title));
-      const escapedExcerpt = escapeHtml(
-        truncateAtWordBoundary(post.excerpt, MAX_DESCRIPTION_LENGTH),
-      );
+      const escapedExcerpt = escapeHtml(formatBlogDescription(post.excerpt));
       const ogImage = post.coverImage || `${SITE_URL}/opengraph.jpg`;
       const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
 
@@ -374,6 +372,7 @@ export function serveStatic(app: Express) {
       getBaseHtml(canonicalPath)
         .replace(/<title>[\s\S]*?<\/title>/, `<title>${escapedTitle}</title>`)
         .replace(/<meta name="description"[^>]*\/?>/g, "")
+        .replace(/<meta name="robots"[^>]*\/?>/g, "")
         .replace(/<link rel="canonical"[^>]*\/?>/g, "")
         .replace(/<meta property="og:title"[^>]*\/?>/, `<meta property="og:title" content="${escapedTitle}" />`)
         .replace(/<meta property="og:description"[^>]*\/?>/, `<meta property="og:description" content="${escapedDescription}" />`)
@@ -517,20 +516,22 @@ function resolveImageDimensions(
 }
 
 function formatBlogTitle(title: string): string {
-  const brandedTitle = `${title} | Arica Tech`;
-  return truncateAtWordBoundary(brandedTitle, MAX_TITLE_LENGTH, title);
+  const suffix = " | Arica Tech";
+  return title.length + suffix.length <= MAX_TITLE_LENGTH
+    ? `${title}${suffix}`
+    : title;
 }
 
-function truncateAtWordBoundary(
-  value: string,
-  maxLength: number,
-  fallback = value,
-): string {
-  if (value.length <= maxLength) return value;
-  const limit = Math.max(1, maxLength - 1);
-  const boundary = value.slice(0, limit).lastIndexOf(" ");
-  const truncated = value.slice(0, boundary > 0 ? boundary : limit).trim();
-  return truncated ? `${truncated}…` : fallback.slice(0, maxLength);
+function formatBlogDescription(excerpt: string): string {
+  if (excerpt.length <= MAX_DESCRIPTION_LENGTH) return excerpt;
+  const sentences = excerpt.match(/[^.!?]+[.!?]+/g) ?? [];
+  let complete = "";
+  for (const sentence of sentences) {
+    const candidate = `${complete}${sentence}`;
+    if (candidate.length > MAX_DESCRIPTION_LENGTH) break;
+    complete = candidate;
+  }
+  return complete.trim() || excerpt;
 }
 
 function stripBaseMetadata(html: string): string {
