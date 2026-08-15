@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { ArrowRight, ExternalLink, RotateCcw } from "lucide-react";
-import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { EtherealShadow } from "@/components/ui/ethereal-shadow";
@@ -263,7 +262,6 @@ export default function CaseStudies() {
   return (
     <div className="min-h-screen bg-background">
       <AmbientParticles variant="data" count={15} opacity={0.1} />
-      <Navbar />
 
       <section className="pt-32 pb-16 relative overflow-hidden">
         <div className="absolute inset-0 opacity-30" style={{

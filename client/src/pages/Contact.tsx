@@ -2,7 +2,6 @@ import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Phone, MapPin, AlertCircle, Send, ArrowRight } from "lucide-react";
 import { useLocation } from "wouter";
-import { Navbar } from "@/components/Navbar";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -96,7 +95,6 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
 
       <section className="pt-28 pb-12 md:pt-32 md:pb-20">
         <div className="max-w-6xl mx-auto px-4 md:px-6">

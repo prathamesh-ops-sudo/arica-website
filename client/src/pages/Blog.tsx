@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Calendar, Clock, ArrowRight, Tag, Search } from "lucide-react";
-import { Navbar } from "@/components/Navbar";
 import { EtherealShadow } from "@/components/ui/ethereal-shadow";
 
 interface BlogPost {
@@ -48,7 +47,6 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white">
-      <Navbar />
       <EtherealShadow />
 
       {/* Hero Section */}

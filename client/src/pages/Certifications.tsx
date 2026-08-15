@@ -6,8 +6,8 @@ import {
   ArrowLeft, Shield, Lock, Database, CreditCard, Heart, Building2,
   CheckCircle, Award, X, Star
 } from 'lucide-react';
-import { Navbar } from '@/components/Navbar';
 import { isWebGLAvailable } from '@/lib/webgl-utils';
+import { Navbar } from '@/components/Navbar';
 
 interface Certification {
   id: string;
@@ -639,8 +639,11 @@ export default function Certifications() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-      <Navbar />
-      
+      <header>
+        <nav aria-label="Site navigation">
+          <Navbar />
+        </nav>
+      </header>
       <div className="relative pt-24 pb-16 overflow-hidden">
         <div className="absolute inset-0 opacity-30">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#3D70B7] rounded-full blur-[150px]" />

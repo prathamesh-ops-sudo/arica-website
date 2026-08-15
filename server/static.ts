@@ -13,6 +13,7 @@ import {
   SITE_NAVIGATION_LINKS,
   type SiteNavigationLink,
 } from "@shared/site-navigation";
+import { getRelatedBlogPosts } from "@shared/blog-related";
 
 const SITE_URL = "https://www.aricatech.com";
 const MAX_TITLE_LENGTH = 60;
@@ -244,16 +245,41 @@ export function serveStatic(app: Express) {
       const structuredData = JSON.stringify({ "@context": "https://schema.org", "@graph": schemaGraph });
       const articleHtml = (await renderSanitizedMarkdown(post.content, distPath))
         .replace(/<h1\b[^>]*>[\s\S]*?<\/h1>/gi, "");
+      let relatedPosts: typeof post[] = [];
+      try {
+        const { posts } = await storage.getBlogPosts({ published: true, limit: 100 });
+        relatedPosts = getRelatedBlogPosts(post, posts);
+      } catch (error) {
+        console.warn("[blog-related] database unavailable; omitting related posts:", error);
+      }
+      const relatedHtml = relatedPosts.length > 0
+        ? `
+            <section aria-labelledby="related-reading">
+              <h2 id="related-reading">Related reading</h2>
+              <ul>
+                ${relatedPosts.map((related) => `
+                  <li><a href="/blog/${encodeURIComponent(related.slug)}">${escapeHtml(related.title)}</a></li>
+                `).join("")}
+              </ul>
+            </section>`
+        : "";
       const articleRoot = `
+        <header>${renderInternalNavigation()}</header>
         <main class="prerendered-blog-content">
-          ${renderInternalNavigation()}
           <article>
             <h1>${escapeHtml(post.title)}</h1>
             <p>${escapeHtml(post.excerpt)}</p>
             <p>By ${escapeHtml(post.author)}</p>
             <div>${articleHtml}</div>
+            ${relatedHtml}
           </article>
-        </main>`;
+        </main>
+        <footer>
+          ${[...SITE_LEGAL_LINKS, ["/contact", "Contact"] as const]
+            .map(([href, label]) => `<a href="${href}">${escapeHtml(label)}</a>`)
+            .join(" ")}
+          <p>© ${new Date().getFullYear()} Arica Tech Security LLP. All rights reserved.</p>
+        </footer>`;
 
       const metaTags = `
     <title>${escapedTitle}</title>

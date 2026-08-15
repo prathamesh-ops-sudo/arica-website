@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { HyperspaceTransitionProvider } from "@/components/ui/hyperspace-transition";
 import { SiteFooter } from "@/components/ui/site-footer";
+import { Navbar } from "@/components/Navbar";
 import { CookieConsent } from "@/components/CookieConsent";
 import { ThreeDEffectLoader } from "@/components/ui/3d-effect-loader";
 
@@ -133,7 +134,16 @@ function AppContent() {
           />
         </a>
       )}
-      <Router />
+      {!isExperienceSubRoute && (
+        <header>
+          <nav aria-label="Site navigation">
+            <Navbar />
+          </nav>
+        </header>
+      )}
+      <main>
+        <Router />
+      </main>
       {!isFullscreenRoute && <SiteFooter />}
       <CookieConsent />
     </>

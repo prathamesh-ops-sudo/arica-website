@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { Calendar, Clock, ArrowLeft, User, Tag } from "lucide-react";
-import { Navbar } from "@/components/Navbar";
+import { getRelatedBlogPosts } from "@shared/blog-related";
 
 interface BlogPostData {
   id: number;
@@ -25,6 +25,7 @@ export default function BlogPost() {
   const [post, setPost] = useState<BlogPostData | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [allPosts, setAllPosts] = useState<BlogPostData[]>([]);
 
   useEffect(() => {
     if (!params?.slug) return;
@@ -39,12 +40,17 @@ export default function BlogPost() {
       })
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false));
+    fetch("/api/blog?limit=100")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) setAllPosts(data.posts);
+      })
+      .catch(() => {});
   }, [params?.slug]);
 
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0a0a0f] text-white">
-        <Navbar />
         <div className="max-w-3xl mx-auto px-6 pt-32 animate-pulse">
           <div className="h-8 bg-white/10 rounded w-3/4 mb-4" />
           <div className="h-4 bg-white/10 rounded w-1/2 mb-8" />
@@ -63,7 +69,6 @@ export default function BlogPost() {
   if (notFound || !post) {
     return (
       <div className="min-h-screen bg-[#0a0a0f] text-white">
-        <Navbar />
         <div className="max-w-3xl mx-auto px-6 pt-32 text-center">
           <h1 className="text-3xl font-bold mb-4">Post Not Found</h1>
           <p className="text-gray-400 mb-8">
@@ -82,10 +87,10 @@ export default function BlogPost() {
   const htmlContent = DOMPurify.sanitize(
     marked.parse(post.content, { async: false }) as string
   );
+  const relatedPosts = getRelatedBlogPosts(post, allPosts);
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white">
-      <Navbar />
 
       <article className="max-w-3xl mx-auto px-6 pt-32 pb-24">
         {/* Back link */}
@@ -186,6 +191,23 @@ export default function BlogPost() {
             prose-img:rounded-xl"
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
+
+        {relatedPosts.length > 0 && (
+          <section aria-labelledby="related-reading" className="mt-16 pt-8 border-t border-white/10">
+            <h2 id="related-reading" className="text-2xl font-semibold mb-5">
+              Related reading
+            </h2>
+            <div className="grid gap-3">
+              {relatedPosts.map((related) => (
+                <Link key={related.slug} href={`/blog/${related.slug}`}>
+                  <span className="text-[#3D70B7] hover:underline">
+                    {related.title}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Footer */}
         <div className="mt-16 pt-8 border-t border-white/10">

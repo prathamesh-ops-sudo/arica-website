@@ -776,7 +776,7 @@ export default function AttackGlobe() {
   return (
     <div className="min-h-screen bg-[#0a0a1e] relative overflow-x-hidden">
       <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#0a0a1e]/80 border-b border-[#3D70B7]/10">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+        <nav aria-label="Experience navigation" className="container mx-auto px-6 py-4 flex items-center justify-between">
           <Link 
             href="/experience"
             className="flex items-center gap-2 text-[#3D70B7] hover:text-white transition-colors text-sm font-medium"
@@ -806,10 +806,10 @@ export default function AttackGlobe() {
               <span className="text-xs text-[#ff3344] font-bold uppercase tracking-wider">Demo</span>
             </motion.div>
           </div>
-        </div>
+        </nav>
       </header>
 
-      <main className="pt-24 pb-12 px-4">
+              <div className="pt-24 pb-12 px-4">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1100,7 +1100,7 @@ export default function AttackGlobe() {
               </p>
             </motion.div>
           </div>
-        </main>
+              </div>
     </div>
   );
 }

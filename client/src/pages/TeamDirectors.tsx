@@ -1,6 +1,5 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Navbar } from "@/components/Navbar";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 
@@ -254,9 +253,8 @@ export default function TeamDirectors() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
 
-      <main className="pt-28 sm:pt-32 pb-20">
+      <div className="pt-28 sm:pt-32 pb-20">
         {/* Header */}
         <div className="max-w-7xl mx-auto px-6 mb-12 sm:mb-16">
           <motion.div
@@ -303,7 +301,7 @@ export default function TeamDirectors() {
             />
           ))}
         </ul>
-      </main>
+      </div>
     </div>
   );
 }

@@ -653,7 +653,7 @@ export default function SecurityArchitecture() {
 
       <div className="relative z-10">
         <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#000510]/90 border-b border-[#3D70B7]/20">
-          <div className="container mx-auto px-6 py-3 flex items-center justify-between">
+          <nav aria-label="Experience navigation" className="container mx-auto px-6 py-3 flex items-center justify-between">
             <Link
               href="/experience"
               className="flex items-center gap-2 text-[#3D70B7] hover:text-[#3D70B7]/80 transition-colors font-mono text-sm"
@@ -681,10 +681,10 @@ export default function SecurityArchitecture() {
                 <span className="text-xs text-[#3D70B7] font-mono font-bold">DEMO TOPOLOGY</span>
               </div>
             </div>
-          </div>
+          </nav>
         </header>
 
-        <main className="pt-20 pb-12" ref={gsapContainerRef}>
+        <div className="pt-20 pb-12" ref={gsapContainerRef}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -1137,7 +1137,7 @@ export default function SecurityArchitecture() {
               </div>
             </motion.div>
           </div>
-        </main>
+        </div>
       </div>
 
       <AnimatePresence>

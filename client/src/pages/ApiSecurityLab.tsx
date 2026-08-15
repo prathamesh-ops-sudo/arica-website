@@ -745,7 +745,7 @@ export default function ApiSecurityLab() {
     <div className="min-h-screen bg-[#020617] text-slate-100 relative overflow-hidden">
       <CyberBackground />
       
-      <div className="fixed top-6 left-6 z-50">
+      <header><nav aria-label="Experience navigation" className="fixed top-6 left-6 z-50">
         <Link
           href="/experience"
           className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(2,6,23,0.9)] border border-[#3D70B7]/30 hover:border-[#3D70B7]/60 transition-all duration-300 hover:shadow-[0_0_20px_rgba(61, 112, 183,0.2)]"
@@ -754,7 +754,7 @@ export default function ApiSecurityLab() {
           <ArrowLeft className="w-4 h-4 text-[#3D70B7]" />
           <span className="text-sm">Back to Experience</span>
         </Link>
-      </div>
+      </nav></header>
 
       <div className="container mx-auto px-6 py-24 relative z-10">
         <motion.div

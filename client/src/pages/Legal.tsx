@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { Calendar, ArrowLeft } from "lucide-react";
-import { Navbar } from "@/components/Navbar";
 import { LEGAL_POLICIES, getPolicyBySlug } from "@/content/legal";
 
 export default function Legal() {
@@ -21,7 +20,6 @@ export default function Legal() {
   if (!policy) {
     return (
       <div className="min-h-screen bg-[#0a0a0f] text-white">
-        <Navbar />
         <div className="max-w-3xl mx-auto px-6 pt-32 text-center">
           <h1 className="text-3xl font-bold mb-4">Policy Not Found</h1>
           <p className="text-gray-400 mb-8">
@@ -43,7 +41,6 @@ export default function Legal() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white">
-      <Navbar />
 
       <div className="max-w-3xl mx-auto px-6 pt-32 pb-20">
         <motion.div
@@ -51,7 +48,7 @@ export default function Legal() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35 }}
         >
-          <nav className="flex flex-wrap gap-2 mb-10">
+          <div className="flex flex-wrap gap-2 mb-10">
             {LEGAL_POLICIES.map((p) => (
               <Link key={p.slug} href={`/legal/${p.slug}`}>
                 <span
@@ -65,7 +62,7 @@ export default function Legal() {
                 </span>
               </Link>
             ))}
-          </nav>
+          </div>
 
           <h1 className="text-3xl md:text-4xl font-bold mb-4">{policy.title}</h1>
           <p className="flex items-center gap-2 text-sm text-gray-500 mb-10">

@@ -1,6 +1,5 @@
 import { motion, useInView, useSpring, useTransform } from "framer-motion";
 import { Shield, Target, Eye, ArrowRight } from "lucide-react";
-import { Navbar } from "@/components/Navbar";
 import { Link } from "wouter";
 import { useRef, useState, useEffect, useCallback } from "react";
 import { COMPANY_STATS } from "@/content/company-stats";
@@ -141,7 +140,6 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
 export default function About() {
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
 
       <section className="pt-32 pb-20 relative overflow-hidden">
         <motion.div

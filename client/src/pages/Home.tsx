@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/Navbar";
 import { HorizonHeroSection } from "@/components/ui/horizon-hero-section";
 import { ClientsSlider } from "@/components/ClientsSlider";
 import { ForensicsSection } from "@/components/ForensicsSection";
@@ -31,7 +30,6 @@ export default function Home() {
     <div className="min-h-screen bg-background relative">
       <SubtleBackground />
       <div className="relative z-10">
-        <Navbar />
         <HorizonHeroSection />
         <ClientsSlider />
         <SectionDivider />

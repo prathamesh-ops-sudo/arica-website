@@ -1,13 +1,11 @@
 import { motion } from "framer-motion";
 import { CheckCircle, ArrowRight } from "lucide-react";
-import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 
 export default function ThankYou() {
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
 
       <section className="pt-28 pb-12 md:pt-32 md:pb-20">
         <div className="max-w-3xl mx-auto px-6 text-center">

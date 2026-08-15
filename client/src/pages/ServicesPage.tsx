@@ -12,7 +12,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Link } from "wouter";
-import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Typewriter } from "@/components/ui/typewriter";
 import { AmbientParticles } from "@/components/ui/ambient-particles";
@@ -324,7 +323,6 @@ export default function ServicesPage() {
     <div className="min-h-screen bg-background">
       <FloatingSecurityElements />
       <AmbientParticles variant="dots" count={25} opacity={0.12} />
-      <Navbar />
 
       <section className="pt-32 pb-20 relative overflow-hidden">
         <div className="absolute inset-0 opacity-30" style={{
@@ -364,7 +362,7 @@ export default function ServicesPage() {
           </motion.div>
 
           {/* Table of Contents */}
-          <motion.nav
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
@@ -391,7 +389,7 @@ export default function ServicesPage() {
                 <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-[#42BA90] group-hover:translate-x-0.5 transition-all" />
               </motion.a>
             ))}
-          </motion.nav>
+          </motion.div>
         </div>
       </section>
 

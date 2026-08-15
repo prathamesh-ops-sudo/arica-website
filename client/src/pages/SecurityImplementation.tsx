@@ -726,7 +726,7 @@ export default function SecurityImplementation() {
     <div className="min-h-screen text-white relative overflow-hidden" style={{ backgroundColor: NAVY }}>
       <div className="absolute inset-0 bg-gradient-to-br from-[#1C2C5A]/10 via-transparent to-[#1C2C5A]/10" />
 
-      <div className="fixed top-6 left-6 z-50">
+      <header><nav aria-label="Experience navigation" className="fixed top-6 left-6 z-50">
         <Link
           href="/experience"
           className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/10 hover:bg-white/20 transition-all"
@@ -735,7 +735,7 @@ export default function SecurityImplementation() {
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Experience</span>
         </Link>
-      </div>
+      </nav></header>
 
       <div className="relative z-10 container mx-auto px-6 py-24">
         <motion.div

@@ -1217,7 +1217,7 @@ export default function OngoingSupport() {
 
       <div className="relative z-10">
         <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#000510]/90 border-b border-[#3D70B7]/20">
-          <div className="container mx-auto px-6 py-3 flex items-center justify-between">
+          <nav aria-label="Experience navigation" className="container mx-auto px-6 py-3 flex items-center justify-between">
             <Link
               href="/experience"
               className="flex items-center gap-2 text-[#3D70B7] hover:text-[#3D70B7]/80 transition-colors font-mono text-sm"
@@ -1254,10 +1254,10 @@ export default function OngoingSupport() {
                 <span className="text-xs text-[#3D70B7] font-mono font-bold">RETAINED SUPPORT VIEW</span>
               </motion.div>
             </div>
-          </div>
+          </nav>
         </header>
 
-        <main className="pt-20">
+        <div className="pt-20">
           <section className="relative h-[60vh] min-h-[500px]">
             <div className="absolute inset-0 opacity-35">
               <WebGLFallback>
@@ -1380,7 +1380,7 @@ export default function OngoingSupport() {
               <EmergencyContactSection />
             </div>
           </section>
-        </main>
+        </div>
 
         <footer className="border-t border-[#3D70B7]/20 py-8 px-6">
           <div className="container mx-auto text-center">
