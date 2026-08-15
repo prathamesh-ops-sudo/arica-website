@@ -30,7 +30,6 @@ const contentSecurityPolicy = {
     "https://api.microlink.io",
     "https://i.ibb.co",
     "https://images.unsplash.com",
-    "https://framerusercontent.com",
   ],
   "connect-src": [
     "'self'",

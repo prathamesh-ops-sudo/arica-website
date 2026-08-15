@@ -151,7 +151,7 @@ export function EtherealShadow({
                 <div
                     style={{
                         backgroundColor: color,
-                        maskImage: `url('https://framerusercontent.com/images/ceBGguIpUU8luwByxuQz79t7To.png')`,
+                        maskImage: "url('/decorative/ethereal-mask.webp')",
                         maskSize: sizing === "stretch" ? "100% 100%" : "cover",
                         maskRepeat: "no-repeat",
                         maskPosition: "center",
@@ -182,7 +182,7 @@ export function EtherealShadow({
                     style={{
                         position: "absolute",
                         inset: 0,
-                        backgroundImage: `url("https://framerusercontent.com/images/g0QcWrxr87K0ufOxIUFBakwYA8.png")`,
+                        backgroundImage: "url('/decorative/ethereal-noise.webp')",
                         backgroundSize: noise.scale * 200,
                         backgroundRepeat: "repeat",
                         opacity: noise.opacity / 2
