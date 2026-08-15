@@ -86,7 +86,7 @@ export default function BlogPost() {
 
   const htmlContent = DOMPurify.sanitize(
     marked.parse(post.content, { async: false }) as string
-  );
+  ).replace(/<h1\b[^>]*>[\s\S]*?<\/h1>/gi, "");
   const relatedPosts = getRelatedBlogPosts(post, allPosts);
 
   return (
