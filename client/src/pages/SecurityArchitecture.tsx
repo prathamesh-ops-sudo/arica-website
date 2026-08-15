@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background';
 import { useGsapStagger } from '@/hooks/useGsapStagger';
-import { isWebGLAvailable } from '@/lib/webgl-utils';
+import { isPrerendering, isWebGLAvailable } from '@/lib/webgl-utils';
 
 interface NetworkNode {
   id: string;
@@ -214,6 +214,7 @@ export default function SecurityArchitecture() {
   }, []);
 
   const initScene = useCallback(() => {
+    if (isPrerendering()) return;
     if (!canvasRef.current || !containerRef.current) return;
     
     if (!isWebGLAvailable()) {
@@ -932,7 +933,7 @@ export default function SecurityArchitecture() {
                   </div>
                   {!webglError && <canvas ref={canvasRef} className="w-full h-full" />}
 
-                  {!isLoaded && !webglError && (
+                  {!isPrerendering() && !isLoaded && !webglError && (
                     <div className="absolute inset-0 flex items-center justify-center bg-[#000510]">
                       <div className="flex flex-col items-center gap-4">
                         <div className="w-12 h-12 border-2 border-[#3D70B7]/30 border-t-[#3D70B7] rounded-full animate-spin" />
@@ -951,7 +952,7 @@ export default function SecurityArchitecture() {
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <h3 className="text-xl font-mono text-[#3D70B7]">3D Visualization Unavailable</h3>
+                          <p className="text-xl font-mono text-[#3D70B7]">3D Visualization Unavailable</p>
                           <p className="text-sm text-[#3D70B7]/60 font-mono max-w-md">
                             WebGL is not available in this browser. The network topology visualization requires hardware-accelerated graphics.
                           </p>

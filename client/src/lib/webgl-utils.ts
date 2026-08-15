@@ -1,3 +1,8 @@
+export function isPrerendering(): boolean {
+  return typeof navigator !== 'undefined' &&
+    navigator.userAgent.includes('AricaTechPrerender');
+}
+
 export function isWebGLAvailable(): boolean {
   try {
     const canvas = document.createElement('canvas');

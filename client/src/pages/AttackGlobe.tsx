@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { ChevronLeft, Shield, AlertTriangle, Clock, Zap, Target, Globe2, Activity, ShieldCheck, ArrowRight, Search, Filter, X } from "lucide-react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import * as THREE from "three";
+import { isPrerendering } from "@/lib/webgl-utils";
 
 const attackTypes = [
   { id: 'ddos', name: 'DDoS Attack', color: '#ff3344' },
@@ -303,6 +304,7 @@ export default function AttackGlobe() {
   }, []);
 
   useEffect(() => {
+    if (isPrerendering()) return;
     if (!canvasRef.current || !containerRef.current) return;
 
     const refs = sceneRef.current;
@@ -893,7 +895,7 @@ export default function AttackGlobe() {
                   <div className="w-full h-full flex items-center justify-center" data-testid="webgl-fallback">
                     <div className="text-center p-8">
                       <Globe2 className="w-24 h-24 mx-auto mb-4 text-[#3D70B7]/50" />
-                      <h3 className="text-xl font-semibold text-white/80 mb-2">3D Globe Unavailable</h3>
+                      <p className="text-xl font-semibold text-white/80 mb-2">3D Globe Unavailable</p>
                       <p className="text-white/50">WebGL is required for the interactive globe visualization.</p>
                     </div>
                   </div>

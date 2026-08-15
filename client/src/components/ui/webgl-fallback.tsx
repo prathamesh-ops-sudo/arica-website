@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from 'react';
-import { isWebGLAvailable } from '@/lib/webgl-utils';
+import { isPrerendering, isWebGLAvailable } from '@/lib/webgl-utils';
 
 interface WebGLFallbackProps {
   children: ReactNode;
@@ -79,9 +79,9 @@ function DefaultFallback({ showMessage }: { showMessage: boolean }) {
                 />
               </svg>
             </div>
-            <h3 className="text-white text-lg font-semibold mb-2">
+            <p className="text-white text-lg font-semibold mb-2">
               Enhanced Graphics Unavailable
-            </h3>
+            </p>
             <p className="text-white/60 text-sm max-w-xs">
               Your browser doesn't support WebGL. The experience is optimized with a beautiful fallback.
             </p>
@@ -97,11 +97,17 @@ export function WebGLFallback({
   fallback, 
   showMessage = false 
 }: WebGLFallbackProps) {
-  const [webglSupported, setWebglSupported] = useState<boolean | null>(null);
+  const prerendering = isPrerendering();
+  const [webglSupported, setWebglSupported] = useState<boolean | null>(
+    prerendering ? true : null,
+  );
 
   useEffect(() => {
+    if (prerendering) return;
     setWebglSupported(isWebGLAvailable());
-  }, []);
+  }, [prerendering]);
+
+  if (prerendering) return <>{children}</>;
 
   if (webglSupported === null) {
     return <DefaultFallback showMessage={false} />;
