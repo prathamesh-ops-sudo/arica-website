@@ -119,7 +119,10 @@ export default function Blog() {
       </section>
 
       {/* Posts Grid */}
-      <section className="max-w-6xl mx-auto px-6 pb-24">
+      <section
+        className="max-w-6xl mx-auto px-6 pb-24"
+        data-prerender-blog-listing
+      >
         {loading ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (

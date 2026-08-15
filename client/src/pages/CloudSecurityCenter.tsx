@@ -1443,7 +1443,7 @@ export default function CloudSecurityCenter() {
                     className="inline-flex items-center justify-center gap-2 bg-transparent border border-[#3D70B7]/50 text-[#3D70B7] font-mono px-6 py-3 rounded-lg hover:bg-[#3D70B7]/10 transition-all hover:scale-105"
                     data-testid="cta-learn-more"
                   >
-                    Learn More
+                    Explore our security services
                   </Link>
                 </div>
               </div>

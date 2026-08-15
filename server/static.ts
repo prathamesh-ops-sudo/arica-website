@@ -6,11 +6,17 @@ import { storage } from "./storage";
 import {
   isKnownLegalRoute,
   isKnownStaticRoute,
-  SITEMAP_STATIC_ROUTES,
   STATIC_ROUTE_ALIASES,
 } from "@shared/public-routes";
+import {
+  SITE_LEGAL_LINKS,
+  SITE_NAVIGATION_LINKS,
+  type SiteNavigationLink,
+} from "@shared/site-navigation";
 
 const SITE_URL = "https://www.aricatech.com";
+const MAX_TITLE_LENGTH = 60;
+const MAX_DESCRIPTION_LENGTH = 155;
 const loadMarked = new Function(
   "return import('marked')",
 ) as () => Promise<typeof import("marked")>;
@@ -49,7 +55,7 @@ const STATIC_METADATA: Record<string, { title: string; description: string }> = 
   },
   "/vulnerability-scanner": {
     title: "Vulnerability Scanner Demo | Arica Tech Security",
-    description: "Explore an interactive vulnerability-scanning demonstration covering common findings and assessment concepts. It is an illustrative lab, not live monitoring.",
+    description: "Explore an illustrative vulnerability-scanning demonstration covering common findings and assessment concepts, not live monitoring.",
   },
   "/compliance-dashboard": {
     title: "ISMS Readiness Dashboard Demo | Arica Tech Security",
@@ -184,8 +190,10 @@ export function serveStatic(app: Express) {
         return res.status(404).send(indexHtml);
       }
 
-      const escapedTitle = escapeHtml(`${post.title} | Arica Tech Security Blog`);
-      const escapedExcerpt = escapeHtml(post.excerpt.slice(0, 160));
+      const escapedTitle = escapeHtml(formatBlogTitle(post.title));
+      const escapedExcerpt = escapeHtml(
+        truncateAtWordBoundary(post.excerpt, MAX_DESCRIPTION_LENGTH),
+      );
       const ogImage = post.coverImage || `${SITE_URL}/opengraph.jpg`;
       const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
 
@@ -236,7 +244,7 @@ export function serveStatic(app: Express) {
       }
 
       const structuredData = JSON.stringify({ "@context": "https://schema.org", "@graph": schemaGraph });
-      const articleHtml = (await renderSanitizedMarkdown(post.content))
+      const articleHtml = (await renderSanitizedMarkdown(post.content, distPath))
         .replace(/<h1\b[^>]*>[\s\S]*?<\/h1>/gi, "");
       const articleRoot = `
         <main class="prerendered-blog-content">
@@ -318,7 +326,7 @@ export function serveStatic(app: Express) {
     try {
       const { posts } = await storage.getBlogPosts({ published: true, limit: 100 });
       const listingRoot = `
-        <section class="max-w-6xl mx-auto px-6 pb-24 prerendered-blog-listing">
+        <section class="max-w-6xl mx-auto px-6 pb-24 prerendered-blog-listing" data-prerender-blog-listing>
           <div class="blog-post-list">
             ${posts.map((post) => `
               <article>
@@ -359,7 +367,9 @@ export function serveStatic(app: Express) {
     const escapedDescription = escapeHtml(metadata.description);
     const noindex = routePath === "/thank-you"
       ? '\n    <meta name="robots" content="noindex, nofollow" />'
-      : "";
+      : routePath === "/experience"
+        ? '\n    <meta name="robots" content="noindex, follow" />'
+        : "";
     const injectedHtml = injectAfterCharset(
       getBaseHtml(canonicalPath)
         .replace(/<title>[\s\S]*?<\/title>/, `<title>${escapedTitle}</title>`)
@@ -392,9 +402,12 @@ function escapeHtml(str: string): string {
     .replace(/>/g, "&gt;");
 }
 
-async function renderSanitizedMarkdown(markdown: string): Promise<string> {
+async function renderSanitizedMarkdown(
+  markdown: string,
+  publicRoot: string,
+): Promise<string> {
   const { marked } = await loadMarked();
-  return sanitizeHtml(marked.parse(markdown, { async: false }) as string, {
+  const sanitized = sanitizeHtml(marked.parse(markdown, { async: false }) as string, {
     allowedTags: [
       ...sanitizeHtml.defaults.allowedTags.filter(
         (tag) => !["iframe", "script", "style", "svg"].includes(tag),
@@ -420,6 +433,104 @@ async function renderSanitizedMarkdown(markdown: string): Promise<string> {
     },
     allowProtocolRelative: false,
   });
+  return addIntrinsicImageDimensions(sanitized, publicRoot);
+}
+
+function addIntrinsicImageDimensions(html: string, publicRoot: string): string {
+  return html.replace(
+    /<img\b([^>]*?)(\/?)>/gi,
+    (full, attributes: string, closing: string) => {
+      if (/\bwidth\s*=|\bheight\s*=/i.test(attributes)) return full;
+      const source = attributes.match(/\bsrc\s*=\s*["']([^"']+)["']/i)?.[1];
+      if (!source) return full;
+      const dimensions = resolveImageDimensions(source, publicRoot);
+      if (!dimensions) return full;
+      return `<img${attributes} width="${dimensions.width}" height="${dimensions.height}"${closing}>`;
+    },
+  );
+}
+
+function resolveImageDimensions(
+  source: string,
+  publicRoot: string,
+): { width: number; height: number } | undefined {
+  let pathname: string;
+  try {
+    const url = new URL(source, SITE_URL);
+    if (url.origin !== SITE_URL) return undefined;
+    pathname = decodeURIComponent(url.pathname);
+  } catch {
+    return undefined;
+  }
+  const filePath = path.resolve(publicRoot, `.${pathname}`);
+  if (filePath !== publicRoot && !filePath.startsWith(`${publicRoot}${path.sep}`)) {
+    return undefined;
+  }
+  let data: Buffer;
+  try {
+    data = fs.readFileSync(filePath);
+  } catch {
+    return undefined;
+  }
+  if (data.length >= 24 && data.readUInt32BE(0) === 0x89504e47) {
+    return { width: data.readUInt32BE(16), height: data.readUInt32BE(20) };
+  }
+  if (
+    data.length >= 30 &&
+    data.toString("ascii", 0, 4) === "RIFF" &&
+    data.toString("ascii", 8, 12) === "WEBP"
+  ) {
+    const format = data.toString("ascii", 12, 16);
+    if (format === "VP8X") {
+      return {
+        width: 1 + data.readUIntLE(24, 3),
+        height: 1 + data.readUIntLE(27, 3),
+      };
+    }
+    const frameStart = data.indexOf(Buffer.from([0x9d, 0x01, 0x2a]));
+    if (format === "VP8 " && frameStart >= 0 && data.length >= frameStart + 7) {
+      return {
+        width: data.readUInt16LE(frameStart + 3) & 0x3fff,
+        height: data.readUInt16LE(frameStart + 5) & 0x3fff,
+      };
+    }
+  }
+  if (data.length >= 4 && data[0] === 0xff && data[1] === 0xd8) {
+    let offset = 2;
+    while (offset + 9 < data.length) {
+      if (data[offset] !== 0xff) {
+        offset += 1;
+        continue;
+      }
+      const marker = data[offset + 1];
+      const length = data.readUInt16BE(offset + 2);
+      if (marker >= 0xc0 && marker <= 0xc3) {
+        return {
+          width: data.readUInt16BE(offset + 7),
+          height: data.readUInt16BE(offset + 5),
+        };
+      }
+      offset += 2 + length;
+    }
+  }
+  return undefined;
+}
+
+function formatBlogTitle(title: string): string {
+  const brandedTitle = `${title} | Arica Tech`;
+  return truncateAtWordBoundary(brandedTitle, MAX_TITLE_LENGTH, title);
+}
+
+function truncateAtWordBoundary(
+  value: string,
+  maxLength: number,
+  fallback = value,
+): string {
+  if (value.length <= maxLength) return value;
+  const limit = Math.max(1, maxLength - 1);
+  const boundary = value.slice(0, limit).lastIndexOf(" ");
+  const truncated = value.slice(0, boundary > 0 ? boundary : limit).trim();
+  return truncated ? `${truncated}…` : fallback.slice(0, maxLength);
 }
 
 function stripBaseMetadata(html: string): string {
@@ -447,23 +558,24 @@ function replaceRootContent(html: string, content: string): string {
 
 function replaceBlogListingContent(html: string, content: string): string {
   const listingSectionPattern =
-    /<section class="max-w-6xl mx-auto px-6 pb-24">[\s\S]*?<\/section>/;
+    /<section\b[^>]*data-prerender-blog-listing(?:="[^"]*")?[^>]*>[\s\S]*?<\/section>/;
   if (listingSectionPattern.test(html)) {
     return html.replace(listingSectionPattern, content);
   }
+  console.error(
+    "[blog-listing] data-prerender-blog-listing marker missing; falling back to root replacement",
+  );
   return replaceRootContent(html, content);
 }
 
 function renderInternalNavigation(): string {
-  const links = SITEMAP_STATIC_ROUTES
-    .map(({ path: routePath }) => {
-      const label = routePath === "/" ? "Home" : routePath
-        .split("/")
-        .filter(Boolean)
-        .map((part) => part.replaceAll("-", " "))
-        .join(" / ");
-      return `<a href="${routePath}">${escapeHtml(label)}</a>`;
-    })
+  const navigationLinks: readonly SiteNavigationLink[] = [
+    ["/", "Home"],
+    ...SITE_NAVIGATION_LINKS,
+    ...SITE_LEGAL_LINKS,
+  ];
+  const links = navigationLinks
+    .map(([routePath, label]: SiteNavigationLink) => `<a href="${routePath}">${escapeHtml(label)}</a>`)
     .join("\n");
   return `
     <nav aria-label="Site navigation" class="prerendered-site-navigation"

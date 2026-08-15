@@ -99,6 +99,8 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
                 src="/arica-logo.png"
                 alt="Arica Tech Security"
                 className="w-auto mx-auto"
+                width={7804}
+                height={2886}
                 style={{ height: "clamp(5rem, 15vw, 12rem)" }}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}

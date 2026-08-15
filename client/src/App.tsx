@@ -128,6 +128,8 @@ function AppContent() {
             src="/arica-logo.png"
             alt="Arica Tech Security LLP"
             className="h-8 md:h-14 w-auto"
+            width={7804}
+            height={2886}
           />
         </a>
       )}
