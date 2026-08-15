@@ -344,14 +344,14 @@ export default function AttackGlobe() {
     textureLoader.crossOrigin = 'anonymous';
     
     const earthTexture = textureLoader.load(
-      '/textures/earth-blue-marble.jpg',
+      '/textures-optimized/earth-blue-marble.webp',
       (texture) => {
         texture.colorSpace = THREE.SRGBColorSpace;
         earthMaterial.needsUpdate = true;
       }
     );
     
-    const bumpTexture = textureLoader.load('/textures/earth-topology.png');
+    const bumpTexture = textureLoader.load('/textures-optimized/earth-topology.webp');
     
     const earthMaterial = new THREE.MeshPhongMaterial({
       map: earthTexture,
