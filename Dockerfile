@@ -12,14 +12,16 @@ RUN npm ci
 # Copy source code
 COPY . .
 
+RUN apk add --no-cache chromium
+
 # Vite reads VITE_* env vars at build time and inlines them into the client
 # bundle. The site key (public) is therefore baked in here; the matching
 # secret key is consumed by the server at runtime via App Runner env vars.
 ARG VITE_TURNSTILE_SITE_KEY="0x4AAAAAADVS9UDND4X34co8"
 ENV VITE_TURNSTILE_SITE_KEY=$VITE_TURNSTILE_SITE_KEY
 
-# Build the application (client + server)
-RUN npm run build
+# Build the application (client + server), then capture the rendered route HTML.
+RUN npm run build && npx tsx script/prerender.ts
 
 # Stage 2: Production
 FROM node:20-alpine AS production

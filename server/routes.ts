@@ -7,6 +7,7 @@ import { insertContactInquirySchema, insertBlogPostSchema, updateBlogPostSchema 
 import { fromZodError } from "zod-validation-error";
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import { NodeHttpHandler } from "@smithy/node-http-handler";
+import { SITEMAP_STATIC_ROUTES } from "@shared/public-routes";
 
 // App Runner's shared-NAT egress to the public SES endpoint
 // (email.us-east-1.amazonaws.com) was timing out 100% of the time, so we
@@ -530,35 +531,7 @@ export async function registerRoutes(
   }
 
   // --- Sitemap (enhanced with news namespace) ---
-  const STATIC_PAGES = [
-    { loc: "/", priority: "1.0", changefreq: "weekly" },
-    { loc: "/about", priority: "0.8", changefreq: "monthly" },
-    { loc: "/services", priority: "0.9", changefreq: "monthly" },
-    { loc: "/contact", priority: "0.7", changefreq: "monthly" },
-    { loc: "/case-studies", priority: "0.7", changefreq: "monthly" },
-    { loc: "/team", priority: "0.6", changefreq: "monthly" },
-    { loc: "/blog", priority: "0.9", changefreq: "daily" },
-    { loc: "/certifications", priority: "0.7", changefreq: "monthly" },
-    { loc: "/attack-globe", priority: "0.4", changefreq: "yearly" },
-    { loc: "/vulnerability-scanner", priority: "0.4", changefreq: "yearly" },
-    { loc: "/compliance-dashboard", priority: "0.4", changefreq: "yearly" },
-    { loc: "/devsecops", priority: "0.5", changefreq: "monthly" },
-    { loc: "/devsecops-pipeline", priority: "0.4", changefreq: "yearly" },
-    { loc: "/api-security-lab", priority: "0.4", changefreq: "yearly" },
-    { loc: "/cloud-security-center", priority: "0.4", changefreq: "yearly" },
-    { loc: "/mobile-security", priority: "0.4", changefreq: "yearly" },
-    { loc: "/risk-assessment", priority: "0.4", changefreq: "yearly" },
-    { loc: "/security-policies", priority: "0.5", changefreq: "monthly" },
-    { loc: "/security-architecture", priority: "0.4", changefreq: "yearly" },
-    { loc: "/code-review", priority: "0.4", changefreq: "yearly" },
-    { loc: "/security-training", priority: "0.4", changefreq: "yearly" },
-    { loc: "/ongoing-support", priority: "0.5", changefreq: "monthly" },
-    { loc: "/security-implementation", priority: "0.5", changefreq: "monthly" },
-    { loc: "/legal/privacy-policy", priority: "0.3", changefreq: "yearly" },
-    { loc: "/legal/cookies-policy", priority: "0.3", changefreq: "yearly" },
-    { loc: "/legal/information-security-policy", priority: "0.3", changefreq: "yearly" },
-    { loc: "/legal/third-party-data-vendor-policy", priority: "0.3", changefreq: "yearly" },
-  ];
+  const staticLastmod = (process.env.BUILD_DATE ?? new Date().toISOString()).slice(0, 10);
 
   app.get("/sitemap.xml", async (_req, res) => {
     try {
@@ -568,17 +541,15 @@ export async function registerRoutes(
       } catch (error) {
         console.error("[sitemap] blog slug lookup failed:", error);
       }
-      const now = new Date().toISOString();
-
       let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
       xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n`;
       xml += `        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"\n`;
       xml += `        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n`;
 
-      for (const page of STATIC_PAGES) {
+      for (const page of SITEMAP_STATIC_ROUTES) {
         xml += `  <url>\n`;
-        xml += `    <loc>${SITE_URL}${page.loc}</loc>\n`;
-        xml += `    <lastmod>${now}</lastmod>\n`;
+        xml += `    <loc>${SITE_URL}${page.path}</loc>\n`;
+        xml += `    <lastmod>${staticLastmod}</lastmod>\n`;
         xml += `    <changefreq>${page.changefreq}</changefreq>\n`;
         xml += `    <priority>${page.priority}</priority>\n`;
         xml += `  </url>\n`;

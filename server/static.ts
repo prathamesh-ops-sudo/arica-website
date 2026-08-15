@@ -1,15 +1,18 @@
 import express, { type Express } from "express";
 import fs from "fs";
 import path from "path";
+import sanitizeHtml from "sanitize-html";
 import { storage } from "./storage";
+import {
+  isKnownLegalRoute,
+  isKnownStaticRoute,
+  STATIC_ROUTE_ALIASES,
+} from "@shared/public-routes";
 
 const SITE_URL = "https://www.aricatech.com";
-const STATIC_ALIASES: Record<string, string> = {
-  "/forensics": "/services",
-  "/compliance": "/services",
-  "/portal": "/contact",
-};
-
+const loadMarked = new Function(
+  "return import('marked')",
+) as () => Promise<typeof import("marked")>;
 const STATIC_METADATA: Record<string, { title: string; description: string }> = {
   "/": {
     title: "Cybersecurity Consulting & VAPT Services | Arica Tech",
@@ -134,6 +137,18 @@ export function serveStatic(app: Express) {
   }
 
   const indexHtml = fs.readFileSync(path.resolve(distPath, "index.html"), "utf-8");
+  const prerenderedPath = path.resolve(distPath, "prerendered");
+
+  function getPrerenderedHtml(routePath: string): string | undefined {
+    const filename = `${routePath === "/" ? "__root" : routePath.slice(1).replaceAll("/", "__")}.html`;
+    const filePath = path.join(prerenderedPath, filename);
+    if (!fs.existsSync(filePath)) return undefined;
+    return fs.readFileSync(filePath, "utf-8");
+  }
+
+  function getBaseHtml(routePath: string): string {
+    return getPrerenderedHtml(routePath) ?? indexHtml;
+  }
 
   // Hashed assets (JS, CSS) get long cache (1 year) since filenames change on rebuild
   app.use(
@@ -164,7 +179,7 @@ export function serveStatic(app: Express) {
       const post = await storage.getBlogPostBySlug(req.params.slug);
       if (!post || !post.published) {
         res.setHeader("Cache-Control", "no-cache");
-        return res.send(indexHtml);
+        return res.status(404).send(indexHtml);
       }
 
       const escapedTitle = escapeHtml(`${post.title} | Arica Tech Security Blog`);
@@ -219,6 +234,19 @@ export function serveStatic(app: Express) {
       }
 
       const structuredData = JSON.stringify({ "@context": "https://schema.org", "@graph": schemaGraph });
+      const { marked } = await loadMarked();
+      const articleHtml = sanitizeHtml(marked.parse(post.content, { async: false }) as string, {
+        allowedSchemes: ["http", "https", "mailto"],
+      });
+      const articleRoot = `
+        <main class="prerendered-blog-content">
+          <article>
+            <h1>${escapeHtml(post.title)}</h1>
+            <p>${escapeHtml(post.excerpt)}</p>
+            <p>By ${escapeHtml(post.author)}</p>
+            <div>${articleHtml}</div>
+          </article>
+        </main>`;
 
       const metaTags = `
     <title>${escapedTitle}</title>
@@ -241,9 +269,10 @@ export function serveStatic(app: Express) {
     <script type="application/ld+json">${structuredData}</script>`;
 
       // Inject after <head> opening tag (before existing meta)
-      const injectedHtml = stripBaseMetadata(indexHtml).replace(
-        '<meta charset="UTF-8" />',
-        `<meta charset="UTF-8" />${metaTags}`
+      const injectedHtml = injectAfterCharset(
+        stripBaseMetadata(indexHtml)
+          .replace('<div id="root"></div>', `<div id="root">${articleRoot}</div>`),
+        metaTags,
       );
 
       res.setHeader("Cache-Control", "public, max-age=300");
@@ -284,9 +313,9 @@ export function serveStatic(app: Express) {
     <meta name="twitter:image" content="${SITE_URL}/opengraph.jpg" />
     <script type="application/ld+json">${breadcrumb}</script>`;
 
-    const injectedHtml = stripBaseMetadata(indexHtml).replace(
-      '<meta charset="UTF-8" />',
-      `<meta charset="UTF-8" />${metaTags}`
+    const injectedHtml = injectAfterCharset(
+      stripBreadcrumbStructuredData(stripBaseMetadata(getBaseHtml("/blog"))),
+      metaTags,
     );
     res.setHeader("Cache-Control", "public, max-age=300");
     res.send(injectedHtml);
@@ -294,9 +323,17 @@ export function serveStatic(app: Express) {
 
   app.use("*", (req, res, next) => {
     const routePath = new URL(req.originalUrl, "http://localhost").pathname.replace(/\/$/, "") || "/";
-    const canonicalPath = STATIC_ALIASES[routePath] || routePath;
+    const canonicalPath = STATIC_ROUTE_ALIASES[routePath] || routePath;
     const metadata = STATIC_METADATA[canonicalPath];
-    if (!metadata) return next();
+    if (!metadata || !isKnownStaticRoute(routePath)) {
+      if (
+        routePath.startsWith("/blog/") ||
+        (routePath.startsWith("/legal/") && !isKnownLegalRoute(routePath))
+      ) {
+        return res.status(404).send(indexHtml);
+      }
+      return next();
+    }
 
     const canonicalUrl = `${SITE_URL}${canonicalPath}`;
     const escapedTitle = escapeHtml(metadata.title);
@@ -304,19 +341,18 @@ export function serveStatic(app: Express) {
     const noindex = routePath === "/thank-you"
       ? '\n    <meta name="robots" content="noindex, nofollow" />'
       : "";
-    const injectedHtml = indexHtml
-      .replace(/<title>[\s\S]*?<\/title>/, `<title>${escapedTitle}</title>`)
-      .replace(/<meta name="description"[^>]*\/?>/g, "")
-      .replace(/<link rel="canonical"[^>]*\/?>/g, "")
-      .replace(/<meta property="og:title"[^>]*\/?>/, `<meta property="og:title" content="${escapedTitle}" />`)
-      .replace(/<meta property="og:description"[^>]*\/?>/, `<meta property="og:description" content="${escapedDescription}" />`)
-      .replace(/<meta property="og:url"[^>]*\/?>/g, `<meta property="og:url" content="${canonicalUrl}" />`)
-      .replace(/<meta name="twitter:title"[^>]*\/?>/, `<meta name="twitter:title" content="${escapedTitle}" />`)
-      .replace(/<meta name="twitter:description"[^>]*\/?>/, `<meta name="twitter:description" content="${escapedDescription}" />`)
-      .replace(
-        '<meta charset="UTF-8" />',
-        `<meta charset="UTF-8" />\n    <meta name="description" content="${escapedDescription}" />\n    <link rel="canonical" href="${canonicalUrl}" />${noindex}`,
-      );
+    const injectedHtml = injectAfterCharset(
+      getBaseHtml(canonicalPath)
+        .replace(/<title>[\s\S]*?<\/title>/, `<title>${escapedTitle}</title>`)
+        .replace(/<meta name="description"[^>]*\/?>/g, "")
+        .replace(/<link rel="canonical"[^>]*\/?>/g, "")
+        .replace(/<meta property="og:title"[^>]*\/?>/, `<meta property="og:title" content="${escapedTitle}" />`)
+        .replace(/<meta property="og:description"[^>]*\/?>/, `<meta property="og:description" content="${escapedDescription}" />`)
+        .replace(/<meta property="og:url"[^>]*\/?>/g, `<meta property="og:url" content="${canonicalUrl}" />`)
+        .replace(/<meta name="twitter:title"[^>]*\/?>/, `<meta name="twitter:title" content="${escapedTitle}" />`)
+        .replace(/<meta name="twitter:description"[^>]*\/?>/, `<meta name="twitter:description" content="${escapedDescription}" />`),
+      `\n    <meta name="description" content="${escapedDescription}" />\n    <link rel="canonical" href="${canonicalUrl}" />${noindex}`,
+    );
 
     res.setHeader("Cache-Control", "public, max-age=300");
     res.send(injectedHtml);
@@ -325,7 +361,7 @@ export function serveStatic(app: Express) {
   // fall through to index.html if the file doesn't exist (SPA routing)
   app.use("*", (_req, res) => {
     res.setHeader("Cache-Control", "no-cache");
-    res.sendFile(path.resolve(distPath, "index.html"));
+    res.status(404).sendFile(path.resolve(distPath, "index.html"));
   });
 }
 
@@ -344,4 +380,18 @@ function stripBaseMetadata(html: string): string {
     .replace(/<link rel="canonical"[^>]*\/?>/g, "")
     .replace(/<meta property="og:[^"]+"[^>]*\/?>/g, "")
     .replace(/<meta name="twitter:[^"]+"[^>]*\/?>/g, "");
+}
+
+function stripBreadcrumbStructuredData(html: string): string {
+  return html.replace(
+    /<script type="application\/ld\+json">[\s\S]*?<\/script>/g,
+    (script) => script.includes('"BreadcrumbList"') ? "" : script,
+  );
+}
+
+function injectAfterCharset(html: string, content: string): string {
+  return html.replace(
+    /<meta charset="UTF-8"\s*\/?>/,
+    (charset) => `${charset}${content}`,
+  );
 }
