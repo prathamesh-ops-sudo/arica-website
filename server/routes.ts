@@ -508,26 +508,12 @@ export async function registerRoutes(
     }
   }
 
-  async function pingGoogle(urls: string[]) {
-    try {
-      for (const url of urls) {
-        await fetch(
-          `https://www.google.com/ping?sitemap=${encodeURIComponent(SITE_URL + "/sitemap.xml")}`
-        );
-      }
-      console.log(`[google-ping] sitemap ping sent for ${urls.length} URLs`);
-    } catch (err) {
-      console.warn("[google-ping] failed:", (err as Error)?.message);
-    }
-  }
-
   // Hook: after blog create/update, ping search engines
   function notifySearchEngines(slugs: string[]) {
     const urls = slugs.map((s) => `${SITE_URL}/blog/${s}`);
     urls.push(`${SITE_URL}/blog`);
     urls.push(`${SITE_URL}/sitemap.xml`);
     pingIndexNow(urls);
-    pingGoogle(urls);
   }
 
   // --- Sitemap (enhanced with news namespace) ---

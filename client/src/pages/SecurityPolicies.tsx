@@ -835,7 +835,7 @@ export default function SecurityPolicies() {
               <span className="text-[#3D70B7] text-sm font-medium">Security Framework</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              Security
+              Security{" "}
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#42BA90]">
                 Policies
               </span>

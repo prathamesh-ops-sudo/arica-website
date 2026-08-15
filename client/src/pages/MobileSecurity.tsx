@@ -627,7 +627,7 @@ export default function MobileSecurity() {
               <span className="text-sm font-medium" style={{ color: '#3D70B7' }}>Mobile Security Testing</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              Mobile App
+              Mobile App{" "}
               <span className="block text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(to right, #3D70B7, #42BA90)' }}>
                 Security Assessment
               </span>

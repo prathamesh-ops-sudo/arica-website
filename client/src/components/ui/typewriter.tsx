@@ -19,7 +19,9 @@ export function Typewriter({
   cursorChar = "|",
   className = "",
 }: TypewriterProps) {
-  const [displayText, setDisplayText] = useState("")
+  const isPrerender = typeof navigator !== "undefined" &&
+    navigator.userAgent.includes("AricaTechPrerender");
+  const [displayText, setDisplayText] = useState(isPrerender ? words[0] : "")
   const [isDeleting, setIsDeleting] = useState(false)
   const [wordIndex, setWordIndex] = useState(0)
   const [charIndex, setCharIndex] = useState(0)
@@ -28,6 +30,7 @@ export function Typewriter({
   const currentWord = words[wordIndex]
 
   useEffect(() => {
+    if (isPrerender) return;
     const timeout = setTimeout(
       () => {
         if (!isDeleting) {
@@ -53,22 +56,22 @@ export function Typewriter({
     )
 
     return () => clearTimeout(timeout)
-  }, [charIndex, currentWord, isDeleting, speed, delayBetweenWords, wordIndex, words])
+  }, [charIndex, currentWord, isDeleting, speed, delayBetweenWords, wordIndex, words, isPrerender])
 
   useEffect(() => {
-    if (!cursor) return
+    if (!cursor || isPrerender) return
 
     const cursorInterval = setInterval(() => {
       setShowCursor((prev) => !prev)
     }, 500)
 
     return () => clearInterval(cursorInterval)
-  }, [cursor])
+  }, [cursor, isPrerender])
 
   return (
     <span className={className}>
       {displayText}
-      {cursor && (
+      {cursor && !isPrerender && (
         <span 
           className="ml-1 text-primary transition-opacity duration-75" 
           style={{ opacity: showCursor ? 1 : 0 }}

@@ -843,7 +843,7 @@ export default function CodeReview() {
               <span className="text-sm font-medium" style={{ color: CYAN }}>Code Review</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-4 gsap-fade-in">
-              AI-Powered
+              AI-Powered{" "}
               <span className="block text-transparent bg-clip-text" style={{ backgroundImage: `linear-gradient(to right, ${CYAN}, ${PURPLE})` }}>
                 Code Analysis
               </span>

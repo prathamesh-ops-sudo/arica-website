@@ -100,7 +100,7 @@ export default function ComplianceDashboard() {
               <span className="text-amber-400 text-sm font-medium">Illustrative Client Dashboard · Demo</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              ISMS Readiness
+              ISMS Readiness{" "}
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">
                 Dashboard
               </span>

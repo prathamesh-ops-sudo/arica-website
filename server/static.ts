@@ -6,6 +6,7 @@ import { storage } from "./storage";
 import {
   isKnownLegalRoute,
   isKnownStaticRoute,
+  SITEMAP_STATIC_ROUTES,
   STATIC_ROUTE_ALIASES,
 } from "@shared/public-routes";
 
@@ -163,6 +164,7 @@ export function serveStatic(app: Express) {
   app.use(
     express.static(distPath, {
       index: false,
+      redirect: false,
       maxAge: "1d",
       setHeaders: (res, filePath) => {
         // Service worker must not be cached aggressively
@@ -234,9 +236,11 @@ export function serveStatic(app: Express) {
       }
 
       const structuredData = JSON.stringify({ "@context": "https://schema.org", "@graph": schemaGraph });
-      const articleHtml = await renderSanitizedMarkdown(post.content);
+      const articleHtml = (await renderSanitizedMarkdown(post.content))
+        .replace(/<h1\b[^>]*>[\s\S]*?<\/h1>/gi, "");
       const articleRoot = `
         <main class="prerendered-blog-content">
+          ${renderInternalNavigation()}
           <article>
             <h1>${escapeHtml(post.title)}</h1>
             <p>${escapeHtml(post.excerpt)}</p>
@@ -314,8 +318,7 @@ export function serveStatic(app: Express) {
     try {
       const { posts } = await storage.getBlogPosts({ published: true, limit: 100 });
       const listingRoot = `
-        <main class="prerendered-blog-listing">
-          <h1>Cybersecurity Insights &amp; News</h1>
+        <section class="max-w-6xl mx-auto px-6 pb-24 prerendered-blog-listing">
           <div class="blog-post-list">
             ${posts.map((post) => `
               <article>
@@ -326,8 +329,8 @@ export function serveStatic(app: Express) {
                 </time>
               </article>`).join("\n")}
           </div>
-        </main>`;
-      baseHtml = replaceRootContent(baseHtml, listingRoot);
+        </section>`;
+      baseHtml = replaceBlogListingContent(baseHtml, listingRoot);
     } catch (error) {
       console.warn("[blog-listing] database unavailable; serving captured listing content:", error);
     }
@@ -440,6 +443,33 @@ function replaceRootContent(html: string, content: string): string {
     /<div id="root">[\s\S]*<\/div>(?=\s*(?:<script|<\/body>))/,
     `<div id="root">${content}</div>`,
   );
+}
+
+function replaceBlogListingContent(html: string, content: string): string {
+  const listingSectionPattern =
+    /<section class="max-w-6xl mx-auto px-6 pb-24">[\s\S]*?<\/section>/;
+  if (listingSectionPattern.test(html)) {
+    return html.replace(listingSectionPattern, content);
+  }
+  return replaceRootContent(html, content);
+}
+
+function renderInternalNavigation(): string {
+  const links = SITEMAP_STATIC_ROUTES
+    .map(({ path: routePath }) => {
+      const label = routePath === "/" ? "Home" : routePath
+        .split("/")
+        .filter(Boolean)
+        .map((part) => part.replaceAll("-", " "))
+        .join(" / ");
+      return `<a href="${routePath}">${escapeHtml(label)}</a>`;
+    })
+    .join("\n");
+  return `
+    <nav aria-label="Site navigation" class="prerendered-site-navigation"
+      style="display:flex;flex-wrap:wrap;gap:0.75rem 1.25rem;align-items:center;padding:1rem 1.5rem;margin:0 auto 2rem;max-width:72rem;border-bottom:1px solid rgba(255,255,255,0.12);font-size:0.875rem">
+      ${links}
+    </nav>`;
 }
 
 function injectAfterCharset(html: string, content: string): string {

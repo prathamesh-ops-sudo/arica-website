@@ -83,6 +83,7 @@ async function main() {
   const results: Record<string, "captured" | "fallback"> = {};
   try {
     const page = await browser.newPage();
+    await page.setUserAgent(`${await browser.userAgent()} AricaTechPrerender`);
     page.setDefaultNavigationTimeout(15_000);
     for (const route of STATIC_PUBLIC_ROUTES) {
       results[route] = await prerenderRoute(page, route);

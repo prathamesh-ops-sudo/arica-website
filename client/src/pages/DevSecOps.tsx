@@ -963,7 +963,7 @@ export default function DevSecOps() {
             )}
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-4 gsap-fade-in">
-            Security-Integrated
+            Security-Integrated{" "}
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#42BA90]">
               CI/CD Pipeline
             </span>

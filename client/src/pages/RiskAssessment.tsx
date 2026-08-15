@@ -1059,7 +1059,7 @@ export default function RiskAssessment() {
               />
             </motion.div>
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              Cybersecurity
+              Cybersecurity{" "}
               <motion.span 
                 className="block text-transparent bg-clip-text bg-gradient-to-r from-[#3D70B7] to-[#42BA90]"
                 animate={{
