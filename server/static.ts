@@ -392,7 +392,30 @@ function escapeHtml(str: string): string {
 async function renderSanitizedMarkdown(markdown: string): Promise<string> {
   const { marked } = await loadMarked();
   return sanitizeHtml(marked.parse(markdown, { async: false }) as string, {
+    allowedTags: [
+      ...sanitizeHtml.defaults.allowedTags.filter(
+        (tag) => !["iframe", "script", "style", "svg"].includes(tag),
+      ),
+      "figure",
+      "figcaption",
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "img",
+      "pre",
+      "code",
+    ],
+    allowedAttributes: {
+      ...sanitizeHtml.defaults.allowedAttributes,
+      img: ["src", "alt", "title", "width", "height", "loading"],
+    },
     allowedSchemes: ["http", "https", "mailto"],
+    allowedSchemesByTag: {
+      a: ["http", "https", "mailto"],
+      img: ["http", "https"],
+    },
+    allowProtocolRelative: false,
   });
 }
 
