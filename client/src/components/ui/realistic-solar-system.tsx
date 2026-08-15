@@ -834,8 +834,8 @@ const trailParticleShader = {
 };
 
 const PLANET_TEXTURES: Record<string, string> = {
-  sun: '/textures-optimized/sun.webp',
-  mercury: '/textures-optimized/mercury.webp',
+  sun: '/textures/sun.jpg',
+  mercury: '/textures/mercury.jpg',
   earth: '/textures-optimized/earth.webp',
   mars: '/textures-optimized/mars.webp',
   jupiter: '/textures-optimized/jupiter.webp',
@@ -843,7 +843,7 @@ const PLANET_TEXTURES: Record<string, string> = {
   neptune: '/textures-optimized/neptune.webp',
   uranus: '/textures-optimized/uranus.webp',
   moon: '/textures-optimized/moon.webp',
-  pluto: '/textures-optimized/mercury.webp',
+  pluto: '/textures/mercury.jpg',
 };
 
 const PLANET_ID_TO_TEXTURE: Record<string, string> = {

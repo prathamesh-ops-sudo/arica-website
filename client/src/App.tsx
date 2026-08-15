@@ -116,6 +116,7 @@ function AppContent() {
   const [location] = useLocation();
   const isFullscreenRoute = FULLSCREEN_ROUTES.includes(location);
   const isExperienceSubRoute = EXPERIENCE_SUB_ROUTES.includes(location);
+  const isTeamRoute = location === "/team";
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -123,7 +124,7 @@ function AppContent() {
   
   return (
     <>
-      {!isExperienceSubRoute && (
+      {!isExperienceSubRoute && !isTeamRoute && (
         <a href="/" className="fixed z-[10000]" style={{ top: "calc(1rem - 1px)", left: "calc(1rem - 3px)" }} aria-label="Arica Tech Security LLP Home">
           <img
             src="/arica-logo.png"
