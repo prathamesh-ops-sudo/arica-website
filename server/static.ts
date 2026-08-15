@@ -234,10 +234,7 @@ export function serveStatic(app: Express) {
       }
 
       const structuredData = JSON.stringify({ "@context": "https://schema.org", "@graph": schemaGraph });
-      const { marked } = await loadMarked();
-      const articleHtml = sanitizeHtml(marked.parse(post.content, { async: false }) as string, {
-        allowedSchemes: ["http", "https", "mailto"],
-      });
+      const articleHtml = await renderSanitizedMarkdown(post.content);
       const articleRoot = `
         <main class="prerendered-blog-content">
           <article>
@@ -285,7 +282,7 @@ export function serveStatic(app: Express) {
   });
 
   // Blog listing page also gets custom meta
-  app.use("/blog", (_req, res, next) => {
+  app.use("/blog", async (_req, res, next) => {
     if (_req.originalUrl !== "/blog" && _req.originalUrl !== "/blog/") return next();
 
     const breadcrumb = JSON.stringify({
@@ -313,10 +310,29 @@ export function serveStatic(app: Express) {
     <meta name="twitter:image" content="${SITE_URL}/opengraph.jpg" />
     <script type="application/ld+json">${breadcrumb}</script>`;
 
-    const injectedHtml = injectAfterCharset(
-      stripBreadcrumbStructuredData(stripBaseMetadata(getBaseHtml("/blog"))),
-      metaTags,
-    );
+    let baseHtml = stripBreadcrumbStructuredData(stripBaseMetadata(getBaseHtml("/blog")));
+    try {
+      const { posts } = await storage.getBlogPosts({ published: true, limit: 100 });
+      const listingRoot = `
+        <main class="prerendered-blog-listing">
+          <h1>Cybersecurity Insights &amp; News</h1>
+          <div class="blog-post-list">
+            ${posts.map((post) => `
+              <article>
+                <h2><a href="/blog/${encodeURIComponent(post.slug)}">${escapeHtml(post.title)}</a></h2>
+                <p>${escapeHtml(post.excerpt)}</p>
+                <time datetime="${post.publishedAt?.toISOString() || post.updatedAt.toISOString()}">
+                  ${escapeHtml((post.publishedAt || post.updatedAt).toISOString().slice(0, 10))}
+                </time>
+              </article>`).join("\n")}
+          </div>
+        </main>`;
+      baseHtml = replaceRootContent(baseHtml, listingRoot);
+    } catch (error) {
+      console.warn("[blog-listing] database unavailable; serving captured listing content:", error);
+    }
+
+    const injectedHtml = injectAfterCharset(baseHtml, metaTags);
     res.setHeader("Cache-Control", "public, max-age=300");
     res.send(injectedHtml);
   });
@@ -373,6 +389,13 @@ function escapeHtml(str: string): string {
     .replace(/>/g, "&gt;");
 }
 
+async function renderSanitizedMarkdown(markdown: string): Promise<string> {
+  const { marked } = await loadMarked();
+  return sanitizeHtml(marked.parse(markdown, { async: false }) as string, {
+    allowedSchemes: ["http", "https", "mailto"],
+  });
+}
+
 function stripBaseMetadata(html: string): string {
   return html
     .replace(/<title>[\s\S]*?<\/title>/g, "")
@@ -386,6 +409,13 @@ function stripBreadcrumbStructuredData(html: string): string {
   return html.replace(
     /<script type="application\/ld\+json">[\s\S]*?<\/script>/g,
     (script) => script.includes('"BreadcrumbList"') ? "" : script,
+  );
+}
+
+function replaceRootContent(html: string, content: string): string {
+  return html.replace(
+    /<div id="root">[\s\S]*<\/div>(?=\s*(?:<script|<\/body>))/,
+    `<div id="root">${content}</div>`,
   );
 }
 

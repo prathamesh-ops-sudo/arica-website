@@ -30,10 +30,22 @@ async function waitForServer(): Promise<void> {
       const response = await fetch(`http://127.0.0.1:${port}/`);
       if (response.ok) return;
     } catch {
-      await new Promise((resolve) => setTimeout(resolve, 250));
     }
+    await new Promise((resolve) => setTimeout(resolve, 250));
   }
   throw new Error("Prerender server did not become ready");
+}
+
+async function warnIfDatabaseUnavailable(): Promise<void> {
+  try {
+    const response = await fetch(`http://127.0.0.1:${port}/api/blog?limit=1`);
+    if (response.ok) return;
+  } catch {
+    // The capture can still proceed because database content is rendered at runtime.
+  }
+  console.warn(
+    "[prerender] database unavailable; /blog listing links and /blog/:slug content will be database-driven at runtime",
+  );
 }
 
 async function prerenderRoute(page: puppeteer.Page, route: string): Promise<"captured" | "fallback"> {
@@ -59,6 +71,7 @@ async function prerenderRoute(page: puppeteer.Page, route: string): Promise<"cap
 async function main() {
   await mkdir(outputDir, { recursive: true });
   await waitForServer();
+  await warnIfDatabaseUnavailable();
 
   const executablePath = process.env.CHROMIUM_PATH ?? "/usr/bin/chromium";
   const browser = await puppeteer.launch({
