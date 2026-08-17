@@ -22,7 +22,7 @@
   <text x="80" y="398" font-family="Segoe UI, Arial, sans-serif" font-size="30" fill="#94a3b8">Process · Compliance (RBI · SEBI · CERT-In · DPDP) · Cost</text>
   <line x1="80" y1="470" x2="1120" y2="470" stroke="#1e3a5f" stroke-width="2"/>
   <text x="80" y="528" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#e2e8f0">Prathamesh Dabir</text>
-  <text x="80" y="566" font-family="Segoe UI, Arial, sans-serif" font-size="25" fill="#94a3b8">Security Operations &amp; Threat Intelligence · Arica Tech Security</text>
+  <text x="80" y="566" font-family="Segoe UI, Arial, sans-serif" font-size="25" fill="#94a3b8">Chief Technology Officer · Arica Tech Security</text>
   <g transform="translate(980,150)">
     <circle cx="60" cy="60" r="58" fill="none" stroke="url(#accent)" stroke-width="4"/>
     <path d="M60 18 L98 36 V66 C98 92 80 108 60 116 C40 108 22 92 22 66 V36 Z" fill="none" stroke="#7dd3fc" stroke-width="4"/>

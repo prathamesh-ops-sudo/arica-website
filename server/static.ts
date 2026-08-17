@@ -211,7 +211,7 @@ export function serveStatic(app: Express) {
           "@type": "BlogPosting",
           "headline": post.title,
           "description": post.excerpt,
-          "author": { "@type": "Person", "name": post.author, "jobTitle": "Security Operations & Threat Intelligence", "worksFor": { "@type": "Organization", "name": "Arica Tech Security LLP" } },
+          "author": { "@type": "Person", "name": post.author, "jobTitle": "Chief Technology Officer", "worksFor": { "@type": "Organization", "name": "Arica Tech Security LLP" } },
           "datePublished": post.publishedAt?.toISOString(),
           "dateModified": post.updatedAt.toISOString(),
           "publisher": { "@type": "Organization", "name": "Arica Tech Security LLP", "url": SITE_URL, "logo": { "@type": "ImageObject", "url": `${SITE_URL}/arica-logo.png` } },
