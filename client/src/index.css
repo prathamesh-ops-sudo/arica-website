@@ -590,11 +590,14 @@ html, body {
   min-height: 100svh;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  /* keeps the fixed logo from sitting on top of the nav pill */
   .mobile-site-nav {
     top: 4rem !important;
   }
+}
 
+@media (max-width: 768px) {
   .horizon-side-menu {
     left: 1rem;
   }
@@ -1415,5 +1418,90 @@ html, body {
 
   * {
     -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Mobile hero: composited-only visuals, no canvas, no images */
+.mhero-glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(60px);
+  will-change: transform;
+}
+
+.mhero-glow-a {
+  top: -12%;
+  left: -22%;
+  width: 70vw;
+  height: 70vw;
+  background: radial-gradient(circle, rgba(61, 112, 183, 0.85), transparent 70%);
+  animation: mhero-drift-a 18s ease-in-out infinite;
+}
+
+.mhero-glow-b {
+  bottom: -8%;
+  right: -24%;
+  width: 66vw;
+  height: 66vw;
+  background: radial-gradient(circle, rgba(66, 186, 144, 0.6), transparent 70%);
+  animation: mhero-drift-b 22s ease-in-out infinite;
+}
+
+@keyframes mhero-drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(6%, 5%, 0) scale(1.12); }
+}
+
+.mhero-glow-c {
+  top: 26%;
+  left: 50%;
+  width: 88vw;
+  height: 46vw;
+  margin-left: -44vw;
+  background: radial-gradient(ellipse, rgba(89, 130, 196, 0.3), transparent 72%);
+}
+
+@keyframes mhero-drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.08); }
+  50% { transform: translate3d(-7%, -4%, 0) scale(1); }
+}
+
+.mhero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 90% 55% at 50% 42%, #000 25%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 55% at 50% 42%, #000 25%, transparent 78%);
+}
+
+.mhero-title-accent {
+  background: linear-gradient(96deg, #8ab4ea 0%, #ffffff 42%, #6fd6ae 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.mhero-chip {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(6px);
+}
+
+.mhero-cta-primary {
+  background: linear-gradient(135deg, #3D70B7 0%, #42BA90 100%);
+  box-shadow: 0 10px 30px -12px rgba(66, 186, 144, 0.55);
+}
+
+.mhero-cta-primary:active {
+  transform: translateY(1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mhero-glow-a,
+  .mhero-glow-b {
+    animation: none;
   }
 }
