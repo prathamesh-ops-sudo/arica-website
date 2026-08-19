@@ -587,10 +587,14 @@ html, body {
 }
 
 .horizon-hero-mobile {
-  min-height: 200vh;
+  min-height: 100svh;
 }
 
 @media (max-width: 768px) {
+  .mobile-site-nav {
+    top: 4rem !important;
+  }
+
   .horizon-side-menu {
     left: 1rem;
   }
@@ -618,7 +622,7 @@ html, body {
 
 @media (max-width: 1024px) {
   .horizon-hero-mobile {
-    min-height: 150vh;
+    min-height: 100svh;
   }
 }
 

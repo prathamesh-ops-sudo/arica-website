@@ -126,11 +126,11 @@ function AppContent() {
       {!isExperienceSubRoute && (
         <a href="/" className="fixed z-[10000]" style={{ top: "calc(1rem - 1px)", left: "calc(1rem - 3px)" }} aria-label="Arica Tech Security LLP Home">
           <img
-            src="/arica-logo.png"
+            src="/arica-logo.webp"
             alt="Arica Tech Security LLP"
             className="h-8 md:h-14 w-auto"
-            width={7804}
-            height={2886}
+            width={779}
+            height={288}
           />
         </a>
       )}

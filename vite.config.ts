@@ -24,6 +24,22 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    modulePreload: {
+      resolveDependencies: (_filename, dependencies) =>
+        dependencies.filter((dependency) => !dependency.includes("/three-")),
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom"],
+          motion: ["framer-motion"],
+          query: ["@tanstack/react-query"],
+          icons: ["lucide-react"],
+          three: ["three"],
+          gsap: ["gsap"],
+        },
+      },
+    },
   },
   server: {
     host: "0.0.0.0",

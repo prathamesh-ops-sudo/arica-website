@@ -96,11 +96,11 @@ export function CinematicHeroOverlay({ onEnterExperience, isPastHero }: Props) {
               style={{ pointerEvents: "none" }}
             >
               <motion.img
-                src="/arica-logo.png"
+                src="/arica-logo.webp"
                 alt="Arica Tech Security"
                 className="w-auto mx-auto"
-                width={7804}
-                height={2886}
+                width={779}
+                height={288}
                 style={{ height: "clamp(5rem, 15vw, 12rem)" }}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}

@@ -86,33 +86,35 @@ export default function Blog() {
               className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-[#3D70B7]/50 transition-colors"
             />
           </div>
-          {allTags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setSelectedTag(null)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                  !selectedTag
-                    ? "bg-[#3D70B7] text-white"
-                    : "bg-white/5 text-gray-400 hover:bg-white/10"
-                }`}
-              >
-                All
-              </button>
-              {allTags.map((tag) => (
+          <div className="h-10 w-full min-w-0 shrink-0 flex flex-nowrap items-center gap-2 overflow-x-auto md:h-auto md:flex-wrap md:overflow-visible">
+            {allTags.length > 0 && (
+              <>
                 <button
-                  key={tag}
-                  onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
+                  onClick={() => setSelectedTag(null)}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                    selectedTag === tag
+                    !selectedTag
                       ? "bg-[#3D70B7] text-white"
                       : "bg-white/5 text-gray-400 hover:bg-white/10"
                   }`}
                 >
-                  {tag}
+                  All
                 </button>
-              ))}
-            </div>
-          )}
+                {allTags.map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                      selectedTag === tag
+                        ? "bg-[#3D70B7] text-white"
+                        : "bg-white/5 text-gray-400 hover:bg-white/10"
+                    }`}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </>
+            )}
+          </div>
         </div>
       </section>
 
@@ -167,6 +169,8 @@ export default function Blog() {
                         <img
                           src={post.coverImage}
                           alt={post.title}
+                          width={1200}
+                          height={630}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] to-transparent opacity-60" />
