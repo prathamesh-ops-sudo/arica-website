@@ -8,6 +8,7 @@ import { ArrowLeft, Shield, AlertTriangle, CheckCircle, Bug, Lock, Key, Package,
 import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background';
 import { useGsapStagger } from '@/hooks/useGsapStagger';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
+import '@/lib/configure-troika';
 
 const CYAN = '#3D70B7';
 const PURPLE = '#3D70B7';

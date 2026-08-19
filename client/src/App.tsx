@@ -26,7 +26,6 @@ const EXPERIENCE_SUB_ROUTES = [
   "/security-policies",
   "/security-architecture",
   "/code-review",
-  "/certifications",
   "/security-training",
   "/ongoing-support",
   "/security-implementation",

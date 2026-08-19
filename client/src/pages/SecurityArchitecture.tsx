@@ -11,6 +11,7 @@ import {
 import { PurpleGalaxyBackground } from '@/components/ui/purple-galaxy-background';
 import { useGsapStagger } from '@/hooks/useGsapStagger';
 import { isPrerendering, isWebGLAvailable } from '@/lib/webgl-utils';
+import '@/lib/configure-troika';
 
 interface NetworkNode {
   id: string;

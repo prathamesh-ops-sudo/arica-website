@@ -12,6 +12,7 @@ import {
   Cloud, Terminal, Bug, ShieldCheck, ShieldAlert, Radio
 } from 'lucide-react';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
+import '@/lib/configure-troika';
 
 const NEUTRAL_LIGHT = '#e5e5e5';
 const NEUTRAL_MID = '#ACACAC';

@@ -1,23 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLocation } from "wouter";
-import { ShieldCheck } from "lucide-react";
-import { useHyperspaceTransition } from "./hyperspace-transition";
+import { Link } from "wouter";
 import { useIsMobileOrTablet } from "@/hooks/use-mobile";
 
 type DesktopHero = typeof import("./horizon-hero-desktop")["HorizonHeroSection"];
 
 function MobileHero() {
-  const [, setLocation] = useLocation();
-  const { triggerTransition } = useHyperspaceTransition();
-
-  const handleEnterExperience = () => {
-    triggerTransition(() => {
-      setLocation("/experience");
-    });
-  };
-
   return (
     <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background to-background px-6 pb-12 pt-32 text-center">
       <div
@@ -37,19 +26,18 @@ function MobileHero() {
           Built to protect, investigate, and comply.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3">
-          <button
-            onClick={handleEnterExperience}
-            className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3 font-semibold text-white backdrop-blur-xl transition-all hover:bg-white/15"
+          <Link
+            href="/contact"
+            className="rounded-full bg-[#42BA90] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#42BA90]/90"
           >
-            <ShieldCheck className="h-5 w-5" />
-            Enter Experience
-          </button>
-          <a
+            Talk to our team
+          </Link>
+          <Link
             href="/services"
             className="rounded-full border border-[#42BA90]/40 px-6 py-3 font-semibold text-[#8de0c2] transition-colors hover:bg-[#42BA90]/10"
           >
             Explore Services
-          </a>
+          </Link>
         </div>
       </div>
     </section>

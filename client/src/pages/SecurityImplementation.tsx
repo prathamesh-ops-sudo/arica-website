@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { WebGLFallback } from '@/components/ui/webgl-fallback';
+import '@/lib/configure-troika';
 
 const CYAN = '#3D70B7';
 const PURPLE = '#3D70B7';
