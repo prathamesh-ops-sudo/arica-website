@@ -3,12 +3,12 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useLocation } from 'wouter';
 import { useHyperspaceTransition } from './hyperspace-transition';
-import { isWebGLAvailable } from '@/lib/webgl-utils';
 import EnergyBeam from './energy-beam';
 import { TubesBackground } from './neon-flow';
 import { CinematicHeroOverlay } from '@/components/CinematicHeroOverlay';
 import { useIsMobileOrTablet } from '@/hooks/use-mobile';
 import { ShieldCheck } from 'lucide-react';
+import { HorizonHeroCss } from './horizon-hero-css';
 
 interface ThreeRefs {
   scene: any;
@@ -31,6 +31,10 @@ export function HorizonHeroSection() {
   const smoothCameraPos = useRef({ x: 0, y: 30, z: 100 });
   const lastProgressRef = useRef(0);
   const rafIdRef = useRef<number | null>(null);
+  const heroVisibleRef = useRef(true);
+  const documentVisibleRef = useRef(
+    typeof document === "undefined" || document.visibilityState !== "hidden",
+  );
   
   const [scrollProgress, setScrollProgress] = useState(0);
   const [currentSection, setCurrentSection] = useState(0);
@@ -60,11 +64,6 @@ export function HorizonHeroSection() {
     let disposed = false;
     let THREE: typeof import('three');
     
-    if (!isWebGLAvailable()) {
-      setWebglFailed(true);
-      return;
-    }
-
     const initThree = async () => {
       try {
         THREE = await import('three');
@@ -105,7 +104,7 @@ export function HorizonHeroSection() {
         }
 
         refs.renderer.setSize(window.innerWidth, window.innerHeight);
-        refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
+        refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
         refs.renderer.toneMapping = THREE.ACESFilmicToneMapping;
         refs.renderer.toneMappingExposure = 0.6;
 
@@ -114,7 +113,7 @@ export function HorizonHeroSection() {
         createDistantBodies();
         createAtmosphere();
 
-        animate(0);
+        startAnimation();
         setIsReady(true);
       } catch (error) {
         console.warn('Three.js initialization failed:', error);
@@ -434,10 +433,14 @@ export function HorizonHeroSection() {
     const frameInterval = 1000 / 30;
     const animate = (timestamp: number) => {
       const refs = threeRefs.current;
-      refs.animationId = requestAnimationFrame(animate);
+      refs.animationId = null;
+      if (!heroVisibleRef.current || !documentVisibleRef.current || disposed) return;
       
       const delta = timestamp - lastFrameTime;
-      if (delta < frameInterval) return;
+      if (delta < frameInterval) {
+        refs.animationId = requestAnimationFrame(animate);
+        return;
+      }
       lastFrameTime = timestamp - (delta % frameInterval);
       
       const time = Date.now() * 0.001;
@@ -480,7 +483,53 @@ export function HorizonHeroSection() {
       if (refs.renderer && refs.scene && refs.camera) {
         refs.renderer.render(refs.scene, refs.camera);
       }
+
+      refs.animationId = requestAnimationFrame(animate);
     };
+
+    const startAnimation = () => {
+      const refs = threeRefs.current;
+      if (
+        refs.animationId === null &&
+        refs.renderer &&
+        heroVisibleRef.current &&
+        documentVisibleRef.current &&
+        !disposed
+      ) {
+        refs.animationId = requestAnimationFrame(animate);
+      }
+    };
+
+    const stopAnimation = () => {
+      const animationId = threeRefs.current.animationId;
+      if (animationId !== null) {
+        cancelAnimationFrame(animationId);
+        threeRefs.current.animationId = null;
+      }
+    };
+
+    const observer = typeof IntersectionObserver === "undefined"
+      ? null
+      : new IntersectionObserver(([entry]) => {
+          heroVisibleRef.current = entry.isIntersecting;
+          if (entry.isIntersecting) startAnimation();
+          else stopAnimation();
+        });
+    if (observer && containerRef.current) observer.observe(containerRef.current);
+
+    const handleVisibilityChange = () => {
+      documentVisibleRef.current = document.visibilityState !== "hidden";
+      if (documentVisibleRef.current) startAnimation();
+      else stopAnimation();
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    const handleContextLost = (event: Event) => {
+      event.preventDefault();
+      stopAnimation();
+      setWebglFailed(true);
+    };
+    canvasRef.current?.addEventListener("webglcontextlost", handleContextLost);
 
     initThree();
 
@@ -499,11 +548,12 @@ export function HorizonHeroSection() {
       disposed = true;
       const refs = threeRefs.current;
       
-      if (refs.animationId) {
-        cancelAnimationFrame(refs.animationId);
-      }
+      stopAnimation();
 
       window.removeEventListener('resize', handleResize);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      observer?.disconnect();
+      canvasRef.current?.removeEventListener("webglcontextlost", handleContextLost);
 
       refs.stars.forEach(starField => {
         starField.geometry.dispose();
@@ -616,6 +666,10 @@ export function HorizonHeroSection() {
       setLocation('/experience');
     });
   }, [triggerTransition, setLocation]);
+
+  if (webglFailed && !isMobileOrTablet) {
+    return <HorizonHeroCss desktop />;
+  }
 
   return (
     <div ref={containerRef} className={isMobileOrTablet ? "horizon-hero-container horizon-hero-mobile" : "horizon-hero-container"}>

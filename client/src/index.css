@@ -653,10 +653,45 @@ html, body {
   min-height: 100svh;
 }
 
+.horizon-hero-css-container {
+  min-height: 300vh;
+}
+
+.horizon-hero-css-section {
+  min-height: 100svh;
+}
+
 @media (max-width: 1024px) {
   /* keeps the fixed logo from sitting on top of the nav pill */
   .mobile-site-nav {
     top: 4rem !important;
+  }
+}
+
+@media (min-width: 1025px) {
+  .horizon-hero-css-content {
+    max-width: min(90vw, 1200px) !important;
+    width: 100%;
+    gap: 1.5rem;
+  }
+
+  .horizon-hero-css-title {
+    white-space: nowrap !important;
+    font-size: clamp(3rem, 7vw, 6.5rem) !important;
+  }
+
+  .horizon-hero-css-content .mhero-title-accent {
+    font-size: clamp(1.6rem, 3vw, 3rem);
+  }
+
+  .horizon-hero-css-content > p {
+    max-width: none;
+    font-size: 1.1rem;
+  }
+
+  .horizon-hero-css-content > div {
+    flex-direction: row;
+    max-width: none;
   }
 }
 

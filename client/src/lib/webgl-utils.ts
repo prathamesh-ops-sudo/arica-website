@@ -15,6 +15,29 @@ export function isWebGLAvailable(): boolean {
   }
 }
 
+export function isWebGLAccelerated(): boolean {
+  try {
+    const canvas = document.createElement('canvas');
+    const context = (
+      canvas.getContext('webgl') ||
+      canvas.getContext('experimental-webgl')
+    ) as WebGLRenderingContext | null;
+
+    if (!context || context.isContextLost()) return false;
+
+    const debugInfo = context.getExtension('WEBGL_debug_renderer_info');
+    const renderer = String(
+      debugInfo
+        ? context.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
+        : context.getParameter(context.RENDERER),
+    ).toLowerCase();
+
+    return !/swiftshader|software|llvmpipe|microsoft basic render driver/.test(renderer);
+  } catch {
+    return false;
+  }
+}
+
 export function isWebGL2Available(): boolean {
   try {
     const canvas = document.createElement('canvas');
