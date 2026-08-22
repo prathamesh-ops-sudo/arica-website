@@ -23,6 +23,15 @@ function routeFilename(route: string): string {
   return `${route === "/" ? "__root" : route.slice(1).replaceAll("/", "__")}.html`;
 }
 
+function stripDeferredHomePreloads(html: string): string {
+  const deferredAssets =
+    "(?:ClientsSlider|ForensicsSection|FloatingCyberThreats|ThreatVortex|AsciiHeroSection|company-stats|ComplianceSection)-[^\"']+\\.js";
+  return html.replace(
+    new RegExp(`<link rel="modulepreload"[^>]*href="[^"]*/assets/${deferredAssets}"[^>]*>\\s*`, "g"),
+    "",
+  );
+}
+
 async function waitForServer(): Promise<void> {
   const deadline = Date.now() + 30_000;
   while (Date.now() < deadline) {
@@ -60,7 +69,8 @@ async function prerenderRoute(page: puppeteer.Page, route: string): Promise<"cap
     if (!html.includes("<div id=\"root\">") || html.match(/<div id="root"><\/div>/)) {
       return "fallback";
     }
-    await writeFile(path.join(outputDir, routeFilename(route)), html);
+    const outputHtml = route === "/" ? stripDeferredHomePreloads(html) : html;
+    await writeFile(path.join(outputDir, routeFilename(route)), outputHtml);
     return "captured";
   } catch (error) {
     console.warn(`[prerender] fallback ${route}: ${(error as Error).message}`);

@@ -53,22 +53,41 @@
       });
     </script>
 
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-PFMH7375');</script>
-    <!-- End Google Tag Manager -->
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S5XWE1EJ7J"></script>
+    <!-- Load the measurement stack after first paint without changing consent state or IDs. -->
     <script>
-      gtag('js', new Date());
-      gtag('config', 'G-S5XWE1EJ7J');
+      (function() {
+        var tagsLoaded = false;
+        var loadTags = function() {
+          if (tagsLoaded) return;
+          tagsLoaded = true;
+
+          gtag('js', new Date());
+          gtag('config', 'G-S5XWE1EJ7J');
+
+          var firstScript = document.getElementsByTagName('script')[0];
+          var gtmScript = document.createElement('script');
+          gtmScript.async = true;
+          gtmScript.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-PFMH7375';
+          firstScript.parentNode.insertBefore(gtmScript, firstScript);
+
+          var gtagScript = document.createElement('script');
+          gtagScript.async = true;
+          gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-S5XWE1EJ7J';
+          firstScript.parentNode.insertBefore(gtagScript, firstScript);
+        };
+        var scheduleTags = function() {
+          if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(loadTags, { timeout: 2000 });
+          } else {
+            window.setTimeout(loadTags, 100);
+          }
+        };
+
+        window.addEventListener('load', scheduleTags, { once: true });
+        window.setTimeout(loadTags, 4000);
+      })();
     </script>
 
-    <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -220,9 +239,7 @@
     }
     </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   </head>
   <body>
     <div id="root"></div>

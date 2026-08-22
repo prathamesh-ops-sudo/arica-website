@@ -177,6 +177,11 @@ export function serveStatic(app: Express) {
         // Service worker must not be cached aggressively
         if (filePath.endsWith("sw.js")) {
           res.setHeader("Cache-Control", "no-cache");
+        } else if (
+          filePath.endsWith("arica-logo.webp") ||
+          filePath.includes(`${path.sep}fonts${path.sep}`)
+        ) {
+          res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
         }
       },
     })

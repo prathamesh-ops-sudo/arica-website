@@ -1,9 +1,84 @@
 import { HorizonHeroSection } from "@/components/ui/horizon-hero-section";
-import { ClientsSlider } from "@/components/ClientsSlider";
-import { ForensicsSection } from "@/components/ForensicsSection";
-import { AsciiHeroSection } from "@/components/AsciiHeroSection";
-import { ComplianceSection } from "@/components/ComplianceSection";
-import { ThreatVortex } from "@/components/ThreatVortex";
+import { ComponentType, useEffect, useRef, useState } from "react";
+import { isPrerendering } from "@/lib/webgl-utils";
+
+type HomeSectionLoader = () => Promise<{ default: ComponentType }>;
+
+const loadClientsSlider: HomeSectionLoader = () =>
+  import("@/components/ClientsSlider").then(({ ClientsSlider: Component }) => ({
+    default: Component,
+  }));
+const loadForensicsSection: HomeSectionLoader = () =>
+  import("@/components/ForensicsSection").then(({ ForensicsSection: Component }) => ({
+    default: Component,
+  }));
+const loadThreatVortex: HomeSectionLoader = () =>
+  import("@/components/ThreatVortex").then(({ ThreatVortex: Component }) => ({
+    default: Component,
+  }));
+const loadAsciiHeroSection: HomeSectionLoader = () =>
+  import("@/components/AsciiHeroSection").then(({ AsciiHeroSection: Component }) => ({
+    default: Component,
+  }));
+const loadComplianceSection: HomeSectionLoader = () =>
+  import("@/components/ComplianceSection").then(({ ComplianceSection: Component }) => ({
+    default: Component,
+  }));
+
+function DeferredHomeSection({
+  load,
+  minHeight,
+}: {
+  load: HomeSectionLoader;
+  minHeight: string;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [Section, setSection] = useState<ComponentType | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    let loading = false;
+    const loadSection = () => {
+      if (loading) return;
+      loading = true;
+      load().then(({ default: LoadedSection }) => {
+        if (mounted) setSection(() => LoadedSection);
+      });
+    };
+
+    if (isPrerendering()) {
+      loadSection();
+      return () => {
+        mounted = false;
+      };
+    }
+
+    const loadWhenNearViewport = () => {
+      const top = containerRef.current?.getBoundingClientRect().top ?? Infinity;
+      if (top < window.innerHeight + 100) {
+        loadSection();
+        window.removeEventListener("scroll", loadWhenNearViewport);
+        window.removeEventListener("resize", loadWhenNearViewport);
+      }
+    };
+
+    loadWhenNearViewport();
+    window.addEventListener("scroll", loadWhenNearViewport, { passive: true });
+    window.addEventListener("resize", loadWhenNearViewport);
+
+    return () => {
+      mounted = false;
+      window.removeEventListener("scroll", loadWhenNearViewport);
+      window.removeEventListener("resize", loadWhenNearViewport);
+    };
+  }, [load]);
+
+  return (
+    <div ref={containerRef} style={{ minHeight }}>
+      {Section ? <Section /> : null}
+    </div>
+  );
+}
 
 function SectionDivider() {
   return (
@@ -31,15 +106,15 @@ export default function Home() {
       <SubtleBackground />
       <div className="relative z-10">
         <HorizonHeroSection />
-        <ClientsSlider />
+        <DeferredHomeSection load={loadClientsSlider} minHeight="15rem" />
         <SectionDivider />
-        <ForensicsSection />
+        <DeferredHomeSection load={loadForensicsSection} minHeight="38rem" />
         <SectionDivider />
-        <ThreatVortex />
+        <DeferredHomeSection load={loadThreatVortex} minHeight="56rem" />
         <SectionDivider />
-        <AsciiHeroSection />
+        <DeferredHomeSection load={loadAsciiHeroSection} minHeight="52rem" />
         <SectionDivider />
-        <ComplianceSection />
+        <DeferredHomeSection load={loadComplianceSection} minHeight="52rem" />
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 const CACHE_NAME = "arica-v1";
 const STATIC_ASSETS = [
   "/",
-  "/arica-logo.png",
+  "/arica-logo.webp",
   "/favicon.png",
 ];
 
@@ -78,24 +78,4 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // For Google Fonts: cache-first with network fallback
-  if (
-    url.hostname === "fonts.googleapis.com" ||
-    url.hostname === "fonts.gstatic.com"
-  ) {
-    event.respondWith(
-      caches.match(event.request).then(
-        (cached) =>
-          cached ||
-          fetch(event.request).then((response) => {
-            if (response.ok) {
-              const clone = response.clone();
-              caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-            }
-            return response;
-          })
-      )
-    );
-    return;
-  }
 });
