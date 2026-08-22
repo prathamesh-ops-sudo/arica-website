@@ -1,4 +1,5 @@
 import express, { type Request, Response, NextFunction } from "express";
+import compression from "compression";
 import helmet from "helmet";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
@@ -7,6 +8,7 @@ import { createServer } from "http";
 const app = express();
 const httpServer = createServer(app);
 const isProduction = process.env.NODE_ENV === "production";
+app.use(compression());
 const contentSecurityPolicy = {
   "default-src": ["'self'"],
   "base-uri": ["'self'"],

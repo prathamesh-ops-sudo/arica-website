@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Phone, MapPin, AlertCircle, Send, ArrowRight } from "lucide-react";
 import { useLocation } from "wouter";
@@ -39,8 +39,26 @@ export default function Contact() {
   });
   const [captchaToken, setCaptchaToken] = useState<string>("");
   const captchaRef = useRef<TurnstileWidgetHandle>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
   const formStartTs = useRef<number>(Date.now());
   const captchaRequired = TURNSTILE_SITE_KEY.length > 0;
+
+  useEffect(() => {
+    if (mapLoaded || !mapRef.current || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setMapLoaded(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(mapRef.current);
+    return () => observer.disconnect();
+  }, [mapLoaded]);
 
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -294,19 +312,33 @@ export default function Contact() {
 
           {/* Google Maps */}
           <motion.div
+            ref={mapRef}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
             className="relative rounded-2xl overflow-hidden mt-12 h-[350px] border border-[#3D70B7]/20"
           >
-              <iframe
-                title="Arica Tech Security LLP Office Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3783.5683192726074!2d73.821124!3d18.5032028!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bf27b58ff65f%3A0x5765fa0aa36e28e!2sMahati%20Residency!5e0!3m2!1sen!2sin!4v1776345725727!5m2!1sen!2sin"
-                className="absolute inset-0 w-full h-full border-0 grayscale-[40%] contrast-[1.1]"
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
+              {mapLoaded ? (
+                <iframe
+                  title="Arica Tech Security LLP Office Location"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3783.5683192726074!2d73.821124!3d18.5032028!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bf27b58ff65f%3A0x5765fa0aa36e28e!2sMahati%20Residency!5e0!3m2!1sen!2sin!4v1776345725727!5m2!1sen!2sin"
+                  className="absolute inset-0 w-full h-full border-0 grayscale-[40%] contrast-[1.1]"
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setMapLoaded(true)}
+                  aria-label="Load interactive map for the Arica Tech Security LLP office"
+                  className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#071124] via-background to-[#0b172d] text-white transition-colors hover:from-[#0b1938] hover:to-[#102241]"
+                >
+                  <MapPin className="h-9 w-9 text-[#42BA90]" aria-hidden="true" />
+                  <span className="text-sm font-semibold">Load interactive map</span>
+                  <span className="text-xs text-muted-foreground">View the office location in Google Maps</span>
+                </button>
+              )}
               <div className="absolute bottom-4 left-4 right-4 bg-background/90 backdrop-blur-sm rounded-xl p-4 border border-[#3D70B7]/20">
                 <p className="font-semibold text-sm mb-1">Arica Tech Security LLP</p>
                 <p className="text-xs text-muted-foreground leading-relaxed">

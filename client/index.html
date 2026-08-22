@@ -61,19 +61,11 @@
           if (tagsLoaded) return;
           tagsLoaded = true;
 
-          gtag('js', new Date());
-          gtag('config', 'G-S5XWE1EJ7J');
-
           var firstScript = document.getElementsByTagName('script')[0];
           var gtmScript = document.createElement('script');
           gtmScript.async = true;
           gtmScript.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-PFMH7375';
           firstScript.parentNode.insertBefore(gtmScript, firstScript);
-
-          var gtagScript = document.createElement('script');
-          gtagScript.async = true;
-          gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-S5XWE1EJ7J';
-          firstScript.parentNode.insertBefore(gtagScript, firstScript);
         };
         var scheduleTags = function() {
           if ('requestIdleCallback' in window) {
