@@ -28,6 +28,10 @@ export function NanobotParticles({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const animationRef = useRef<number | null>(null);
+  const visibleRef = useRef(true);
+  const documentVisibleRef = useRef(
+    typeof document === "undefined" || document.visibilityState !== "hidden",
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -57,7 +61,12 @@ export function NanobotParticles({
       alpha: Math.random() * 0.5 + 0.3,
     }));
 
+    let disposed = false;
+
     const animate = () => {
+      animationRef.current = null;
+      if (!visibleRef.current || !documentVisibleRef.current || disposed) return;
+
       if (!ctx || !canvas) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -106,13 +115,49 @@ export function NanobotParticles({
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    animate();
+    const startAnimation = () => {
+      if (
+        animationRef.current === null &&
+        visibleRef.current &&
+        documentVisibleRef.current &&
+        !disposed
+      ) {
+        animationRef.current = requestAnimationFrame(animate);
+      }
+    };
+
+    const stopAnimation = () => {
+      if (animationRef.current !== null) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+    };
+
+    const observer =
+      typeof IntersectionObserver === "undefined"
+        ? null
+        : new IntersectionObserver(([entry]) => {
+            visibleRef.current = entry.isIntersecting;
+            if (entry.isIntersecting) startAnimation();
+            else stopAnimation();
+          });
+    if (observer) observer.observe(canvas);
+
+    const handleVisibilityChange = () => {
+      documentVisibleRef.current = document.visibilityState !== "hidden";
+      if (documentVisibleRef.current) startAnimation();
+      else stopAnimation();
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    startAnimation();
 
     return () => {
+      disposed = true;
       window.removeEventListener("resize", resize);
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      observer?.disconnect();
+      stopAnimation();
     };
   }, [particleCount, color, maxDistance]);
 

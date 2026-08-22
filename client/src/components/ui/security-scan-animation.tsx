@@ -22,6 +22,11 @@ export function SecurityScanAnimation() {
   const [scanProgress, setScanProgress] = useState(0);
   const [vulnerabilities, setVulnerabilities] = useState({ critical: 0, warning: 0, safe: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const visibleRef = useRef(true);
+  const documentVisibleRef = useRef(
+    typeof document === "undefined" || document.visibilityState !== "hidden",
+  );
 
   useEffect(() => {
     const points: DataPoint[] = [];
@@ -38,14 +43,52 @@ export function SecurityScanAnimation() {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setScanProgress((prev) => {
-        const next = prev + 0.5;
-        return next > 100 ? 0 : next;
-      });
-    }, 50);
+    const startAnimation = () => {
+      if (
+        intervalRef.current === null &&
+        visibleRef.current &&
+        documentVisibleRef.current
+      ) {
+        intervalRef.current = setInterval(() => {
+          setScanProgress((prev) => {
+            const next = prev + 0.5;
+            return next > 100 ? 0 : next;
+          });
+        }, 50);
+      }
+    };
 
-    return () => clearInterval(interval);
+    const stopAnimation = () => {
+      if (intervalRef.current !== null) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+
+    const observer =
+      typeof IntersectionObserver === "undefined"
+        ? null
+        : new IntersectionObserver(([entry]) => {
+            visibleRef.current = entry.isIntersecting;
+            if (entry.isIntersecting) startAnimation();
+            else stopAnimation();
+          });
+    if (observer && containerRef.current) observer.observe(containerRef.current);
+
+    const handleVisibilityChange = () => {
+      documentVisibleRef.current = document.visibilityState !== "hidden";
+      if (documentVisibleRef.current) startAnimation();
+      else stopAnimation();
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    startAnimation();
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      observer?.disconnect();
+      stopAnimation();
+    };
   }, []);
 
   useEffect(() => {

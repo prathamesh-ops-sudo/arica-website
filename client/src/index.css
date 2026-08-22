@@ -689,9 +689,12 @@ html, body {
     font-size: 1.1rem;
   }
 
-  .horizon-hero-css-content > div {
+  .horizon-hero-css-ctas {
     flex-direction: row;
+    width: fit-content;
     max-width: none;
+    align-items: center;
+    justify-content: center;
   }
 }
 

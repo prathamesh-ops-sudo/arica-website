@@ -28,7 +28,7 @@ export function HorizonHeroCss({ desktop = false }: { desktop?: boolean }) {
           Built to protect, investigate, and comply.
         </p>
 
-        <div className="flex w-full max-w-xs flex-col items-stretch gap-3 pt-1">
+        <div className="horizon-hero-css-ctas flex w-full max-w-xs flex-col items-stretch gap-3 pt-1">
           <Link
             href="/contact"
             className="mhero-cta-primary rounded-full px-6 py-3.5 font-semibold text-white transition-transform"
