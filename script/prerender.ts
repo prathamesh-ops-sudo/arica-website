@@ -31,6 +31,88 @@ function stripDeferredHomePreloads(html: string): string {
   );
 }
 
+type RuntimeArtifact = {
+  kind: "script" | "link" | "iframe" | "noscript";
+  url: string;
+};
+
+type RuntimeArtifactReport = {
+  route: string;
+  removed: RuntimeArtifact[];
+};
+
+function stripRuntimeArtifactsInBrowser(): RuntimeArtifact[] {
+  const runtimeHosts = [
+    "analytics.google.com",
+    "challenges.cloudflare.com",
+    "doubleclick.net",
+    "google-analytics.com",
+    "googleadservices.com",
+    "googletagmanager.com",
+    "googlesyndication.com",
+  ];
+  const artifacts: RuntimeArtifact[] = [];
+
+  document.querySelectorAll("noscript").forEach(function (element) {
+    const content = element.innerHTML;
+    const normalizedContent = content.toLowerCase();
+    if (runtimeHosts.some((host) => normalizedContent.includes(host))) {
+      artifacts.push({ kind: "noscript", url: content.slice(0, 200) });
+      element.remove();
+    }
+  });
+  document.querySelectorAll<HTMLScriptElement>("script[src]").forEach(function (element) {
+    try {
+      const hostname = new URL(element.src, window.location.href).hostname.toLowerCase();
+      if (runtimeHosts.some((host) => hostname === host || hostname.endsWith(`.${host}`))) {
+        const url = new URL(element.src, window.location.href);
+        artifacts.push({ kind: "script", url: `${url.origin}${url.pathname}` });
+        element.remove();
+      }
+    } catch {
+      // Ignore malformed runtime URLs.
+    }
+  });
+  document.querySelectorAll<HTMLLinkElement>("link[href]").forEach(function (element) {
+    const rel = element.rel.toLowerCase();
+    try {
+      const hostname = new URL(element.href, window.location.href).hostname.toLowerCase();
+      if (
+        runtimeHosts.some((host) => hostname === host || hostname.endsWith(`.${host}`)) &&
+        ["modulepreload", "preconnect", "prefetch", "preload", "stylesheet"].some((value) =>
+          rel.split(/\s+/).includes(value),
+        )
+      ) {
+        const url = new URL(element.href, window.location.href);
+        artifacts.push({ kind: "link", url: `${url.origin}${url.pathname}` });
+        element.remove();
+      }
+    } catch {
+      // Ignore malformed runtime URLs.
+    }
+  });
+  document.querySelectorAll<HTMLIFrameElement>("iframe[src]").forEach(function (element) {
+    try {
+      const hostname = new URL(element.src, window.location.href).hostname.toLowerCase();
+      if (runtimeHosts.some((host) => hostname === host || hostname.endsWith(`.${host}`))) {
+        const url = new URL(element.src, window.location.href);
+        artifacts.push({ kind: "iframe", url: `${url.origin}${url.pathname}` });
+        element.remove();
+      }
+    } catch {
+      // Ignore malformed runtime URLs.
+    }
+  });
+
+  return artifacts;
+}
+
+async function stripRuntimeArtifacts(page: puppeteer.Page, route: string): Promise<RuntimeArtifactReport> {
+  const removed = await page.evaluate(stripRuntimeArtifactsInBrowser);
+
+  return { route, removed };
+}
+
 async function waitForServer(): Promise<void> {
   const deadline = Date.now() + 30_000;
   while (Date.now() < deadline) {
@@ -64,7 +146,22 @@ async function prerenderRoute(page: puppeteer.Page, route: string): Promise<"cap
     });
     await page.waitForSelector("#root > *", { timeout: 15_000 });
     await new Promise((resolve) => setTimeout(resolve, 1_000));
-    const html = await page.content();
+    const runtimeArtifacts = await stripRuntimeArtifacts(page, route);
+    let html = await page.content();
+    const lateRuntimeArtifacts = await stripRuntimeArtifacts(page, route);
+    runtimeArtifacts.removed.push(...lateRuntimeArtifacts.removed);
+    if (lateRuntimeArtifacts.removed.length > 0) {
+      html = await page.content();
+    }
+    if (runtimeArtifacts.removed.length > 0) {
+      console.log(
+        `[prerender] stripped ${route}: ${runtimeArtifacts.removed
+          .map(({ kind, url }) => `${kind}=${url}`)
+          .join(", ")}`,
+      );
+    } else {
+      console.log(`[prerender] stripped ${route}: none`);
+    }
     if (!html.includes("<div id=\"root\">") || html.match(/<div id="root"><\/div>/)) {
       return "fallback";
     }
