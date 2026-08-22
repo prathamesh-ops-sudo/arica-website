@@ -36,7 +36,9 @@ export function useIsTablet() {
 }
 
 export function useIsMobileOrTablet() {
-  const [is, setIs] = React.useState(false)
+  const [is, setIs] = React.useState(() =>
+    typeof window !== "undefined" && window.innerWidth < TABLET_BREAKPOINT
+  )
 
   React.useEffect(() => {
     const check = () => {

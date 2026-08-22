@@ -1,11 +1,8 @@
 import { Switch, Route, useLocation } from "wouter";
-import { useEffect, lazy, Suspense } from "react";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { useEffect, lazy, Suspense, useState, type ComponentType } from "react";
 import { HyperspaceTransitionProvider } from "@/components/ui/hyperspace-transition";
 import { SiteFooter } from "@/components/ui/site-footer";
 import { Navbar } from "@/components/Navbar";
-import { CookieConsent } from "@/components/CookieConsent";
 import { ThreeDEffectLoader } from "@/components/ui/3d-effect-loader";
 
 const FULLSCREEN_ROUTES = ["/experience"];
@@ -142,19 +139,57 @@ function AppContent() {
         <Router />
       </main>
       {!isFullscreenRoute && <SiteFooter />}
-      <CookieConsent />
+      <DeferredCookieConsent />
     </>
   );
 }
 
+function DeferredCookieConsent() {
+  const [ConsentComponent, setConsentComponent] = useState<ComponentType | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    const timer = window.setTimeout(() => {
+      void import("@/components/CookieConsent").then(({ CookieConsent }) => {
+        if (active) setConsentComponent(() => CookieConsent);
+      });
+    }, 2000);
+
+    return () => {
+      active = false;
+      window.clearTimeout(timer);
+    };
+  }, []);
+
+  return ConsentComponent ? <ConsentComponent /> : null;
+}
+
+function DeferredToaster() {
+  const [ToasterComponent, setToasterComponent] = useState<ComponentType | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    const timer = window.setTimeout(() => {
+      void import("@/components/ui/toaster").then(({ Toaster }) => {
+        if (active) setToasterComponent(() => Toaster);
+      });
+    }, 2000);
+
+    return () => {
+      active = false;
+      window.clearTimeout(timer);
+    };
+  }, []);
+
+  return ToasterComponent ? <ToasterComponent /> : null;
+}
+
 function App() {
   return (
-    <TooltipProvider>
-      <HyperspaceTransitionProvider>
-        <Toaster />
-        <AppContent />
-      </HyperspaceTransitionProvider>
-    </TooltipProvider>
+    <HyperspaceTransitionProvider>
+      <DeferredToaster />
+      <AppContent />
+    </HyperspaceTransitionProvider>
   );
 }
 
