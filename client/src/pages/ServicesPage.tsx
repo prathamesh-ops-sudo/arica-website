@@ -390,6 +390,13 @@ export default function ServicesPage() {
               </motion.a>
             ))}
           </motion.div>
+          <p className="mt-8 text-sm text-muted-foreground">
+            See how these approaches are applied in our{" "}
+            <Link href="/case-studies" className="text-primary underline-offset-4 hover:underline">
+              anonymised case studies
+            </Link>
+            .
+          </p>
         </div>
       </section>
 

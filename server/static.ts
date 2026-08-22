@@ -268,6 +268,15 @@ export function serveStatic(app: Express) {
               </ul>
             </section>`
         : "";
+      const blogCtaHtml = `
+            <section>
+              <h2>Need this in your own environment?</h2>
+              <p>Arica Tech Security runs VAPT, ISO 27001 readiness support, and digital forensics engagements for teams in India and beyond.</p>
+              <p>
+                <a href="/contact">Talk to our team</a>
+                <a href="/services">Explore services</a>
+              </p>
+            </section>`;
       const articleRoot = `
         <header>${renderInternalNavigation()}</header>
         <main class="prerendered-blog-content">
@@ -276,6 +285,7 @@ export function serveStatic(app: Express) {
             <p>${escapeHtml(post.excerpt)}</p>
             <p>By ${escapeHtml(post.author)}</p>
             <div>${articleHtml}</div>
+            ${blogCtaHtml}
             ${relatedHtml}
           </article>
         </main>

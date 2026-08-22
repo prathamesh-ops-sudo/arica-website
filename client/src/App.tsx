@@ -4,6 +4,7 @@ import { HyperspaceTransitionProvider } from "@/components/ui/hyperspace-transit
 import { SiteFooter } from "@/components/ui/site-footer";
 import { Navbar } from "@/components/Navbar";
 import { ThreeDEffectLoader } from "@/components/ui/3d-effect-loader";
+import { MobileConversionBar } from "@/components/MobileConversionBar";
 
 const FULLSCREEN_ROUTES = ["/experience"];
 
@@ -110,6 +111,7 @@ function AppContent() {
   const [location] = useLocation();
   const isFullscreenRoute = FULLSCREEN_ROUTES.includes(location);
   const isExperienceSubRoute = EXPERIENCE_SUB_ROUTES.includes(location);
+  const showMobileConversionBar = location !== "/contact" && !isFullscreenRoute;
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -135,10 +137,11 @@ function AppContent() {
           </nav>
         </header>
       )}
-      <main>
+      <main className={showMobileConversionBar ? "mobile-conversion-main" : undefined}>
         <Router />
       </main>
       {!isFullscreenRoute && <SiteFooter />}
+      <MobileConversionBar hidden={!showMobileConversionBar} />
       <DeferredCookieConsent />
     </>
   );

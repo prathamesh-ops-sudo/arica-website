@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
-import { ArrowRight, ExternalLink, RotateCcw } from "lucide-react";
+import { ArrowRight, Link as LinkIcon, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { EtherealShadow } from "@/components/ui/ethereal-shadow";
@@ -242,10 +242,13 @@ function FlipCard({ study, index }: { study: typeof caseStudies[0]; index: numbe
             </div>
           </div>
 
-          <button className="absolute bottom-6 left-6 right-6 flex items-center justify-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors py-2 rounded-lg bg-primary/10 hover:bg-primary/20">
-            View Full Report
-            <ExternalLink className="w-3.5 h-3.5" />
-          </button>
+          <Link
+            href="/contact"
+            className="absolute bottom-6 left-6 right-6 flex items-center justify-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors py-2 rounded-lg bg-primary/10 hover:bg-primary/20"
+          >
+            Discuss a similar engagement
+            <LinkIcon className="w-3.5 h-3.5" />
+          </Link>
         </motion.div>
       </motion.div>
     </motion.div>

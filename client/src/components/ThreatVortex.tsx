@@ -222,7 +222,7 @@ export function ThreatVortex() {
           </h2>
           <p className="text-lg text-[#ACACAC] max-w-2xl mx-auto">
             Watch an illustrative defense scenario detect, engage, and contain simulated cyber threats.
-            No breach survives. No malware escapes.
+            Detection, containment, and forensic follow-through — the same phases we run during a real engagement.
           </p>
         </motion.div>
 
@@ -711,7 +711,7 @@ export function ThreatVortex() {
             BREACHES &bull; MALWARE &bull; RANSOMWARE &bull; DDoS &bull; ZERO-DAYS &bull; SQL INJECTION
           </p>
           <p className="text-xs text-[#42BA90] font-mono tracking-widest mt-2">
-            EVERY THREAT. INTERCEPTED. DESTROYED.
+            DETECT · CONTAIN · INVESTIGATE · REMEDIATE
           </p>
         </motion.div>
       </div>

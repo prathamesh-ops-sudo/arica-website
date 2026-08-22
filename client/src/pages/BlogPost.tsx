@@ -192,6 +192,27 @@ export default function BlogPost() {
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
 
+        <section className="mt-12 rounded-2xl border border-[#3D70B7]/30 bg-[#3D70B7]/5 p-6 md:p-8">
+          <h2 className="text-2xl font-semibold text-white">Need this in your own environment?</h2>
+          <p className="mt-3 text-gray-300 leading-relaxed">
+            Arica Tech Security runs VAPT, ISO 27001 readiness support, and digital forensics engagements for teams in India and beyond.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link
+              href="/contact"
+              className="inline-flex min-h-11 items-center rounded-full bg-[#3D70B7] px-5 font-semibold text-white hover:bg-[#3D70B7]/90"
+            >
+              Talk to our team
+            </Link>
+            <Link
+              href="/services"
+              className="inline-flex min-h-11 items-center rounded-full border border-[#42BA90]/50 px-5 font-semibold text-[#8de0c2] hover:bg-[#42BA90]/10"
+            >
+              Explore services
+            </Link>
+          </div>
+        </section>
+
         {relatedPosts.length > 0 && (
           <section aria-labelledby="related-reading" className="mt-16 pt-8 border-t border-white/10">
             <h2 id="related-reading" className="text-2xl font-semibold mb-5">

@@ -468,11 +468,12 @@ export function ContactForm() {
               <SelectValue placeholder="Select a service" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="prevention">Prevention</SelectItem>
-              <SelectItem value="forensics">Forensics</SelectItem>
-              <SelectItem value="legal">Legal Support</SelectItem>
-              <SelectItem value="recovery">Post-Attack Recovery</SelectItem>
-              <SelectItem value="comprehensive">Comprehensive Package</SelectItem>
+              <SelectItem value="vapt">VAPT (penetration testing)</SelectItem>
+              <SelectItem value="iso-readiness">ISO 27001 readiness &amp; audit support</SelectItem>
+              <SelectItem value="forensics-incident-response">Digital forensics &amp; incident response</SelectItem>
+              <SelectItem value="secure-development-code-review">Secure development &amp; code review</SelectItem>
+              <SelectItem value="security-training">Security training</SelectItem>
+              <SelectItem value="other">Other</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -563,6 +564,9 @@ export function ContactForm() {
           transition={{ duration: 2, repeat: Infinity }}
         />
       </motion.button>
+      <p className="text-xs text-muted-foreground">
+        We use your details only to respond to your enquiry.
+      </p>
     </motion.form>
   );
 }

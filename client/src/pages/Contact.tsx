@@ -7,6 +7,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { ContactCard } from "@/components/ui/contact-card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { TurnstileWidget, type TurnstileWidgetHandle } from "@/components/TurnstileWidget";
 
 // Build-time public site key. When unset the captcha layer stays dormant
@@ -17,6 +24,7 @@ type FormData = {
   name: string;
   companyName: string;
   department: string;
+  service: string;
   email: string;
   phone: string;
   message: string;
@@ -32,6 +40,7 @@ export default function Contact() {
     name: "",
     companyName: "",
     department: "",
+    service: "",
     email: "",
     phone: "",
     message: "",
@@ -82,7 +91,7 @@ export default function Contact() {
           email: formData.email.trim(),
           company: formData.companyName.trim(),
           department: formData.department.trim(),
-          service: "",
+          service: formData.service,
           message: messageParts.join("\n\n") || "Contact form submission",
           phone: formData.phone.trim() || undefined,
           website: formData.website,
@@ -235,6 +244,29 @@ export default function Contact() {
                     </div>
 
                     <div className="flex flex-col gap-2">
+                      <Label htmlFor="service" className="text-sm font-medium">
+                        Service Interested In
+                      </Label>
+                      <Select
+                        value={formData.service}
+                        onValueChange={(value) => handleInputChange("service", value)}
+                        disabled={submitting}
+                      >
+                        <SelectTrigger id="service" className="bg-background border-[#3D70B7]/20 focus:border-[#3D70B7]">
+                          <SelectValue placeholder="Select a service" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="vapt">VAPT (penetration testing)</SelectItem>
+                          <SelectItem value="iso-readiness">ISO 27001 readiness &amp; audit support</SelectItem>
+                          <SelectItem value="forensics-incident-response">Digital forensics &amp; incident response</SelectItem>
+                          <SelectItem value="secure-development-code-review">Secure development &amp; code review</SelectItem>
+                          <SelectItem value="security-training">Security training</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
                       <Label htmlFor="email" className="text-sm font-medium">
                         Email <span className="text-red-500">*</span>
                       </Label>
@@ -306,6 +338,9 @@ export default function Contact() {
                         </>
                       )}
                     </Button>
+                    <p className="text-xs text-muted-foreground">
+                      We use your details only to respond to your enquiry.
+                    </p>
                   </form>
                 </ContactCard>
           </motion.div>
