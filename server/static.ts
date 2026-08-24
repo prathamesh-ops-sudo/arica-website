@@ -158,6 +158,39 @@ export function serveStatic(app: Express) {
     return getPrerenderedHtml(routePath) ?? indexHtml;
   }
 
+  app.use((req, res, next) => {
+    const queryStart = req.originalUrl.indexOf("?");
+    const rawPath =
+      queryStart === -1
+        ? req.originalUrl
+        : req.originalUrl.slice(0, queryStart);
+    const originalPath = rawPath.startsWith("/") ? rawPath : `/${rawPath}`;
+    const query = queryStart === -1 ? "" : req.originalUrl.slice(queryStart);
+    const isAssetPath =
+      originalPath === "/assets" ||
+      originalPath.startsWith("/assets/") ||
+      originalPath.startsWith("/fonts/") ||
+      /\.(?:avif|css|gif|ico|jpe?g|js|json|map|png|svg|ttf|woff2?|webp|xml)$/.test(
+        originalPath.replace(/\/$/, ""),
+      );
+
+    if (originalPath === "/index.html") {
+      return res.redirect(301, `/${query}`);
+    }
+
+    if (
+      originalPath !== "/" &&
+      originalPath.endsWith("/") &&
+      !isAssetPath
+    ) {
+      const pathWithoutTrailingSlash =
+        originalPath.replace(/\/+$/, "").replace(/^[/\\]+/, "/") || "/";
+      return res.redirect(301, `${pathWithoutTrailingSlash}${query}`);
+    }
+
+    next();
+  });
+
   // Hashed assets (JS, CSS) get long cache (1 year) since filenames change on rebuild
   app.use(
     "/assets",
