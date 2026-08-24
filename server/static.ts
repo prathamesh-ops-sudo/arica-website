@@ -166,6 +166,14 @@ export function serveStatic(app: Express) {
         : req.originalUrl.slice(0, queryStart);
     const originalPath = rawPath.startsWith("/") ? rawPath : `/${rawPath}`;
     const query = queryStart === -1 ? "" : req.originalUrl.slice(queryStart);
+    if (
+      !["GET", "HEAD"].includes(req.method) ||
+      originalPath === "/api" ||
+      originalPath.startsWith("/api/")
+    ) {
+      return next();
+    }
+
     const isAssetPath =
       originalPath === "/assets" ||
       originalPath.startsWith("/assets/") ||
