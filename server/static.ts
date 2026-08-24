@@ -299,7 +299,10 @@ export function serveStatic(app: Express) {
         });
       }
 
-      const structuredData = JSON.stringify({ "@context": "https://schema.org", "@graph": schemaGraph });
+      const structuredData = serializeJsonForScript({
+        "@context": "https://schema.org",
+        "@graph": schemaGraph,
+      });
       const articleHtml = (await renderSanitizedMarkdown(post.content, distPath))
         .replace(/<h1\b[^>]*>[\s\S]*?<\/h1>/gi, "");
       let relatedPosts: typeof post[] = [];
@@ -388,7 +391,7 @@ export function serveStatic(app: Express) {
   app.use("/blog", async (_req, res, next) => {
     if (_req.originalUrl !== "/blog" && _req.originalUrl !== "/blog/") return next();
 
-    const breadcrumb = JSON.stringify({
+    const breadcrumb = serializeJsonForScript({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
@@ -484,6 +487,25 @@ export function serveStatic(app: Express) {
     res.setHeader("Cache-Control", "no-cache");
     res.status(404).sendFile(path.resolve(distPath, "index.html"));
   });
+}
+
+const JSON_SCRIPT_ESCAPES: Record<string, string> = {
+  "<": "\\u003C",
+  ">": "\\u003E",
+  "&": "\\u0026",
+  "\u2028": "\\u2028",
+  "\u2029": "\\u2029",
+};
+
+export function serializeJsonForScript(value: unknown): string {
+  const serialized = JSON.stringify(value);
+  if (serialized === undefined) {
+    throw new Error("Unable to serialize JSON for script context");
+  }
+  return serialized.replace(
+    /[<>&\u2028\u2029]/g,
+    (character) => JSON_SCRIPT_ESCAPES[character],
+  );
 }
 
 function escapeHtml(str: string): string {
