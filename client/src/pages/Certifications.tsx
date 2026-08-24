@@ -440,6 +440,7 @@ function CertificationBadges3D({
         cancelAnimationFrame(sceneRef.current.animationId);
         sceneRef.current.animationId = null;
       }
+      sceneRef.current.clock.stop();
     };
 
     const startAnimation = () => {
@@ -449,6 +450,9 @@ function CertificationBadges3D({
         isDocumentVisible &&
         !disposed
       ) {
+        const elapsedTime = sceneRef.current.clock.getElapsedTime();
+        sceneRef.current.clock.start();
+        sceneRef.current.clock.elapsedTime = elapsedTime;
         sceneRef.current.animationId = requestAnimationFrame(animate);
       }
     };

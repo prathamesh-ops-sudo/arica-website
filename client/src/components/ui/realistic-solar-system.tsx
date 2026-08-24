@@ -1338,7 +1338,9 @@ export function RealisticSolarSystem() {
         documentVisibleRef.current &&
         !disposed
       ) {
+        const elapsedTime = refs.clock.getElapsedTime();
         refs.clock.start();
+        refs.clock.elapsedTime = elapsedTime;
         refs.animationId = requestAnimationFrame(animate);
       }
     };
