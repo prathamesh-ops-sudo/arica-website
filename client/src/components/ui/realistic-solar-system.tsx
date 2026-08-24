@@ -935,6 +935,10 @@ export function RealisticSolarSystem() {
   const lastScrollTimeRef = useRef(0);
   const scrollVelocityRef = useRef(0);
   const blackHoleTimersRef = useRef<NodeJS.Timeout[]>([]);
+  const sceneVisibleRef = useRef(true);
+  const documentVisibleRef = useRef(
+    typeof document === 'undefined' || document.visibilityState !== 'hidden',
+  );
   
   const physicsStateRef = useRef<PhysicsState>({
     scrollVelocity: 0,
@@ -1037,7 +1041,7 @@ export function RealisticSolarSystem() {
         failIfMajorPerformanceCaveat: false,
       });
       refs.renderer.setSize(window.innerWidth, window.innerHeight);
-      refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileDevice ? 1 : 2));
+      refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileDevice ? 1 : 1.5));
       refs.renderer.toneMapping = THREE.ACESFilmicToneMapping;
       refs.renderer.toneMappingExposure = 1.4;
 
@@ -1077,7 +1081,6 @@ export function RealisticSolarSystem() {
       createParallaxStarfield();
       createGalaxies();
 
-      animate();
     } catch (error) {
       console.warn('WebGL initialization failed, showing fallback UI');
     }
@@ -1319,6 +1322,42 @@ export function RealisticSolarSystem() {
       }
     };
 
+    let disposed = false;
+    const stopAnimation = () => {
+      if (refs.animationId !== null) {
+        cancelAnimationFrame(refs.animationId);
+        refs.animationId = null;
+      }
+      refs.clock.stop();
+    };
+    const startAnimation = () => {
+      if (
+        refs.animationId === null &&
+        refs.renderer &&
+        sceneVisibleRef.current &&
+        documentVisibleRef.current &&
+        !disposed
+      ) {
+        refs.clock.start();
+        refs.animationId = requestAnimationFrame(animate);
+      }
+    };
+    const observer = typeof IntersectionObserver === 'undefined'
+      ? null
+      : new IntersectionObserver(([entry]) => {
+          sceneVisibleRef.current = entry.isIntersecting;
+          if (sceneVisibleRef.current) startAnimation();
+          else stopAnimation();
+        });
+    if (observer && containerRef.current) observer.observe(containerRef.current);
+
+    const handleVisibilityChange = () => {
+      documentVisibleRef.current = document.visibilityState !== 'hidden';
+      if (documentVisibleRef.current) startAnimation();
+      else stopAnimation();
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     const scrollElement = scrollRef.current;
     if (scrollElement) {
       scrollElement.addEventListener('scroll', handleScroll, { passive: true });
@@ -1327,9 +1366,16 @@ export function RealisticSolarSystem() {
     window.addEventListener('resize', handleResize);
     canvasRef.current.addEventListener('click', handleClick);
     handleScroll();
+    startAnimation();
 
     const currentCanvas = canvasRef.current;
     return () => {
+      disposed = true;
+      sceneVisibleRef.current = false;
+      stopAnimation();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      observer?.disconnect();
+
       // Remove all event listeners
       scrollElement?.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
@@ -1338,7 +1384,6 @@ export function RealisticSolarSystem() {
       
       // Cancel all animation frames
       if (scrollRafRef.current) cancelAnimationFrame(scrollRafRef.current);
-      if (refs.animationId) cancelAnimationFrame(refs.animationId);
       
       // Clear all black hole timers
       blackHoleTimersRef.current.forEach(timer => clearTimeout(timer));
@@ -2028,6 +2073,11 @@ export function RealisticSolarSystem() {
 
   const animate = useCallback(() => {
     const refs = sceneRef.current;
+    refs.animationId = null;
+    if (!sceneVisibleRef.current || !documentVisibleRef.current) {
+      refs.clock.stop();
+      return;
+    }
     refs.animationId = requestAnimationFrame(animate);
 
     const time = refs.clock.getElapsedTime();

@@ -6,7 +6,7 @@ import {
   ArrowLeft, Shield, Lock, Database, CreditCard, Heart, Building2,
   CheckCircle, Award, X, Star
 } from 'lucide-react';
-import { isWebGLAvailable } from '@/lib/webgl-utils';
+import { isWebGLAccelerated, isWebGLAvailable } from '@/lib/webgl-utils';
 
 interface Certification {
   id: string;
@@ -138,9 +138,11 @@ function CertificationBadges3D({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [canRenderWebGL, setCanRenderWebGL] = useState<boolean | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
+    setCanRenderWebGL(isWebGLAvailable() && isWebGLAccelerated());
     return () => setIsMounted(false);
   }, []);
   const sceneRef = useRef<{
@@ -302,10 +304,7 @@ function CertificationBadges3D({
   }, []);
 
   useEffect(() => {
-    if (!containerRef.current || !isMounted) return;
-    
-    if (!isWebGLAvailable()) {
-      console.warn('WebGL not available, skipping 3D rendering');
+    if (!containerRef.current || !isMounted || canRenderWebGL !== true) {
       return;
     }
 
@@ -323,6 +322,7 @@ function CertificationBadges3D({
       });
     } catch (error) {
       console.warn('WebGL not available, skipping 3D rendering');
+      setCanRenderWebGL(false);
       return;
     }
 
@@ -334,7 +334,7 @@ function CertificationBadges3D({
     sceneRef.current.camera = camera;
 
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
     sceneRef.current.renderer = renderer;
@@ -430,7 +430,33 @@ function CertificationBadges3D({
     container.addEventListener('mousemove', handleMouseMove);
     container.addEventListener('click', handleClick);
 
+    let disposed = false;
+    let isContainerVisible = true;
+    let isDocumentVisible = document.visibilityState !== 'hidden';
+    let lastHoveredId: string | null = null;
+
+    const stopAnimation = () => {
+      if (sceneRef.current.animationId !== null) {
+        cancelAnimationFrame(sceneRef.current.animationId);
+        sceneRef.current.animationId = null;
+      }
+    };
+
+    const startAnimation = () => {
+      if (
+        sceneRef.current.animationId === null &&
+        isContainerVisible &&
+        isDocumentVisible &&
+        !disposed
+      ) {
+        sceneRef.current.animationId = requestAnimationFrame(animate);
+      }
+    };
+
     const animate = () => {
+      sceneRef.current.animationId = null;
+      if (!isContainerVisible || !isDocumentVisible || disposed) return;
+
       const time = sceneRef.current.clock.getElapsedTime();
 
       sceneRef.current.raycaster.setFromCamera(sceneRef.current.mouse, camera);
@@ -484,19 +510,15 @@ function CertificationBadges3D({
         }
       });
 
-      if (hoveredId) {
-        container.style.cursor = 'pointer';
+      container.style.cursor = hoveredId ? 'pointer' : 'default';
+      if (hoveredId !== lastHoveredId) {
+        lastHoveredId = hoveredId;
         setHoveredBadge(hoveredId);
-      } else {
-        container.style.cursor = 'default';
-        setHoveredBadge(null);
       }
 
       renderer.render(scene, camera);
       sceneRef.current.animationId = requestAnimationFrame(animate);
     };
-
-    animate();
 
     const handleResize = () => {
       const newWidth = container.clientWidth;
@@ -507,15 +529,40 @@ function CertificationBadges3D({
     };
 
     window.addEventListener('resize', handleResize);
+    const observer = typeof IntersectionObserver === 'undefined'
+      ? null
+      : new IntersectionObserver(([entry]) => {
+          isContainerVisible = entry.isIntersecting;
+          if (isContainerVisible) startAnimation();
+          else stopAnimation();
+        });
+    observer?.observe(container);
+
+    const handleVisibilityChange = () => {
+      isDocumentVisible = document.visibilityState !== 'hidden';
+      if (isDocumentVisible) startAnimation();
+      else stopAnimation();
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    const handleContextLost = (event: Event) => {
+      event.preventDefault();
+      stopAnimation();
+      setCanRenderWebGL(false);
+    };
+    renderer.domElement.addEventListener('webglcontextlost', handleContextLost);
+
+    startAnimation();
 
     return () => {
+      disposed = true;
+      stopAnimation();
       window.removeEventListener('resize', handleResize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      observer?.disconnect();
+      renderer.domElement.removeEventListener('webglcontextlost', handleContextLost);
       container.removeEventListener('mousemove', handleMouseMove);
       container.removeEventListener('click', handleClick);
-      
-      if (sceneRef.current.animationId) {
-        cancelAnimationFrame(sceneRef.current.animationId);
-      }
 
       badges.forEach(badge => {
         badge.children.forEach(child => {
@@ -537,7 +584,7 @@ function CertificationBadges3D({
         container.removeChild(renderer.domElement);
       }
     };
-  }, [isMounted, createHexagonGeometry, createShieldGeometry, createBadgeMaterial, createSparkleParticles, onBadgeClick, setHoveredBadge]);
+  }, [isMounted, canRenderWebGL, createHexagonGeometry, createShieldGeometry, createBadgeMaterial, createSparkleParticles, onBadgeClick, setHoveredBadge]);
 
   if (!isMounted) {
     return (
@@ -548,6 +595,40 @@ function CertificationBadges3D({
         <div className="text-center">
           <div className="w-12 h-12 border-2 border-[#3D70B7]/30 border-t-[#3D70B7] rounded-full animate-spin mx-auto mb-4" />
           <p className="text-slate-400">Loading 3D visualization...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (canRenderWebGL === false) {
+    return (
+      <div
+        className="w-full h-[500px] rounded-3xl overflow-hidden bg-slate-900/20 flex items-center justify-center px-6"
+        data-testid="certification-badges-fallback"
+      >
+        <div className="w-full max-w-3xl rounded-2xl border border-slate-700/60 bg-slate-900/50 p-6 sm:p-8">
+          <div className="mb-6 text-center">
+            <p className="text-xs uppercase tracking-[0.24em] text-[#42BA90]">
+              Framework coverage
+            </p>
+            <p className="mt-2 text-sm text-slate-400">
+              Explore the security and compliance frameworks we help clients assess and implement.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {certifications.map((certification) => {
+              const Icon = certification.icon;
+              return (
+                <div
+                  key={certification.id}
+                  className="flex items-center gap-3 rounded-xl border border-slate-700/60 bg-slate-800/50 px-3 py-4"
+                >
+                  <Icon className="h-5 w-5 shrink-0" style={{ color: certification.color }} />
+                  <span className="text-sm font-medium text-slate-200">{certification.name}</span>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     );
