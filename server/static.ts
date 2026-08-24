@@ -135,6 +135,38 @@ const STATIC_METADATA: Record<string, { title: string; description: string }> = 
     description: "Confirmation that your message was received by Arica Tech Security.",
   },
 };
+const BLOG_METADATA: Record<
+  string,
+  {
+    description?: string;
+    ogDescription?: string;
+    twitterDescription?: string;
+    schemaAuthor?: Record<string, string>;
+    schemaPublisher?: Record<string, unknown>;
+  }
+> = {
+  "what-is-antivirus-software": {
+    description:
+      "What antivirus software is, how signature, behavioral, and cloud detection work, the main types including EDR, real examples, and whether you still need it in 2026.",
+    ogDescription:
+      "450,000+ new malware samples daily — yet 79% of attacks use no malware. The honest guide to antivirus in 2026.",
+    twitterDescription:
+      "Antivirus all catches commodity malware now. The differences that matter are elsewhere.",
+    schemaAuthor: {
+      "@type": "Organization",
+      name: "Arica Tech",
+      url: SITE_URL,
+    },
+    schemaPublisher: {
+      "@type": "Organization",
+      name: "Arica Tech",
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/arica-logo.png`,
+      },
+    },
+  },
+};
 
 export function serveStatic(app: Express) {
   const distPath = path.resolve(__dirname, "public");
@@ -239,7 +271,16 @@ export function serveStatic(app: Express) {
 
       const escapedTitle = escapeHtml(formatBlogTitle(post.title));
       const escapedExcerpt = escapeHtml(formatBlogDescription(post.excerpt));
-      const ogImage = post.coverImage || `${SITE_URL}/opengraph.jpg`;
+      const blogMetadata = BLOG_METADATA[post.slug] ?? {};
+      const escapedOgDescription = escapeHtml(
+        blogMetadata.ogDescription ?? formatBlogDescription(post.excerpt),
+      );
+      const escapedTwitterDescription = escapeHtml(
+        blogMetadata.twitterDescription ?? formatBlogDescription(post.excerpt),
+      );
+      const ogImage = post.coverImage
+        ? new URL(post.coverImage, SITE_URL).toString()
+        : `${SITE_URL}/opengraph.jpg`;
       const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
 
       // Extract FAQ sections from markdown for FAQ schema
@@ -256,13 +297,13 @@ export function serveStatic(app: Express) {
         {
           "@type": "BlogPosting",
           "headline": post.title,
-          "description": post.excerpt,
-          "author": { "@type": "Person", "name": post.author, "jobTitle": "Chief Technology Officer", "worksFor": { "@type": "Organization", "name": "Arica Tech Security LLP" } },
+          "description": blogMetadata.description ?? post.excerpt,
+          "author": blogMetadata.schemaAuthor ?? { "@type": "Person", "name": post.author, "jobTitle": "Chief Technology Officer", "worksFor": { "@type": "Organization", "name": "Arica Tech Security LLP" } },
           "datePublished": post.publishedAt?.toISOString(),
           "dateModified": post.updatedAt.toISOString(),
-          "publisher": { "@type": "Organization", "name": "Arica Tech Security LLP", "url": SITE_URL, "logo": { "@type": "ImageObject", "url": `${SITE_URL}/arica-logo.png` } },
+          "publisher": blogMetadata.schemaPublisher ?? { "@type": "Organization", "name": "Arica Tech Security LLP", "url": SITE_URL, "logo": { "@type": "ImageObject", "url": `${SITE_URL}/arica-logo.png` } },
           "mainEntityOfPage": { "@type": "WebPage", "@id": canonicalUrl },
-          ...(post.coverImage ? { "image": post.coverImage } : {}),
+          ...(post.coverImage ? { "image": ogImage } : {}),
           ...(post.tags ? { "keywords": post.tags.join(", ") } : {}),
           "wordCount": post.content.split(/\s+/).length,
           "timeRequired": `PT${post.readingTime || 5}M`,
@@ -342,7 +383,7 @@ export function serveStatic(app: Express) {
     <meta name="description" content="${escapedExcerpt}" />
     <link rel="canonical" href="${canonicalUrl}" />
     <meta property="og:title" content="${escapedTitle}" />
-    <meta property="og:description" content="${escapedExcerpt}" />
+    <meta property="og:description" content="${escapedOgDescription}" />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="${canonicalUrl}" />
     <meta property="og:image" content="${ogImage}" />
@@ -353,7 +394,7 @@ export function serveStatic(app: Express) {
     ${(post.tags || []).map(t => `<meta property="article:tag" content="${escapeHtml(t)}" />`).join("\n    ")}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escapedTitle}" />
-    <meta name="twitter:description" content="${escapedExcerpt}" />
+    <meta name="twitter:description" content="${escapedTwitterDescription}" />
     <meta name="twitter:image" content="${ogImage}" />
     <script type="application/ld+json">${structuredData}</script>`;
 
