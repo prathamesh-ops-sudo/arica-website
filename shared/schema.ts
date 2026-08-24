@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, serial, timestamp, boolean, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, serial, timestamp, boolean, integer, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -36,6 +36,12 @@ export type InsertContactInquiry = z.infer<typeof insertContactInquirySchema>;
 export type ContactInquiry = typeof contactInquiries.$inferSelect;
 
 // --- Blog posts ---
+export type BlogPostMetadata = {
+  description?: string;
+  ogDescription?: string;
+  twitterDescription?: string;
+};
+
 export const blogPosts = pgTable("blog_posts", {
   id: serial("id").primaryKey(),
   slug: varchar("slug", { length: 255 }).notNull().unique(),
@@ -43,6 +49,7 @@ export const blogPosts = pgTable("blog_posts", {
   excerpt: text("excerpt").notNull(),
   content: text("content").notNull(),
   coverImage: text("cover_image"),
+  metadata: jsonb("metadata").$type<BlogPostMetadata>(),
   author: text("author").notNull().default("Prathamesh Dabir"),
   tags: text("tags").array(),
   published: boolean("published").notNull().default(false),
@@ -52,11 +59,22 @@ export const blogPosts = pgTable("blog_posts", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const insertBlogPostSchema = createInsertSchema(blogPosts).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
+export const insertBlogPostSchema = createInsertSchema(blogPosts)
+  .omit({
+    id: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    metadata: z
+      .object({
+        description: z.string().optional(),
+        ogDescription: z.string().optional(),
+        twitterDescription: z.string().optional(),
+      })
+      .nullable()
+      .optional(),
+  });
 
 export const updateBlogPostSchema = insertBlogPostSchema.partial();
 
