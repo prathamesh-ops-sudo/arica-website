@@ -311,6 +311,9 @@ export function serveStatic(app: Express) {
       });
       const articleHtml = (await renderSanitizedMarkdown(post.content, distPath))
         .replace(/<h1\b[^>]*>[\s\S]*?<\/h1>/gi, "");
+      const coverImageHtml = post.coverImage
+        ? `<img src="${escapeHtml(post.coverImage)}" alt="${escapeHtml(post.title)}" width="${coverDimensions?.width || 1200}" height="${coverDimensions?.height || 630}" style="display:block;max-width:100%;height:auto;margin-bottom:2.5rem;border-radius:0.75rem;" />`
+        : "";
       let relatedPosts: typeof post[] = [];
       try {
         const { posts } = await storage.getBlogPosts({ published: true, limit: 100 });
@@ -375,6 +378,7 @@ export function serveStatic(app: Express) {
             <h1>${escapeHtml(post.title)}</h1>
             <p>${escapeHtml(post.excerpt)}</p>
             <p>By ${escapeHtml(post.author)}</p>
+            ${coverImageHtml}
             <div>${articleHtml}</div>
             ${blogCtaHtml}
             ${relatedHtml}
