@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Calendar, Clock, ArrowRight, Tag, Search } from "lucide-react";
-import { EtherealShadow } from "@/components/ui/ethereal-shadow";
 import { consumeJsonPayload } from "@/lib/blog-ssr";
 
 interface BlogPost {
@@ -102,29 +100,21 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white">
-      <EtherealShadow />
-
       {/* Hero Section */}
       <section className="relative pt-32 pb-16 px-6">
         <div className="max-w-6xl mx-auto text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl font-bold mb-4"
-          >
+          <h1 className="blog-fade-up text-4xl md:text-5xl font-bold mb-4">
             <span className="bg-gradient-to-r from-[#3D70B7] to-[#42BA90] bg-clip-text text-transparent">
               Security Insights
             </span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-gray-400 text-lg max-w-2xl mx-auto"
+          </h1>
+          <p
+            className="blog-fade-up text-gray-400 text-lg max-w-2xl mx-auto"
+            style={{ animationDelay: "0.1s" }}
           >
             Threat intelligence, industry best practices, and cybersecurity
             perspectives from the Arica Tech team.
-          </motion.p>
+          </p>
         </div>
       </section>
 
@@ -211,11 +201,10 @@ export default function Blog() {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((post, idx) => (
-              <motion.article
+              <article
                 key={post.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.05 }}
+                className="blog-fade-up"
+                style={{ animationDelay: `${idx * 0.05}s` }}
               >
                 <Link href={`/blog/${post.slug}`}>
                   <div className="group bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:border-[#3D70B7]/40 transition-all duration-300 hover:shadow-lg hover:shadow-[#3D70B7]/5 cursor-pointer h-full flex flex-col">
@@ -281,7 +270,7 @@ export default function Blog() {
                     </div>
                   </div>
                 </Link>
-              </motion.article>
+              </article>
             ))}
           </div>
         )}

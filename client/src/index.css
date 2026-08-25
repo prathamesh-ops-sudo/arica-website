@@ -399,6 +399,49 @@ html, body {
     animation: pulse-glow 2s ease-in-out infinite;
   }
 
+  .blog-fade-up {
+    animation: blog-fade-up 0.3s ease-out both;
+  }
+
+  .blog-fade-up-small {
+    animation: blog-fade-up-small 0.3s ease-out both;
+  }
+
+  .blog-fade-in {
+    animation: blog-fade-in 0.3s ease-out both;
+  }
+
+  @keyframes blog-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes blog-fade-up-small {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes blog-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-20px); }
@@ -1601,6 +1644,12 @@ html, body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .blog-fade-up,
+  .blog-fade-up-small,
+  .blog-fade-in {
+    animation: none;
+  }
+
   .mhero-glow-a,
   .mhero-glow-b {
     animation: none;

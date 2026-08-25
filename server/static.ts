@@ -249,6 +249,12 @@ export function serveStatic(app: Express) {
       const ogImage = post.coverImage
         ? new URL(post.coverImage, SITE_URL).toString()
         : `${SITE_URL}/opengraph.jpg`;
+      const coverDimensions = post.coverImage
+        ? resolveImageDimensions(post.coverImage, distPath)
+        : undefined;
+      const coverPreload = post.coverImage
+        ? `<link rel="preload" as="image" fetchpriority="high" href="${escapeHtml(post.coverImage)}" />`
+        : "";
       const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
 
       // Extract FAQ sections from markdown for FAQ schema
@@ -335,6 +341,12 @@ export function serveStatic(app: Express) {
           readingTime: post.readingTime,
           publishedAt: post.publishedAt,
           updatedAt: post.updatedAt,
+          ...(coverDimensions
+            ? {
+                coverImageWidth: coverDimensions.width,
+                coverImageHeight: coverDimensions.height,
+              }
+            : {}),
         },
         articleHtml,
         relatedPosts: relatedPosts.map((related) => ({
@@ -393,6 +405,7 @@ export function serveStatic(app: Express) {
     <meta name="twitter:title" content="${escapedTitle}" />
     <meta name="twitter:description" content="${escapedTwitterDescription}" />
     <meta name="twitter:image" content="${ogImage}" />
+    ${coverPreload}
     <script type="application/ld+json">${structuredData}</script>
     <script type="application/json" id="blog-post-data">${blogPostPayload}</script>`;
 

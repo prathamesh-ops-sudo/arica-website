@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { useRoute, Link } from "wouter";
-import { motion } from "framer-motion";
 import { Calendar, Clock, ArrowLeft, User, Tag } from "lucide-react";
 import { getRelatedBlogPosts } from "@shared/blog-related";
 import { consumeJsonPayload, getBlogPostSlugFromLocation } from "@/lib/blog-ssr";
@@ -17,6 +16,8 @@ interface BlogPostData {
   readingTime: number | null;
   publishedAt: string | null;
   updatedAt: string;
+  coverImageWidth?: number;
+  coverImageHeight?: number;
 }
 
 interface BlogPostPayload {
@@ -49,6 +50,8 @@ function isBlogPost(value: unknown): value is BlogPostData {
     (post.readingTime === null || typeof post.readingTime === "number") &&
     (post.publishedAt === null || typeof post.publishedAt === "string") &&
     typeof post.updatedAt === "string"
+    && (post.coverImageWidth === undefined || typeof post.coverImageWidth === "number")
+    && (post.coverImageHeight === undefined || typeof post.coverImageHeight === "number")
   );
 }
 
@@ -211,24 +214,16 @@ export default function BlogPost() {
 
       <article className="max-w-3xl mx-auto px-6 pt-32 pb-24">
         {/* Back link */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="mb-8"
-        >
+        <div className="blog-fade-in mb-8">
           <Link href="/blog">
             <span className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-[#3D70B7] transition-colors cursor-pointer">
               <ArrowLeft className="w-4 h-4" /> All articles
             </span>
           </Link>
-        </motion.div>
+        </div>
 
         {/* Header */}
-        <motion.header
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-10"
-        >
+        <header className="blog-fade-up mb-10">
           {post.tags && post.tags.length > 0 && (
             <div className="flex gap-2 mb-4 flex-wrap">
               {post.tags.map((tag) => (
@@ -270,30 +265,29 @@ export default function BlogPost() {
               </span>
             )}
           </div>
-        </motion.header>
+        </header>
 
         {/* Cover image */}
         {post.coverImage && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="mb-10 rounded-xl overflow-hidden"
+          <div
+            className="blog-fade-in mb-10 rounded-xl overflow-hidden"
+            style={{ animationDelay: "0.2s" }}
           >
             <img
               src={post.coverImage}
               alt={post.title}
+              width={post.coverImageWidth || 1200}
+              height={post.coverImageHeight || 630}
+              fetchPriority="high"
+              decoding="async"
               className="w-full h-auto max-h-[400px] object-cover"
             />
-          </motion.div>
+          </div>
         )}
 
         {/* Content */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="prose prose-invert prose-lg max-w-none
+        <div
+          className="blog-fade-up-small prose prose-invert prose-lg max-w-none
             prose-headings:text-white prose-headings:font-semibold
             prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
             prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
@@ -306,6 +300,7 @@ export default function BlogPost() {
             prose-ul:text-gray-300 prose-ol:text-gray-300
             prose-li:marker:text-[#3D70B7]
             prose-img:rounded-xl"
+          style={{ animationDelay: "0.3s" }}
           dangerouslySetInnerHTML={{ __html: htmlContent || "" }}
         />
 
