@@ -323,6 +323,30 @@ export function serveStatic(app: Express) {
               </ul>
             </section>`
         : "";
+      const blogPostPayload = serializeJsonForScript({
+        post: {
+          id: post.id,
+          slug: post.slug,
+          title: post.title,
+          excerpt: post.excerpt,
+          coverImage: post.coverImage,
+          author: post.author,
+          tags: post.tags,
+          readingTime: post.readingTime,
+          publishedAt: post.publishedAt,
+          updatedAt: post.updatedAt,
+        },
+        articleHtml,
+        relatedPosts: relatedPosts.map((related) => ({
+          slug: related.slug,
+          title: related.title,
+          excerpt: related.excerpt,
+          tags: related.tags,
+          coverImage: related.coverImage,
+          publishedAt: related.publishedAt,
+          readingTime: related.readingTime,
+        })),
+      });
       const blogCtaHtml = `
             <section>
               <h2>Need this in your own environment?</h2>
@@ -369,7 +393,8 @@ export function serveStatic(app: Express) {
     <meta name="twitter:title" content="${escapedTitle}" />
     <meta name="twitter:description" content="${escapedTwitterDescription}" />
     <meta name="twitter:image" content="${ogImage}" />
-    <script type="application/ld+json">${structuredData}</script>`;
+    <script type="application/ld+json">${structuredData}</script>
+    <script type="application/json" id="blog-post-data">${blogPostPayload}</script>`;
 
       // Inject after <head> opening tag (before existing meta)
       const injectedHtml = injectAfterCharset(
@@ -433,6 +458,23 @@ export function serveStatic(app: Express) {
           </div>
         </section>`;
       baseHtml = replaceBlogListingContent(baseHtml, listingRoot);
+      const blogListingPayload = serializeJsonForScript({
+        posts: posts.map((post) => ({
+          id: post.id,
+          slug: post.slug,
+          title: post.title,
+          excerpt: post.excerpt,
+          coverImage: post.coverImage,
+          author: post.author,
+          tags: post.tags,
+          readingTime: post.readingTime,
+          publishedAt: post.publishedAt,
+        })),
+      });
+      baseHtml = injectAfterCharset(
+        baseHtml,
+        `<script type="application/json" id="blog-list-data">${blogListingPayload}</script>`,
+      );
     } catch (error) {
       console.warn("[blog-listing] database unavailable; serving captured listing content:", error);
     }

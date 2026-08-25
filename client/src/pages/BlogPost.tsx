@@ -1,17 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRoute, Link } from "wouter";
 import { motion } from "framer-motion";
-import { marked } from "marked";
-import DOMPurify from "dompurify";
 import { Calendar, Clock, ArrowLeft, User, Tag } from "lucide-react";
 import { getRelatedBlogPosts } from "@shared/blog-related";
+import { consumeJsonPayload, getBlogPostSlugFromLocation } from "@/lib/blog-ssr";
 
 interface BlogPostData {
   id: number;
   slug: string;
   title: string;
   excerpt: string;
-  content: string;
+  content?: string;
   coverImage: string | null;
   author: string;
   tags: string[] | null;
@@ -20,32 +19,153 @@ interface BlogPostData {
   updatedAt: string;
 }
 
+interface BlogPostPayload {
+  post: BlogPostData;
+  articleHtml: string;
+  relatedPosts: RelatedPostData[];
+}
+
+interface RelatedPostData {
+  slug: string;
+  title: string;
+  excerpt: string | null;
+  tags: string[] | null;
+  coverImage: string | null;
+  publishedAt: string | null;
+  readingTime: number | null;
+}
+
+function isBlogPost(value: unknown): value is BlogPostData {
+  if (!value || typeof value !== "object") return false;
+  const post = value as Partial<BlogPostData>;
+  return (
+    typeof post.id === "number" &&
+    typeof post.slug === "string" &&
+    typeof post.title === "string" &&
+    typeof post.excerpt === "string" &&
+    (post.coverImage === null || typeof post.coverImage === "string") &&
+    typeof post.author === "string" &&
+    (post.tags === null || (Array.isArray(post.tags) && post.tags.every((tag) => typeof tag === "string"))) &&
+    (post.readingTime === null || typeof post.readingTime === "number") &&
+    (post.publishedAt === null || typeof post.publishedAt === "string") &&
+    typeof post.updatedAt === "string"
+  );
+}
+
+function isRelatedPost(value: unknown): value is RelatedPostData {
+  if (!value || typeof value !== "object") return false;
+  const post = value as Partial<RelatedPostData>;
+  return (
+    typeof post.slug === "string" &&
+    typeof post.title === "string" &&
+    (post.excerpt === null || typeof post.excerpt === "string") &&
+    (post.tags === null || (Array.isArray(post.tags) && post.tags.every((tag) => typeof tag === "string"))) &&
+    (post.coverImage === null || typeof post.coverImage === "string") &&
+    (post.publishedAt === null || typeof post.publishedAt === "string") &&
+    (post.readingTime === null || typeof post.readingTime === "number")
+  );
+}
+
+async function renderMarkdown(content: string): Promise<string> {
+  const [{ marked }, { default: DOMPurify }] = await Promise.all([
+    import("marked"),
+    import("dompurify"),
+  ]);
+
+  return DOMPurify.sanitize(
+    marked.parse(content, { async: false }) as string,
+  ).replace(/<h1\b[^>]*>[\s\S]*?<\/h1>/gi, "");
+}
+
+let payload: BlogPostPayload | null = (() => {
+  const candidate = consumeJsonPayload<BlogPostPayload>("blog-post-data");
+  if (
+    !candidate ||
+    !isBlogPost(candidate.post) ||
+    typeof candidate.articleHtml !== "string" ||
+    !Array.isArray(candidate.relatedPosts) ||
+    !candidate.relatedPosts.every(isRelatedPost)
+  ) {
+    return null;
+  }
+  return candidate;
+})();
+
+function takeInitialPayload(): BlogPostPayload | null {
+  const candidate = payload;
+  payload = null;
+  return candidate;
+}
+
 export default function BlogPost() {
   const [, params] = useRoute("/blog/:slug");
-  const [post, setPost] = useState<BlogPostData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const initialPayloadRef = useRef<BlogPostPayload | null | undefined>(undefined);
+  if (initialPayloadRef.current === undefined) {
+    const candidate = takeInitialPayload();
+    initialPayloadRef.current =
+      candidate && candidate.post.slug === getBlogPostSlugFromLocation() ? candidate : null;
+  }
+  const initialPayload = initialPayloadRef.current;
+  const [post, setPost] = useState<BlogPostData | null>(() => initialPayload?.post || null);
+  const [htmlContent, setHtmlContent] = useState<string | null>(
+    () => initialPayload?.articleHtml || null,
+  );
+  const [loading, setLoading] = useState(!initialPayload);
   const [notFound, setNotFound] = useState(false);
-  const [allPosts, setAllPosts] = useState<BlogPostData[]>([]);
+  const [allPosts, setAllPosts] = useState<RelatedPostData[]>(
+    () => initialPayload?.relatedPosts || [],
+  );
+  const initialPayloadUsed = useRef(Boolean(initialPayload));
 
   useEffect(() => {
     if (!params?.slug) return;
-    fetch(`/api/blog/${params.slug}`)
-      .then((res) => {
-        if (!res.ok) throw new Error("not found");
-        return res.json();
+
+    if (initialPayloadUsed.current && initialPayload?.post.slug === params.slug) {
+      initialPayloadUsed.current = false;
+      return;
+    }
+
+    const controller = new AbortController();
+    setLoading(true);
+    setNotFound(false);
+    setPost(null);
+    setHtmlContent(null);
+
+    const postRequest = fetch(`/api/blog/${encodeURIComponent(params.slug)}`, {
+      signal: controller.signal,
+    }).then((res) => {
+      if (!res.ok) throw new Error("not found");
+      return res.json();
+    });
+    const relatedRequest = fetch("/api/blog?limit=100", {
+      signal: controller.signal,
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          throw error;
+        }
+        return null;
+      });
+
+    Promise.all([postRequest, relatedRequest])
+      .then(async ([postData, relatedData]) => {
+        if (!postData.success) throw new Error("not found");
+        const nextPost = postData.post as BlogPostData;
+        const nextHtml = await renderMarkdown(nextPost.content || "");
+        if (relatedData?.success) setAllPosts(relatedData.posts);
+        setPost(nextPost);
+        setHtmlContent(nextHtml);
       })
-      .then((data) => {
-        if (data.success) setPost(data.post);
-        else setNotFound(true);
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setNotFound(true);
       })
-      .catch(() => setNotFound(true))
-      .finally(() => setLoading(false));
-    fetch("/api/blog?limit=100")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) setAllPosts(data.posts);
-      })
-      .catch(() => {});
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+
+    return () => controller.abort();
   }, [params?.slug]);
 
   if (loading) {
@@ -84,9 +204,6 @@ export default function BlogPost() {
     );
   }
 
-  const htmlContent = DOMPurify.sanitize(
-    marked.parse(post.content, { async: false }) as string
-  ).replace(/<h1\b[^>]*>[\s\S]*?<\/h1>/gi, "");
   const relatedPosts = getRelatedBlogPosts(post, allPosts);
 
   return (
@@ -189,7 +306,7 @@ export default function BlogPost() {
             prose-ul:text-gray-300 prose-ol:text-gray-300
             prose-li:marker:text-[#3D70B7]
             prose-img:rounded-xl"
-          dangerouslySetInnerHTML={{ __html: htmlContent }}
+          dangerouslySetInnerHTML={{ __html: htmlContent || "" }}
         />
 
         <section className="mt-12 rounded-2xl border border-[#3D70B7]/30 bg-[#3D70B7]/5 p-6 md:p-8">

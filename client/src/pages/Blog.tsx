@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Calendar, Clock, ArrowRight, Tag, Search } from "lucide-react";
 import { EtherealShadow } from "@/components/ui/ethereal-shadow";
+import { consumeJsonPayload } from "@/lib/blog-ssr";
 
 interface BlogPost {
   id: number;
@@ -16,20 +17,74 @@ interface BlogPost {
   publishedAt: string | null;
 }
 
+interface BlogListingPayload {
+  posts: BlogPost[];
+}
+
+function isBlogPost(value: unknown): value is BlogPost {
+  if (!value || typeof value !== "object") return false;
+  const post = value as Partial<BlogPost>;
+  return (
+    typeof post.id === "number" &&
+    typeof post.slug === "string" &&
+    typeof post.title === "string" &&
+    typeof post.excerpt === "string" &&
+    (post.coverImage === null || typeof post.coverImage === "string") &&
+    typeof post.author === "string" &&
+    (post.tags === null || (Array.isArray(post.tags) && post.tags.every((tag) => typeof tag === "string"))) &&
+    (post.readingTime === null || typeof post.readingTime === "number") &&
+    (post.publishedAt === null || typeof post.publishedAt === "string")
+  );
+}
+
+let initialListingPayload: BlogListingPayload | null = (() => {
+  const payload = consumeJsonPayload<BlogListingPayload>("blog-list-data");
+  return payload && Array.isArray(payload.posts) && payload.posts.every(isBlogPost)
+    ? payload
+    : null;
+})();
+
+function takeInitialListingPayload(): BlogListingPayload | null {
+  const payload = initialListingPayload;
+  initialListingPayload = null;
+  return payload;
+}
+
 export default function Blog() {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
+  const initialPayloadRef = useRef<BlogListingPayload | null | undefined>(undefined);
+  if (initialPayloadRef.current === undefined) {
+    initialPayloadRef.current = takeInitialListingPayload();
+  }
+  const initialPayload = initialPayloadRef.current;
+  const [posts, setPosts] = useState<BlogPost[]>(() => initialPayload?.posts || []);
+  const [loading, setLoading] = useState(!initialPayload);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const initialPayloadUsed = useRef(Boolean(initialPayload));
 
   useEffect(() => {
-    fetch("/api/blog")
+    if (initialPayloadUsed.current) {
+      initialPayloadUsed.current = false;
+      return;
+    }
+
+    const controller = new AbortController();
+    setLoading(true);
+
+    fetch("/api/blog", { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) setPosts(data.posts);
       })
-      .catch(console.error)
-      .finally(() => setLoading(false));
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        console.error("Failed to fetch blog posts", error);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+
+    return () => controller.abort();
   }, []);
 
   const allTags = Array.from(
